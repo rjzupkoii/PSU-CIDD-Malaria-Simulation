@@ -1,0 +1,1 @@
+for i in {1..10}; do ./dist/Release/MinGW-Windows/malariasimulation.exe; done

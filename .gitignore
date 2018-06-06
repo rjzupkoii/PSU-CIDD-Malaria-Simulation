@@ -1,0 +1,8 @@
+build*
+bin
+.idea
+.vscode
+.vs
+node_modules
+Testing
+cmake-*

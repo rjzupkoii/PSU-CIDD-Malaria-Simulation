@@ -1,0 +1,1124 @@
+# ---------------------------------------------------------------
+#
+# DATE: Sep 16 2015
+# AUTHORS: Tran Dang Nguyen and Maciej F Boni
+#
+# This sample input file was created to get a first-time user up 
+# and running quickly with the simulation.
+#
+# ---------------------------------------------------------------
+
+
+# total number of days the simulation is run, including the burn-in period which we normally set to 4000
+# days; during the burn-in period, no one receives malaria treatement and the system sets into a natural 
+# equilibrium 
+total_time: 3600
+
+# length of burn-in period
+start_treatment_day: 100
+
+# the day at which the simulation's reporting functionality begins collecting data for 
+# the purposes of displaying it
+start_collect_data_day: 100
+
+
+spatial_information:
+
+#id, latitude, longitude
+# popsize scale down with a factor of 100
+  location_info: [
+[0,11.745981,-2.93008],
+[1,12.1846407,-4.0848789],
+[2,12.7430244,-3.8553507],
+[3,12.4503003,-3.4700327],
+[4,12.64031,-4.410878],
+[5,13.0695031,-3.0626284],
+[6,10.6400163,-4.7588042],
+[7,10.6503878,-5.1692752],
+[8,11.7863324,-0.3654204],
+[9,11.5077529,0.0513246],
+[10,12.180204,-0.3513021],
+[11,13.3252954,-1.5257042],
+[12,12.6612116,-0.5683399],
+[13,13.0910405,-1.0873551],
+[14,12.2562183,-2.3517526],
+[15,12.3181444,-2.4653598],
+[16,11.0978809,-2.0959429],
+[17,11.5478704,-1.768487],
+[18,12.074325,-1.3421032],
+[19,11.1652432,-1.1400998],
+[20,11.66503,-1.0634024],
+[21,12.3714277,-1.5196603],
+[22,12.9780605,-0.1401381],
+[23,12.0601649,0.3654204],
+[24,12.6513142,0.4915329],
+[25,11.23766,0.716824],
+[26,12.0718334,1.7879685],
+[27,11.1649219,-4.3051542],
+[28,10.9808313,-4.9091329],
+[29,11.4894238,-3.523092],
+[30,13.768042,-2.072648],
+[31,12.9626069,-2.2581158],
+[32,13.5668258,-2.4109908],
+[33,13.2036283,-2.3566861],
+[34,12.2483626,-0.6251541],
+[35,12.65179,-1.888756],
+[36,12.5840501,-1.2987349],
+[37,14.4431072,-0.2291565],
+[38,14.0246473,-0.0233208],
+[39,14.1005099,-1.6226538],
+[40,13.433333,0.533333],
+[41,10.9578957,-3.2432781],
+[42,11.1490462,-3.0601241],
+[43,9.8738597,-2.9213408],
+[44,10.3231036,-3.1679257]
+]
+  # probability that a symptomatic and infected individual seeks and receives antimalarial treatment
+  #if the number of values less than number of locations, the first value will be applied for all locations
+  p_treatment_for_less_than_5_by_location: [0.48,0.48,0.48,0.48,0.48,0.48,0.517,0.517,0.645,0.645,0.645,0.566,0.566,0.566,0.692,0.692,0.692,0.692,0.616,0.616,0.616,0.469,0.402,0.402,0.402,0.402,0.402,0.462,0.462,0.462,0.626,0.626,0.626,0.626,0.56,0.56,0.56,0.231,0.231,0.231,0.231,0.402,0.402,0.402,0.402]
+  p_treatment_for_more_than_5_by_location: [0.48,0.48,0.48,0.48,0.48,0.48,0.517,0.517,0.645,0.645,0.645,0.566,0.566,0.566,0.692,0.692,0.692,0.692,0.616,0.616,0.616,0.469,0.402,0.402,0.402,0.402,0.402,0.462,0.462,0.462,0.626,0.626,0.626,0.626,0.56,0.56,0.56,0.231,0.231,0.231,0.231,0.402,0.402,0.402,0.402]
+
+  #transmission intensity
+  #if the number of values less than number of locations, the first value will be applied for all locations
+  beta_by_location: [0.213659, 0.203368, 0.204934, 0.233512, 0.186304, 0.219291, 0.487490, 0.287411, 0.151929, 0.250640, 0.080687, 0.166065, 0.127059, 0.141438, 0.129546, 0.115278, 0.482174, 0.211832, 0.091861, 0.364942, 0.187634, 0.123396, 0.287777, 0.790848, 0.736700,14.088860, 0.749254, 0.174167, 0.410241, 0.350496, 0.304573, 0.089745, 0.081970, 0.148964, 0.190404, 0.174899, 0.089809, 0.748210, 0.220087, 0.657269, 0.395606, 0.352937, 0.164519, 0.833791, 0.392035]
+
+  population_size_by_location: [21091,26639,27595,29392,16197,21890,39713,12250,53637,25457,32528,27162,32455,59053,50066,29447,20527,17256,23713,15497,24326,167657,40293,30098,7774,7358,33599,93894,28059,22451,14110,32045,54718,16437,31594,13713,23652,19253,26143,34192,15764,10007,19065,6897,25349]
+
+  #spatial_model could be Gravity, Barabasi, or Wesolowski
+  spatial_model: "Wesolowski"
+
+  Barabasi:
+    r_g_0: 5.8
+    beta_r: 1.65
+    kappa: 350
+
+  Wesolowski:
+    kappa: 0.01093251
+    alpha: 0.22268982
+    beta: 0.14319618
+    gamma: 0.83741484
+
+
+
+#if the number of values less than number of locations, the first value will be applied for all locations
+  age_distribution_by_location: [
+    [0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.02992,0.2007,0.098066667,0.098066667,0.098066667,0.0563]
+  ]
+
+# this functionality works, but it was not used in any analyses for the 2015 LGH paper
+#this applies for all locations
+circulation_information:
+  max_relative_moving_value: 35
+  number_of_moving_levels: 100
+  moving_level_distribution:
+  #  distribution: Exponential
+    distribution: Gamma
+    Exponential:
+      scale: 0.17
+    Gamma:
+      mean: 3.4244
+      sd: 3.4244
+  circulation_percent: 0.0095
+  length_of_stay:
+    mean: 11.8737
+    sd: 11.8737399331
+
+
+
+# this functionality works, but it was not used in any analyses for the 2015 LGH paper
+# seasonality parameters, by location
+seasonal_beta:
+  a: [0, 0.7778, 0.25, 0.25]
+  phi_upper: [92, 200, 200, 200]
+  phi_lower: [61, 200, 200, 200]
+
+# probability that an infectious bite on a human causes a blood stage malaria infection
+p_infection_from_an_infectious_bite: 0.1
+
+
+# the simulation itself uses explicit ages and birthdays
+# but for reporting purposes and for age-specific mortality calculations, individuals are grouped into the following age classes
+number_of_age_classes: 15
+age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 20, 60, 100]
+
+
+# this is only used for initializing the population structure at time 0
+# the last four rows of the matrix below are ignored when the number of locations is 1
+initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35, 45, 55, 65, 100]
+
+
+# below value indicates 37.25 births per 1000 individuals per year
+birth_rate: 0.0412
+
+
+# annual death rate (probability) by age group (non-malaria cause)
+death_rate_by_age: [0.063681,0.00344,0.00344,0.00344,0.00344,0.002431,0.002431,0.002431,0.002431,0.002431,0.00173,0.002816,0.00369,0.007529,0.1053652]
+
+
+# number of days to keep track total number of parasites in population
+# in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
+# if an individual is infected today, the infection type and probability will be based
+# on the biting that took place 11 days ago
+number_of_tracking_days: 11
+
+
+# probability of death for patients who are not treated or patients who experience a treatment failure (due to drug resistance, or otherwise)
+# when received treatment, this rate drop by factor of 10 in code
+mortality_when_treatment_fail_by_age: [0.040, 0.020,0.020,0.020,0.020,0.004,0.004,0.004,0.004,0.004,0.004, 0.001, 0.001, 0.001, 0.001]
+
+
+genotype_info:
+    loci:
+        # here we start defining the first locus
+        - locus_name: "pfcrt"
+          position: 0
+          alleles:
+            - value: 0
+              allele_name: "K76"
+              short_name: "K"
+              # this is the list of "mutant values" you can mutate up to (there is no real meaning of up; down mutations are equally likely)
+              can_mutate_to: [1]
+              mutation_level: 0
+              daily_cost_of_resistance: 0.0
+            - value: 1
+              allele_name: "76T"
+              short_name: "T"
+              can_mutate_to: [0]
+              mutation_level: 1
+              daily_cost_of_resistance: 0.0005
+              # here we start defining the second locus
+        - locus_name: "pfmdr1"
+          position: 1
+          alleles:
+            - value: 0
+              allele_name: "N86 Y184 one copy of pfmdr1"
+              short_name: "NY--"
+              can_mutate_to: [1,2,4]
+              mutation_level: 0
+              daily_cost_of_resistance: 0.0
+            - value: 1
+              allele_name: "86Y Y184 one copy of pfmdr1"
+              short_name: "YY--"
+              can_mutate_to: [3,0,5]
+              mutation_level: 1
+              daily_cost_of_resistance: 0.0005
+            - value: 2
+              allele_name: "N86 184F one copy of pfmdr1"
+              short_name: "NF--"
+              can_mutate_to: [3,0,6]
+              mutation_level: 1
+              daily_cost_of_resistance: 0.0005
+            - value: 3
+              allele_name: "86Y 184F one copy of pfmdr1"
+              short_name: "YF--"
+              can_mutate_to: [1,2,7]
+              mutation_level: 2
+              daily_cost_of_resistance: 0.00099975
+            - value: 4
+              allele_name: "N86 Y184 2 copies of pfmdr1"
+              short_name: "NYNY"
+              can_mutate_to: [0]
+              mutation_level: 1
+              daily_cost_of_resistance: 0.005
+            - value: 5
+              allele_name: "86Y Y184 2 copies of pfmdr1"
+              short_name: "YYYY"
+              can_mutate_to: [1]
+              mutation_level: 2
+              daily_cost_of_resistance: 0.0055
+            - value: 6
+              allele_name: "N86 184F 2 copies of pfmdr1"
+              short_name: "NFNF"
+              can_mutate_to: [2]
+              mutation_level: 2
+              daily_cost_of_resistance: 0.0055
+            - value: 7
+              allele_name: "86Y 184F 2 copies of pfmdr1"
+              short_name: "YFYF"
+              can_mutate_to: [3]
+              mutation_level: 3
+              daily_cost_of_resistance: 0.006
+        - locus_name: "K13 Propeller"
+          position: 2
+          alleles:
+            - value: 0
+              allele_name: "C580"
+              short_name: "C"
+              can_mutate_to: [1]
+              mutation_level: 0
+              daily_cost_of_resistance: 0.0
+            - value: 1
+              allele_name: "580Y"
+              short_name: "Y"
+              can_mutate_to: [0]
+              mutation_level: 1
+              daily_cost_of_resistance: 0.0005
+        - locus_name: "Plasmepsin 2-3"
+          position: 3
+          alleles:
+            - value: 0
+              allele_name: "Plasmepsin 2-3 one copy"
+              short_name: "1"
+              can_mutate_to: [1]
+              mutation_level: 0
+              daily_cost_of_resistance: 0.0
+            - value: 1
+              allele_name: "Plasmepsin 2-3 2 copies"
+              short_name: "2"
+              can_mutate_to: [0]
+              mutation_level: 1
+              daily_cost_of_resistance: 0.0005
+        - locus_name: "Hypothetical locus for multiple use"
+          position: 4
+          alleles:
+            - value: 0
+              allele_name: "naive"
+              short_name: "x"
+              can_mutate_to: [1]
+              mutation_level: 0
+              daily_cost_of_resistance: 0.0
+            - value: 1
+              allele_name: "mutant"
+              short_name: "X"
+              can_mutate_to: [0]
+              mutation_level: 1
+              daily_cost_of_resistance: 0.0005
+
+
+
+fake_efficacy_table: [
+[0.68583,0.72647,0.87025,0.90016,0.78844,0.41007,0.80084],
+[0.68583,0.72647,0.87025,0.90016,0.78844,0.41007,0.80084],
+[0.68583,0.72647,0.87025,0.20752,0.78844,0.41007,0.80084],
+[0.68583,0.72647,0.87025,0.20752,0.78844,0.41007,0.80084],
+[0.2451,0.72647,0.87025,0.90016,0.78844,0.41007,0.80084],
+[0.2451,0.72647,0.87025,0.90016,0.78844,0.41007,0.80084],
+[0.2451,0.72647,0.87025,0.20752,0.78844,0.41007,0.80084],
+[0.2451,0.72647,0.87025,0.20752,0.78844,0.41007,0.80084],
+[0.68583,0.83124,0.69829,0.90016,0.78844,0.41007,0.64142],
+[0.68583,0.83124,0.69829,0.90016,0.78844,0.41007,0.64142],
+[0.68583,0.83124,0.69829,0.20752,0.78844,0.41007,0.64142],
+[0.68583,0.83124,0.69829,0.20752,0.78844,0.41007,0.64142],
+[0.2451,0.83124,0.69829,0.90016,0.78844,0.41007,0.64142],
+[0.2451,0.83124,0.69829,0.90016,0.78844,0.41007,0.64142],
+[0.2451,0.83124,0.69829,0.20752,0.78844,0.41007,0.64142],
+[0.2451,0.83124,0.69829,0.20752,0.78844,0.41007,0.64142],
+[0.68583,0.6382,0.92186,0.90016,0.78844,0.41007,0.80084],
+[0.68583,0.6382,0.92186,0.90016,0.78844,0.41007,0.80084],
+[0.68583,0.6382,0.92186,0.20752,0.78844,0.41007,0.80084],
+[0.68583,0.6382,0.92186,0.20752,0.78844,0.41007,0.80084],
+[0.2451,0.6382,0.92186,0.90016,0.78844,0.41007,0.80084],
+[0.2451,0.6382,0.92186,0.90016,0.78844,0.41007,0.80084],
+[0.2451,0.6382,0.92186,0.20752,0.78844,0.41007,0.80084],
+[0.2451,0.6382,0.92186,0.20752,0.78844,0.41007,0.80084],
+[0.68583,0.72647,0.75961,0.90016,0.78844,0.41007,0.64142],
+[0.68583,0.72647,0.75961,0.90016,0.78844,0.41007,0.64142],
+[0.68583,0.72647,0.75961,0.20752,0.78844,0.41007,0.64142],
+[0.68583,0.72647,0.75961,0.20752,0.78844,0.41007,0.64142],
+[0.2451,0.72647,0.75961,0.90016,0.78844,0.41007,0.64142],
+[0.2451,0.72647,0.75961,0.90016,0.78844,0.41007,0.64142],
+[0.2451,0.72647,0.75961,0.20752,0.78844,0.41007,0.64142],
+[0.2451,0.72647,0.75961,0.20752,0.78844,0.41007,0.64142],
+[0.68583,0.5285,0.87025,0.90016,0.50075,0.41007,0.80084],
+[0.68583,0.5285,0.87025,0.90016,0.50075,0.41007,0.80084],
+[0.68583,0.5285,0.87025,0.20752,0.50075,0.41007,0.80084],
+[0.68583,0.5285,0.87025,0.20752,0.50075,0.41007,0.80084],
+[0.2451,0.5285,0.87025,0.90016,0.50075,0.41007,0.80084],
+[0.2451,0.5285,0.87025,0.90016,0.50075,0.41007,0.80084],
+[0.2451,0.5285,0.87025,0.20752,0.50075,0.41007,0.80084],
+[0.2451,0.5285,0.87025,0.20752,0.50075,0.41007,0.80084],
+[0.68583,0.6677,0.69829,0.90016,0.50075,0.41007,0.64142],
+[0.68583,0.6677,0.69829,0.90016,0.50075,0.41007,0.64142],
+[0.68583,0.6677,0.69829,0.20752,0.50075,0.41007,0.64142],
+[0.68583,0.6677,0.69829,0.20752,0.50075,0.41007,0.64142],
+[0.2451,0.6677,0.69829,0.90016,0.50075,0.41007,0.64142],
+[0.2451,0.6677,0.69829,0.90016,0.50075,0.41007,0.64142],
+[0.2451,0.6677,0.69829,0.20752,0.50075,0.41007,0.64142],
+[0.2451,0.6677,0.69829,0.20752,0.50075,0.41007,0.64142],
+[0.68583,0.41289,0.92186,0.90016,0.50075,0.41007,0.80084],
+[0.68583,0.41289,0.92186,0.90016,0.50075,0.41007,0.80084],
+[0.68583,0.41289,0.92186,0.20752,0.50075,0.41007,0.80084],
+[0.68583,0.41289,0.92186,0.20752,0.50075,0.41007,0.80084],
+[0.2451,0.41289,0.92186,0.90016,0.50075,0.41007,0.80084],
+[0.2451,0.41289,0.92186,0.90016,0.50075,0.41007,0.80084],
+[0.2451,0.41289,0.92186,0.20752,0.50075,0.41007,0.80084],
+[0.2451,0.41289,0.92186,0.20752,0.50075,0.41007,0.80084],
+[0.68583,0.5285,0.75961,0.90016,0.50075,0.41007,0.64142],
+[0.68583,0.5285,0.75961,0.90016,0.50075,0.41007,0.64142],
+[0.68583,0.5285,0.75961,0.20752,0.50075,0.41007,0.64142],
+[0.68583,0.5285,0.75961,0.20752,0.50075,0.41007,0.64142],
+[0.2451,0.5285,0.75961,0.90016,0.50075,0.41007,0.64142],
+[0.2451,0.5285,0.75961,0.90016,0.50075,0.41007,0.64142],
+[0.2451,0.5285,0.75961,0.20752,0.50075,0.41007,0.64142],
+[0.2451,0.5285,0.75961,0.20752,0.50075,0.41007,0.64142],
+[0.68583,0.76967,0.81689,0.90016,0.78844,0.41007,0.34533],
+[0.68583,0.76967,0.81689,0.90016,0.78844,0.41007,0.34533],
+[0.68583,0.76967,0.81689,0.20752,0.78844,0.41007,0.34533],
+[0.68583,0.76967,0.81689,0.20752,0.78844,0.41007,0.34533],
+[0.2451,0.76967,0.81689,0.90016,0.78844,0.41007,0.34533],
+[0.2451,0.76967,0.81689,0.90016,0.78844,0.41007,0.34533],
+[0.2451,0.76967,0.81689,0.20752,0.78844,0.41007,0.34533],
+[0.2451,0.76967,0.81689,0.20752,0.78844,0.41007,0.34533],
+[0.68583,0.87104,0.64507,0.90016,0.78844,0.41007,0.20415],
+[0.68583,0.87104,0.64507,0.90016,0.78844,0.41007,0.20415],
+[0.68583,0.87104,0.64507,0.20752,0.78844,0.41007,0.20415],
+[0.68583,0.87104,0.64507,0.20752,0.78844,0.41007,0.20415],
+[0.2451,0.87104,0.64507,0.90016,0.78844,0.41007,0.20415],
+[0.2451,0.87104,0.64507,0.90016,0.78844,0.41007,0.20415],
+[0.2451,0.87104,0.64507,0.20752,0.78844,0.41007,0.20415],
+[0.2451,0.87104,0.64507,0.20752,0.78844,0.41007,0.20415],
+[0.68583,0.68357,0.85353,0.90016,0.78844,0.41007,0.34533],
+[0.68583,0.68357,0.85353,0.90016,0.78844,0.41007,0.34533],
+[0.68583,0.68357,0.85353,0.20752,0.78844,0.41007,0.34533],
+[0.68583,0.68357,0.85353,0.20752,0.78844,0.41007,0.34533],
+[0.2451,0.68357,0.85353,0.90016,0.78844,0.41007,0.34533],
+[0.2451,0.68357,0.85353,0.90016,0.78844,0.41007,0.34533],
+[0.2451,0.68357,0.85353,0.20752,0.78844,0.41007,0.34533],
+[0.2451,0.68357,0.85353,0.20752,0.78844,0.41007,0.34533],
+[0.68583,0.76967,0.72893,0.90016,0.78844,0.41007,0.20415],
+[0.68583,0.76967,0.72893,0.90016,0.78844,0.41007,0.20415],
+[0.68583,0.76967,0.72893,0.20752,0.78844,0.41007,0.20415],
+[0.68583,0.76967,0.72893,0.20752,0.78844,0.41007,0.20415],
+[0.2451,0.76967,0.72893,0.90016,0.78844,0.41007,0.20415],
+[0.2451,0.76967,0.72893,0.90016,0.78844,0.41007,0.20415],
+[0.2451,0.76967,0.72893,0.20752,0.78844,0.41007,0.20415],
+[0.2451,0.76967,0.72893,0.20752,0.78844,0.41007,0.20415],
+[0.68583,0.5904,0.81689,0.90016,0.50075,0.41007,0.34533],
+[0.68583,0.5904,0.81689,0.90016,0.50075,0.41007,0.34533],
+[0.68583,0.5904,0.81689,0.20752,0.50075,0.41007,0.34533],
+[0.68583,0.5904,0.81689,0.20752,0.50075,0.41007,0.34533],
+[0.2451,0.5904,0.81689,0.90016,0.50075,0.41007,0.34533],
+[0.2451,0.5904,0.81689,0.90016,0.50075,0.41007,0.34533],
+[0.2451,0.5904,0.81689,0.20752,0.50075,0.41007,0.34533],
+[0.2451,0.5904,0.81689,0.20752,0.50075,0.41007,0.34533],
+[0.68583,0.72647,0.64507,0.90016,0.50075,0.41007,0.20415],
+[0.68583,0.72647,0.64507,0.90016,0.50075,0.41007,0.20415],
+[0.68583,0.72647,0.64507,0.20752,0.50075,0.41007,0.20415],
+[0.68583,0.72647,0.64507,0.20752,0.50075,0.41007,0.20415],
+[0.2451,0.72647,0.64507,0.90016,0.50075,0.41007,0.20415],
+[0.2451,0.72647,0.64507,0.90016,0.50075,0.41007,0.20415],
+[0.2451,0.72647,0.64507,0.20752,0.50075,0.41007,0.20415],
+[0.2451,0.72647,0.64507,0.20752,0.50075,0.41007,0.20415],
+[0.68583,0.49168,0.85353,0.90016,0.50075,0.41007,0.34533],
+[0.68583,0.49168,0.85353,0.90016,0.50075,0.41007,0.34533],
+[0.68583,0.49168,0.85353,0.20752,0.50075,0.41007,0.34533],
+[0.68583,0.49168,0.85353,0.20752,0.50075,0.41007,0.34533],
+[0.2451,0.49168,0.85353,0.90016,0.50075,0.41007,0.34533],
+[0.2451,0.49168,0.85353,0.90016,0.50075,0.41007,0.34533],
+[0.2451,0.49168,0.85353,0.20752,0.50075,0.41007,0.34533],
+[0.2451,0.49168,0.85353,0.20752,0.50075,0.41007,0.34533],
+[0.68583,0.5904,0.72893,0.90016,0.50075,0.41007,0.20415],
+[0.68583,0.5904,0.72893,0.90016,0.50075,0.41007,0.20415],
+[0.68583,0.5904,0.72893,0.20752,0.50075,0.41007,0.20415],
+[0.68583,0.5904,0.72893,0.20752,0.50075,0.41007,0.20415],
+[0.2451,0.5904,0.72893,0.90016,0.50075,0.41007,0.20415],
+[0.2451,0.5904,0.72893,0.90016,0.50075,0.41007,0.20415],
+[0.2451,0.5904,0.72893,0.20752,0.50075,0.41007,0.20415],
+[0.2451,0.5904,0.72893,0.20752,0.50075,0.41007,0.20415]
+]
+
+
+#
+# initialize parasite population
+# day-location - id - number
+# day= 0 is 7 days ago
+#
+# this is all currently based on the fact that development inside the moquito takes 7 days (DiM=7)
+# but, we will want to do sensitivity analyses that allow us to look at DiM=10, DiM=14 and so on.
+#
+# so, for the IC (inital conditions) below we can just assume that if we had 600 infected persons 3 days ago,
+# that the number of infected persons 1 day ago and 5 days ago wa salso 600; in other words, we can remove column
+# one from here
+#
+
+#
+#
+# NOV 19 2009: the new input method should look like this
+# so that we don't have to put DiM explicitly into the input file
+#
+#1. loc 2. id (this is the resistance type of the parasite) 3. prevalence unweighted by biting rate
+initial_parasite_info:
+  #if location id is -1 all location will have the same initial parasites
+  - location_id: -1
+    parasite_info:
+        #TNY__C1x
+      - parasite_type_id: 64
+        prevalence: 0.05
+      - parasite_type_id: 72
+        prevalence: 0.05
+
+#      - parasite_type_id: 2
+#        prevalence: 0.1
+#      - parasite_type_id: 4
+#        prevalence: 0.1
+
+# functional but not used in 2015 LGH paper
+# allows for the introduction of a specific parasite type at a specific time
+introduce_parasite:
+#  - location: 0
+#    parasite_info:
+#      - time: 4000
+#        genotype_id: 1
+#        number_of_cases: 5
+#      - time: 4000
+#        genotype_id: 2
+#        number_of_cases: 5
+#      - time: 4000
+#        genotype_id: 4
+#        number_of_cases: 5
+#      - time: 4000
+#        genotype_id: 8
+#        number_of_cases: 5
+#
+
+
+# periodic importation of drug-sensitive parasites; five new cases imported every seven days
+introduce_parasite_periodically:
+  - location: 0
+    parasite_info:
+      - duration: 10
+        # genotype_id -1: fix allele 580Y and x of the last loci, other alleles will be drawed randomly
+        genotype_id: -1
+        number_of_cases: 1
+        start_day: 5110
+
+
+
+
+
+# drug information below
+#
+# maximum_parasite_killing_rate:
+#       e.g. 0.999 means the drug can kill 99.9% of parasites in 1 day if a person has
+#       the highest possible drug concentration
+#
+# n:
+#       the slope of the linear portion of the conentration-effect curve
+#
+# EC50:
+#       the drug concentration which produces 50% of the parasite killing achieved at maximum-concentration
+#       ( the expected starting concentration is 1.0 )
+#
+# age_specific_drug_concentration_sd:
+#       the actual drug concentration, per individual, will be drawn from a normal distribution with mean=1 and this sd.
+#
+# k:
+#       parameter that describes the change in the mutation probability when drug levels are intermediate
+#       - set k=0.5 for a simple linear model where mutation probablity decreases linearly with drug concentration
+#       - set k=2 or k=4 for a piecewise-linear model where mutation probability increases from high concentrations
+#               to intermediate concentrations, and then decreases linearly from intermediate concentrations to zero
+#
+drugInfo:
+  0:
+    name: "artmisinin"
+    half_life: 0.25
+    maximum_parasite_killing_rate: 0.999
+    n: 25
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    mutation_probability: 0.005
+    affecting_loci: [2]
+    selecting_alleles: [[1]]
+    k: 4
+    EC50:
+       ..0.. : 0.75
+       ..1.. : 1.2
+  1:
+    name: "lumefantrine"
+    half_life: 4.5
+    maximum_parasite_killing_rate: 0.99
+    n: 20
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    mutation_probability: 0.005
+    affecting_loci: [0,1]
+    selecting_alleles: [[0],[0,2,3,4,6,7]]
+    k: 4
+    EC50:
+       #KNY--
+       00... : 0.8
+       #KYY--
+       01... : 0.67
+       #KNF--
+       02... : 0.9
+       #KYF--
+       03... : 0.8
+       #KNYNY
+       04... : 1.0
+       #KYYYY
+       05... : 0.87
+       #KNFNF
+       06... : 1.1
+       #KYFYF
+       07... : 1.0
+       #TNY--
+       10... : 0.75
+       #TYY--
+       11... : 0.6
+       #TNF--
+       12... : 0.85
+       #TYF--
+       13... : 0.75
+       #TNYNY
+       14... : 0.95
+       #TYYNY
+       15... : 0.8
+       #TNFNF
+       16... : 1.05
+       #TYFYF
+       17... : 0.95
+  2:
+    name: "amodiaquine"
+    half_life: 9.0
+    maximum_parasite_killing_rate: 0.95
+    n: 19
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    mutation_probability: 0.005
+    affecting_loci: [0,1]
+    selecting_alleles: [[1],[0,1,3,4,5,7]]
+    k: 4
+    EC50:
+       #KNY--
+       00... : 0.62
+       #KYY--
+       01... : 0.85
+       #KNF--
+       02... : 0.5
+       #KYF--
+       03... : 0.775
+       #KNYNY
+       04... : 0.62
+       #KYYYY
+       05... : 0.85
+       #KNFNF
+       06... : 0.5
+       #KYFYF
+       07... : 0.775
+       #TNY--
+       10... : 0.7
+       #TYY--
+       11... : 0.9
+       #TNF--
+       12... : 0.65
+       #TYF--
+       13... : 0.82
+       #TNYNY
+       14... : 0.7
+       #TYYYY
+       15... : 0.9
+       #TNFNF
+       16... : 0.65
+       #TYFYF
+       17... : 0.82
+  3:
+    name: "piperaquine"
+    half_life: 28.0
+    maximum_parasite_killing_rate: 0.9
+    n: 15
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    mutation_probability: 0.005
+    affecting_loci: [3]
+    selecting_alleles: [[1]]
+    resistant_factor: [[1]]
+    k: 4
+    EC50:
+       ...0. : 0.58
+       ...1. : 1.4
+  #MQ
+  4:
+    name: "Mefloquine"
+    half_life: 21.0
+    maximum_parasite_killing_rate: 0.9
+    n: 15
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    mutation_probability: 0.005
+    affecting_loci: [1]
+    selecting_alleles: [[4,5,6,7]]
+    k: 4
+    EC50:
+       .0... : 0.76
+       .1... : 0.76
+       .2... : 0.76
+       .3... : 0.76
+       .4... : 1.07
+       .5... : 1.07
+       .6... : 1.07
+       .7... : 1.07
+  5:
+    name: "SP"
+    half_life: 6.5
+    maximum_parasite_killing_rate: 0.9
+    n: 15
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    mutation_probability: 0.000
+    affecting_loci: []
+    selecting_alleles: []
+    k: 4
+    EC50:
+       ..... : 1.08
+  6:
+    name: "CQ"
+    half_life: 10
+    maximum_parasite_killing_rate: 0.95
+    n: 19
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    mutation_probability: 0.005
+    affecting_loci: [0,1]
+    selecting_alleles: [[1],[1,3,5,7]]
+    k: 4
+    EC50:
+       #KNY--
+       00... : 0.72
+       #KYY--
+       01... : 0.9
+       #KNF--
+       02... : 0.72
+       #KYF--
+       03... : 0.9
+       #KNYNY
+       04... : 0.72
+       #KYYYY
+       05... : 0.9
+       #KNFNF
+       06... : 0.72
+       #KYFYF
+       07... : 0.9
+       #TNY--
+       10... : 1.19
+       #TYY--
+       11... : 1.35
+       #TNF--
+       12... : 1.19
+       #TYF--
+       13... : 1.35
+       #TNYNY
+       14... : 1.19
+       #TYYYY
+       15... : 1.35
+       #TNFNF
+       16... : 1.19
+       #TYFYF
+       17... : 1.35
+  7:
+    name: "QN"
+    half_life: 0.625
+    maximum_parasite_killing_rate: 0.9
+    n: 19
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    mutation_probability: 0.005
+    affecting_loci: [0]
+    selecting_alleles: [[1]]
+    k: 4
+    #62% & 93% efficacies
+    EC50:
+      0.... : 0.6
+      1.... : 1.08
+lumefantrine_drug_id: 2
+artemisinin_drug_id: 0
+
+# therapy info
+# the drug_ids that make up the therapy, and the number of days that the therapy is prescribed for
+# testing day tells you the follow-up point at which it is determined if treatment failed or not
+tf_testing_day: 28
+
+TherapyInfo:
+  #mono as
+  0:
+    drug_id: [0]
+    dosing_days: 3
+  #mono Lumefaltrine
+  1:
+    drug_id: [1]
+    dosing_days:  3
+  #mono AQ
+  2:
+    drug_id: [2]
+    dosing_days: 3
+  #mono PPQ
+  3:
+    drug_id: [3]
+    dosing_days: 3
+  #mono MQ
+  4:
+    drug_id: [4]
+    dosing_days: 3
+  #mono SP
+  5:
+    drug_id: [5]
+    dosing_days: 3
+  #AL
+  6:
+    drug_id: [0,1]
+    dosing_days: 3
+  #AS-AQ
+  7:
+    drug_id: [0,2]
+    dosing_days: 3
+  # DHA-PPQ
+  8:
+    drug_id: [0,3]
+    dosing_days: 3
+  #AS-MQ
+  9:
+    drug_id: [0,4]
+    dosing_days: 3
+  #AS-SP
+  10:
+    drug_id: [0,5]
+    dosing_days: 3
+  #TACT DHA-PPQ-MQ
+  11:
+    drug_id: [0,3,4]
+    dosing_days: 3
+  #TACT AL-AQ
+  12:
+    drug_id: [0,1,2]
+    dosing_days: 3
+  #CQ
+  13:
+    drug_id: [6]
+    dosing_days: 3
+  #QN trial
+  14:
+    drug_id: [7]
+    dosing_days: 7
+
+# drug-deployment strategy - simply uncomment below to turn on a particular strategy
+StrategyInfo:
+    0:
+        name: ACTDistribution-AL-DPQ-ASSP-ASAQ-ASMQ
+        type: MFTDifferentDistributionByLocation
+        therapy_ids: [6,8,10,7,9]
+        distribution: [
+        [0.836684858,0.059881511,0.056717559,0.030492855,0.016180749]
+        ]
+    1:
+        name: RFTDistribution-QN-SP-CQ-AQ
+        type: MFTDifferentDistributionByLocation
+        therapy_ids: [14,5,13,2 ]
+        distribution: [
+        [0.037151703,0.26625387,0.052631579,0.643962848],
+        [0.037151703,0.26625387,0.052631579,0.643962848],
+        [0.037151703,0.26625387,0.052631579,0.643962848],
+        [0.037151703,0.26625387,0.052631579,0.643962848],
+        [0.037151703,0.26625387,0.052631579,0.643962848],
+        [0.037151703,0.26625387,0.052631579,0.643962848],
+        [0.058052434,0.058052434,0.099250936,0.784644195],
+        [0.058052434,0.058052434,0.099250936,0.784644195],
+        [0.054713805,0.624859708,0.018799102,0.301627385],
+        [0.054713805,0.624859708,0.018799102,0.301627385],
+        [0.054713805,0.624859708,0.018799102,0.301627385],
+        [0.074178645,0.816478439,0.040297741,0.069045175],
+        [0.074178645,0.816478439,0.040297741,0.069045175],
+        [0.074178645,0.816478439,0.040297741,0.069045175],
+        [0.057648402,0.290525114,0.038242009,0.613584475],
+        [0.057648402,0.290525114,0.038242009,0.613584475],
+        [0.057648402,0.290525114,0.038242009,0.613584475],
+        [0.057648402,0.290525114,0.038242009,0.613584475],
+        [0.014898689,0.577473182,0.014898689,0.39272944],
+        [0.014898689,0.577473182,0.014898689,0.39272944],
+        [0.014898689,0.577473182,0.014898689,0.39272944],
+        [0.121088861,0.335106383,0.158635795,0.385168961],
+        [0.066817667,0.046432616,0.027180068,0.859569649],
+        [0.066817667,0.046432616,0.027180068,0.859569649],
+        [0.066817667,0.046432616,0.027180068,0.859569649],
+        [0.066817667,0.046432616,0.027180068,0.859569649],
+        [0.066817667,0.046432616,0.027180068,0.859569649],
+        [0.156140351,0.142105263,0.170175439,0.531578947],
+        [0.156140351,0.142105263,0.170175439,0.531578947],
+        [0.156140351,0.142105263,0.170175439,0.531578947],
+        [0.012278308,0.012278308,0.028649386,0.946793997],
+        [0.012278308,0.012278308,0.028649386,0.946793997],
+        [0.012278308,0.012278308,0.028649386,0.946793997],
+        [0.012278308,0.012278308,0.028649386,0.946793997],
+        [0.013291855,0.013291855,0.033653846,0.939762443],
+        [0.013291855,0.013291855,0.033653846,0.939762443],
+        [0.013291855,0.013291855,0.033653846,0.939762443],
+        [0.078947368,0.211278195,0.051879699,0.657894737],
+        [0.078947368,0.211278195,0.051879699,0.657894737],
+        [0.078947368,0.211278195,0.051879699,0.657894737],
+        [0.078947368,0.211278195,0.051879699,0.657894737],
+        [0.088709677,0.175806452,0.112903226,0.622580645],
+        [0.088709677,0.175806452,0.112903226,0.622580645],
+        [0.088709677,0.175806452,0.112903226,0.622580645],
+        [0.088709677,0.175806452,0.112903226,0.622580645]
+        ]
+    2:
+        name: BaseLineStrategy
+        type: NestedSwitching
+        strategy_ids: [1,0]
+        start_distribution: [0.05, 0.95]
+        end_distribution: [0.8,0.2]
+        strategy_switching_day: 5110
+        switch_to_strategy_id: 1
+    3:
+        name: BaseLineStrategy
+        type: NestedSwitchingDifferentDistributionByLocation
+        strategy_ids: [0,1]
+        start_distribution: [
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.735905045,0.264094955],
+        [0.735905045,0.264094955],
+        [0.153846154,0.846153846],
+        [0.153846154,0.846153846],
+        [0.153846154,0.846153846],
+        [0.101476015,0.898523985],
+        [0.101476015,0.898523985],
+        [0.101476015,0.898523985],
+        [0.168091168,0.831908832],
+        [0.168091168,0.831908832],
+        [0.168091168,0.831908832],
+        [0.168091168,0.831908832],
+        [0.174212598,0.825787402],
+        [0.174212598,0.825787402],
+        [0.174212598,0.825787402],
+        [0.241935484,0.758064516],
+        [0.132612967,0.867387033],
+        [0.132612967,0.867387033],
+        [0.132612967,0.867387033],
+        [0.132612967,0.867387033],
+        [0.132612967,0.867387033],
+        [0.430569431,0.569430569],
+        [0.430569431,0.569430569],
+        [0.430569431,0.569430569],
+        [0.274975272,0.725024728],
+        [0.274975272,0.725024728],
+        [0.274975272,0.725024728],
+        [0.274975272,0.725024728],
+        [0.127344521,0.872655479],
+        [0.127344521,0.872655479],
+        [0.127344521,0.872655479],
+        [0.388224471,0.611775529],
+        [0.388224471,0.611775529],
+        [0.388224471,0.611775529],
+        [0.388224471,0.611775529],
+        [0.472340426,0.527659574],
+        [0.472340426,0.527659574],
+        [0.472340426,0.527659574],
+        [0.472340426,0.527659574]
+        ]
+        end_distribution: [
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.388257576,0.611742424],
+        [0.735905045,0.264094955],
+        [0.735905045,0.264094955],
+        [0.153846154,0.846153846],
+        [0.153846154,0.846153846],
+        [0.153846154,0.846153846],
+        [0.101476015,0.898523985],
+        [0.101476015,0.898523985],
+        [0.101476015,0.898523985],
+        [0.168091168,0.831908832],
+        [0.168091168,0.831908832],
+        [0.168091168,0.831908832],
+        [0.168091168,0.831908832],
+        [0.174212598,0.825787402],
+        [0.174212598,0.825787402],
+        [0.174212598,0.825787402],
+        [0.241935484,0.758064516],
+        [0.132612967,0.867387033],
+        [0.132612967,0.867387033],
+        [0.132612967,0.867387033],
+        [0.132612967,0.867387033],
+        [0.132612967,0.867387033],
+        [0.430569431,0.569430569],
+        [0.430569431,0.569430569],
+        [0.430569431,0.569430569],
+        [0.274975272,0.725024728],
+        [0.274975272,0.725024728],
+        [0.274975272,0.725024728],
+        [0.274975272,0.725024728],
+        [0.127344521,0.872655479],
+        [0.127344521,0.872655479],
+        [0.127344521,0.872655479],
+        [0.388224471,0.611775529],
+        [0.388224471,0.611775529],
+        [0.388224471,0.611775529],
+        [0.388224471,0.611775529],
+        [0.472340426,0.527659574],
+        [0.472340426,0.527659574],
+        [0.472340426,0.527659574],
+        [0.472340426,0.527659574]
+        ]
+        strategy_switching_day: -1
+        switch_to_strategy_id: 0
+
+
+main_strategy_id: 3
+
+
+
+# this number use to detemine whether a therapy is "useful" or not and it is used to calculate
+# the useful therapeutic duration of a therapy
+TF_rate: 0.1
+
+# definitions of some log parasite density levels
+#
+parasite_density_level:
+#  log_parasite_density_cured:        -2.699    # corresponds to 10,000 total parasites (0.002 per μl)
+  log_parasite_density_cured:        -4.699    # corresponds to 100 total parasites (0.00002 per μl)
+  log_parasite_density_from_liver:    -2.000    # corresponds to 50,000 total parasites (0.01 per μl)
+#  log_parasite_density_asymptomatic: 1.301    # corresponds to 20 parasites per microliter of blood
+#  log_parasite_density_asymptomatic: 2.69    # corresponds to 500 parasites per microliter of blood
+  log_parasite_density_asymptomatic: 3    # corresponds to 1000 parasites per microliter of blood
+  log_parasite_density_clinical:     4.301    # corresponds to 20,000 parasites per microliter of blood (total 10^11)
+  log_parasite_density_clinical_from:     3.301    # corresponds to 2000 parasites per microliter of blood (total 10^10)
+  log_parasite_density_clinical_to:     5.301    # corresponds to 200,000 parasites per microliter of blood (total 10^12)
+  log_parasite_density_detectable:   1.000    # corresponds to 10 parasites per microliter of blood
+  log_parasite_density_pyrogenic:    3.398    # corresponds to 2500 parasites per microliter of blood
+
+
+immune_system_information:
+
+  #rate at which antimalarial immune function increases when a host is parasitaemic
+  b1: 0.00125
+
+  #rate at which antimalarial immune function decreases when a host is parasitaemic
+  b2: 0.0025
+
+  # durations of infection of naive and fully-immune hosts.
+  # these parameters are used to calculate max and min killing rate by immune system
+  duration_for_naive: 300
+  duration_for_fully_immune: 60
+
+  # initial conditions for the immune function of the population at time zero
+  mean_initial_condition: 0.1
+  sd_initial_condition: 0.1
+
+  # (per year) age-dependent faster acquisition of immunity from age 1 to age 10
+  immune_inflation_rate: 0.01
+
+  # mix and max probabilities of experiencing symptoms as a result of a new infection
+  # the actual probability will depend on the host's immunity
+  min_clinical_probability: 0.05
+  max_clinical_probability: 0.99
+
+  # slope of sigmoidal prob-v-immunity function (parameter z in supplement of 2015 LGH paper)
+  immune_effect_on_progression_to_clinical: 4
+
+  # age at which immune function is mature
+  age_mature_immunity: 10
+
+  # parameter kappa in supplement of 2015 LGH paper
+  factor_effect_age_mature_immunity : 1
+
+# days from end of liver-stage infection to appearance of symptoms
+days_to_clinical_under_five: 4
+days_to_clinical_over_five: 6
+
+
+# days that parasites develop mature gametocyte after exiting liverstage
+# please read the documentation carefully - there are no explicit gametocytes in
+# v3.0.2 of the simulation
+days_mature_gametocyte_under_five: 4
+days_mature_gametocyte_over_five: 6
+
+# probability that a patient completes a course of treatment
+p_compliance: 1
+
+# this functionality works. It is used when p_compliance (above) is less than 1.
+# It was not used in any analyses for the 2015 LGH paper where p_compliance is always 1.
+# this guarantees that the minimum number of dosing days for a poorly-complying
+# patient is still 1
+min_dosing_days: 1
+
+# relative biting rates for individuals; uncomment "distribution: Exponential" to use an
+# exponentially distributed biting rate
+relative_bitting_info:
+  max_relative_biting_value: 35
+  number_of_biting_levels: 100
+  biting_level_distribution:
+  #  distribution: Exponential
+    distribution: Gamma
+    Exponential:
+      scale: 0.17
+    Gamma:
+      mean: 5
+      sd: 10
+
+gametocyte_level_under_artemisinin_action: 1.0
+gametocyte_level_full: 1.0
+
+# these values are based on Ross 2006 - these parameters determine the probability a mosquito
+# becomes infected based on the host's asexual parasitaemia level
+relative_infectivity:
+  sigma: 3.91
+  ro: 0.00031
+  # on average 1 mosquito take 3 microliters of blood per bloodeal
+  blood_meal_volume: 3
+
+# probability to relapse after no treatment, or a treatment failure due to drug resistance
+p_relapse: 0.01
+
+# number of days before a relapse can occur
+relapse_duration: 30
+
+# relapse rate - used to increase the parasite density after a treatment failure (at the drug clearance day)
+# multiply by sqrt(20) per day
+relapseRate: 4.4721
+
+# minimum update frequency for a host's attributes (esp. parasite density) is every 7 days, or
+# more frequently if other events are occurring at this time
+update_frequency: 7
+
+#report to GUI and console every 30 days
+report_frequency: 30
+
+# if an infected and asymptomatic host is bitten and infected by a new
+# parasite clone, this setting allows the new infection to cause symptoms
+allow_new_coinfection_to_cause_symtoms: true
+
+# this functionality works, but it was not used in any analyses for the 2015 LGH paper
+external_population_circulation_information:
+  max_relative_moving_value: 35
+  number_of_moving_levels: 100
+  moving_level_distribution:
+  #  distribution: Exponential
+    distribution: Gamma  
+    Exponential:
+      scale: 0.17
+    Gamma:
+      mean: 5
+      sd: 10
+  circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01 ]
+  length_of_stay:
+    # drawn from gamma distribution?
+    mean: 5
+    sd: 10    
+  daily_EIR: [0.01,0.01,0.01,0.01,0.1]
+  seasonal_EIR:
+    a: [0,0.25,0.25,0.25]
+    phi_upper: [200,200,200,200]
+    phi_lower: [100,200,200,200]
+
+# this functionality works, but it was not used in any analyses for the 2015 LGH paper
+tme_info:
+  tme_starting_day: 0
+  mda_coverage: [0.8, 0.8, 0.8, 0.8]
+  mda_duration: [4, 4, 4, 4]
+  
+# free recombination among the drug resistance loci
+using_free_recombination: true
+#using_free_recombination: false
+
+# the current treatment failure rate as observed in the population is not really
+# today's treatment failure rate, as these data are never assembled that quickly in
+# real life; rather, it is the average treatment failure rate observed over the 
+# past 60 days
+tf_window_size: 60
+
+# special function to make the mean biting rate (across hosts) depend on age
+using_age_dependent_bitting_level: false
+
+# special function which makes the probability of an infection (resulting 
+# from an infectious mosquito bite) age-dependent
+using_variable_probability_infectious_bites_cause_infection: false
+
+fraction_mosquitoes_interrupted_feeding: 0.0

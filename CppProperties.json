@@ -1,0 +1,44 @@
+{
+  "environments": [
+    {
+      "MINGW_PREFIX": "C:/dev/msys64/mingw64",
+      "MINGW_CHOST ": "x86_64-w64-mingw32",
+      "MINGW_PACKAGE_PREFIX": "mingw-w64-x86_64",
+      "MSYSTEM": "MINGW64",
+      "MSYSTEM_CARCH": "x64_64",
+      "MSYSTEM_PREFIX": "${env.MINGW_PREFIX}",
+      "SHELL": "${env.MINGW_PREFIX}/../usr/bin/bash",
+      "TEMP": "${env.MINGW_PREFIX}/../tmp",
+      "TMP": "${env.TEMP}",
+      "PATH": "${env.MINGW_PREFIX}/bin;${env.MINGW_PREFIX}/../usr/local/bin;${env.MINGW_PREFIX}/../usr/bin;${env.PATH}",
+      "INCLUDE": "${workspaceRoot}/src/include;${env.MINGW_PREFIX}/mingw/include"
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Debug",
+
+      "includePath": [
+        "${workspaceRoot}"
+      ],
+
+      "defines": [
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ]
+    },
+    {
+      "name": "Release",
+      "includePath": [
+        "${workspaceRoot}"
+      ],
+
+      "defines": [
+        "NDEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ]
+    }
+  ]
+}
