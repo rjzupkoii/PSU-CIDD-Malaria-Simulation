@@ -15,7 +15,7 @@
 class Model;
 
 class Random {
-    VIRTUAL_PROPERTY(unsigned int, seed);
+    VIRTUAL_PROPERTY(unsigned long, seed);
     READ_ONLY_PROPERTY_REF(BittingLevelGenerator, bitting_level_generator)
     READ_ONLY_PROPERTY_REF(BittingLevelGenerator, moving_level_generator)
     READ_ONLY_PROPERTY_REF(BittingLevelGenerator, external_population_moving_level_generator)
@@ -29,14 +29,14 @@ public:
 
     virtual ~Random();
 
-    void initialize(const unsigned int& seed = -1);
+    void initialize(const unsigned long &seed = -1);
 
     void release();
 
     virtual int random_poisson(const double& poissonMeans);
 
-    virtual int random_uniform(const int& range);
-    virtual int random_uniform_int(const int& from, const int& to);
+    virtual unsigned long random_uniform(unsigned long range);
+    virtual unsigned long random_uniform_int(const unsigned long &from, const unsigned long &to);
     virtual double random_uniform_double(const double& from, const double& to);
     
 
@@ -61,9 +61,9 @@ public:
 
     virtual double random_flat(const double& from, const double& to);
 
-    virtual void random_multinomial(const int& K, const unsigned& N, double p[], unsigned n[]);
+    virtual void random_multinomial(const size_t &K, const unsigned& N, double p[], unsigned n[]);
     
-    virtual void random_shuffle( void * base, size_t nmembm, size_t size);
+    virtual void random_shuffle( void * base, size_t base_length, size_t size_of_type);
 
     virtual int random_biting_level();
     virtual int random_moving_level();
@@ -72,10 +72,10 @@ public:
     
     virtual double cdf_standard_normal_distribution(const double& p);
     
-    virtual int random_binomial(const double& p, const int& n);
+    virtual int random_binomial(const double &p, const unsigned int &n);
     
 private:
-    unsigned int good_seed();
+    unsigned long good_seed();
 };
 
 #endif	/* RANDOM_H */

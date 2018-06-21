@@ -138,7 +138,6 @@ age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 20, 60, 100]
 
 
 # this is only used for initializing the population structure at time 0
-# the last four rows of the matrix below are ignored when the number of locations is 1
 initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35, 45, 55, 65, 100]
 
 

@@ -6,55 +6,65 @@
  */
 
 #ifndef SCHEDULER_H
-#define	SCHEDULER_H
+#define  SCHEDULER_H
+
+#include <chrono>
 #include "PropertyMacro.h"
 #include "TypeDef.h"
 
 class Model;
 
 class Scheduler {
-    DISALLOW_COPY_AND_ASSIGN_(Scheduler)
-    PROPERTY_REF(int, current_time)
-    PROPERTY_HEADER(int, total_time)
+DISALLOW_COPY_AND_ASSIGN_(Scheduler)
 
-    POINTER_PROPERTY(Model, model);
+  bool is_monthly_reporting_day();
 
-    PROPERTY_REF(EventPtrVector2, timed_events_list);
-    PROPERTY_REF(bool, is_force_stop);
+  bool is_last_day_of_year();
+
+PROPERTY_REF(int, current_time)
+
+PROPERTY_HEADER(int, total_time)
+
+POINTER_PROPERTY(Model, model);
+
+PROPERTY_REF(EventPtrVector2, timed_events_list);
+PROPERTY_REF(bool, is_force_stop);
 
 public:
-    Scheduler(Model* model = nullptr);
-    virtual ~Scheduler();
+  std::chrono::system_clock::time_point calendar_date;
+public:
+  Scheduler(Model *model = nullptr);
 
-    void clear_all_events();
+  virtual ~Scheduler();
 
-    virtual void schedule(Event* event);
-    virtual void cancel(Event* event);
+  void clear_all_events();
 
-    void initialize(const int& total_time);
+  virtual void schedule(Event *event);
 
-    void run();
+  virtual void cancel(Event *event);
 
-    void begin_time_step();
+  void initialize(const int &start_year, const int &start_month, const int &start_day, const int &total_time);
 
-    void end_time_step();
+  void run();
 
-    bool can_stop();
+  void begin_time_step();
 
-    void update_end_of_time_step();
+  void end_time_step();
 
-    void update_force_of_infection();
+  bool can_stop();
 
-    void report_end_of_time_step();
+  void update_end_of_time_step();
 
-    int current_day_in_year();
-    
-    void perform_monthly_update();
+  void update_force_of_infection();
+
+  void report_end_of_time_step();
+
+  int current_day_in_year();
 
 private:
 
-    void update_treatment_coverage();
+  void update_treatment_coverage();
 };
 
-#endif	/* SCHEDULER_H */
+#endif  /* SCHEDULER_H */
 

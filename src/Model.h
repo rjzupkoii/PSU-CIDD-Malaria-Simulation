@@ -10,29 +10,23 @@
 
 #include "PropertyMacro.h"
 #include "Scheduler.h"
-
-
 #include "ClinicalUpdateFunction.h"
 #include "ImmunityClearanceUpdateFunction.h"
 #include "ObjectPool.h"
 
 class Scheduler;
 class Population;
-class ExternalPopulation;
 class Config;
 class Random;
 class ModelDataCollector;
 class Reporter;
-class TMEScheduler;
 
 class Model {
-    //    DISALLOW_COPY_AND_ASSIGN_(Model);
+    DISALLOW_COPY_AND_ASSIGN_(Model);
 
     POINTER_PROPERTY(Config, config);
     POINTER_PROPERTY(Scheduler, scheduler);
-    POINTER_PROPERTY(TMEScheduler, tme_scheduler);
     POINTER_PROPERTY(Population, population);
-//    POINTER_PROPERTY(ExternalPopulation, external_population);
     POINTER_PROPERTY(Random, random);
     POINTER_PROPERTY(ModelDataCollector, data_collector);
 
@@ -56,14 +50,12 @@ class Model {
     static Config* CONFIG;
     static Random* RANDOM;
     static Scheduler* SCHEDULER;
-    static TMEScheduler* TME_SCHEDULER;
     static ModelDataCollector* DATA_COLLECTOR;
     static Population* POPULATION;
 //    static Population* EXTERNAL_POPULATION;
 
 public:
     Model(const int& object_pool_size = 100000);
-    Model(const Model& orig);
     virtual ~Model();
 
     void initialize();
@@ -74,7 +66,6 @@ public:
     void before_run();
     void run();
     void after_run();
-
 
     void release();
 

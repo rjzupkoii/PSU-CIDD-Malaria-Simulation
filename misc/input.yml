@@ -12,7 +12,7 @@
 # total number of days the simulation is run, including the burn-in period which we normally set to 4000
 # days; during the burn-in period, no one receives malaria treatement and the system sets into a natural 
 # equilibrium 
-total_time: 720
+total_time: 40
 
 # length of burn-in period
 start_treatment_day: 0
@@ -22,7 +22,7 @@ start_treatment_day: 0
 start_collect_data_day: 0
 
 # the day at which the MDC will begin collecting NTF
-start_intervention_day: 3600
+start_intervention_day: 0
 
 spatial_information:
 #id, latitude, longitude
