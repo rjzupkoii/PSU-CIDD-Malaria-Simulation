@@ -6,7 +6,6 @@
  */
 
 #include "ImmuneSystem.h"
-#include <boost/foreach.hpp>
 #include "ImmuneComponent.h"
 #include "HelperFunction.h"
 #include "Person.h"

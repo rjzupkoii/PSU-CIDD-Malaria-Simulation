@@ -9,7 +9,6 @@
 #define	INITIALPARASITEINFO_H
 
 #include <yaml-cpp/yaml.h>
-#include <boost/foreach.hpp>
 
 //struct ParasiteInfo {
 //    int parasite_type_id;

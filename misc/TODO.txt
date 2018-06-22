@@ -1,5 +1,4 @@
 TODO:
 
  - Report real date for monthly Jan 31 day, Feb 28/29 days (leap year count),...
- - Update report data monthly at the end of each month
  - Check birth day for each individual to match with the new calendar

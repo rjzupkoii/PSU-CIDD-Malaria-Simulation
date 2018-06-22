@@ -20,14 +20,14 @@ ImmuneComponent::ImmuneComponent(ImmuneSystem* immune_system) : immune_system_(i
 }
 
 ImmuneComponent::~ImmuneComponent() {
-    immune_system_ = NULL;
+    immune_system_ = nullptr;
 }
 
 double ImmuneComponent::get_current_value() {
     int currentTime = Model::SCHEDULER->current_time();
     double temp = 0.0;
-    if (immune_system_ != NULL) {
-        if (immune_system_->person() != NULL) {
+    if (immune_system_ != nullptr) {
+        if (immune_system_->person() != nullptr) {
 
             int duration = currentTime - immune_system_->person()->latest_update_time();
 

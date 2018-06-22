@@ -47,7 +47,7 @@ spatial_information:
   beta_by_location: [0.05]
 
 #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [10010, 10020, 10030, 10040, 10050, 10060, 10070, 10080, 10090 ]
+  population_size_by_location: [1000, 10020, 10030, 10040, 10050, 10060, 10070, 10080, 10090 ]
   #spatial_model could be Gravity, Barabasi, or Wesolowski
   spatial_model: "Wesolowski"
 

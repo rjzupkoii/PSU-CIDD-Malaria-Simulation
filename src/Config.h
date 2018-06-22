@@ -8,18 +8,18 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "PropertyMacro.h"
 #include <string>
 #include <vector>
 #include <set>
 #include <yaml-cpp/yaml.h>
+#include <memory>
+#include "PropertyMacro.h"
 #include "TypeDef.h"
 #include "DrugDatabase.h"
 #include "IntGenotypeDatabase.h"
 #include <boost/math/constants/constants.hpp>
 #include "Spatial/Location.h"
 #include "Spatial/SpatialModel.h"
-#include <memory>
 
 class Model;
 

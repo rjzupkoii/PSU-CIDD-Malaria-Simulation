@@ -23,7 +23,7 @@ TherapyBuilder::~TherapyBuilder() {
 }
 
 Therapy* TherapyBuilder::build(const YAML::Node& ns, const int& t_id) {
-    Therapy* t = NULL;
+    Therapy* t = nullptr;
     if (ns["drug_id"]) {
         t = new SCTherapy();
         t->set_id(t_id);

@@ -10,15 +10,15 @@
 #include  "Dispatcher.h"
 #include <typeinfo>
 
-Event::Event() : dispatcher_(NULL), scheduler_(NULL), time_(-1), executable_(true), IndexHandler() {
+Event::Event() : dispatcher_(nullptr), scheduler_(nullptr), time_(-1), executable_(true), IndexHandler() {
 }
 
 Event::~Event() {
-    if (dispatcher_ != NULL) {      
+    if (dispatcher_ != nullptr) {
         dispatcher_->remove(this);
     }
-    dispatcher_ = NULL;
-    scheduler_ = NULL;
+    dispatcher_ = nullptr;
+    scheduler_ = nullptr;
 }
 
 void Event::perform_execute() {
@@ -26,7 +26,7 @@ void Event::perform_execute() {
         //        std::cout << "Before event"<< std::endl;     
 
         //update to current status of the dispatcher
-        if (dispatcher_ != NULL) {
+        if (dispatcher_ != nullptr) {
             //            std::cout << name() << std::endl;
             dispatcher_->update();
         }
@@ -34,9 +34,9 @@ void Event::perform_execute() {
         //std::cout << "1.run" << name()<< std::endl;
         execute();
         //std::cout << "2.e-run" << std::endl;
-        if (dispatcher_ != NULL) {
+        if (dispatcher_ != nullptr) {
             dispatcher_->remove(this);
-            set_dispatcher(NULL);
+            set_dispatcher(nullptr);
         }
 
         set_executable(false);

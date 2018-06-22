@@ -18,7 +18,7 @@ class Reporter {
     POINTER_PROPERTY(Model, model)
 
     enum ReportType {
-        CONSOLE = 0,
+        CONSOLE,
         GUI,
         AMU,
         FARM,

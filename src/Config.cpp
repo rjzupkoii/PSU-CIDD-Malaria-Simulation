@@ -21,6 +21,7 @@
 #include "Spatial/SpatialModelBuilder.h"
 #include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
 #include "Constants.h"
+#include "Helpers/NumberHelpers.h"
 #include <cmath>
 
 using namespace Spatial;
@@ -173,7 +174,7 @@ void Config::read_immune_system_information(const YAML::Node &config) {
   auto mean_initial_condition = config["mean_initial_condition"].as<double>();
   auto sd_initial_condition = config["sd_initial_condition"].as<double>();
 
-  if (sd_initial_condition == 0) {
+  if (NumberHelpers::is_equal(sd_initial_condition, 0.0)) {
     immune_system_information_.alpha_immune = mean_initial_condition;
     immune_system_information_.beta_immune = 0.0;
   } else {

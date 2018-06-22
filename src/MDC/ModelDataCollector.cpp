@@ -37,7 +37,7 @@ ModelDataCollector::~ModelDataCollector() {
 }
 
 void ModelDataCollector::initialize() {
-  if (model_ != NULL) {
+  if (model_ != nullptr) {
     popsize_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
     popsize_residence_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
 
@@ -716,7 +716,7 @@ void ModelDataCollector::record_1_RITF(const int &location) {
 void ModelDataCollector::record_AMU_AFU(Person *person, Therapy *therapy,
                                         ClonalParasitePopulation *clinical_caused_parasite) {
   SCTherapy *scTherapy = dynamic_cast<SCTherapy *> (therapy);
-  if (scTherapy != NULL) {
+  if (scTherapy != nullptr) {
     int artId = scTherapy->get_arteminsinin_id();
     if (artId != -1 && scTherapy->drug_ids().size() > 1) {
       int numberOfDrugsInTherapy = scTherapy->drug_ids().size();
@@ -805,7 +805,7 @@ double ModelDataCollector::get_blood_slide_prevalence(const int &location, const
 
 void ModelDataCollector::perform_monthly_update() {
   if ((Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) &&
-      (((Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) % 30) == 0)) {
+      Model::SCHEDULER->is_last_day_of_month()) {
     for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
       monthly_number_of_treatment_by_location_[loc] = 0;
       monthly_number_of_clinical_episode_by_location_[loc] = 0;

@@ -17,6 +17,8 @@ class Model;
 class Scheduler {
 DISALLOW_COPY_AND_ASSIGN_(Scheduler)
 
+  bool is_last_day_of_month();
+
   bool is_monthly_reporting_day();
 
   bool is_last_day_of_year();

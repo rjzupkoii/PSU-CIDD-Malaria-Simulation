@@ -24,7 +24,7 @@ EndClinicalDueToDrugResistanceEvent::~EndClinicalDueToDrugResistanceEvent() {
 }
 
 void EndClinicalDueToDrugResistanceEvent::schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time) {
-    if (scheduler != NULL) {
+    if (scheduler != nullptr) {
         EndClinicalDueToDrugResistanceEvent* e = new EndClinicalDueToDrugResistanceEvent();
         e->set_dispatcher(p);
         e->set_clinical_caused_parasite(clinical_caused_parasite);

@@ -21,7 +21,7 @@ class ExternalPopulation : public Population {
 
 
 public:
-    ExternalPopulation(Model* model = NULL);
+    ExternalPopulation(Model* model = nullptr);
     //    ExternalPopulation(const ExternalPopulation& orig);
     virtual ~ExternalPopulation();
 

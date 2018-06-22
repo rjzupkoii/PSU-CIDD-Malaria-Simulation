@@ -20,7 +20,7 @@ UpdateEveryKDaysEvent::~UpdateEveryKDaysEvent() {
 }
 
 void UpdateEveryKDaysEvent::schedule_event(Scheduler *scheduler, Person *p, const int &time) {
-    if (scheduler != NULL) {
+    if (scheduler != nullptr) {
         UpdateEveryKDaysEvent *e = new UpdateEveryKDaysEvent();
         e->set_dispatcher(p);
         e->set_executable(true);

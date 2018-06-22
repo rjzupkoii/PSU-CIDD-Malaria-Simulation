@@ -30,7 +30,7 @@ class SingleHostClonalParasitePopulations {
     PROPERTY_REF(double, log10_total_relative_density);
 
 public:
-    SingleHostClonalParasitePopulations(Person* person = NULL);
+    SingleHostClonalParasitePopulations(Person* person = nullptr);
     //    ParasitePopulation(const ParasitePopulation& orig);
     virtual ~SingleHostClonalParasitePopulations();
 

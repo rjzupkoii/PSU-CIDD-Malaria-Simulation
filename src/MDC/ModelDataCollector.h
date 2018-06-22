@@ -218,7 +218,7 @@ PROPERTY_REF(IntVector2, total_TF_60_by_therapy)
     mean_acc acc;
 
 public:
-    ModelDataCollector(Model *model = NULL);
+    ModelDataCollector(Model *model = nullptr);
 
     //    Statistic(const Statistic& orig);
     virtual ~ModelDataCollector();

@@ -6,7 +6,6 @@
  */
 
 #include <vector>
-#include <boost/foreach.hpp>
 #include "PersonIndexAll.h"
 
 PersonIndexAll::PersonIndexAll() {

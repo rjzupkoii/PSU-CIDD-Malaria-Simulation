@@ -5,8 +5,6 @@
  * Created on May 3, 2013, 3:46 PM
  */
 
-#include <boost/foreach.hpp>
-
 #include "Dispatcher.h"
 #include "IndexHandler.h"
 #include "Event.h"

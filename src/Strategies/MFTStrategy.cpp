@@ -14,8 +14,8 @@
 #include "../Therapy.h"
 
 MFTStrategy::MFTStrategy() : distribution_() {
-    //    if (config != NULL) {
-    //        if (config->model() != NULL) {
+    //    if (config != nullptr) {
+    //        if (config->model() != nullptr) {
     //            random_ = config->model()->random();
     //        }
     //    }

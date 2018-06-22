@@ -5,13 +5,12 @@
  * Created on September 24, 2013, 10:00 AM
  */
 
+#include <numeric>
 #include "ResistanceTracker.h"
 #include "../Model.h"
 #include "../Config.h"
 #include "../IntGenotype.h"
 #include "../IntGenotypeDatabase.h"
-#include <numeric>
-#include <boost/foreach.hpp>
 
 
 ResistanceTracker::ResistanceTracker() : total_{0} {

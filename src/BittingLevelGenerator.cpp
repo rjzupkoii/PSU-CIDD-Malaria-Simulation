@@ -10,7 +10,6 @@
 #include "Config.h"
 #include "Random.h"
 #include <assert.h>
-#include <boost/foreach.hpp>
 
 BittingLevelGenerator::BittingLevelGenerator():data_() {
 }
@@ -19,7 +18,7 @@ BittingLevelGenerator::~BittingLevelGenerator() {
 }
 
 int BittingLevelGenerator::draw_random_level(Model* model) {
-    if (data_.size() == 0) {
+    if (data_.empty()) {
         allocate(model);
     }
 
@@ -40,7 +39,7 @@ void BittingLevelGenerator::allocate(Model* model) {
 //    }
 //    std::cout<< std::endl;
     data_.clear();
-    for (int i = 0; i < size; i++) {
+    for (unsigned int &&i = 0; i < size; i++) {
         for (int j = 0; j < n[i]; j++) {
             data_.push_back(i);
         }

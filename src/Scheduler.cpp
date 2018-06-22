@@ -19,7 +19,8 @@
 #include "TMEScheduler.h"
 #include "ImportationPeriodicallyEvent.h"
 
-Scheduler::Scheduler(Model *model) : model_(model), total_time_(-1), current_time_(-1), is_force_stop_(false) {
+Scheduler::Scheduler(Model *model) : model_(model), total_time_(-1), current_time_(-1), is_force_stop_(false),
+                                     calendar_date{} {
 
 }
 
@@ -201,4 +202,9 @@ bool Scheduler::is_last_day_of_year() {
 
 bool Scheduler::is_monthly_reporting_day() {
   return TimeHelpers::get_ymd_from_time_point(Model::SCHEDULER->calendar_date).day == 1;
+}
+
+bool Scheduler::is_last_day_of_month() {
+  auto next_date = calendar_date + Constants::ONE_DAY();
+  return TimeHelpers::get_ymd_from_time_point(next_date).day == 1;;
 }
