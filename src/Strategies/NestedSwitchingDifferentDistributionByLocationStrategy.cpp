@@ -14,6 +14,7 @@
 #include "CyclingStrategy.h"
 #include "AdaptiveCyclingStrategy.h"
 #include "NestedSwitchingStrategy.h"
+#include "../Constants.h"
 
 NestedSwitchingDifferentDistributionByLocationStrategy::NestedSwitchingDifferentDistributionByLocationStrategy()
         : strategy_switching_day_{-1}, switch_to_strategy_id_{-1}, peak_at_{-1} {
@@ -90,7 +91,7 @@ void NestedSwitchingDifferentDistributionByLocationStrategy::update_end_of_time_
 void NestedSwitchingDifferentDistributionByLocationStrategy::adjustDistribution(int time, int peak_at) {
 
     if (time > Model::CONFIG->start_intervention_day() &&
-        (time - Model::CONFIG->start_intervention_day()) % 360 == 0) {
+        (time - Model::CONFIG->start_intervention_day()) % Constants::DAYS_IN_YEAR() == 0) {
         if (peak_at == -1) {
             // inflation every year
             for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {

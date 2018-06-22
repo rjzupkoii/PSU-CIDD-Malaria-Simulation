@@ -10,6 +10,7 @@
 #include "../Random.h"
 #include "../Strategies/IStrategy.h"
 #include "../Helpers/TimeHelpers.h"
+#include "../Constants.h"
 
 BFMonthlyReporter::BFMonthlyReporter() {
 
@@ -78,7 +79,8 @@ void BFMonthlyReporter::after_run() {
   std::cout << Model::CONFIG->strategy()->id << "\t";
 
   //output NTF
-  double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) / 360.0;
+  double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
+          (double) Constants::DAYS_IN_YEAR();
 
   double sumNTF = 0.0;
   ul popSize = 0;

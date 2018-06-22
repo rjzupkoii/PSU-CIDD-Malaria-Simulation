@@ -32,7 +32,7 @@ void Scheduler::initialize(const int &start_year, const int &start_month, const 
   set_current_time(0);
 
   // because day 0 is the previous day of start_day, we have to subtract 1 day from the starting day
-  calendar_date = TimeHelpers::create_time_point(start_year, start_month, start_day) - Constants::aDay();
+  calendar_date = TimeHelpers::create_time_point(start_year, start_month, start_day) - Constants::ONE_DAY();
 
 }
 
@@ -101,7 +101,7 @@ void Scheduler::run() {
 
     end_time_step();
 
-    calendar_date += Constants::aDay();
+    calendar_date += Constants::ONE_DAY();
   }
 }
 
@@ -170,20 +170,19 @@ void Scheduler::report_end_of_time_step() {
 }
 
 bool Scheduler::can_stop() {
-  //    std::cout << current_time_ << "\t" << Model::CONFIG->total_time() << std::endl;
   return current_time_ > Model::CONFIG->total_time() || is_force_stop_;
-  //        return (current_time_ > Model::CONFIG->total_time()) ||  is_force_stop_;
 }
 
 int Scheduler::current_day_in_year() {
-  return (current_time_ - Model::CONFIG->start_collect_data_day()) % 360;
+  //TODO: implement using calendar day
+  return (current_time_ - Model::CONFIG->start_collect_data_day()) % Constants::DAYS_IN_YEAR();
 }
 
 
 void Scheduler::update_treatment_coverage() {
-
-  if (current_time_ > Model::CONFIG->start_intervention_day() &&
-      (current_time_ - Model::CONFIG->start_intervention_day()) % 360 == 0) {
+  // TODO: consider doing this the same day as start intervention day every year
+  if (current_time_ > Model::CONFIG->start_intervention_day() && is_last_day_of_year()) {
+    // TODO: turn on or off this feature in input file
     for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
       Model::CONFIG->location_db()[loc].p_treatment_less_than_5 *= Model::CONFIG->inflation_factor();
       Model::CONFIG->location_db()[loc].p_treatment_more_than_5 *= Model::CONFIG->inflation_factor();

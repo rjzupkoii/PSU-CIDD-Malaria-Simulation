@@ -16,6 +16,7 @@
 #include "../SingleHostClonalParasitePopulations.h"
 #include "../SCTherapy.h"
 #include "../ClonalParasitePopulation.h"
+#include "../Constants.h"
 #include <numeric>
 
 ModelDataCollector::ModelDataCollector(Model *model) : model_(model), current_utl_duration_(),
@@ -382,14 +383,14 @@ void ModelDataCollector::perform_yearly_update() {
   if (Model::SCHEDULER->current_time() == Model::CONFIG->start_collect_data_day()) {
 
     for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      person_days_by_location_year_[loc] = Model::POPULATION->size(loc) * 360;
+      person_days_by_location_year_[loc] = Model::POPULATION->size(loc) * Constants::DAYS_IN_YEAR();
     }
   } else if ((Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) &&
              (Model::SCHEDULER->is_last_day_of_year())) {
     for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
 
       double EIR = (total_number_of_bites_by_location_year_[loc] / (double) person_days_by_location_year_[loc]) *
-                   360.0;
+                   Constants::DAYS_IN_YEAR();
       //only record year have positive EIR
       //            if (EIR > 0) {
       EIR_by_location_year_[loc].push_back(EIR);
@@ -397,7 +398,8 @@ void ModelDataCollector::perform_yearly_update() {
 
       //this number will be changed whenever a birth or a death occurs
       // and also when the individual change location
-      person_days_by_location_year_[loc] = Model::POPULATION->size(loc) * 360;
+      person_days_by_location_year_[loc] = static_cast<unsigned long>(Model::POPULATION->size(loc) *
+                                                                      Constants::DAYS_IN_YEAR());
       total_number_of_bites_by_location_year_[loc] = 0;
       for (int age = 0; age < 80; age++) {
         number_of_untreated_cases_by_location_age_year_[loc][age] = 0;
@@ -425,9 +427,9 @@ void ModelDataCollector::calculate_EIR() {
     if (EIR_by_location_year_[loc].size() == 0) {
       //collect data for less than 1 year
       double total_time_in_years =
-              (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / 360.0;
+              (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / Constants::DAYS_IN_YEAR();
       double EIR = (total_number_of_bites_by_location_year_[loc] / (double) person_days_by_location_year_[loc]) *
-                   360.0;
+                   Constants::DAYS_IN_YEAR();
       EIR = EIR / total_time_in_years;
       EIR_by_location_[loc] = EIR;
     } else {
@@ -461,7 +463,7 @@ void ModelDataCollector::collect_1_clinical_episode(const int &location, const i
 void ModelDataCollector::record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten,
                                         const int &age_group, const int &age) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
-    update_person_days_by_years(location, -(360 - Model::SCHEDULER->current_day_in_year()));
+    update_person_days_by_years(location, -(Constants::DAYS_IN_YEAR() - Model::SCHEDULER->current_day_in_year()));
     update_average_number_bitten(location, birthday, number_of_times_bitten);
     number_of_death_by_location_age_group_[location][age_group] += 1;
     if (age < 79) {
@@ -662,7 +664,8 @@ void ModelDataCollector::record_1_TF(const int &location, const bool &by_drug) {
 
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_intervention_day()) {
     double current_discounted_tf = exp(
-            log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / 360));
+            log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) /
+                              Constants::DAYS_IN_YEAR()));
 
     cumulative_discounted_NTF_by_location_[location] += current_discounted_tf;
     cumulative_NTF_by_location_[location] += 1;
@@ -718,7 +721,8 @@ void ModelDataCollector::record_AMU_AFU(Person *person, Therapy *therapy,
     if (artId != -1 && scTherapy->drug_ids().size() > 1) {
       int numberOfDrugsInTherapy = scTherapy->drug_ids().size();
       double discouted_fraction = exp(
-              log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_treatment_day()) / 360));
+              log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_treatment_day()) /
+                                Constants::DAYS_IN_YEAR()));
       //            assert(false);
       //combine therapy
       for (int i = 0; i < numberOfDrugsInTherapy; i++) {

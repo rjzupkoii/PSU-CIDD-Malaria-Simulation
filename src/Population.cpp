@@ -5,6 +5,7 @@
  * Created on April 15, 2013, 10:49 AM
  */
 
+#include "Constants.h"
 #include "Population.h"
 #include "Model.h"
 #include "PersonIndexAll.h"
@@ -283,7 +284,7 @@ void Population::initialize() {
           number_of_individual_by_loc_ageclass = popsize_by_location - temp_sum;
         } else {
           number_of_individual_by_loc_ageclass =
-                  popsize_by_location * Model::CONFIG->location_db()[loc].age_distribution[age_class];
+                  static_cast<int>(popsize_by_location * Model::CONFIG->location_db()[loc].age_distribution[age_class]);
           temp_sum += number_of_individual_by_loc_ageclass;
         }
 
@@ -302,16 +303,19 @@ void Population::initialize() {
           //                    std::cout << i << "\t" << age_class << "\t" << age_from << "\t" << age_to << std::endl;
 
           //set age will also set ageclass
-          p->set_age(Model::RANDOM->random_uniform_int(age_from, age_to + 1));
+          p->set_age(static_cast<const int &>(Model::RANDOM->random_uniform_int(age_from, age_to + 1)));
           //                    std::cout << p->age() << " \t" << p->age_class() << std::endl;
           //                    p->set_age_class(age_class);
-          p->set_birthday(-Model::RANDOM->random_uniform(360));
+
+          // TODO: implement this using actual calendar day
+          p->set_birthday(static_cast<const int &>(-Model::RANDOM->random_uniform(360)));
 
           BirthdayEvent::schedule_event(Model::SCHEDULER, p, p->birthday() + 360);
 
           //set immune component
           if (p->is_infant(0)) {
             p->immune_system()->set_immune_component(new InfantImmuneComponent());
+            // TODO: implement this using actual calendar day
             //schedule for switch
             SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,
                                                                                    p->birthday() + 360 / 2);
@@ -453,12 +457,13 @@ void Population::perform_birth_event() {
   //    std::cout << "Birth Event" << std::endl;
 
   for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    double poisson_means = size(loc) * Model::CONFIG->birth_rate() / 360.0;
+    double poisson_means = size(loc) * Model::CONFIG->birth_rate() / Constants::DAYS_IN_YEAR();
     int numberOfBirths = Model::RANDOM->random_poisson(poisson_means);
 
     for (int i = 0; i < numberOfBirths; i++) {
       give_1_birth(loc);
-      Model::DATA_COLLECTOR->update_person_days_by_years(loc, (360 - Model::SCHEDULER->current_day_in_year()));
+      Model::DATA_COLLECTOR->update_person_days_by_years(loc, Constants::DAYS_IN_YEAR() -
+                                                              Model::SCHEDULER->current_day_in_year());
     }
   }
 
@@ -493,9 +498,11 @@ void Population::give_1_birth(const int &location) {
   p->set_moving_level(Model::RANDOM->random_moving_level());
   p->set_external_population_moving_level(Model::RANDOM->random_external_population_moving_level());
 
+  // TODO: implement this using actual calendar day
   p->set_birthday(Model::SCHEDULER->current_time());
   BirthdayEvent::schedule_event(Model::SCHEDULER, p, p->birthday() + 360);
 
+  // TODO: implement this using actual calendar day
   //schedule for switch
   SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,
                                                                          p->birthday() + 360 / 2);
@@ -518,7 +525,7 @@ void Population::perform_death_event() {
       for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         int size = pi->vPerson()[loc][hs][ac].size();
         if (size == 0) continue;
-        double poisson_means = size * Model::CONFIG->death_rate_by_age()[ac] / 360;
+        double poisson_means = size * Model::CONFIG->death_rate_by_age()[ac] / Constants::DAYS_IN_YEAR();
 
         assert(Model::CONFIG->death_rate_by_age().size() == Model::CONFIG->number_of_age_classes());
         int numberOfDeaths = Model::RANDOM->random_poisson(poisson_means);

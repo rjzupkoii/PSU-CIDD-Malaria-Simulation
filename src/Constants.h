@@ -7,12 +7,21 @@
 
 #include <chrono>
 
-class Constants {
-public:
-  static std::chrono::hours const &aDay() {
-    static std::chrono::hours aDay_{24};
-    return aDay_;
+#define CONST(constant_type, constant_name, constant_value)\
+public:\
+  static constant_type const &constant_name(){\
+    static constant_type constant_name##_{constant_value};\
+    return constant_name##_;\
   }
+
+class Constants {
+CONST(std::chrono::hours, ONE_DAY, 24)
+CONST(int, DAYS_IN_YEAR, 365)
+
+//  static std::chrono::hours const &ONE_DAY() {
+//    static std::chrono::hours one_day_{24};
+//    return one_day_;
+//  }
 };
 
 #endif //PCMS_CONSTANTS_H

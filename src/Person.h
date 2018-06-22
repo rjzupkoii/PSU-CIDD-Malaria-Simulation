@@ -183,7 +183,7 @@ public:
     bool has_birthday_event();
     bool has_update_by_having_drug_event();
     
-    double get_age_dependent_bitting_factor();
+    double get_age_dependent_biting_factor();
     
     void update_bitting_level();
     
