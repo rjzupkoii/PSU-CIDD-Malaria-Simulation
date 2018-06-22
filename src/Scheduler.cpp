@@ -18,6 +18,11 @@
 #include "Strategies/IStrategy.h"
 #include "TMEScheduler.h"
 #include "ImportationPeriodicallyEvent.h"
+#include "date/date.h"
+
+using namespace date;
+using namespace std::chrono;
+
 
 Scheduler::Scheduler(Model *model) : model_(model), total_time_(-1), current_time_(-1), is_force_stop_(false),
                                      calendar_date{} {
@@ -34,6 +39,9 @@ void Scheduler::initialize(const int &start_year, const int &start_month, const 
 
   // because day 0 is the previous day of start_day, we have to subtract 1 day from the starting day
   calendar_date = TimeHelpers::create_time_point(start_year, start_month, start_day) - Constants::ONE_DAY();
+  date::year_month_day dd = date::sys_days(month{3} / 31 / 2015);
+
+  std::cout << dd << std::endl;
 
 }
 
@@ -176,6 +184,8 @@ bool Scheduler::can_stop() {
 
 int Scheduler::current_day_in_year() {
   //TODO: implement using calendar day
+
+
   return (current_time_ - Model::CONFIG->start_collect_data_day()) % Constants::DAYS_IN_YEAR();
 }
 
@@ -196,7 +206,6 @@ bool Scheduler::is_last_day_of_year() {
   unsigned month;
   unsigned day;
   auto ymd = TimeHelpers::get_ymd_from_time_point(calendar_date);
-
   return ymd.month == 12 && ymd.day == 31;
 }
 

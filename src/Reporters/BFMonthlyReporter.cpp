@@ -39,7 +39,9 @@ void BFMonthlyReporter::after_time_step() {
   if (Model::SCHEDULER->is_monthly_reporting_day()) {
 //    std::cout << Model::SCHEDULER->calendar_date << std::endl;
 //    if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
-    std::cout << Model::SCHEDULER->current_time() << "\t" << Model::SCHEDULER->calendar_date << "\t";
+    auto ymd = TimeHelpers::get_ymd_from_time_point(Model::SCHEDULER->calendar_date);
+
+    std::cout << Model::SCHEDULER->current_time() << "\t" << ymd.day << "\t" << ymd.month << "\t" << ymd.year << "\t";
     std::cout << Model::CONFIG->seasonal_factor_for_beta(Model::SCHEDULER->current_time()) << "\t";
     print_PfPR_0_5_by_location();
 
@@ -80,7 +82,7 @@ void BFMonthlyReporter::after_run() {
 
   //output NTF
   double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
-          (double) Constants::DAYS_IN_YEAR();
+                               (double) Constants::DAYS_IN_YEAR();
 
   double sumNTF = 0.0;
   ul popSize = 0;

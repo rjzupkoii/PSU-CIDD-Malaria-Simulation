@@ -9,21 +9,30 @@
 #include <ostream>
 #include <iomanip>
 
-/// Output timepoint to stream
-/// \tparam Clock
-/// \tparam Duration
-/// \param os
-/// \param time_point
-/// \return
-template<typename Clock, typename Duration>
-std::ostream &operator<<(std::ostream &os, const std::chrono::time_point<Clock, Duration> &time_point) {
-  auto converted_timepoint = Clock::to_time_t(time_point);
-  os << std::put_time(std::localtime(&converted_timepoint), "%d\t%m\t%Y");
-  return os;
-}
+//
+///// Output timepoint to stream
+///// \tparam Clock
+///// \tparam Duration
+///// \param os
+///// \param time_point
+///// \return
+//template<typename Clock, typename Duration>
+//std::ostream &operator<<(std::ostream &os, const std::chrono::time_point<Clock, Duration> &time_point) {
+//  auto converted_timepoint = Clock::to_time_t(time_point);
+//  os << std::put_time(std::localtime(&converted_timepoint), "%d\t%m\t%Y");
+//  return os;
+//}
 
 class TimeHelpers {
 public:
+
+  struct ymd {
+    int year;
+    unsigned month;
+    unsigned day;
+  };
+
+
   /// Create a chrono time point from year, month, day <br>
   /// ex: create_timepoint(2000, 1, 10) create a time point for Jan 10th 2000
   /// \@param year the input year, ex: 1998
@@ -81,11 +90,7 @@ public:
 //    return era * 146097 + static_cast<Int>(doe) - 719468;
 //  }
 
-  struct ymd {
-    int year;
-    unsigned month;
-    unsigned day;
-  };
+
 
   /// Returns year/month/day triple in civil calendar <br>
   /// \tparam Int
@@ -130,5 +135,6 @@ public:
     return ymd;
   }
 };
+
 
 #endif //PCMS_TIMEHELPERS_H
