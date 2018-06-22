@@ -308,9 +308,9 @@ void Population::initialize() {
           //                    p->set_age_class(age_class);
 
           // TODO: implement this using actual calendar day
-          p->set_birthday(static_cast<const int &>(-Model::RANDOM->random_uniform(360)));
+          p->set_birthday(static_cast<const int &>(-Model::RANDOM->random_uniform(Constants::DAYS_IN_YEAR())));
 
-          BirthdayEvent::schedule_event(Model::SCHEDULER, p, p->birthday() + 360);
+          BirthdayEvent::schedule_event(Model::SCHEDULER, p, p->birthday() + Constants::DAYS_IN_YEAR());
 
           //set immune component
           if (p->is_infant(0)) {
@@ -318,7 +318,8 @@ void Population::initialize() {
             // TODO: implement this using actual calendar day
             //schedule for switch
             SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,
-                                                                                   p->birthday() + 360 / 2);
+                                                                                   p->birthday() +
+                                                                                   Constants::DAYS_IN_YEAR() / 2);
           } else {
             p->immune_system()->set_immune_component(new NonInfantImmuneComponent());
           }
@@ -500,12 +501,12 @@ void Population::give_1_birth(const int &location) {
 
   // TODO: implement this using actual calendar day
   p->set_birthday(Model::SCHEDULER->current_time());
-  BirthdayEvent::schedule_event(Model::SCHEDULER, p, p->birthday() + 360);
+  BirthdayEvent::schedule_event(Model::SCHEDULER, p, p->birthday() + Constants::DAYS_IN_YEAR());
 
   // TODO: implement this using actual calendar day
   //schedule for switch
   SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,
-                                                                         p->birthday() + 360 / 2);
+                                                                         p->birthday() + Constants::DAYS_IN_YEAR() / 2);
 
   //    p->startLivingTime = (Global::startTreatmentDay > Global::scheduler->currentTime) ? Global::startTreatmentDay : Global::scheduler->currentTime;
   p->schedule_update_every_K_days_event(Model::CONFIG->update_frequency());
