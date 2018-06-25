@@ -18,11 +18,8 @@
 #include "Strategies/IStrategy.h"
 #include "TMEScheduler.h"
 #include "ImportationPeriodicallyEvent.h"
-#include "date/date.h"
 
 using namespace date;
-using namespace std::chrono;
-
 
 Scheduler::Scheduler(Model *model) : model_(model), total_time_(-1), current_time_(-1), is_force_stop_(false),
                                      calendar_date{} {
@@ -33,15 +30,14 @@ Scheduler::~Scheduler() {
   clear_all_events();
 }
 
-void Scheduler::initialize(const int &start_year, const int &start_month, const int &start_day, const int &total_time) {
+void Scheduler::initialize(const int &start_year, const unsigned int &start_month, const unsigned int &start_day,
+                           const int &total_time) {
   set_total_time(total_time);
   set_current_time(0);
 
+  year_month_day ymd{year{start_year}, month{start_month}, day{start_day}};
   // because day 0 is the previous day of start_day, we have to subtract 1 day from the starting day
-  calendar_date = TimeHelpers::create_time_point(start_year, start_month, start_day) - Constants::ONE_DAY();
-  date::year_month_day dd = date::sys_days(month{3} / 31 / 2015);
-
-  std::cout << dd << std::endl;
+  calendar_date = sys_days(ymd) - days{1};
 
 }
 
@@ -95,7 +91,7 @@ void Scheduler::run() {
 
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
-//    std::cout << "Day: " << calendar_date << std::endl;
+    std::cout << calendar_date << std::endl;
     begin_time_step();
 
     auto size = timed_events_list_[current_time_].size();
@@ -110,7 +106,7 @@ void Scheduler::run() {
 
     end_time_step();
 
-    calendar_date += Constants::ONE_DAY();
+    calendar_date += days{1};
   }
 }
 
@@ -203,17 +199,17 @@ void Scheduler::update_treatment_coverage() {
 }
 
 bool Scheduler::is_last_day_of_year() {
-  unsigned month;
-  unsigned day;
-  auto ymd = TimeHelpers::get_ymd_from_time_point(calendar_date);
-  return ymd.month == 12 && ymd.day == 31;
+  year_month_day ymd{calendar_date};
+  return (ymd.month() - January).count() == 12 && (ymd.day() - 0_d).count() == 31;
 }
 
 bool Scheduler::is_monthly_reporting_day() {
-  return TimeHelpers::get_ymd_from_time_point(Model::SCHEDULER->calendar_date).day == 1;
+  year_month_day ymd{calendar_date};
+  return (ymd.day() - 0_d).count() == 1;
 }
 
 bool Scheduler::is_last_day_of_month() {
-  auto next_date = calendar_date + Constants::ONE_DAY();
-  return TimeHelpers::get_ymd_from_time_point(next_date).day == 1;;
+  auto next_date = calendar_date + days{1};
+  year_month_day ymd{next_date};
+  return (ymd.day() - 0_d).count() == 1;
 }

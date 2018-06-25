@@ -39,9 +39,10 @@ void BFMonthlyReporter::after_time_step() {
   if (Model::SCHEDULER->is_monthly_reporting_day()) {
 //    std::cout << Model::SCHEDULER->calendar_date << std::endl;
 //    if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
-    auto ymd = TimeHelpers::get_ymd_from_time_point(Model::SCHEDULER->calendar_date);
 
-    std::cout << Model::SCHEDULER->current_time() << "\t" << ymd.day << "\t" << ymd.month << "\t" << ymd.year << "\t";
+    std::cout << Model::SCHEDULER->current_time() << "\t";
+    std::cout << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << "\t";
+    std::cout << date::format("%Y\t%m\t%d", Model::SCHEDULER->calendar_date) << "\t";
     std::cout << Model::CONFIG->seasonal_factor_for_beta(Model::SCHEDULER->current_time()) << "\t";
     print_PfPR_0_5_by_location();
 

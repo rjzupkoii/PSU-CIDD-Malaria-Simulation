@@ -9,6 +9,7 @@
 #define  SCHEDULER_H
 
 #include <chrono>
+#include "date/date.h"
 #include "PropertyMacro.h"
 #include "TypeDef.h"
 
@@ -33,7 +34,8 @@ PROPERTY_REF(EventPtrVector2, timed_events_list);
 PROPERTY_REF(bool, is_force_stop);
 
 public:
-  std::chrono::system_clock::time_point calendar_date;
+  date::sys_days calendar_date;
+
 public:
   Scheduler(Model *model = nullptr);
 
@@ -45,7 +47,8 @@ public:
 
   virtual void cancel(Event *event);
 
-  void initialize(const int &start_year, const int &start_month, const int &start_day, const int &total_time);
+  void initialize(const int &start_year, const unsigned int &start_month, const unsigned int &start_day,
+                  const int &total_time);
 
   void run();
 
