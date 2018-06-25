@@ -8,11 +8,11 @@ using namespace Spatial;
 
 class LocationTest : public ::testing::Test {
 protected:
-    virtual void SetUp() {
+  void SetUp() override {
 
     }
 
-    virtual void TearDown() {}
+  void TearDown() override {}
 
 };
 
@@ -21,7 +21,6 @@ TEST_F(LocationTest, Constructor) {
     Location loc(1, 0.123, 3.456, 10000);
     EXPECT_EQ(1, loc.id);
     EXPECT_FLOAT_EQ(0, loc.beta);
-    EXPECT_FLOAT_EQ(0, loc.p_treatment);
     EXPECT_EQ(10000, loc.populationSize);
     EXPECT_FLOAT_EQ(0.123, loc.coordinate->latitude);
     EXPECT_FLOAT_EQ(3.456, loc.coordinate->longitude);

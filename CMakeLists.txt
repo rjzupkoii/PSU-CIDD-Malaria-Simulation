@@ -39,11 +39,13 @@ if (Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif ()
 
+add_subdirectory(${EXT_PROJECTS_DIR}/date)
+
 add_subdirectory(${EXT_PROJECTS_DIR}/yaml-cpp)
-set(YAML_CPP_INCLUDE_DIRS ${EXT_PROJECTS_DIR}/yaml-cpp/include)
+set(YAML_CPP_INCLUDE_DIR ${EXT_PROJECTS_DIR}/yaml-cpp/include)
 set(YAML_CPP_LIBS_DIR ${CMAKE_BINARY_DIR}/ext/yaml-cpp)
 
-include_directories(${YAML_CPP_INCLUDE_DIRS} ext/date/include)
+include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -57,6 +59,7 @@ add_subdirectory(src)
 
 option(BUILD_TESTS "Build all tests." OFF) # Makes boolean 'test' available.
 if (BUILD_TESTS)
+  add_subdirectory(${EXT_PROJECTS_DIR}/catch)
   add_subdirectory(${EXT_PROJECTS_DIR}/googletest)
   set(PROJECT_TEST_NAME masim_test)
   add_subdirectory(test)
