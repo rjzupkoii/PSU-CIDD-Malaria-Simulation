@@ -1,27 +1,18 @@
 //
 // Created by Nguyen Tran on 1/25/2018.
 //
-#include "gtest/gtest.h"
+#include "catch2/catch.hpp"
 #include "Spatial/Location.h"
 
 using namespace Spatial;
 
-class LocationTest : public ::testing::Test {
-protected:
-  void SetUp() override {
 
-    }
+TEST_CASE("location test", "[spatial]") {
+  Location loc(1, 0.123, 3.456, 10000);
 
-  void TearDown() override {}
-
-};
-
-
-TEST_F(LocationTest, Constructor) {
-    Location loc(1, 0.123, 3.456, 10000);
-    EXPECT_EQ(1, loc.id);
-    EXPECT_FLOAT_EQ(0, loc.beta);
-    EXPECT_EQ(10000, loc.populationSize);
-    EXPECT_FLOAT_EQ(0.123, loc.coordinate->latitude);
-    EXPECT_FLOAT_EQ(3.456, loc.coordinate->longitude);
+  REQUIRE(1 == loc.id);
+  REQUIRE(0 == loc.beta);
+  REQUIRE(10000 == loc.populationSize);
+  REQUIRE(Approx(0.123) == loc.coordinate->latitude);
+  REQUIRE(Approx(3.456) == loc.coordinate->longitude);
 }

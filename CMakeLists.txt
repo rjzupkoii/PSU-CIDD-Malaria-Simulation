@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.1)
+project(PCMS)
 
-option(USING_ZAPCC "Use ZAPCC compiler." OFF) # Makes boolean 'test' available.
+option(USING_ZAPCC "Use ZAPCC compiler." OFF)
 if (USING_ZAPCC)
   SET(CMAKE_C_COMPILER /home/ubuntu/zapcc-20170802-175507/bin/zapcc)
   SET(CMAKE_CXX_COMPILER /home/ubuntu/zapcc-20170802-175507/bin/zapcc++)
 endif ()
 
-project(PCMS)
 
 set(EXT_PROJECTS_DIR ${PROJECT_SOURCE_DIR}/ext)
 
@@ -40,7 +40,6 @@ add_subdirectory(src)
 option(BUILD_TESTS "Build all tests." OFF) # Makes boolean 'test' available.
 if (BUILD_TESTS)
   add_subdirectory(${EXT_PROJECTS_DIR}/catch)
-  add_subdirectory(${EXT_PROJECTS_DIR}/googletest)
   set(PROJECT_TEST_NAME masim_test)
   add_subdirectory(test)
 endif ()

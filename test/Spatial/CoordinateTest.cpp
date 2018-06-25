@@ -1,36 +1,30 @@
 //
 // Created by Nguyen Tran on 1/25/2018.
 //
-#include "gtest/gtest.h"
+#include "catch2/catch.hpp"
 #include "Spatial/Coordinate.h"
 #include <math.h>
+
 using namespace Spatial;
 
-class CoordinateTest : public ::testing::Test {
-protected:
-    virtual void SetUp() {
+TEST_CASE("CoordinateTest", "[Spatial]") {
 
-    }
-
-    virtual void TearDown() {}
-
-};
-
-TEST_F(CoordinateTest, InitializeWithLatAndLong) {
+  SECTION("InitializeWithLatAndLong") {
     Coordinate c(10, 100);
 
-    EXPECT_EQ(10, c.latitude);
-    EXPECT_EQ(100, c.longitude);
+    REQUIRE(10 == c.latitude);
+    REQUIRE(100 == c.longitude);
 
     Coordinate c1;
 
-    EXPECT_EQ(0, c1.latitude);
-    EXPECT_EQ(0, c1.longitude);
-}
+    REQUIRE(0 == c1.latitude);
+    REQUIRE(0 == c1.longitude);
 
-TEST_F(CoordinateTest, CalculateDistanceInKm) {
+  }
+  SECTION("CalculateDistanceInKm") {
     Coordinate c1;
     Coordinate c2(80, 70);
 
-    EXPECT_EQ(9629, round(Coordinate::calculate_distance_in_km(c1, c2)));
+    REQUIRE(9629 == round(Coordinate::calculate_distance_in_km(c1, c2)));
+  }
 }
