@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 2.8.8)
 project(catch_builder CXX)
 include(ExternalProject)
 find_package(Git REQUIRED)
+
 ExternalProject_Add(
     date
+    CMAKE_ARGS -DENABLE_DATE_TESTING=OFF
     PREFIX ${CMAKE_BINARY_DIR}/date
     GIT_REPOSITORY https://github.com/HowardHinnant/date
     TIMEOUT 10

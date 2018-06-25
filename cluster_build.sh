@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 git pull
 mkdir build
 cd build
