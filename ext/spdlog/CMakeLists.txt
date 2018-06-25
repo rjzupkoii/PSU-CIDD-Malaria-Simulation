@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 2.8.8)
-project(catch_builder CXX)
+project(spdlog_builder CXX)
 include(ExternalProject)
 find_package(Git REQUIRED)
+
 ExternalProject_Add(
-    catch
+    spdlog
     PREFIX ${CMAKE_BINARY_DIR}/ext
-    GIT_REPOSITORY https://github.com/catchorg/Catch2
+    GIT_REPOSITORY https://github.com/gabime/spdlog
     TIMEOUT 10
     UPDATE_COMMAND ${GIT_EXECUTABLE} pull
     CONFIGURE_COMMAND ""
@@ -15,7 +16,6 @@ ExternalProject_Add(
 )
 
 # Expose required variable (CATCH_INCLUDE_DIR) to parent scope
-ExternalProject_Get_Property(catch source_dir)
-MESSAGE(${source_dir})
-set(CATCH_INCLUDE_DIR ${source_dir}/single_include CACHE INTERNAL "Path to include folder for Catch")
+ExternalProject_Get_Property(spdlog source_dir)
+set(SPDLOG_INCLUDE_DIR ${source_dir}/include CACHE INTERNAL "Path to include folder for spdlog")
 

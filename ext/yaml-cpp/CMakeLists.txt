@@ -3,11 +3,13 @@ project(yaml_cpp_builder C CXX)
 include(ExternalProject)
 
 ExternalProject_Add(yaml_cpp
+
     GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
     CMAKE_ARGS -DYAML_CPP_BUILD_TESTS=OFF
     -DCMAKE_CXX_FLAGS=${MSVC_COMPILER_DEFS}
     UPDATE_DISCONNECTED 1
-    PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
+    PREFIX ${CMAKE_BINARY_DIR}/ext
+#    PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
     # Disable install step
     INSTALL_COMMAND ""
     )
