@@ -3,7 +3,7 @@ file(GLOB SRC_FILES *.cpp *.h Spatial/*.cpp Spatial/*.h Reporters/*.cpp Reporter
 
 add_executable(MaSim ${SRC_FILES} ObjectPool.h)
 
-add_dependencies(MaSim yaml-cpp)
+add_dependencies(MaSim yaml-cpp date)
 
 target_link_libraries(MaSim ${Boost_LIBRARIES}
     ${YAML_CPP_LIBS_DIR}/libyaml-cpp.a

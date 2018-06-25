@@ -24,4 +24,12 @@ target_link_libraries(${PROJECT_TEST_NAME}
         ${YAML_CPP_LIBS_DIR}/libyaml-cpp.a
 )
 
+
+
+include_directories(${CATCH_INCLUDE_DIR})
+add_executable(catch_test main.cpp sample_catch_test.cpp)
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_range_for)
+
+
+add_dependencies(catch_test catch)
+
