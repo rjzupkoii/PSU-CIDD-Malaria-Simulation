@@ -1,3 +1,4 @@
+git pull
 mkdir build
 cd build
 module load gcc/5.3.1

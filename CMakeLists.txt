@@ -40,10 +40,7 @@ if (Boost_FOUND)
 endif ()
 
 add_subdirectory(${EXT_PROJECTS_DIR}/date)
-
 add_subdirectory(${EXT_PROJECTS_DIR}/yaml-cpp)
-set(YAML_CPP_INCLUDE_DIR ${EXT_PROJECTS_DIR}/yaml-cpp/include)
-set(YAML_CPP_LIBS_DIR ${CMAKE_BINARY_DIR}/ext/yaml-cpp)
 
 include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} )
 
