@@ -12,7 +12,13 @@ file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/Spatial/*.cpp)
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} ${SRC_FILES})
 
-add_dependencies(${PROJECT_TEST_NAME} catch yaml_cpp FakeIt spdlog)
+if (YAMLCPP_FOUND)
+  add_dependencies(${PROJECT_TEST_NAME}  yaml-cpp)
+else ()
+  add_dependencies(${PROJECT_TEST_NAME}  yaml-cpp-ext)
+endif ()
+
+add_dependencies(${PROJECT_TEST_NAME} catch FakeIt spdlog)
 
 target_link_libraries(${PROJECT_TEST_NAME}
     ${Boost_LIBRARIES}

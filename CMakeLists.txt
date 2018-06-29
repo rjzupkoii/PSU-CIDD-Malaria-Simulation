@@ -22,12 +22,22 @@ if (GSL_FOUND)
   include_directories(${GSL_INCLUDE_DIRS})
 endif ()
 
+set(YAMLCPP_STATIC_LIBRARY TRUE)
+find_package(yaml-cpp CONFIG)
+if (YAMLCPP_FOUND)
+  MESSAGE("Found local yaml-cpp")
+  MESSAGE(${YAMLCPP_LIBRARY})
+else ()
+  MESSAGE(STATUS "Yaml-cpp not found, use github repository instead")
+  add_subdirectory(${EXT_PROJECTS_DIR}/yaml-cpp)
+#  MESSAGE(${YAMLCPP_STATIC})
+endif ()
+
 add_subdirectory(${EXT_PROJECTS_DIR}/date)
-add_subdirectory(${EXT_PROJECTS_DIR}/yaml-cpp)
 add_subdirectory(${EXT_PROJECTS_DIR}/spdlog)
 add_subdirectory(${EXT_PROJECTS_DIR}/fmt)
 
-include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${FMT_INCLUDE_DIR})
+include_directories(${YAMLCPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${FMT_INCLUDE_DIR})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
