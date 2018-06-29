@@ -2,11 +2,11 @@ file(GLOB SRC_FILES *.cpp *.h Spatial/*.cpp Spatial/*.h Reporters/*.cpp Reporter
     MDC/*.cpp MDC/*.h Helpers/*.cpp Helpers/*.h)
 
 add_executable(MaSim ${SRC_FILES} ObjectPool.h)
-if (YAMLCPP_FOUND)
-  add_dependencies(MaSim yaml-cpp)
-else ()
-  add_dependencies(MaSim yaml-cpp-ext)
-endif ()
+#if (YAMLCPP_FOUND)
+#  add_dependencies(MaSim yaml-cpp)
+#else ()
+#  add_dependencies(MaSim yaml-cpp-ext)
+#endif ()
 add_dependencies(MaSim date spdlog fmt)
 
 target_link_libraries(MaSim

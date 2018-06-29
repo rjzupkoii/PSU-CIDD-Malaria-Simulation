@@ -11,12 +11,12 @@ set(TEST_SRC_FILES
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/Spatial/*.cpp)
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} ${SRC_FILES})
-
-if (YAMLCPP_FOUND)
-  add_dependencies(${PROJECT_TEST_NAME}  yaml-cpp)
-else ()
-  add_dependencies(${PROJECT_TEST_NAME}  yaml-cpp-ext)
-endif ()
+#
+#if (YAMLCPP_FOUND)
+#  add_dependencies(${PROJECT_TEST_NAME}  yaml-cpp)
+#else ()
+#  add_dependencies(${PROJECT_TEST_NAME}  yaml-cpp-ext)
+#endif ()
 
 add_dependencies(${PROJECT_TEST_NAME} catch FakeIt spdlog)
 
