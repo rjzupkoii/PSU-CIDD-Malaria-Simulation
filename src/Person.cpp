@@ -37,6 +37,7 @@
 #include "ReceiveTherapyEvent.h"
 #include "Constants.h"
 #include <algorithm>
+#include <cmath>
 
 OBJECTPOOL_IMPL(Person)
 

@@ -11,8 +11,6 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <boost/algorithm/string.hpp>
-
 template <typename T>
 void DeletePointer(T*& p) {
     if (p != nullptr) {

@@ -5,6 +5,7 @@
  * Created on August 24, 2013, 3:39 PM
  */
 
+#include <cmath>
 #include "MDAAction.h"
 #include "Model.h"
 #include "Scheduler.h"
@@ -36,7 +37,7 @@ void MDAAction::perform_weekly_action(const int& location) {
                 Person* p = pi_lsa->vPerson()[location][state][ac][i];
 
                 double prob_receive_MDA = Model::RANDOM->random_uniform();
-                int day = floor(prob_receive_MDA / percent_MDA_treated_per_day) + 1;
+                auto day = static_cast<int>(floor(prob_receive_MDA / percent_MDA_treated_per_day) + 1);
                 ReceiveMDADrugEvent::schedule_event(Model::SCHEDULER, p,
                                                     Model::CONFIG->tme_strategy()->get_therapy(p), Model::SCHEDULER->current_time() + day);
                 //                std::cout << prob_receive_MDA << "\t" << day << std::endl;

@@ -4,7 +4,7 @@
  * 
  * Created on August 17, 2013, 4:45 PM
  */
-
+#include "fmt/format.h"
 #include "FarmReporter.h"
 #include "../Model.h"
 #include "../Random.h"
@@ -16,7 +16,6 @@
 #include "../Population.h"
 #include "../Strategies/NovelNonACTSwitchingStrategy.h"
 #include "../Constants.h"
-#include <boost/format.hpp>
 
 FarmReporter::FarmReporter() {
 }
@@ -124,9 +123,7 @@ void FarmReporter::after_time_step() {
 }
 
 void FarmReporter::output_parameters() {
-  std::cout << boost::format("%1%\t%2%\t")
-               % Model::RANDOM->seed()
-               % Model::CONFIG->number_of_locations();
+  std::cout << fmt::format("%d\t%d\t", Model::RANDOM->seed(), Model::CONFIG->number_of_locations());
 
   //intial population size
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {

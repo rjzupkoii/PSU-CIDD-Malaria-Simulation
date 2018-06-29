@@ -5,8 +5,10 @@
  * Created on March 27, 2013, 10:38 AM
  */
 
-#include "Config.h"
 #include <gsl/gsl_cdf.h>
+#include <cmath>
+#include <fstream>
+#include "Config.h"
 #include "HelperFunction.h"
 #include "Strategies/IStrategy.h"
 #include "Model.h"
@@ -16,13 +18,11 @@
 #include "TherapyBuilder.h"
 #include "Strategies/NovelNonACTSwitchingStrategy.h"
 #include "Strategies/NestedSwitchingStrategy.h"
-#include <fstream>
 #include "StringSplitHelper.h"
 #include "Spatial/SpatialModelBuilder.h"
 #include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
 #include "Constants.h"
 #include "Helpers/NumberHelpers.h"
-#include <cmath>
 
 using namespace Spatial;
 
@@ -640,7 +640,7 @@ void Config::read_external_population_circulation_info(const YAML::Node &config)
             n["seasonal_EIR"]["a"][input_loc].as<double>());
 
     auto period = n["seasonal_EIR"]["period"].as<double>();
-    auto B = 2 * PI / period;
+    auto B = 2 * M_PI / period;
 
     external_population_circulation_information_.seasonal_EIR.B.push_back(B);
 
@@ -964,7 +964,7 @@ void Config::read_seasonal_information(const YAML::Node &config) {
     seasonal_beta_.A.push_back(config["seasonal_beta"]["a"][input_loc].as<double>());
 
     auto period = config["seasonal_beta"]["period"].as<double>();
-    auto B = 2 * PI / period;
+    auto B = 2 * M_PI / period;
 
     seasonal_beta_.B.push_back(B);
 

@@ -1,10 +1,11 @@
 /* 
  * File:   ConsoleReporter.cpp
  * Author: Merlin
- * 
+ *
  * Created on August 1, 2013, 12:15 PM
  */
 
+#include "fmt/printf.h"
 #include "ConsoleReporter.h"
 #include "../Model.h"
 #include "../Random.h"
@@ -15,11 +16,6 @@
 #include "../Strategies/IStrategy.h"
 #include "../Therapy.h"
 #include "../Constants.h"
-#include <boost/format.hpp>
-#include <iomanip>
-
-#define COLUMN_WIDTH 5
-#define COUT std::cout << std::setw(COLUMN_WIDTH) << std::setprecision(3)
 
 ConsoleReporter::ConsoleReporter() {
 }
@@ -36,8 +32,6 @@ void ConsoleReporter::before_run() {
 }
 
 void report_number_by_state(const int &location, PersonIndexByLocationStateAgeClass *pi) {
-
-
   //    std::cout << std::setw(10) << std::setprecision(3);
   for (int hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
     //        int sum = 0;
@@ -47,7 +41,9 @@ void report_number_by_state(const int &location, PersonIndexByLocationStateAgeCl
     double v = Model::DATA_COLLECTOR->popsize_by_location_hoststate()[location][hs] * 100 /
                (double) Model::DATA_COLLECTOR->popsize_by_location()[location];
     //        double v = sum;
-    std::cout << boost::format("%1%") % boost::io::group(std::setw(COLUMN_WIDTH), std::setprecision(3), v) << "\t";
+
+    fmt::printf("%.3f\t",v);
+
   }
 
 
@@ -93,13 +89,13 @@ void ConsoleReporter::after_run() {
                           (double) Model::DATA_COLLECTOR->popsize_by_location()[location];
     location_NTF /= total_time_in_years;
 
-    COUT << location_NTF << "\t";
+    std::cout << location_NTF << "\t";
   }
   std::cout << std::endl;
 
   std::cout << "Number of mutations by location: " << std::endl;
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-    COUT << Model::DATA_COLLECTOR->cumulative_mutants_by_location()[location] << "\t";
+    std::cout << Model::DATA_COLLECTOR->cumulative_mutants_by_location()[location] << "\t";
   }
   std::cout << std::endl;
 
@@ -154,16 +150,16 @@ void ConsoleReporter::after_time_step() {
   if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
 //        Model::DATA_COLLECTOR->perform_population_statistic();
 
-    std::cout << std::setw(COLUMN_WIDTH) << Model::SCHEDULER->current_time() << "\t";
+    std::cout << Model::SCHEDULER->current_time() << "\t";
 
     PersonIndexByLocationStateAgeClass *pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
     for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-      std::cout << std::setw(COLUMN_WIDTH) << "||\t";
+      std::cout << "||\t";
       report_number_by_state(location, pi);
-      COUT << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100 << "\t";
-      COUT << Model::DATA_COLLECTOR->total_immune_by_location()[location] / Model::POPULATION->size(location) << "\t";
-      COUT << Model::DATA_COLLECTOR->current_RITF_by_location()[location] << "-"
+      std::cout << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100 << "\t";
+      std::cout << Model::DATA_COLLECTOR->total_immune_by_location()[location] / Model::POPULATION->size(location) << "\t";
+      std::cout << Model::DATA_COLLECTOR->current_RITF_by_location()[location] << "-"
            << Model::DATA_COLLECTOR->current_TF_by_location()[location] << "\t";
     }
     std::cout << std::endl;

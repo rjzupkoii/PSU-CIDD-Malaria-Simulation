@@ -5,7 +5,7 @@ set -ex
 # docker hub username
 USERNAME=merlinvn
 # image name
-IMAGE=aci
+IMAGE=cpp_tools
 
 version=`cat DOCKER_VERSION`
 

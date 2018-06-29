@@ -10,7 +10,6 @@
 #include "PropertyMacro.h"
 #include "TypeDef.h"
 #include "IntGenotype.h"
-//#include <boost/dynamic_bitset.hpp>
 #include <map>
 
 class IntGenotype;

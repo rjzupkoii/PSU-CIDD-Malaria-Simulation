@@ -18,13 +18,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 find_package(GSL REQUIRED)
 if (GSL_FOUND)
-  #MESSAGE(${GSL_LIBRARY})
+  MESSAGE(${GSL_LIBRARIES})
   include_directories(${GSL_INCLUDE_DIRS})
-endif ()
-
-find_package(Boost REQUIRED)
-if (Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})
 endif ()
 
 add_subdirectory(${EXT_PROJECTS_DIR}/date)

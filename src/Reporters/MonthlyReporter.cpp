@@ -102,7 +102,7 @@ void MonthlyReporter::after_time_step() {
 
     }
 
-    fs_ << boost::accumulators::mean(Model::DATA_COLLECTOR->acc) << "\t";
+    fs_ << Model::DATA_COLLECTOR->mean_moi() << "\t";
 
     fs_ << std::endl;
   }

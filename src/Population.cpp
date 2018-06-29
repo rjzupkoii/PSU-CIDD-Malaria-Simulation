@@ -5,6 +5,7 @@
  * Created on April 15, 2013, 10:49 AM
  */
 
+#include <cmath>
 #include "Constants.h"
 #include "Population.h"
 #include "Model.h"

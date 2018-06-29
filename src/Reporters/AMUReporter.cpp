@@ -4,27 +4,22 @@
  * 
  * Created on January 20, 2014, 2:31 PM
  */
+#include <iomanip>
+#include <fmt/format.h>
 
 #include "AMUReporter.h"
-
 #include "../Random.h"
-
-#include <iomanip>
-
 #include "../Model.h"
 #include "../Random.h"
 #include "../MDC/ModelDataCollector.h"
 #include "../Config.h"
 #include "../Therapy.h"
 #include "../Population.h"
-#include <boost/format.hpp>
 #include "../MDC/ResistanceTracker.h"
 #include "../PersonIndexByLocationStateAgeClass.h"
 #include "../Strategies/IStrategy.h"
 #include "../Constants.h"
 
-#define COLUMN_WIDTH 5
-#define COUT std::cout << std::setw(COLUMN_WIDTH) << std::setprecision(3)
 
 AMUReporter::AMUReporter() : last_reported_NTF_(0) {
 }
@@ -189,9 +184,7 @@ void AMUReporter::after_time_step() {
 }
 
 void AMUReporter::output_parameters() {
-  std::cout << boost::format("%1%\t%2%\t")
-               % Model::RANDOM->seed()
-               % Model::CONFIG->number_of_locations();
+  std::cout << fmt::format("%d\t%d\t", Model::RANDOM->seed(), Model::CONFIG->number_of_locations());
 
   //intial population size
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Statistic.cpp
  * Author: Merlin
  * 
@@ -18,6 +18,7 @@
 #include "../ClonalParasitePopulation.h"
 #include "../Constants.h"
 #include <numeric>
+#include <cmath>
 
 ModelDataCollector::ModelDataCollector(Model *model) : model_(model), current_utl_duration_(),
                                                        popsize_by_location_(), blood_slide_prevalence_by_location_(),
@@ -196,7 +197,6 @@ void ModelDataCollector::initialize() {
 }
 
 void ModelDataCollector::perform_population_statistic() {
-  acc = mean_acc();
   //this will do every time the reporter execute the report
 
   //reset vector
@@ -259,6 +259,9 @@ void ModelDataCollector::perform_population_statistic() {
   }
 
   auto *pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+  long long sum_moi = 0;
+
+
   for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     int pop_sum_location = 0;
     for (int hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
@@ -302,8 +305,9 @@ void ModelDataCollector::perform_population_statistic() {
           }
 
           int moi = p->all_clonal_parasite_populations()->size();
+
           if (moi > 0) {
-            acc(moi);
+            sum_moi += moi;
 
             total_parasite_population_by_location_[loc] += moi;
             total_parasite_population_by_location_age_group_[loc][p->age_class()] += moi;
@@ -326,6 +330,9 @@ void ModelDataCollector::perform_population_statistic() {
     }
 
     popsize_by_location_[loc] = pop_sum_location;
+
+    auto sum_popsize_by_location = std::accumulate(popsize_by_location_.begin(), popsize_by_location_.end(), 0);
+    mean_moi_ = sum_moi / (double)sum_popsize_by_location;
 
     //        double number_of_assymptomatic_and_clinical = blood_slide_prevalence_by_location_[loc] + popsize_by_location_hoststate_[loc][Person::CLINICAL];
     //        number_of_positive_by_location_[loc] = popsize_by_location_hoststate_[loc][Person::ASYMPTOMATIC] + popsize_by_location_hoststate_[loc][Person::CLINICAL];
@@ -720,7 +727,7 @@ void ModelDataCollector::record_AMU_AFU(Person *person, Therapy *therapy,
     int artId = scTherapy->get_arteminsinin_id();
     if (artId != -1 && scTherapy->drug_ids().size() > 1) {
       int numberOfDrugsInTherapy = scTherapy->drug_ids().size();
-      double discouted_fraction = exp(
+      double discounted_fraction = exp(
               log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_treatment_day()) /
                                 Constants::DAYS_IN_YEAR()));
       //            assert(false);
@@ -739,11 +746,11 @@ void ModelDataCollector::record_AMU_AFU(Person *person, Therapy *therapy,
               foundAMU = true;
               AMU_per_parasite_pop_ += scTherapy->dosing_day() / (double) parasitePopulationSize;
               discounted_AMU_per_parasite_pop_ +=
-                      discouted_fraction * scTherapy->dosing_day() / (double) parasitePopulationSize;
+                      discounted_fraction * scTherapy->dosing_day() / (double) parasitePopulationSize;
               if (bp == clinical_caused_parasite) {
                 AMU_for_clinical_caused_parasite_ += scTherapy->dosing_day();
                 discounted_AMU_for_clinical_caused_parasite_ +=
-                        discouted_fraction * scTherapy->dosing_day();
+                        discounted_fraction * scTherapy->dosing_day();
               }
             }
 
@@ -753,12 +760,12 @@ void ModelDataCollector::record_AMU_AFU(Person *person, Therapy *therapy,
           }
           if (foundAMU) {
             AMU_per_person_ += scTherapy->dosing_day();
-            discounted_AMU_per_person_ += discouted_fraction * scTherapy->dosing_day();
+            discounted_AMU_per_person_ += discounted_fraction * scTherapy->dosing_day();
           }
 
           if (foundAFU) {
             AFU_ += scTherapy->dosing_day();
-            discounted_AFU_ += discouted_fraction * scTherapy->dosing_day();
+            discounted_AFU_ += discounted_fraction * scTherapy->dosing_day();
           }
         }
       }

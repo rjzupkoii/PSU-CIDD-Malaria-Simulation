@@ -17,13 +17,10 @@
 #include "TypeDef.h"
 #include "DrugDatabase.h"
 #include "IntGenotypeDatabase.h"
-#include <boost/math/constants/constants.hpp>
 #include "Spatial/Location.h"
 #include "Spatial/SpatialModel.h"
 
 class Model;
-
-const double PI = boost::math::constants::pi<double>();
 
 class Config {
 DISALLOW_COPY_AND_ASSIGN_(Config)

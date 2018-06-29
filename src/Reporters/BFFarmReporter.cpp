@@ -8,7 +8,6 @@
 #include "../Random.h"
 #include "../Config.h"
 #include "../PersonIndexAll.h"
-#include <boost/format.hpp>
 
 BFFarmReporter::BFFarmReporter() {
 
