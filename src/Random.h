@@ -29,7 +29,7 @@ public:
 
     virtual ~Random();
 
-    void initialize(const unsigned long &seed = -1);
+    void initialize(const unsigned long &seed = 0);
 
     void release();
 

@@ -29,7 +29,7 @@ void Random::initialize(const unsigned long &seed) {
   G_RNG = gsl_rng_alloc(TT);
 
   // seed the RNG
-  seed_ = seed == -1 ? good_seed() : seed;
+  seed_ = seed == 0 ? good_seed() : seed;
   gsl_rng_set(G_RNG, seed_);
 
 }
