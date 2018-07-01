@@ -2,12 +2,12 @@ file(GLOB SRC_FILES *.cpp *.h Spatial/*.cpp Spatial/*.h Reporters/*.cpp Reporter
     MDC/*.cpp MDC/*.h Helpers/*.cpp Helpers/*.h)
 
 add_executable(MaSim ${SRC_FILES} ObjectPool.h)
-add_dependencies(MaSim date spdlog fmt)
+add_dependencies(MaSim date spdlog)
 
 target_link_libraries(MaSim
     yaml-cpp
-    ${FMT_LIBS_DIR}/libfmt.a
-    ${GSL_LIBRARIES}
+    fmt::fmt
+     GSL::gsl GSL::gslcblas
     )
 
 target_compile_features(MaSim PRIVATE cxx_range_for)

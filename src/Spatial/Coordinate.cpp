@@ -1,8 +1,8 @@
 //
 // Created by Nguyen Tran on 1/25/2018.
 //
-
-#include <math.h>
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "Coordinate.h"
 
 namespace Spatial {

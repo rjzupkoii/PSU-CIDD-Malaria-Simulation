@@ -1,5 +1,5 @@
 #include "yaml-cpp/yaml.h"
-#include "catch2/catch.hpp"
+#include "catch/catch.hpp"
 
 TEST_CASE("yaml_cpp_test", "[sampleyaml_cpp_test]" ) {
   YAML::Node node = YAML::Load("[1, 2, 3]");

@@ -5,6 +5,7 @@
  * Created on March 27, 2013, 10:38 AM
  */
 
+#define _USE_MATH_DEFINES
 #include <gsl/gsl_cdf.h>
 #include <cmath>
 #include <fstream>

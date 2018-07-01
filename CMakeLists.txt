@@ -1,11 +1,18 @@
 cmake_minimum_required(VERSION 3.1)
 project(PCMS)
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 option(USING_ZAPCC "Use ZAPCC compiler." OFF)
 if (USING_ZAPCC)
   SET(CMAKE_C_COMPILER /home/ubuntu/zapcc-20170802-175507/bin/zapcc)
   SET(CMAKE_CXX_COMPILER /home/ubuntu/zapcc-20170802-175507/bin/zapcc++)
 endif ()
+
+# for Windows only
+if (WIN32)
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+endif()
 
 
 set(EXT_PROJECTS_DIR ${PROJECT_SOURCE_DIR}/ext)
@@ -23,11 +30,11 @@ if (GSL_FOUND)
 endif ()
 
 set(YAMLCPP_STATIC_LIBRARY TRUE)
-find_package(yaml-cpp CONFIG REQUIRED)
+find_package(yaml-cpp REQUIRED)
+find_package(fmt REQUIRED)
 
 add_subdirectory(${EXT_PROJECTS_DIR}/date)
 add_subdirectory(${EXT_PROJECTS_DIR}/spdlog)
-add_subdirectory(${EXT_PROJECTS_DIR}/fmt)
 
 include_directories(${YAMLCPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${FMT_INCLUDE_DIR})
 
@@ -38,8 +45,7 @@ add_subdirectory(src)
 #Setup test project
 option(BUILD_TESTS "Build all tests." OFF) # Makes boolean 'test' available.
 if (BUILD_TESTS)
-  add_subdirectory(${EXT_PROJECTS_DIR}/catch)
-  add_subdirectory(${EXT_PROJECTS_DIR}/fakeit)
+  find_package(Catch2 REQUIRED)  
   set(PROJECT_TEST_NAME masim_test)
   add_subdirectory(test)
 endif ()

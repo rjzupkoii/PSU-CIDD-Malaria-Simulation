@@ -2,8 +2,9 @@
 // Created by Nguyen Tran on 6/25/18.
 //
 #include <string>
-#include "catch2/catch.hpp"
 #include "fakeit.hpp"
+#include <catch/catch.hpp>
+#include <iostream>
 
 using namespace fakeit;
 
