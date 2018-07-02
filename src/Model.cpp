@@ -5,7 +5,6 @@
  * Created on March 22, 2013, 2:26 PM
  */
 
-// #include <spdlog/spdlog.h>
 #include "Model.h"
 #include "Population.h"
 #include "HelperFunction.h"
@@ -34,15 +33,14 @@
 #include "ImportationPeriodicallyEvent.h"
 #include "ImportationEvent.h"
 
-
-
 Model* Model::MODEL = nullptr;
 Config* Model::CONFIG = nullptr;
 Random* Model::RANDOM = nullptr;
 Scheduler* Model::SCHEDULER = nullptr;
 ModelDataCollector* Model::DATA_COLLECTOR = nullptr;
 Population* Model::POPULATION = nullptr;
-// std::shared_ptr<spdlog::logger> Model::LOGGER;
+// std::shared_ptr<spdlog::logger> LOGGER;
+
 
 Model::Model(const int& object_pool_size) {
   initialize_object_pool(object_pool_size);
@@ -51,14 +49,14 @@ Model::Model(const int& object_pool_size) {
   scheduler_ = new Scheduler(this);
   population_ = new Population(this);
   data_collector_ = new ModelDataCollector(this);
-  
+
   MODEL = this;
   CONFIG = config_;
   SCHEDULER = scheduler_;
   RANDOM = random_;
   DATA_COLLECTOR = data_collector_;
   POPULATION = population_;
-  // LOGGER = spdlog::stdout_color_mt("console");
+  // LOGGER = spdlog::stdout_logger_mt("console");
 
   progress_to_clinical_update_function_ = new ClinicalUpdateFunction(this);
   immunity_clearance_update_function_ = new ImmunityClearanceUpdateFunction(this);

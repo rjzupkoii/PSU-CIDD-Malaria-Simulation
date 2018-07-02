@@ -7,6 +7,7 @@ ExternalProject_Add(
     spdlog
     PREFIX ${CMAKE_BINARY_DIR}/ext
     GIT_REPOSITORY https://github.com/gabime/spdlog
+	CMAKE_ARGS -DSPDLOG_BUILD_TESTING=OFF 
     TIMEOUT 10
     UPDATE_COMMAND ${GIT_EXECUTABLE} pull
     CONFIGURE_COMMAND ""

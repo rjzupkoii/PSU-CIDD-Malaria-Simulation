@@ -8,8 +8,8 @@
 #ifndef MODEL_H
 #define	MODEL_H
 
+#include <memory>
 #include <vector>
-// #include <spdlog/spdlog.h>
 #include "PropertyMacro.h"
 #include "Scheduler.h"
 #include "ClinicalUpdateFunction.h"
@@ -47,8 +47,7 @@ PROPERTY_REF(int, override_parameter_line_number) // base 1
 PROPERTY_REF(int, gui_type)
 PROPERTY_REF(bool, is_farm_output)
 
-
-
+public: 
   static Model* MODEL;
   static Config* CONFIG;
   static Random* RANDOM;
@@ -57,9 +56,6 @@ PROPERTY_REF(bool, is_farm_output)
   static Population* POPULATION;
   // static std::shared_ptr<spdlog::logger> LOGGER;
 
-  //    static Population* EXTERNAL_POPULATION;
-
-public:
   explicit Model(const int& object_pool_size = 100000);
   virtual ~Model();
 

@@ -6,16 +6,46 @@
  */
 
 #include <iostream>
-#include <spdlog/spdlog.h>
 #include <clara.hpp>
+#include <fmt/format.h>
 #include "Model.h"
+#include "easylogging++.h"
+#include "Args.hpp"
+
+INITIALIZE_EASYLOGGINGPP
+
+
 using namespace std;
 
-void handle_cli(Model* model, const int argc, const char** argv);
+void handle_cli(Model* model, int argc, char** argv);
 
 
-int main(const int argc, const char* argv[]) {
+void config_logger() {
+  el::Configurations default_conf;
+  default_conf.setToDefault();
+  default_conf.set(el::Level::Debug, el::ConfigurationType::Format, "%level [%logger] [%host] [%func] [%loc] %msg");
+  default_conf.set(el::Level::Error, el::ConfigurationType::Format, "%level [%logger] [%host] [%func] [%loc] %msg");
+  default_conf.set(el::Level::Fatal, el::ConfigurationType::Format, "%level [%logger] [%host] [%func] [%loc] %msg");
+  default_conf.set(el::Level::Trace, el::ConfigurationType::Format, "%level [%logger] [%host] [%func] [%loc] %msg");
+  default_conf.set(el::Level::Info, el::ConfigurationType::Format, "%level [%logger] %msg");
+  default_conf.set(el::Level::Warning, el::ConfigurationType::Format, "%level [%logger] %msg");
+  default_conf.set(el::Level::Verbose, el::ConfigurationType::Format, "%level-%vlevel [%logger] %msg");
+
+
+  default_conf.setGlobally(el::ConfigurationType::ToFile, "false");
+  default_conf.setGlobally(el::ConfigurationType::ToStandardOutput, "true");
+  default_conf.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
+
+  // default logger uses default configurations
+  el::Loggers::reconfigureLogger("default", default_conf);
+}
+
+int main(const int argc, char** argv) {
   try {
+
+    config_logger();
+
+    START_EASYLOGGINGPP(argc, argv);
 
     auto* m = new Model();
     handle_cli(m, argc, argv);
@@ -26,36 +56,44 @@ int main(const int argc, const char* argv[]) {
 
     delete m;
   }
-    // Exceptions will only be thrown upon failed logger or sink construction (not during logging)
-  catch (const spdlog::spdlog_ex& ex) {
-    std::cout << "Log init failed: " << ex.what() << std::endl;
-    return 1;
-  }
   catch (const std::exception& e) {
     std::cout << __FUNCTION__ << "-" << e.what() << std::endl;
     return 1;
   }
+
+
   return 0;
 }
 
-void handle_cli(Model* model, const int argc, const char** argv) {
-  using namespace clara;
-  std::string intput_filename = "input.yml";
-  
-  auto cli
-    = Opt(intput_filename, "input_file")
-    ["-i"]["--input"]
-    ("The config file (YAML format). \nEx: malariasimulation -i config.yml");
-
-  auto result = cli.parse(clara::Args(argc, argv));
+void handle_cli(Model* model, int argc, char** argv) {
+  args::ArgumentParser parser("This is a test program.", "This goes after the options.");
+  args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
+  args::ValueFlag<std::string> input_file(parser, "string",
+                                          "The config file (YAML format). \nEx: malariasimulation -i input.yml",
+                                            {'i', 'c', "input", "config"});
 
 
-  if (!result) {
-    std::cerr << "Error in command line: " << result.errorMessage() << std::endl;
-    exit(1);
+  try {
+    parser.ParseCLI(argc, argv);
+  }
+  catch (const args::Help& e) {
+    std::cout << parser;
+    exit(0);
+  }
+  catch (const args::ParseError& e) {
+    LOG(FATAL) << fmt::format("{0} {1}", e.what(), parser);
+  }
+  catch (const args::ValidationError& e) {
+    LOG(FATAL) << fmt::format("{0} {1}", e.what(), parser);
   }
 
-  // Everything was ok, input_filename will have a value if supplied on command line
-  model->set_config_filename(intput_filename);
+  const auto input = input_file ? args::get(input_file) : "input.yml";
 
+  if (input != "input.yml") {
+    LOG(INFO) << fmt::format("Used custom input file: {0}", input);
+  }
+  else {
+    LOG(INFO) << fmt::format("Used default input file: {0}", input);
+  }
+  model->set_config_filename(input);
 }
