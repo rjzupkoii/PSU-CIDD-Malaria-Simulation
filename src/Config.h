@@ -23,7 +23,7 @@
 class Model;
 
 class Config {
-DISALLOW_COPY_AND_ASSIGN_(Config)
+DISALLOW_COPY_AND_ASSIGN(Config)
 
 POINTER_PROPERTY(Model, model)
 

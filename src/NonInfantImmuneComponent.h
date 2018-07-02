@@ -12,7 +12,7 @@
 #include "ObjectPool.h"
 
 class NonInfantImmuneComponent : public ImmuneComponent {
-    DISALLOW_COPY_AND_ASSIGN_(NonInfantImmuneComponent)
+    DISALLOW_COPY_AND_ASSIGN(NonInfantImmuneComponent)
 //    OBJECTPOOL(NonInfantImmuneComponent)
 public:
     NonInfantImmuneComponent(ImmuneSystem* immune_system = nullptr);

@@ -17,7 +17,7 @@ class Scheduler;
 class Person;
 
 class EndClinicalDueToDrugResistanceEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(EndClinicalDueToDrugResistanceEvent)
+    DISALLOW_COPY_AND_ASSIGN(EndClinicalDueToDrugResistanceEvent)
     OBJECTPOOL(EndClinicalDueToDrugResistanceEvent)
     POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite);
 

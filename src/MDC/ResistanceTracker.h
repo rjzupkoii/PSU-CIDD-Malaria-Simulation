@@ -12,7 +12,7 @@
 #include "../TypeDef.h"
 
 class ResistanceTracker {
-DISALLOW_COPY_AND_ASSIGN_(ResistanceTracker)
+DISALLOW_COPY_AND_ASSIGN(ResistanceTracker)
 
     void change_location(const int &genotype_id, const int &from_location, const int &to_location);
 

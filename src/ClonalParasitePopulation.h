@@ -20,7 +20,7 @@ class SingleHostClonalParasitePopulations;
 
 class ClonalParasitePopulation : public IndexHandler {
     OBJECTPOOL(ClonalParasitePopulation);
-    DISALLOW_COPY_AND_ASSIGN_(ClonalParasitePopulation)
+    DISALLOW_COPY_AND_ASSIGN(ClonalParasitePopulation)
 
     PROPERTY_HEADER(double, last_update_log10_parasite_density)
     PROPERTY_HEADER(double, gametocyte_level)

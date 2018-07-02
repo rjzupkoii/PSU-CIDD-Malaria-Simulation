@@ -38,7 +38,7 @@ public:
     };
     static std::map<std::string, StrategyType> StrategyTypeMap;
 
-    DISALLOW_COPY_AND_ASSIGN_(IStrategy)
+    DISALLOW_COPY_AND_ASSIGN(IStrategy)
 public:
     int id;
     std::string name;

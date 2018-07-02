@@ -5,6 +5,7 @@
  * Created on August 1, 2013, 12:15 PM
  */
 
+#include <iostream>
 #include "fmt/printf.h"
 #include "ConsoleReporter.h"
 #include "../Model.h"
@@ -13,8 +14,6 @@
 #include "../Population.h"
 #include "../PersonIndexByLocationStateAgeClass.h"
 #include "../MDC/ModelDataCollector.h"
-#include "../Strategies/IStrategy.h"
-#include "../Therapy.h"
 #include "../Constants.h"
 
 ConsoleReporter::ConsoleReporter() {

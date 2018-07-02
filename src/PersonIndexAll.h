@@ -13,7 +13,7 @@
 #include "TypeDef.h"
 
 class PersonIndexAll: public PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN_(PersonIndexAll)
+    DISALLOW_COPY_AND_ASSIGN(PersonIndexAll)
     
     PROPERTY_REF(PersonPtrVector, vPerson)
     

@@ -12,7 +12,7 @@
 #include "PropertyMacro.h"
 
 class PersonIndexByLocationBittingLevelHandler: public IndexHandler {
-    DISALLOW_COPY_AND_ASSIGN_(PersonIndexByLocationBittingLevelHandler)
+    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationBittingLevelHandler)
 public:
     PersonIndexByLocationBittingLevelHandler();
 //    PersonIndexByLocationBittingLevelHandler(const PersonIndexByLocationBittingLevelHandler& orig);

@@ -4,6 +4,7 @@
  * 
  * Created on August 17, 2013, 4:45 PM
  */
+#include <iostream>
 #include "fmt/format.h"
 #include "FarmReporter.h"
 #include "../Model.h"
@@ -11,10 +12,7 @@
 #include "../MDC/ModelDataCollector.h"
 #include "../Config.h"
 #include "../Strategies/IStrategy.h"
-#include "../Therapy.h"
 #include "../SCTherapy.h"
-#include "../Population.h"
-#include "../Strategies/NovelNonACTSwitchingStrategy.h"
 #include "../Constants.h"
 
 FarmReporter::FarmReporter() {
@@ -40,7 +38,7 @@ void FarmReporter::after_run() {
   print_ntf_by_location();
 
   //TF at year 15
-  std::cout << Model::DATA_COLLECTOR->TF_at_15() << "\t";
+  std::cout << Model::DATA_COLLECTOR->tf_at_15() << "\t";
   std::cout << Model::DATA_COLLECTOR->single_resistance_frequency_at_15() << "\t";
   std::cout << Model::DATA_COLLECTOR->double_resistance_frequency_at_15() << "\t";
   std::cout << Model::DATA_COLLECTOR->triple_resistance_frequency_at_15() << "\t";

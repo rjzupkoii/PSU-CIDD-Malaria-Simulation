@@ -13,7 +13,7 @@
 class Model;
 
 class BittingLevelGenerator {
-    DISALLOW_COPY_AND_ASSIGN_(BittingLevelGenerator)
+    DISALLOW_COPY_AND_ASSIGN(BittingLevelGenerator)
     PROPERTY_REF(UIntVector, data)
     POINTER_PROPERTY(DoubleVector, level_density)
 

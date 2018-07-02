@@ -59,7 +59,7 @@ public:
     };
 
     OBJECTPOOL(Person)
-    DISALLOW_COPY_AND_ASSIGN_(Person)
+    DISALLOW_COPY_AND_ASSIGN(Person)
 
     POINTER_PROPERTY(Population, population)
     PROPERTY_HEADER(int, location)

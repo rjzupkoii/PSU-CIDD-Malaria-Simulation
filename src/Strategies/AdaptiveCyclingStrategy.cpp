@@ -64,7 +64,7 @@ void AdaptiveCyclingStrategy::update_end_of_time_step() {
       switch_therapy();
       //            std::cout << to_string() << std::endl;
     } else {
-      if (Model::DATA_COLLECTOR->current_TF_by_therapy()[get_therapy(nullptr)->id()] > trigger_value_) {
+      if (Model::DATA_COLLECTOR->current_tf_by_therapy()[get_therapy(nullptr)->id()] > trigger_value_) {
         // TODO:: turn_off_days and delay_until_actual_trigger should be match with calendar day
         if (Model::SCHEDULER->current_time() > (latest_switch_time_ + turn_off_days_)) {
           latest_switch_time_ = Model::SCHEDULER->current_time() + delay_until_actual_trigger_;

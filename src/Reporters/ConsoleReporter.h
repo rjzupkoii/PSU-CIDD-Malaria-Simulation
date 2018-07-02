@@ -11,7 +11,7 @@
 #include "Reporter.h"
 
 class ConsoleReporter : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN_(ConsoleReporter)
+    DISALLOW_COPY_AND_ASSIGN(ConsoleReporter)
 public:
     ConsoleReporter();
     //    ConsoleReporter(const ConsoleReporter& orig);

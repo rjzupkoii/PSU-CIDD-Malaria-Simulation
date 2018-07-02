@@ -13,7 +13,7 @@
 #include <string>
 
 class YearlyReporterV1 : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN_(YearlyReporterV1)
+    DISALLOW_COPY_AND_ASSIGN(YearlyReporterV1)
 
     std::fstream fs_;
     std::string file_name_;

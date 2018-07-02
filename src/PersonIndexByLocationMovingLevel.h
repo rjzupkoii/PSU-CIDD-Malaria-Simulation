@@ -14,7 +14,7 @@
 
 
 class PersonIndexByLocationMovingLevel : public PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN_(PersonIndexByLocationMovingLevel);
+    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationMovingLevel);
     PROPERTY_REF(PersonPtrVector3, vPerson);
 public:
     PersonIndexByLocationMovingLevel(const int& no_location = 1, const int& no_level = 1);

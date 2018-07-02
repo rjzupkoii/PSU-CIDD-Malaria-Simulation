@@ -8,11 +8,12 @@
 #ifndef ADAPTIVECYCLINGSTRATEGY_H
 #define ADAPTIVECYCLINGSTRATEGY_H
 
+#include <vector>
 #include "IStrategy.h"
 #include "../PropertyMacro.h"
 
 class AdaptiveCyclingStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN_(AdaptiveCyclingStrategy)
+    DISALLOW_COPY_AND_ASSIGN(AdaptiveCyclingStrategy)
     VIRTUAL_PROPERTY_REF(std::vector<Therapy*>, therapy_list)
     VIRTUAL_PROPERTY_REF(int, index)
 

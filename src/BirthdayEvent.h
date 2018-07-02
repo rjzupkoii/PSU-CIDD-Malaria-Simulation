@@ -14,7 +14,7 @@ class Person;
 
 class BirthdayEvent : public Event {
     OBJECTPOOL(BirthdayEvent)
-    DISALLOW_COPY_AND_ASSIGN_(BirthdayEvent)
+    DISALLOW_COPY_AND_ASSIGN(BirthdayEvent)
 public:
     BirthdayEvent();
 //    BirthdayEvent(const BirthdayEvent& orig);

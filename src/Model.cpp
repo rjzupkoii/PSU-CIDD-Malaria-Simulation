@@ -5,6 +5,7 @@
  * Created on March 22, 2013, 2:26 PM
  */
 
+// #include <spdlog/spdlog.h>
 #include "Model.h"
 #include "Population.h"
 #include "HelperFunction.h"
@@ -26,47 +27,43 @@
 #include "MoveParasiteToBloodEvent.h"
 #include "UpdateEveryKDaysEvent.h"
 #include "Reporters/Reporter.h"
-#include "BittingLevelGenerator.h"
 #include "CirculateToTargetLocationNextDayEvent.h"
 #include "ReturnToResidenceEvent.h"
 #include "ClonalParasitePopulation.h"
-#include "NonInfantImmuneComponent.h"
-#include "InfantImmuneComponent.h"
-#include "ExternalPopulation.h"
 #include "SwitchImmuneComponentEvent.h"
-#include "MoveToExternalPopulationEvent.h"
-#include "ReturnToNormalPopulationEvent.h"
-#include "TMEScheduler.h"
 #include "ImportationPeriodicallyEvent.h"
 #include "ImportationEvent.h"
 
 
-Model *Model::MODEL = nullptr;
-Config *Model::CONFIG = nullptr;
-Random *Model::RANDOM = nullptr;
-Scheduler *Model::SCHEDULER = nullptr;
-ModelDataCollector *Model::DATA_COLLECTOR = nullptr;
-Population *Model::POPULATION = nullptr;
 
-Model::Model(const int &object_pool_size) {
+Model* Model::MODEL = nullptr;
+Config* Model::CONFIG = nullptr;
+Random* Model::RANDOM = nullptr;
+Scheduler* Model::SCHEDULER = nullptr;
+ModelDataCollector* Model::DATA_COLLECTOR = nullptr;
+Population* Model::POPULATION = nullptr;
+// std::shared_ptr<spdlog::logger> Model::LOGGER;
+
+Model::Model(const int& object_pool_size) {
   initialize_object_pool(object_pool_size);
   random_ = new Random(this);
   config_ = new Config(this);
   scheduler_ = new Scheduler(this);
   population_ = new Population(this);
   data_collector_ = new ModelDataCollector(this);
-
-  progress_to_clinical_update_function_ = new ClinicalUpdateFunction(this);
-  immunity_clearance_update_function_ = new ImmunityClearanceUpdateFunction(this);
-  having_drug_update_function_ = new ImmunityClearanceUpdateFunction(this);
-  clinical_update_function_ = new ImmunityClearanceUpdateFunction(this);
-
+  
   MODEL = this;
   CONFIG = config_;
   SCHEDULER = scheduler_;
   RANDOM = random_;
   DATA_COLLECTOR = data_collector_;
   POPULATION = population_;
+  // LOGGER = spdlog::stdout_color_mt("console");
+
+  progress_to_clinical_update_function_ = new ClinicalUpdateFunction(this);
+  immunity_clearance_update_function_ = new ImmunityClearanceUpdateFunction(this);
+  having_drug_update_function_ = new ImmunityClearanceUpdateFunction(this);
+  clinical_update_function_ = new ImmunityClearanceUpdateFunction(this);
 
   reporters_ = std::vector<Reporter *>();
 
@@ -80,31 +77,7 @@ Model::Model(const int &object_pool_size) {
 }
 
 Model::~Model() {
-  //    std::cout << "Model Release" << std::endl;
-  DeletePointer<ClinicalUpdateFunction>(progress_to_clinical_update_function_);
-  DeletePointer<ImmunityClearanceUpdateFunction>(immunity_clearance_update_function_);
-  DeletePointer<ImmunityClearanceUpdateFunction>(having_drug_update_function_);
-  DeletePointer<ImmunityClearanceUpdateFunction>(clinical_update_function_);
-
-  DeletePointer<Population>(population_);
-//    DeletePointer<ExternalPopulation>(external_population_);
-  DeletePointer<Scheduler>(scheduler_);
-  DeletePointer<ModelDataCollector>(data_collector_);
-
-  DeletePointer<Config>(config_);
-  DeletePointer<Random>(random_);
-
-  for (Reporter *reporter: reporters_) {
-    DeletePointer<Reporter>(reporter);
-  }
-  reporters_.clear();
-
-  MODEL = nullptr;
-  CONFIG = nullptr;
-  SCHEDULER = nullptr;
-  RANDOM = nullptr;
-  DATA_COLLECTOR = nullptr;
-  POPULATION = nullptr;
+  release();
 
   release_object_pool();
 }
@@ -124,11 +97,13 @@ void Model::initialize() {
   if (gui_type_ == -1) {
     if (is_farm_output_) {
       add_reporter(Reporter::MakeReport(Reporter::FARM));
-    } else {
+    }
+    else {
       add_reporter(Reporter::MakeReport(Reporter::BFFARM_REPORTER));
       add_reporter(Reporter::MakeReport(Reporter::BFREPORTER));
     }
-  } else {
+  }
+  else {
     add_reporter(Reporter::MakeReport(Reporter::GUI));
   }
 
@@ -139,7 +114,7 @@ void Model::initialize() {
 
   //initialize reporters
 
-  for (Reporter *reporter : reporters_) {
+  for (Reporter* reporter : reporters_) {
     reporter->initialize();
   }
 
@@ -156,12 +131,12 @@ void Model::initialize() {
   population_->introduce_initial_cases();
 
   //initialize external population
-//    external_population_->initialize();
+  //    external_population_->initialize();
 
 
   //schedule for some special or periodic events
 
-  for (auto &i : CONFIG->importation_parasite_periodically_info()) {
+  for (auto& i : CONFIG->importation_parasite_periodically_info()) {
     ImportationPeriodicallyEvent::schedule_event(SCHEDULER,
                                                  i.location,
                                                  i.duration,
@@ -170,7 +145,7 @@ void Model::initialize() {
                                                  i.start_day);
   }
 
-  for (auto &i : CONFIG->importation_parasite_info()) {
+  for (auto& i : CONFIG->importation_parasite_info()) {
     ImportationEvent::schedule_event(SCHEDULER, i.location,
                                      i.time,
                                      i.parasite_type_id,
@@ -178,7 +153,7 @@ void Model::initialize() {
   }
 }
 
-void Model::initialize_object_pool(const int &size) {
+void Model::initialize_object_pool(const int& size) {
   BirthdayEvent::InitializeObjectPool(size);
   ProgressToClinicalEvent::InitializeObjectPool(size);
   EndClinicalDueToDrugResistanceEvent::InitializeObjectPool(size);
@@ -201,8 +176,8 @@ void Model::initialize_object_pool(const int &size) {
   Drug::InitializeObjectPool(size);
   DrugsInBlood::InitializeObjectPool(size);
 
-//    InfantImmuneComponent::InitializeObjectPool(size);
-//    NonInfantImmuneComponent::InitializeObjectPool(size);
+  //    InfantImmuneComponent::InitializeObjectPool(size);
+  //    NonInfantImmuneComponent::InitializeObjectPool(size);
 
   ImmuneSystem::InitializeObjectPool(size);
   Person::InitializeObjectPool(size);
@@ -210,16 +185,12 @@ void Model::initialize_object_pool(const int &size) {
 
 void Model::release_object_pool() {
   //    std::cout << "Release object pool" << std::endl;
-#ifdef UNITTEST
-
-#else
   Person::ReleaseObjectPool();
-
   ImmuneSystem::ReleaseObjectPool();
 
   // TODO: Investigate why?
-//    InfantImmuneComponent::ReleaseObjectPool();
-//    NonInfantImmuneComponent::ReleaseObjectPool();
+  //    InfantImmuneComponent::ReleaseObjectPool();
+  //    NonInfantImmuneComponent::ReleaseObjectPool();
 
   DrugsInBlood::ReleaseObjectPool();
   Drug::ReleaseObjectPool();
@@ -242,7 +213,6 @@ void Model::release_object_pool() {
   EndClinicalDueToDrugResistanceEvent::ReleaseObjectPool();
   ProgressToClinicalEvent::ReleaseObjectPool();
   BirthdayEvent::ReleaseObjectPool();
-#endif
 }
 
 void Model::run() {
@@ -254,41 +224,67 @@ void Model::run() {
 void Model::before_run() {
   //    std::cout << "Seed:" << RANDOM->seed() << std::endl;
 
-  for (Reporter *reporter: reporters_) {
+  for (Reporter* reporter : reporters_) {
     reporter->before_run();
   }
 }
 
 void Model::after_run() {
-  Model::DATA_COLLECTOR->update_after_run();
+  DATA_COLLECTOR->update_after_run();
 
-  for (Reporter *reporter : reporters_) {
+  for (Reporter* reporter : reporters_) {
     reporter->after_run();
   }
 }
 
-void Model::perform_infection_event() {
+void Model::release() {
+  //    std::cout << "Model Release" << std::endl;
+  DeletePointer<ClinicalUpdateFunction>(progress_to_clinical_update_function_);
+  DeletePointer<ImmunityClearanceUpdateFunction>(immunity_clearance_update_function_);
+  DeletePointer<ImmunityClearanceUpdateFunction>(having_drug_update_function_);
+  DeletePointer<ImmunityClearanceUpdateFunction>(clinical_update_function_);
+
+  DeletePointer<Population>(population_);
+  //    DeletePointer<ExternalPopulation>(external_population_);
+  DeletePointer<Scheduler>(scheduler_);
+  DeletePointer<ModelDataCollector>(data_collector_);
+
+  DeletePointer<Config>(config_);
+  DeletePointer<Random>(random_);
+
+  for (Reporter* reporter : reporters_) {
+    DeletePointer<Reporter>(reporter);
+  }
+  reporters_.clear();
+
+  MODEL = nullptr;
+  CONFIG = nullptr;
+  SCHEDULER = nullptr;
+  RANDOM = nullptr;
+  DATA_COLLECTOR = nullptr;
+  POPULATION = nullptr;
+}
+
+void Model::perform_infection_event() const {
   population_->perform_infection_event();
 }
 
 void Model::report_end_of_time_step() {
-  Model::DATA_COLLECTOR->perform_population_statistic();
+  DATA_COLLECTOR->perform_population_statistic();
 
-  for (Reporter *reporter: reporters_) {
+  for (Reporter* reporter : reporters_) {
     reporter->after_time_step();
   }
 
 }
 
 void Model::report_begin_of_time_step() {
-  for (Reporter *reporter :  reporters_) {
+  for (Reporter* reporter : reporters_) {
     reporter->begin_time_step();
   }
 }
 
-void Model::add_reporter(Reporter *reporter) {
+void Model::add_reporter(Reporter* reporter) {
   reporters_.push_back(reporter);
   reporter->set_model(this);
 }
-
-

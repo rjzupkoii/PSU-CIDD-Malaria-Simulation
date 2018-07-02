@@ -14,7 +14,7 @@
 class DrugType;
 
 class Therapy {
-    DISALLOW_COPY_AND_ASSIGN_(Therapy)
+    DISALLOW_COPY_AND_ASSIGN(Therapy)
 
     VIRTUAL_PROPERTY_REF(int, id)
     VIRTUAL_PROPERTY_REF(int, number_of_dosing_days)

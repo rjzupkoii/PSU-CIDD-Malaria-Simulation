@@ -10,7 +10,7 @@
 
 
 class NestedSwitchingDifferentDistributionByLocationStrategy  : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN_(NestedSwitchingDifferentDistributionByLocationStrategy)
+    DISALLOW_COPY_AND_ASSIGN(NestedSwitchingDifferentDistributionByLocationStrategy)
     VIRTUAL_PROPERTY_REF(std::vector<IStrategy*>, strategy_list)
     VIRTUAL_PROPERTY_REF(DoubleVector2, distribution)
     VIRTUAL_PROPERTY_REF(DoubleVector2, start_distribution)

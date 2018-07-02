@@ -26,10 +26,10 @@
 #include "SCTherapy.h"
 
 using namespace std;
-void CreateOptionParser(ez::ezOptionParser& opt);
-void handle_option_parser(Model* m, int argc, const char * argv[]);
+void create_option_parser(ez::ezOptionParser& opt);
+void handle_cli(Model* m, int argc, const char * argv[]);
 
-void Usage(ez::ezOptionParser& opt) {
+void usage(ez::ezOptionParser& opt) {
     std::string usage;
     opt.getUsage(usage);
     std::cout << usage;
@@ -43,7 +43,7 @@ int genotype_id = 0;
  */
 int main(int argc, const char * argv[]) {
     Model* m = new Model();
-    handle_option_parser(m, argc, argv);
+    handle_cli(m, argc, argv);
 
     m->initialize();
 
@@ -78,7 +78,7 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
-void CreateOptionParser(ez::ezOptionParser& opt) {
+void create_option_parser(ez::ezOptionParser& opt) {
     opt.overview = "PK/PD simulation for malaria.";
     opt.syntax = "PkPdSimulation [OPTIONS]";
     opt.example = "PkPdSimulation -h\n\n";
@@ -147,9 +147,9 @@ void CreateOptionParser(ez::ezOptionParser& opt) {
 
 }
 
-void handle_option_parser(Model* m, int argc, const char * argv[]) {
+void handle_cli(Model* m, int argc, const char * argv[]) {
     ez::ezOptionParser opt;
-    CreateOptionParser(opt);
+    create_option_parser(opt);
     opt.parse(argc, argv);
 
     if (opt.isSet("-h")) {
@@ -176,7 +176,7 @@ void handle_option_parser(Model* m, int argc, const char * argv[]) {
     if (!opt.gotRequired(badOptions)) {
         for (i = 0; i < badOptions.size(); ++i)
             std::cerr << "ERROR: Missing required option " << badOptions[i] << ".\n\n";
-        Usage(opt);
+        usage(opt);
         exit(1);
     }
     std::string config_filename = "basic_config.yml";

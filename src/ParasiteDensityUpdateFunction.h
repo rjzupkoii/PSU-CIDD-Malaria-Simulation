@@ -13,7 +13,7 @@
 class ClonalParasitePopulation;
 
 class ParasiteDensityUpdateFunction {
-    DISALLOW_COPY_AND_ASSIGN_(ParasiteDensityUpdateFunction)
+    DISALLOW_COPY_AND_ASSIGN(ParasiteDensityUpdateFunction)
 public:
     ParasiteDensityUpdateFunction();
     //    ParasiteUpdateFunction(const ParasiteUpdateFunction& orig);

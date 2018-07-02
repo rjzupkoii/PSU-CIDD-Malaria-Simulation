@@ -14,7 +14,7 @@ class Person;
 class Therapy;
 
 class ReceiveMDADrugEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(ReceiveMDADrugEvent)
+    DISALLOW_COPY_AND_ASSIGN(ReceiveMDADrugEvent)
     POINTER_PROPERTY(Therapy, received_therapy)
 
 public:

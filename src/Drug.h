@@ -13,7 +13,7 @@
 
 class Drug {
     OBJECTPOOL(Drug)
-    DISALLOW_COPY_AND_ASSIGN_(Drug)
+    DISALLOW_COPY_AND_ASSIGN(Drug)
 
     double get_parasite_killing_rate(int &genotype_id);
 

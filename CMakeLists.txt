@@ -34,9 +34,10 @@ find_package(yaml-cpp REQUIRED)
 find_package(fmt REQUIRED)
 
 add_subdirectory(${EXT_PROJECTS_DIR}/date)
+add_subdirectory(${EXT_PROJECTS_DIR}/clara)
 add_subdirectory(${EXT_PROJECTS_DIR}/spdlog)
 
-include_directories(${YAMLCPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${FMT_INCLUDE_DIR})
+include_directories(${YAMLCPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${FMT_INCLUDE_DIR} ${CLARA_INCLUDE_DIR})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 

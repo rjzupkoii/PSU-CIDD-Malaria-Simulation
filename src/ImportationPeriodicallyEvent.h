@@ -12,7 +12,7 @@
 #include "PropertyMacro.h"
 
 class ImportationPeriodicallyEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(ImportationPeriodicallyEvent);
+    DISALLOW_COPY_AND_ASSIGN(ImportationPeriodicallyEvent);
     OBJECTPOOL(ImportationPeriodicallyEvent)
     VIRTUAL_PROPERTY_REF(int, location);
     VIRTUAL_PROPERTY_REF(int, duration);

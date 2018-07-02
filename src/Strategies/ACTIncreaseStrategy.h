@@ -21,7 +21,7 @@
 class Random;
 
 class ACTIncreaseStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN_(ACTIncreaseStrategy)
+    DISALLOW_COPY_AND_ASSIGN(ACTIncreaseStrategy)
     VIRTUAL_PROPERTY_REF(std::vector<Therapy*>, therapy_list)
     VIRTUAL_PROPERTY_REF(std::vector<double>, distribution)
     VIRTUAL_PROPERTY_REF(std::vector<double>, start_distribution)

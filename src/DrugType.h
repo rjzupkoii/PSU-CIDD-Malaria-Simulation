@@ -26,7 +26,7 @@ public:
         SP = 5,
         Other
     };
-    DISALLOW_COPY_AND_ASSIGN_(DrugType)
+    DISALLOW_COPY_AND_ASSIGN(DrugType)
     VIRTUAL_PROPERTY_REF(int, id)
 
     VIRTUAL_PROPERTY_REF(DrugFamily, drug_family)

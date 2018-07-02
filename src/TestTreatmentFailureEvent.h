@@ -16,7 +16,7 @@ class Scheduler;
 class Person;
 
 class TestTreatmentFailureEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(TestTreatmentFailureEvent);
+    DISALLOW_COPY_AND_ASSIGN(TestTreatmentFailureEvent);
     OBJECTPOOL(TestTreatmentFailureEvent)
     POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite);
 //    PROPERTY_REF(bool, isResistance);

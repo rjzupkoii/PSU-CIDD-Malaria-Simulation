@@ -18,7 +18,7 @@
 #include "../PropertyMacro.h"
 
 class BurninFarmReporter : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN_(BurninFarmReporter)
+    DISALLOW_COPY_AND_ASSIGN(BurninFarmReporter)
 public:
     BurninFarmReporter();
     //    FarmReporter(const FarmReporter& orig);

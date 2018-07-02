@@ -38,7 +38,7 @@ public:
 
     static std::map<std::string, CommandEnum> CommandsMap;
 
-    DISALLOW_COPY_AND_ASSIGN_(GuiReporter)
+    DISALLOW_COPY_AND_ASSIGN(GuiReporter)
 public:
     GuiReporter();
     //    GuiReporter(const GuiReporter &orig);

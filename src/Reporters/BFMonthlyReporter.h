@@ -9,7 +9,7 @@
 #include "Reporter.h"
 
 class BFMonthlyReporter : public Reporter {
-DISALLOW_COPY_AND_ASSIGN_(BFMonthlyReporter)
+DISALLOW_COPY_AND_ASSIGN(BFMonthlyReporter)
 
 public:
     BFMonthlyReporter();

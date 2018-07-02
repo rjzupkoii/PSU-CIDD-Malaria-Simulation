@@ -17,7 +17,7 @@
 #include <string>
 
 class BurninMonthlyReporter : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN_(BurninMonthlyReporter)
+    DISALLOW_COPY_AND_ASSIGN(BurninMonthlyReporter)
 
     VIRTUAL_PROPERTY_REF(double, last_reported_NTF)
     VIRTUAL_PROPERTY_REF(int, last_reported_clinical_episodes)

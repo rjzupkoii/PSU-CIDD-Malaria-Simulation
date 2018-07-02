@@ -34,7 +34,7 @@ class PersonIndexByLocationBittingLevel;
  * 
  */
 class Population : public Dispatcher {
-DISALLOW_COPY_AND_ASSIGN_(Population)
+DISALLOW_COPY_AND_ASSIGN(Population)
 
 POINTER_PROPERTY(Model, model);
 

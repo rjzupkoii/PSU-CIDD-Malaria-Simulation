@@ -11,7 +11,7 @@
 #include "Person.h"
 
 class PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN_(PersonIndex)
+    DISALLOW_COPY_AND_ASSIGN(PersonIndex)
 
 public:
     PersonIndex();

@@ -11,7 +11,7 @@
 
 namespace Spatial {
     class SpatialModel {
-    DISALLOW_COPY_AND_ASSIGN_(SpatialModel)
+    DISALLOW_COPY_AND_ASSIGN(SpatialModel)
 
     public:
         SpatialModel();

@@ -11,7 +11,7 @@
 #include "Reporter.h"
 
 class AMUReporter : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN_(AMUReporter)
+    DISALLOW_COPY_AND_ASSIGN(AMUReporter)
     VIRTUAL_PROPERTY_REF(double, last_reported_NTF)
     
 public:

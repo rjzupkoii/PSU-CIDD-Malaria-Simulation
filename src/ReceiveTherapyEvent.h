@@ -16,7 +16,7 @@ class Therapy;
 class ClonalParasitePopulation;
 
 class ReceiveTherapyEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(ReceiveTherapyEvent)
+    DISALLOW_COPY_AND_ASSIGN(ReceiveTherapyEvent)
     POINTER_PROPERTY(Therapy, received_therapy)
     POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite);
 public:

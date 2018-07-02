@@ -21,7 +21,7 @@
 class IStrategy;
 
 class StrategyBuilder {
-    DISALLOW_COPY_AND_ASSIGN_(StrategyBuilder)
+    DISALLOW_COPY_AND_ASSIGN(StrategyBuilder)
 public:
     StrategyBuilder();
     virtual ~StrategyBuilder();

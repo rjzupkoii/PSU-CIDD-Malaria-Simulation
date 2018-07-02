@@ -11,7 +11,7 @@
 
 namespace Spatial {
     class SpatialModelBuilder {
-        DISALLOW_COPY_AND_ASSIGN_(SpatialModelBuilder)
+        DISALLOW_COPY_AND_ASSIGN(SpatialModelBuilder)
     public:
         SpatialModelBuilder();
 

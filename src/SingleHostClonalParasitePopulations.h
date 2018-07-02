@@ -20,7 +20,7 @@ class DrugsInBlood;
 
 class SingleHostClonalParasitePopulations {
     OBJECTPOOL(SingleHostClonalParasitePopulations)
-    DISALLOW_COPY_AND_ASSIGN_(SingleHostClonalParasitePopulations)
+    DISALLOW_COPY_AND_ASSIGN(SingleHostClonalParasitePopulations)
 
     POINTER_PROPERTY(Person, person)
 

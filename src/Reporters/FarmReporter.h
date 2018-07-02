@@ -12,7 +12,7 @@
 #include "../PropertyMacro.h"
 
 class FarmReporter : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN_(FarmReporter)
+    DISALLOW_COPY_AND_ASSIGN(FarmReporter)
 public:
     FarmReporter();
     //    FarmReporter(const FarmReporter& orig);

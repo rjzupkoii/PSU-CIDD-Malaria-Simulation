@@ -11,7 +11,7 @@
 namespace Spatial {
 
     class GeneralGravitySM : public SpatialModel {
-    DISALLOW_COPY_AND_ASSIGN_(GeneralGravitySM)
+    DISALLOW_COPY_AND_ASSIGN(GeneralGravitySM)
 
     public:
         GeneralGravitySM();

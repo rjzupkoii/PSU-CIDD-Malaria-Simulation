@@ -15,7 +15,7 @@ class DrugType;
 class Therapy;
 
 class IntGenotype {
-    DISALLOW_COPY_AND_ASSIGN_(IntGenotype)
+    DISALLOW_COPY_AND_ASSIGN(IntGenotype)
     PROPERTY_REF(int, genotype_id);
     PROPERTY_REF(IntVector, gene_expression);
     PROPERTY_REF(double, daily_fitness_multiple_infection);

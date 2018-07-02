@@ -16,7 +16,7 @@ class Scheduler;
 class Person;
 
 class EndClinicalByNoTreatmentEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(EndClinicalByNoTreatmentEvent);
+    DISALLOW_COPY_AND_ASSIGN(EndClinicalByNoTreatmentEvent);
     OBJECTPOOL(EndClinicalByNoTreatmentEvent)
     POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite);
 

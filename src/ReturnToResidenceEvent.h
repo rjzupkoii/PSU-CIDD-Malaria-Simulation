@@ -17,7 +17,7 @@ class Scheduler;
 class Person;
 
 class ReturnToResidenceEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(ReturnToResidenceEvent);
+    DISALLOW_COPY_AND_ASSIGN(ReturnToResidenceEvent);
     OBJECTPOOL(ReturnToResidenceEvent)
 public:
     ReturnToResidenceEvent();

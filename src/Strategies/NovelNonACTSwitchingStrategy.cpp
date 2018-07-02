@@ -48,7 +48,7 @@ void NovelNonACTSwitchingStrategy::update_end_of_time_step() {
     if (fraction_non_art_replacement_ > 0.0) {
       //collect the current TF
       //TODO: multiple location
-      Model::DATA_COLLECTOR->TF_at_15() = Model::DATA_COLLECTOR->current_TF_by_location()[0];
+      Model::DATA_COLLECTOR->tf_at_15() = Model::DATA_COLLECTOR->current_TF_by_location()[0];
       Model::DATA_COLLECTOR->single_resistance_frequency_at_15() = Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
               Model::DATA_COLLECTOR->resistance_tracker().single_resistance_ids());
       Model::DATA_COLLECTOR->double_resistance_frequency_at_15() = Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(

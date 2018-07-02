@@ -15,7 +15,7 @@ class Person;
 class Scheduler;
 
 class ReturnToNormalPopulationEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(ReturnToNormalPopulationEvent);
+    DISALLOW_COPY_AND_ASSIGN(ReturnToNormalPopulationEvent);
     OBJECTPOOL(ReturnToNormalPopulationEvent)
 public:
     ReturnToNormalPopulationEvent();

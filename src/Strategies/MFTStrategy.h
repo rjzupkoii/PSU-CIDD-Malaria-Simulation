@@ -15,7 +15,7 @@ class Random;
 class Therapy;
 
 class MFTStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN_(MFTStrategy)
+    DISALLOW_COPY_AND_ASSIGN(MFTStrategy)
     VIRTUAL_PROPERTY_REF(std::vector<Therapy*>, therapy_list)
     VIRTUAL_PROPERTY_REF(std::vector<double>, distribution)
 

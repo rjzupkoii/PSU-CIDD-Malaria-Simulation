@@ -18,7 +18,7 @@ class DrugType;
 
 class DrugsInBlood {
     OBJECTPOOL(DrugsInBlood)
-    DISALLOW_COPY_AND_ASSIGN_(DrugsInBlood)
+    DISALLOW_COPY_AND_ASSIGN(DrugsInBlood)
     POINTER_PROPERTY(Person, person)
     POINTER_PROPERTY(DrugPtrMap, drugs)
 

@@ -15,7 +15,7 @@ class Dispatcher;
 class Scheduler;
 
 class Event : public IndexHandler {
-    DISALLOW_COPY_AND_ASSIGN_(Event)
+    DISALLOW_COPY_AND_ASSIGN(Event)
 
     POINTER_PROPERTY(Scheduler, scheduler);
     POINTER_PROPERTY(Dispatcher, dispatcher);

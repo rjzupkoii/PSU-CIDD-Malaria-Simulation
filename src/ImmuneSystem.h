@@ -23,7 +23,7 @@ class Config;
 
 class ImmuneSystem {
     OBJECTPOOL(ImmuneSystem)
-    DISALLOW_COPY_AND_ASSIGN_(ImmuneSystem)
+    DISALLOW_COPY_AND_ASSIGN(ImmuneSystem)
     POINTER_PROPERTY(Person, person);
     VIRTUAL_PROPERTY_REF(bool, increase);
 

@@ -9,7 +9,7 @@
 #define	PERSONINDEXHANDLER_H
 #include "PropertyMacro.h"
 class IndexHandler {
-    DISALLOW_COPY_AND_ASSIGN_(IndexHandler)
+    DISALLOW_COPY_AND_ASSIGN(IndexHandler)
     PROPERTY_REF(int,index)
     
 public:

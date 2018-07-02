@@ -10,7 +10,7 @@
 
 namespace Spatial {
     class Coordinate {
-    DISALLOW_COPY_AND_ASSIGN_(Coordinate)
+    DISALLOW_COPY_AND_ASSIGN(Coordinate)
 
     public:
         float latitude;

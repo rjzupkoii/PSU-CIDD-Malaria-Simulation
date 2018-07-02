@@ -12,7 +12,7 @@
 #include "../PropertyMacro.h"
 
 class CyclingStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN_(CyclingStrategy)
+    DISALLOW_COPY_AND_ASSIGN(CyclingStrategy)
     VIRTUAL_PROPERTY_REF(std::vector<Therapy*>, therapy_list)
     VIRTUAL_PROPERTY_REF(int, index)
     VIRTUAL_PROPERTY_REF(int, cycling_time)

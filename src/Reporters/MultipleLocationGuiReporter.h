@@ -12,7 +12,7 @@
 #include "../PropertyMacro.h"
 
 class MultipleLocationGuiReporter : public GuiReporter {
-    DISALLOW_COPY_AND_ASSIGN_(MultipleLocationGuiReporter)
+    DISALLOW_COPY_AND_ASSIGN(MultipleLocationGuiReporter)
 public:
     MultipleLocationGuiReporter();
     //    MultipleLocationGuiReporter(const MultipleLocationGuiReporter& orig);

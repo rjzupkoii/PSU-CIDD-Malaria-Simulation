@@ -18,7 +18,7 @@ class Person;
 class IntGenotype;
 
 class MoveParasiteToBloodEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(MoveParasiteToBloodEvent);
+    DISALLOW_COPY_AND_ASSIGN(MoveParasiteToBloodEvent);
     OBJECTPOOL(MoveParasiteToBloodEvent)
     POINTER_PROPERTY(IntGenotype, infection_type);
 

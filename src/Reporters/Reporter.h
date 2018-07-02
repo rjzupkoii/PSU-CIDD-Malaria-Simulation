@@ -14,7 +14,7 @@ class Model;
 
 class Reporter {
 
-    DISALLOW_COPY_AND_ASSIGN_(Reporter)
+    DISALLOW_COPY_AND_ASSIGN(Reporter)
     POINTER_PROPERTY(Model, model)
 
     enum ReportType {

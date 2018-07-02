@@ -20,7 +20,7 @@ namespace spd = spdlog;
 int main(int, char *[]) {
   try {
     // Console logger with color
-    auto console = spd::stdout_color_mt("console");
+    std::shared_ptr<spdlog::logger> console = spd::stdout_color_mt("console");
     console->info("Welcome to spdlog!");
     console->error("Some error message with arg{}..", 1);
 

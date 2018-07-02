@@ -18,7 +18,7 @@
 #include "../PropertyMacro.h"
 
 class NestedSwitchingStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN_(NestedSwitchingStrategy)
+    DISALLOW_COPY_AND_ASSIGN(NestedSwitchingStrategy)
     VIRTUAL_PROPERTY_REF(std::vector<IStrategy*>, strategy_list)
     VIRTUAL_PROPERTY_REF(std::vector<double>, distribution)
     VIRTUAL_PROPERTY_REF(std::vector<double>, start_distribution)

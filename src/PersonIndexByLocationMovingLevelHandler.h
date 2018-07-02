@@ -11,7 +11,7 @@
 #include "PropertyMacro.h"
 
 class PersonIndexByLocationMovingLevelHandler : public IndexHandler {
-    DISALLOW_COPY_AND_ASSIGN_(PersonIndexByLocationMovingLevelHandler)
+    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationMovingLevelHandler)
 public:
     PersonIndexByLocationMovingLevelHandler();
     //    PersonIndexByLocationMovingLevelHandler(const PersonIndexByLocationMovingLevelHandler& orig);

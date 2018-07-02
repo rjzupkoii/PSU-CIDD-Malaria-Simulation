@@ -13,7 +13,7 @@
 #include <string>
 
 class MonthlyReporterConsole : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN_(MonthlyReporterConsole)
+    DISALLOW_COPY_AND_ASSIGN(MonthlyReporterConsole)
 
     VIRTUAL_PROPERTY_REF(double, last_reported_NTF)
     VIRTUAL_PROPERTY_REF(int, last_reported_clinical_episodes)

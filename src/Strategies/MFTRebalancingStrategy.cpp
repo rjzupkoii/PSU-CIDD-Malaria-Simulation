@@ -16,6 +16,7 @@
 #include "../Config.h"
 #include "../MDC/ModelDataCollector.h"
 #include "../Therapy.h"
+#include <string>
 
 MFTRebalancingStrategy::MFTRebalancingStrategy() : next_update_time_(-1), latest_adjust_distribution_time_(-1) {
 }
@@ -60,10 +61,10 @@ void MFTRebalancingStrategy::update_end_of_time_step() {
         double sum = 0;
         for (int i = 0; i < distribution().size(); i++) {
           //            std::cout << Model::DATA_COLLECTOR->current_TF_by_therapy()[therapy_list()[i]->id()] << "-";
-          if (Model::DATA_COLLECTOR->current_TF_by_therapy()[therapy_list()[i]->id()] < 0.05) {
+          if (Model::DATA_COLLECTOR->current_tf_by_therapy()[therapy_list()[i]->id()] < 0.05) {
             next_distribution_[i] = 1.0 / 0.05;
           } else {
-            next_distribution_[i] = 1.0 / Model::DATA_COLLECTOR->current_TF_by_therapy()[therapy_list()[i]->id()];
+            next_distribution_[i] = 1.0 / Model::DATA_COLLECTOR->current_tf_by_therapy()[therapy_list()[i]->id()];
           }
           sum += next_distribution_[i];
         }

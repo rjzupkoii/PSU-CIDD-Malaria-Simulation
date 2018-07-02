@@ -14,7 +14,7 @@ class Model;
 
 class ImmuneComponent {
 //    //OBJECTPOOL(ImmuneComponent)
-    DISALLOW_COPY_AND_ASSIGN_(ImmuneComponent)
+    DISALLOW_COPY_AND_ASSIGN(ImmuneComponent)
 
     POINTER_PROPERTY(ImmuneSystem, immune_system)
 

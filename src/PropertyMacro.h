@@ -24,7 +24,6 @@
         property_type& property_name() { return property_name##_; }\
         void set_##property_name(const property_type& value){ property_name##_ = value;}
 
-
 #define POINTER_PROPERTY(property_type, property_name)\
     private:\
         property_type* property_name##_;\
@@ -61,28 +60,30 @@
 
 #define DISALLOW_COPY_(type)\
     public:\
-        type(type const &) = delete;\
+        type(type const &) = delete;
 
-#define DISALLOW_COPY_AND_ASSIGN_(type)\
+#define DISALLOW_COPY_AND_ASSIGN(type)\
     DISALLOW_COPY_(type)\
-    DISALLOW_ASSIGN_(type)\
-        
+    DISALLOW_ASSIGN_(type)
+
+#define DISALLOW_MOVE(type)\
+  public:\
+    type(type&&) = delete;\
+    type& operator=(type&&) = delete;
 
 #define PROPERTY_HEADER(property_type, property_name)\
     private:\
         property_type property_name##_;\
     public:\
         property_type property_name() const;\
-        void set_##property_name(const property_type &value);\
-        
+        void set_##property_name(const property_type &value);
 
 #define POINTER_PROPERTY_HEADER(property_type, property_name)\
     private:\
         property_type* property_name##_;\
     public:\
         property_type* property_name() const;\
-        void set_##property_name(property_type* value);\
-        
+        void set_##property_name(property_type* value);
 
 #define VIRTUAL_PROPERTY(property_type, property_name)\
     private:\
@@ -99,4 +100,3 @@
         virtual void set_##property_name(const property_type& value){ property_name##_ = value;}
 
 #endif	/* PROPERTYMACRO_H */
-

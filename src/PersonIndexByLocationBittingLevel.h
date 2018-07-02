@@ -14,7 +14,7 @@
 #include "PersonIndex.h"
 
 class PersonIndexByLocationBittingLevel : public PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN_(PersonIndexByLocationBittingLevel);
+    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationBittingLevel);
     PROPERTY_REF(PersonPtrVector3, vPerson);
 
 public:

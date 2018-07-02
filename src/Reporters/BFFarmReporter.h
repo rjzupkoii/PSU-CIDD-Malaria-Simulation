@@ -8,7 +8,7 @@
 #include "Reporter.h"
 
 class BFFarmReporter: public Reporter {
-    DISALLOW_COPY_AND_ASSIGN_(BFFarmReporter)
+    DISALLOW_COPY_AND_ASSIGN(BFFarmReporter)
 
 public:
     BFFarmReporter();

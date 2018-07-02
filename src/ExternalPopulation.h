@@ -15,7 +15,7 @@ class Model;
 class PersonIndexAll;
 
 class ExternalPopulation : public Population {
-    DISALLOW_COPY_AND_ASSIGN_(ExternalPopulation)
+    DISALLOW_COPY_AND_ASSIGN(ExternalPopulation)
 //    POINTER_PROPERTY(PersonIndexPtrList, person_index_list)
 //    READ_ONLY_PROPERTY(PersonIndexAll*, all_persons)
 

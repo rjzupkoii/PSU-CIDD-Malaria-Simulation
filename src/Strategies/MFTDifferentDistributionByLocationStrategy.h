@@ -11,7 +11,7 @@
 
 
 class MFTDifferentDistributionByLocationStrategy : public IStrategy {
-DISALLOW_COPY_AND_ASSIGN_(MFTDifferentDistributionByLocationStrategy)
+DISALLOW_COPY_AND_ASSIGN(MFTDifferentDistributionByLocationStrategy)
 
 VIRTUAL_PROPERTY_REF(std::vector<Therapy *>, therapy_list)
 

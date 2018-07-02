@@ -15,7 +15,7 @@
 class DrugType;
 
 class SCTherapy: public Therapy {
-    DISALLOW_COPY_AND_ASSIGN_(SCTherapy)
+    DISALLOW_COPY_AND_ASSIGN(SCTherapy)
 
     
     VIRTUAL_PROPERTY_REF(int, artemisinin_id)

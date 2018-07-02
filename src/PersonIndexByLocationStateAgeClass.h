@@ -14,7 +14,7 @@
 #include "PersonIndex.h"
 
 class PersonIndexByLocationStateAgeClass : public PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN_(PersonIndexByLocationStateAgeClass)
+    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationStateAgeClass)
 
 
     PROPERTY_REF(PersonPtrVector4, vPerson);

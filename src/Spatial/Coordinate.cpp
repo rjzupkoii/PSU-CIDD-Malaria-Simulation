@@ -3,6 +3,7 @@
 //
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <ostream>
 #include "Coordinate.h"
 
 namespace Spatial {

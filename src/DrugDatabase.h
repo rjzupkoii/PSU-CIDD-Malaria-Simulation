@@ -15,7 +15,7 @@
 typedef std::map<int, DrugType*> DrugTypePtrMap;
 
 class DrugDatabase {
-    DISALLOW_COPY_AND_ASSIGN_(DrugDatabase)
+    DISALLOW_COPY_AND_ASSIGN(DrugDatabase)
     VIRTUAL_PROPERTY_REF(DrugTypePtrMap, drug_db)
 
 public:

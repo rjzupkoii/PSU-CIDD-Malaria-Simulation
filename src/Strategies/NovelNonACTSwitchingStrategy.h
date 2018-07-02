@@ -17,7 +17,7 @@
 #include "MFTStrategy.h"
 
 class NovelNonACTSwitchingStrategy : public MFTStrategy {
-    DISALLOW_COPY_AND_ASSIGN_(NovelNonACTSwitchingStrategy)
+    DISALLOW_COPY_AND_ASSIGN(NovelNonACTSwitchingStrategy)
     VIRTUAL_PROPERTY_REF(int, non_artemisinin_switching_day)
     VIRTUAL_PROPERTY_REF(int, non_art_therapy_id)
     VIRTUAL_PROPERTY_REF(double, fraction_non_art_replacement)

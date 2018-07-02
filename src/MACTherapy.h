@@ -12,7 +12,7 @@
 #include "Therapy.h"
 
 class MACTherapy: public Therapy {
-    DISALLOW_COPY_AND_ASSIGN_(MACTherapy)
+    DISALLOW_COPY_AND_ASSIGN(MACTherapy)
     VIRTUAL_PROPERTY_REF(std::vector<int>, therapy_ids);
     VIRTUAL_PROPERTY_REF(std::vector<int>, start_at_days);
 

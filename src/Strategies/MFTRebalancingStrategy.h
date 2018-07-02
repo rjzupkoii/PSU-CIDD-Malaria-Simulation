@@ -18,7 +18,7 @@
 #include "../PropertyMacro.h"
 
 class MFTRebalancingStrategy : public MFTStrategy {
-    DISALLOW_COPY_AND_ASSIGN_(MFTRebalancingStrategy)
+    DISALLOW_COPY_AND_ASSIGN(MFTRebalancingStrategy)
     VIRTUAL_PROPERTY_REF(int, update_duration_after_rebalancing)
 
     VIRTUAL_PROPERTY_REF(int, latest_adjust_distribution_time)

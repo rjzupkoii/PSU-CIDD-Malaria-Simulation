@@ -17,7 +17,7 @@ class Scheduler;
 class Person;
 
 class UpdateWhenDrugIsPresentEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(UpdateWhenDrugIsPresentEvent);
+    DISALLOW_COPY_AND_ASSIGN(UpdateWhenDrugIsPresentEvent);
     OBJECTPOOL(UpdateWhenDrugIsPresentEvent)
     POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite);
 public:

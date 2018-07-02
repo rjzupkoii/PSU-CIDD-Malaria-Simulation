@@ -11,7 +11,7 @@
 
 namespace Spatial {
     class BarabasiSM : public SpatialModel {
-    DISALLOW_COPY_AND_ASSIGN_(BarabasiSM)
+    DISALLOW_COPY_AND_ASSIGN(BarabasiSM)
 
     VIRTUAL_PROPERTY_REF(double, r_g_0)
 

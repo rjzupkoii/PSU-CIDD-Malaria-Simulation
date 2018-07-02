@@ -18,7 +18,7 @@ typedef std::map<int, IntGenotype*> IntGenotypePtrMap;
 typedef std::vector< std::vector < std::vector <double> > > MatingMatrix;
 
 class IntGenotypeDatabase {
-    DISALLOW_COPY_AND_ASSIGN_(IntGenotypeDatabase)
+    DISALLOW_COPY_AND_ASSIGN(IntGenotypeDatabase)
     VIRTUAL_PROPERTY_REF(IntGenotypePtrMap, db);
     VIRTUAL_PROPERTY_REF(MatingMatrix, mating_matrix);
     VIRTUAL_PROPERTY_REF(IntVector, weight);

@@ -14,7 +14,7 @@
 class Model;
 
 class ClinicalUpdateFunction: public ParasiteDensityUpdateFunction {
-    DISALLOW_COPY_AND_ASSIGN_(ClinicalUpdateFunction)
+    DISALLOW_COPY_AND_ASSIGN(ClinicalUpdateFunction)
     POINTER_PROPERTY(Model, model)
 public:
     ClinicalUpdateFunction(Model* model = nullptr);

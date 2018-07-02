@@ -14,7 +14,7 @@
 class InfantImmuneComponent : public ImmuneComponent {
 //OBJECTPOOL(InfantImmuneComponent)
 
-DISALLOW_COPY_AND_ASSIGN_(InfantImmuneComponent)
+DISALLOW_COPY_AND_ASSIGN(InfantImmuneComponent)
 
 public:
     InfantImmuneComponent(ImmuneSystem *immune_system = nullptr);

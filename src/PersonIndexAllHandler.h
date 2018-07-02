@@ -12,7 +12,7 @@
 #include "IndexHandler.h"
 
 class PersonIndexAllHandler: public IndexHandler {
-    DISALLOW_COPY_AND_ASSIGN_(PersonIndexAllHandler)        
+    DISALLOW_COPY_AND_ASSIGN(PersonIndexAllHandler)        
 public:
     PersonIndexAllHandler();    
     virtual ~PersonIndexAllHandler();

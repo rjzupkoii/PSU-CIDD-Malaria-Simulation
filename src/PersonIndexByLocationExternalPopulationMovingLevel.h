@@ -13,7 +13,7 @@
 #include "PersonIndex.h"
 
 class PersonIndexByLocationExternalPopulationMovingLevel: public PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN_(PersonIndexByLocationExternalPopulationMovingLevel)
+    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationExternalPopulationMovingLevel)
     PROPERTY_REF(PersonPtrVector3, vPerson)
 
 public:

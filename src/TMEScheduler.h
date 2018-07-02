@@ -16,7 +16,7 @@
 class Model;
 
 class TMEScheduler {
-    DISALLOW_COPY_AND_ASSIGN_(TMEScheduler)
+    DISALLOW_COPY_AND_ASSIGN(TMEScheduler)
 
     POINTER_PROPERTY(Model, model)
     PROPERTY_REF(StringVector2, schedule)

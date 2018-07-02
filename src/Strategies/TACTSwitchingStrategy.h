@@ -17,7 +17,7 @@
 #include "ACTIncreaseStrategy.h"
 
 class TACTSwitchingTStrategy : public ACTIncreaseStrategy {
-    DISALLOW_COPY_AND_ASSIGN_(TACTSwitchingTStrategy)
+    DISALLOW_COPY_AND_ASSIGN(TACTSwitchingTStrategy)
     VIRTUAL_PROPERTY_REF(int, TACT_switching_day)
     VIRTUAL_PROPERTY_REF(int, TACT_id)
 public:

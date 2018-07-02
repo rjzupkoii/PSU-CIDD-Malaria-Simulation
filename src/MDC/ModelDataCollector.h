@@ -23,7 +23,7 @@ class Therapy;
 class ClonalParasitePopulation;
 
 class ModelDataCollector {
-DISALLOW_COPY_AND_ASSIGN_(ModelDataCollector)
+DISALLOW_COPY_AND_ASSIGN(ModelDataCollector)
 
 POINTER_PROPERTY(Model, model)
 
@@ -174,7 +174,7 @@ PROPERTY_REF(IntVector, monthly_number_of_clinical_episode_by_location);
 PROPERTY_REF(IntVector2, popsize_by_location_age)
 
 
-PROPERTY_REF(double, TF_at_15)
+PROPERTY_REF(double, tf_at_15)
 
 PROPERTY_REF(double, single_resistance_frequency_at_15)
 
@@ -190,22 +190,22 @@ PROPERTY_REF(double, art_resistance_frequency_at_15)
 
 PROPERTY_REF(double, total_resistance_frequency_at_15)
 
-PROPERTY_REF(IntVector, today_TF_by_therapy)
+PROPERTY_REF(IntVector, today_tf_by_therapy)
 
 PROPERTY_REF(IntVector, today_number_of_treatments_by_therapy)
 
-PROPERTY_REF(DoubleVector, current_TF_by_therapy)
+PROPERTY_REF(DoubleVector, current_tf_by_therapy)
 
 PROPERTY_REF(IntVector2, total_number_of_treatments_60_by_therapy)
 
-PROPERTY_REF(IntVector2, total_TF_60_by_therapy)
+PROPERTY_REF(IntVector2, total_tf_60_by_therapy)
 
 PROPERTY_REF(double, mean_moi)
 
   static const int number_of_reported_MOI = 8;
 
 public:
-  ModelDataCollector(Model *model = nullptr);
+  explicit ModelDataCollector(Model *model = nullptr);
 
   //    Statistic(const Statistic& orig);
   virtual ~ModelDataCollector();
@@ -225,7 +225,7 @@ public:
 
   virtual void update_person_days_by_years(const int &location, const int &days);
 
-  void calculate_EIR();
+  void calculate_eir();
 
   void
   record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten, const int &age_group,

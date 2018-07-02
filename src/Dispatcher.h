@@ -14,7 +14,7 @@
 class Event;
 
 class Dispatcher {
-    DISALLOW_COPY_AND_ASSIGN_(Dispatcher)
+    DISALLOW_COPY_AND_ASSIGN(Dispatcher)
     POINTER_PROPERTY(EventPtrVector, events);
 
 

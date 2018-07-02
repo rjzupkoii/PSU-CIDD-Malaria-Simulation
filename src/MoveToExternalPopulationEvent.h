@@ -16,7 +16,7 @@ class Scheduler;
 class Person;
 
 class MoveToExternalPopulationEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN_(MoveToExternalPopulationEvent)
+    DISALLOW_COPY_AND_ASSIGN(MoveToExternalPopulationEvent)
     OBJECTPOOL(MoveToExternalPopulationEvent)
 public:
     MoveToExternalPopulationEvent();
