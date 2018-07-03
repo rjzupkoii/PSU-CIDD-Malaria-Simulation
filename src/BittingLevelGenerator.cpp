@@ -9,41 +9,42 @@
 #include "Model.h"
 #include "Config.h"
 #include "Random.h"
-#include <assert.h>
+#include <cassert>
 
-BittingLevelGenerator::BittingLevelGenerator():data_() {
+// TODO: writing test 
+
+BittingLevelGenerator::BittingLevelGenerator():
+  level_density_(nullptr) {}
+
+BittingLevelGenerator::~BittingLevelGenerator() = default;
+
+int BittingLevelGenerator::draw_random_level(Random* random) {
+  if (data_.empty()) {
+    allocate(random);
+  }
+
+  const int temp = data_.back();
+  data_.pop_back();
+  return temp;
 }
 
-BittingLevelGenerator::~BittingLevelGenerator() {
-}
+void BittingLevelGenerator::allocate(Random* random) {
+  const auto chunk_size = 100000;
 
-int BittingLevelGenerator::draw_random_level(Model* model) {
-    if (data_.empty()) {
-        allocate(model);
+  const int size = level_density_->size();
+  UIntVector n(size);
+  random->random_multinomial(size, chunk_size, &level_density_->at(0), &n[0]);
+  //
+  //    for(int i :  n){
+  //        std::cout << i << "\t";
+  //    }
+  //    std::cout<< std::endl;
+  data_.clear();
+  for (auto i = 0; i < size; i++) {
+    for (auto j = 0; j < n[i]; j++) {
+      data_.push_back(i);
     }
-
-    int temp = data_.back();
-    data_.pop_back();
-    return temp;
-}
-
-void BittingLevelGenerator::allocate(Model* model) {
-    const int chunkSize = 100000;
-
-    int size = level_density_->size();
-    UIntVector n(size);
-    model->random()->random_multinomial(size, chunkSize, &level_density_->at(0), &n[0]);
-//
-//    for(int i :  n){
-//        std::cout << i << "\t";
-//    }
-//    std::cout<< std::endl;
-    data_.clear();
-    for (unsigned int &&i = 0; i < size; i++) {
-        for (int j = 0; j < n[i]; j++) {
-            data_.push_back(i);
-        }
-    }
-    assert(data_.size() == chunkSize);
-    model->random()->random_shuffle(&data_[0], data_.size(), sizeof(int));
+  }
+  assert(data_.size() == chunkSize);
+  random->random_shuffle(&data_[0], data_.size(), sizeof(int));
 }

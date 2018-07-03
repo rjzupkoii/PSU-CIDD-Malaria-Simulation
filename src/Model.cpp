@@ -32,6 +32,7 @@
 #include "SwitchImmuneComponentEvent.h"
 #include "ImportationPeriodicallyEvent.h"
 #include "ImportationEvent.h"
+#include "easylogging++.h"
 
 Model* Model::MODEL = nullptr;
 Config* Model::CONFIG = nullptr;
@@ -81,6 +82,8 @@ Model::~Model() {
 }
 
 void Model::initialize() {
+
+  LOG(INFO) << "Model initilizing...";
   //Initialize Random Seed
   random_->initialize(initial_seed_number_);
 

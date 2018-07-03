@@ -15,68 +15,67 @@
 class Model;
 
 class Random {
-    VIRTUAL_PROPERTY(unsigned long, seed);
-    READ_ONLY_PROPERTY_REF(BittingLevelGenerator, bitting_level_generator)
-    READ_ONLY_PROPERTY_REF(BittingLevelGenerator, moving_level_generator)
-    READ_ONLY_PROPERTY_REF(BittingLevelGenerator, external_population_moving_level_generator)
-    POINTER_PROPERTY(Model, model)
-   
-    
+VIRTUAL_PROPERTY(unsigned long, seed);
+READ_ONLY_PROPERTY_REF(BittingLevelGenerator, bitting_level_generator)
+READ_ONLY_PROPERTY_REF(BittingLevelGenerator, moving_level_generator)
+READ_ONLY_PROPERTY_REF(BittingLevelGenerator, external_population_moving_level_generator)
+POINTER_PROPERTY(Model, model)
+
+
 public:
-    gsl_rng* G_RNG;
+  gsl_rng* G_RNG;
 
-    Random(Model* model = nullptr,gsl_rng* g_rng = nullptr);
+  Random(Model* model = nullptr, gsl_rng* g_rng = nullptr);
 
-    virtual ~Random();
+  virtual ~Random();
 
-    void initialize(const unsigned long &seed = 0);
+  void initialize(const unsigned long& seed = 0);
 
-    void release();
+  void release();
 
-    virtual int random_poisson(const double& poissonMeans);
+  virtual int random_poisson(const double& poissonMeans);
 
-    virtual unsigned long random_uniform(unsigned long range);
-    virtual unsigned long random_uniform_int(const unsigned long &from, const unsigned long &to);
-    virtual double random_uniform_double(const double& from, const double& to);
-    
+  virtual unsigned long random_uniform(unsigned long range);
+  virtual unsigned long random_uniform_int(const unsigned long& from, const unsigned long& to);
+  virtual double random_uniform_double(const double& from, const double& to);
 
-    /*
-     * This function will return a random number in [0,1)
-     */
-    virtual double random_uniform();
 
-    virtual double random_normal(const double& mean, const double& sd);
-    virtual double random_normal_truncated(const double& mean, const double& sd);
+  /*
+   * This function will return a random number in [0,1)
+   */
+  virtual double random_uniform();
 
-    virtual int random_normal(const int& mean, const int& sd);
-    virtual int random_normal_truncated(const int& mean, const int& sd);
+  virtual double random_normal(const double& mean, const double& sd);
+  virtual double random_normal_truncated(const double& mean, const double& sd);
 
-    virtual double random_beta(const double& alpha, const double& beta);
+  virtual int random_normal(const int& mean, const int& sd);
+  virtual int random_normal_truncated(const int& mean, const int& sd);
 
-    virtual double random_gamma(const double& shape, const double& scale);
+  virtual double random_beta(const double& alpha, const double& beta);
 
-    virtual double cdf_gamma_distribution(const double& x, const double& alpha, const double& beta);
+  virtual double random_gamma(const double& shape, const double& scale);
 
-    virtual double cdf_gamma_distribution_inverse(const double& p, const double& alpha, const double& beta);
+  virtual double cdf_gamma_distribution(const double& x, const double& alpha, const double& beta);
 
-    virtual double random_flat(const double& from, const double& to);
+  virtual double cdf_gamma_distribution_inverse(const double& p, const double& alpha, const double& beta);
 
-    virtual void random_multinomial(const size_t &K, const unsigned& N, double p[], unsigned n[]);
-    
-    virtual void random_shuffle( void * base, size_t base_length, size_t size_of_type);
+  virtual double random_flat(const double& from, const double& to);
 
-    virtual int random_biting_level();
-    virtual int random_moving_level();
-    virtual int random_external_population_moving_level();
-    
-    
-    virtual double cdf_standard_normal_distribution(const double& p);
-    
-    virtual int random_binomial(const double &p, const unsigned int &n);
-    
-private:
-    unsigned long good_seed();
+  virtual void random_multinomial(const size_t& K, const unsigned& N, double p[], unsigned n[]);
+
+  virtual void random_shuffle(void* base, size_t base_length, size_t size_of_type);
+
+  virtual int random_biting_level();
+  virtual int random_moving_level();
+  virtual int random_external_population_moving_level();
+
+
+  virtual double cdf_standard_normal_distribution(const double& p);
+
+  virtual int random_binomial(const double& p, const unsigned int& n);
+
+
+  static unsigned long good_seed();
 };
 
 #endif	/* RANDOM_H */
-

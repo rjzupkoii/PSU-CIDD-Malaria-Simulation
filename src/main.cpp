@@ -17,25 +17,51 @@ using namespace std;
 
 void handle_cli(Model* model, int argc, char** argv);
 
+inline bool file_exists(const std::string& name) {
+  ifstream f(name.c_str());
+  return f.good();
+}
 
 void config_logger() {
   el::Configurations default_conf;
   default_conf.setToDefault();
-  default_conf.set(el::Level::Debug, el::ConfigurationType::Format, "%level [%logger] [%host] [%func] [%loc] %msg");
-  default_conf.set(el::Level::Error, el::ConfigurationType::Format, "%level [%logger] [%host] [%func] [%loc] %msg");
-  default_conf.set(el::Level::Fatal, el::ConfigurationType::Format, "%level [%logger] [%host] [%func] [%loc] %msg");
-  default_conf.set(el::Level::Trace, el::ConfigurationType::Format, "%level [%logger] [%host] [%func] [%loc] %msg");
-  default_conf.set(el::Level::Info, el::ConfigurationType::Format, "%level [%logger] %msg");
-  default_conf.set(el::Level::Warning, el::ConfigurationType::Format, "%level [%logger] %msg");
-  default_conf.set(el::Level::Verbose, el::ConfigurationType::Format, "%level-%vlevel [%logger] %msg");
+  default_conf.set(el::Level::Debug, el::ConfigurationType::Format, "[%level] [%logger] [%host] [%func] [%loc] %msg");
+  default_conf.set(el::Level::Error, el::ConfigurationType::Format, "[%level] [%logger] [%host] [%func] [%loc] %msg");
+  default_conf.set(el::Level::Fatal, el::ConfigurationType::Format, "[%level] [%logger] [%host] [%func] [%loc] %msg");
+  default_conf.set(el::Level::Trace, el::ConfigurationType::Format, "[%level] [%logger] [%host] [%func] [%loc] %msg");
+  default_conf.set(el::Level::Info, el::ConfigurationType::Format, "[%level] [%logger] %msg");
+  default_conf.set(el::Level::Warning, el::ConfigurationType::Format, "[%level] [%logger] %msg");
+  default_conf.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] [%logger] %msg");
 
 
   default_conf.setGlobally(el::ConfigurationType::ToFile, "false");
   default_conf.setGlobally(el::ConfigurationType::ToStandardOutput, "true");
   default_conf.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
 
+  el::Configurations reporter_logger;
+  reporter_logger.setToDefault();
+  reporter_logger.set(el::Level::Debug, el::ConfigurationType::Format,
+                      "[%level] [%logger] [%host] [%func] [%loc] %msg");
+  reporter_logger.set(el::Level::Error, el::ConfigurationType::Format,
+                      "[%level] [%logger] [%host] [%func] [%loc] %msg");
+  reporter_logger.set(el::Level::Fatal, el::ConfigurationType::Format,
+                      "[%level] [%logger] [%host] [%func] [%loc] %msg");
+  reporter_logger.set(el::Level::Trace, el::ConfigurationType::Format,
+                      "[%level] [%logger] [%host] [%func] [%loc] %msg");
+  reporter_logger.set(el::Level::Info, el::ConfigurationType::Format, "[%level] [%logger] %msg");
+  reporter_logger.set(el::Level::Warning, el::ConfigurationType::Format, "[%level] [%logger] %msg");
+  reporter_logger.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] [%logger] %msg");
+
+
+  reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
+  reporter_logger.setGlobally(el::ConfigurationType::Filename, "reporter.txt");
+  reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
+  reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
   // default logger uses default configurations
-  el::Loggers::reconfigureLogger("default", default_conf);
+  el::Loggers::reconfigureLogger("reporter", reporter_logger);
+  //
+  // CLOG(INFO, "reporter") << "test reporter log";
+  // CLOG(INFO, "reporter") << "test reporter log2";
 }
 
 int main(const int argc, char** argv) {
@@ -64,18 +90,17 @@ int main(const int argc, char** argv) {
 }
 
 void handle_cli(Model* model, int argc, char** argv) {
-  args::ArgumentParser parser("This is a test program.", "This goes after the options.");
+  args::ArgumentParser parser("Individual-based simulation for malaria.", "uut47@psu.edu");
   args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
   args::ValueFlag<std::string> input_file(parser, "string",
                                           "The config file (YAML format). \nEx: malariasimulation -i input.yml",
                                             {'i', 'c', "input", "config"});
 
-
   try {
     parser.ParseCLI(argc, argv);
   }
   catch (const args::Help& e) {
-    std::cout << parser;
+    std::cout << e.what() << parser;
     exit(0);
   }
   catch (const args::ParseError& e) {
@@ -88,10 +113,14 @@ void handle_cli(Model* model, int argc, char** argv) {
   const auto input = input_file ? args::get(input_file) : "input.yml";
 
   if (input != "input.yml") {
-    LOG(INFO) << fmt::format("Used custom input file: {0}", input);
+    LOG(INFO) << fmt::format("Used input file: {0}", input);
   }
   else {
     LOG(INFO) << fmt::format("Used default input file: {0}", input);
+  }
+
+  if (!file_exists(input)) {
+    LOG(FATAL) << fmt::format("File {0} is not exists", input);
   }
   model->set_config_filename(input);
 }

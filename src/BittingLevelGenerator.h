@@ -10,25 +10,25 @@
 
 #include "PropertyMacro.h"
 #include "TypeDef.h"
-class Model;
+class Random;
 
 class BittingLevelGenerator {
-    DISALLOW_COPY_AND_ASSIGN(BittingLevelGenerator)
-    PROPERTY_REF(UIntVector, data)
-    POINTER_PROPERTY(DoubleVector, level_density)
+DISALLOW_COPY_AND_ASSIGN(BittingLevelGenerator)
+DISALLOW_MOVE(BittingLevelGenerator)
+PROPERTY_REF(UIntVector, data)
+POINTER_PROPERTY(DoubleVector, level_density)
 
 public:
-    BittingLevelGenerator();
-    //    BittingLevelGenerator(const BittingLevelGenerator& orig);
-    virtual ~BittingLevelGenerator();
+  BittingLevelGenerator();
+  //    BittingLevelGenerator(const BittingLevelGenerator& orig);
+  virtual ~BittingLevelGenerator();
 
-    int draw_random_level(Model* model);
+  int draw_random_level(Random* random);
 
-    void allocate(Model* model);
+  void allocate(Random* random);
 
 private:
 
 };
 
 #endif	/* BITTINGLEVELGENERATOR_H */
-

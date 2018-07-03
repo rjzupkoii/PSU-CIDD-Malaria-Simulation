@@ -5,9 +5,16 @@ set(TEST_SRC_FILES
     sample_catch_test.cpp
     sample_yaml_cpp_test.cpp
     Spatial/CoordinateTest.cpp
-    Spatial/LocationTest.cpp)
+    Spatial/LocationTest.cpp
+	Core/RandomTest.cpp)
 
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/Spatial/*.cpp)
+
+set(SRC_FILES ${SRC_FILES} 
+	${PROJECT_SOURCE_DIR}/src/Random.cpp 
+	${PROJECT_SOURCE_DIR}/src/Random.h
+	${PROJECT_SOURCE_DIR}/src/BittingLevelGenerator.h
+	${PROJECT_SOURCE_DIR}/src/BittingLevelGenerator.cpp)
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} ${SRC_FILES})
 add_dependencies(${PROJECT_TEST_NAME} date)
@@ -15,6 +22,7 @@ add_dependencies(${PROJECT_TEST_NAME} date)
 target_link_libraries(${PROJECT_TEST_NAME}
     yaml-cpp
 	fmt::fmt fmt::fmt-header-only	
+	GSL::gsl GSL::gslcblas	
     )
 
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_range_for)
