@@ -31,7 +31,7 @@ public:
 
   void initialize(const unsigned long& seed = 0);
 
-  void release();
+  void release() const;
 
   virtual int random_poisson(const double& poissonMeans);
 
@@ -72,10 +72,7 @@ public:
 
   virtual double cdf_standard_normal_distribution(const double& p);
 
-  virtual int random_binomial(const double& p, const unsigned int& n);
-
-
-  static unsigned long good_seed();
+  virtual int random_binomial(const double& p, const unsigned int& n);  
 };
 
 #endif	/* RANDOM_H */

@@ -6,12 +6,14 @@
  */
 #include <cmath>
 #include <cstdlib>
-#include <fstream>
 #include <ctime>
 #include <gsl/gsl_cdf.h>
 #include <gsl/gsl_randist.h>
+#include <thread>
+#include <fmt/format.h>
 #include "Random.h"
 #include "Helpers/NumberHelpers.h"
+#include "easylogging++.h"
 
 Random::Random(Model* model, gsl_rng* g_rng) : seed_(0ul), model_(model), G_RNG(g_rng) {}
 
@@ -20,37 +22,18 @@ Random::~Random() {
 }
 
 void Random::initialize(const unsigned long& seed) {
-
-  const gsl_rng_type* TT = gsl_rng_mt19937;
-  G_RNG = gsl_rng_alloc(TT);
+  const auto tt = gsl_rng_mt19937;
+  G_RNG = gsl_rng_alloc(tt);
 
   // seed the RNG
-  seed_ = seed == 0 ? good_seed() : seed;
+  const std::hash<std::thread::id> hasher;
+  seed_ = seed == 0 ? NumberHelpers::good_seed(clock(), std::time(nullptr), hasher(std::this_thread::get_id())) : seed;
+  LOG(INFO) << fmt::format("Random initializing with seed: {}", seed);
   gsl_rng_set(G_RNG, seed_);
 
 }
 
-unsigned long Random::good_seed() {
-  unsigned long random_seed_a;
-  std::ifstream file("/dev/urandom", std::ios::binary);
-  if (file.is_open()) {
-    const int size = sizeof(int);
-    const auto memblock = new char[size];
-    file.read(memblock, size);
-    file.close();
-    random_seed_a = *reinterpret_cast<unsigned long *>(memblock);
-    delete[] memblock;
-  }
-  else {
-    random_seed_a = 0;
-  }
-  const auto random_seed_b = static_cast<unsigned long>(std::time(nullptr));
-  const auto random_seed = random_seed_a ^ random_seed_b;
-
-  return random_seed;
-}
-
-void Random::release() {
+void Random::release() const {
   gsl_rng_free(G_RNG);
 }
 
@@ -128,8 +111,8 @@ double Random::cdf_gamma_distribution(const double& x, const double& alpha, cons
   return gsl_cdf_gamma_P(x, alpha, beta);
 }
 
-double Random::cdf_gamma_distribution_inverse(const double& P, const double& alpha, const double& beta) {
-  return gsl_cdf_gamma_Pinv(P, alpha, beta);
+double Random::cdf_gamma_distribution_inverse(const double& p, const double& alpha, const double& beta) {
+  return gsl_cdf_gamma_Pinv(p, alpha, beta);
 }
 
 double Random::random_flat(const double& from, const double& to) {

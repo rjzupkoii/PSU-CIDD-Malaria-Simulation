@@ -135,64 +135,63 @@ POINTER_PROPERTY(Spatial::SpatialModel, spatial_model)
 VIRTUAL_PROPERTY_REF(double, inflation_factor)
 
 public:
-    Config(Model *model = nullptr);
+  Config(Model* model = nullptr);
 
-    virtual ~Config();
+  virtual ~Config();
 
-    void read_from_file(const std::string &config_file_name = "config.yml");
+  void read_from_file(const std::string& config_file_name = "config.yml");
 
-    void read_immune_system_information(const YAML::Node &config);
+  void read_immune_system_information(const YAML::Node& config);
 
-    void read_parasite_density_level(const YAML::Node &config);
+  void read_parasite_density_level(const YAML::Node& config);
 
-    void read_strategy_therapy_and_drug_information(const YAML::Node &config);
+  void read_strategy_therapy_and_drug_information(const YAML::Node& config);
 
-    void read_relative_biting_rate_info(const YAML::Node &config);
+  void read_relative_biting_rate_info(const YAML::Node& config);
 
-    void calculate_relative_biting_density();
+  void calculate_relative_biting_density();
 
-    void read_spatial_info(const YAML::Node &config);
+  void read_spatial_info(const YAML::Node& config);
 
-    void read_external_population_circulation_info(const YAML::Node &config);
+  void read_external_population_circulation_info(const YAML::Node& config);
 
-    void read_initial_parasite_info(const YAML::Node &config);
+  void read_initial_parasite_info(const YAML::Node& config);
 
-    void read_importation_parasite_info(const YAML::Node &config);
+  void read_importation_parasite_info(const YAML::Node& config);
 
-    void read_importation_parasite_periodically_info(const YAML::Node &config);
+  void read_importation_parasite_periodically_info(const YAML::Node& config);
 
-    void read_relative_infectivity_info(const YAML::Node &config);
+  void read_relative_infectivity_info(const YAML::Node& config);
 
-    IStrategy *read_strategy(const YAML::Node &n, const int &strategy_id);
+  IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id);
 
-    Therapy *read_therapy(const YAML::Node &config, const int &therapy_id);
+  Therapy* read_therapy(const YAML::Node& config, const int& therapy_id);
 
-    DrugType *read_drugtype(const YAML::Node &config, const int &drug_id);
+  DrugType* read_drugtype(const YAML::Node& config, const int& drug_id);
 
-    void override_parameters(const std::string &override_file, const int &pos);
+  void override_parameters(const std::string& override_file, const int& pos);
 
-    void override_1_parameter(const std::string &parameter_name, const std::string &parameter_value);
+  void override_1_parameter(const std::string& parameter_name, const std::string& parameter_value);
 
-    void build_drug_db(const YAML::Node &config);
+  void build_drug_db(const YAML::Node& config);
 
-    void build_parasite_db();
+  void build_parasite_db();
 
-    void build_drug_and_parasite_db(const YAML::Node &config);
+  void build_drug_and_parasite_db(const YAML::Node& config);
 
-    void read_genotype_info(const YAML::Node &config);
+  void read_genotype_info(const YAML::Node& config);
 
-    double seasonal_factor_for_beta(const int &current_time);
+  double seasonal_factor_for_beta(const int& current_time);
 
-    void read_spatial_information(const YAML::Node &config);
+  void read_spatial_information(const YAML::Node& config);
 
-    void read_seasonal_information(const YAML::Node &config);
+  void read_seasonal_information(const YAML::Node& config);
 
-    void read_age_structure_information(const YAML::Node &config);
+  void read_age_structure_information(const YAML::Node& config);
 
-    void read_biodemography_information(const YAML::Node &config);
+  void read_biodemography_information(const YAML::Node& config);
 
-    void build_location_db(const YAML::Node &node);
+  void build_location_db(const YAML::Node& node);
 };
 
 #endif /* CONFIG_H */
-

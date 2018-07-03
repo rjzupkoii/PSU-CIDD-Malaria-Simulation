@@ -4,7 +4,7 @@
  * 
  * Created on March 22, 2013, 2:26 PM
  */
-
+#include <fmt/format.h>
 #include "Model.h"
 #include "Population.h"
 #include "HelperFunction.h"
@@ -82,52 +82,49 @@ Model::~Model() {
 }
 
 void Model::initialize() {
-
   LOG(INFO) << "Model initilizing...";
+
+  LOG(INFO) << "Initialize Random";
   //Initialize Random Seed
   random_->initialize(initial_seed_number_);
 
+  LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
   //Read input file
   config_->read_from_file(config_filename_);
 
   // modify parameters
   //modify parameters && update config
+  LOG_IF(override_parameter_line_number_!= -1, INFO) << fmt::format("Override parameter from {} at line {}",
+                                                                    override_parameter_filename_,
+                                                                    override_parameter_line_number_);
   config_->override_parameters(override_parameter_filename_, override_parameter_line_number_);
-
+  
   //add reporter here
-  if (gui_type_ == -1) {
-    if (is_farm_output_) {
-      add_reporter(Reporter::MakeReport(Reporter::FARM));
-    }
-    else {
-      add_reporter(Reporter::MakeReport(Reporter::BFFARM_REPORTER));
-      add_reporter(Reporter::MakeReport(Reporter::BFREPORTER));
-    }
-  }
-  else {
-    add_reporter(Reporter::MakeReport(Reporter::GUI));
-  }
-
-  if (override_parameter_line_number_ != -1) {
-    //        add_reporter(Reporter::MakeReport(Reporter::YEARLY_REPORTER_V1));
-  }
-
-
-  //initialize reporters
-
+  add_reporter(Reporter::MakeReport(Reporter::BFREPORTER));
+  
+  LOG(INFO) << "Initialing reports";
+  //initialize reporters  
   for (Reporter* reporter : reporters_) {
     reporter->initialize();
   }
 
-  //initialize scheduler
-  scheduler_->initialize(1999, 12, 1, config_->total_time() + 2000);
 
+  LOG(INFO) << "Initialing scheduler";
+
+  const auto starting_date = date::year_month_day(date::year{ 1999 } / 12 / 1);
+  LOG(INFO) << "Starting day is " << starting_date;
+  //initialize scheduler
+  scheduler_->initialize(starting_date, config_->total_time() + 2000);
+
+  LOG(INFO) << "Initialing data collector";
   //initialize data_collector
   data_collector_->initialize();
 
+  LOG(INFO) << "Initialing population";
   //initialize Population
   population_->initialize();
 
+  LOG(INFO) << "Introducing initial cases";
   //initialize infected_cases
   population_->introduce_initial_cases();
 
@@ -135,8 +132,8 @@ void Model::initialize() {
   //    external_population_->initialize();
 
 
+  LOG(INFO) << "Schedule for periodically importation event";
   //schedule for some special or periodic events
-
   for (auto& i : CONFIG->importation_parasite_periodically_info()) {
     ImportationPeriodicallyEvent::schedule_event(SCHEDULER,
                                                  i.location,
@@ -146,6 +143,7 @@ void Model::initialize() {
                                                  i.start_day);
   }
 
+  LOG(INFO) << "Schedule for importation event at one time point";
   for (auto& i : CONFIG->importation_parasite_info()) {
     ImportationEvent::schedule_event(SCHEDULER, i.location,
                                      i.time,
@@ -217,23 +215,26 @@ void Model::release_object_pool() {
 }
 
 void Model::run() {
+  LOG(INFO) << "Model starting...";
   before_run();
   scheduler_->run();
   after_run();
+  LOG(INFO) << "Model finished.";
 }
 
 void Model::before_run() {
-  //    std::cout << "Seed:" << RANDOM->seed() << std::endl;
-
+	LOG(INFO) << "Perform before run events";
   for (Reporter* reporter : reporters_) {
     reporter->before_run();
   }
 }
 
 void Model::after_run() {
+	LOG(INFO) << "Perform after run events";
+
   DATA_COLLECTOR->update_after_run();
 
-  for (Reporter* reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->after_run();
   }
 }

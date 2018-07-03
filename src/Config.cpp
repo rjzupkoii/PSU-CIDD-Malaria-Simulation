@@ -9,6 +9,7 @@
 #include <gsl/gsl_cdf.h>
 #include <cmath>
 #include <fstream>
+#include <fmt/format.h>
 #include "Config.h"
 #include "HelperFunction.h"
 #include "Strategies/IStrategy.h"
@@ -24,29 +25,29 @@
 #include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
 #include "Constants.h"
 #include "Helpers/NumberHelpers.h"
+#include "easylogging++.h"
+#include "Helpers/OSHelpers.h"
 
 using namespace Spatial;
 
-Config::Config(Model *model) :
-        model_(model), strategy_(nullptr), strategy_db_(), therapy_db_(), drug_db_(nullptr),
-        genotype_db_(nullptr), initial_parasite_info_(), tme_strategy_(nullptr),
-        number_of_parasite_types_(-1), log_parasite_density_level_(), relative_infectivity_(),
-        days_to_clinical_under_five_(-1), days_to_clinical_over_five_(-1),
-        days_mature_gametocyte_under_five_(-1), days_mature_gametocyte_over_five_(-1),
-        p_compliance_{-1}, min_dosing_days_(-1), gametocyte_level_full_(-1),
-        gametocyte_level_under_artemisinin_action_(-1), p_relapse_(-1), relapse_duration_(-1),
-        allow_new_coinfection_to_cause_symtoms_(false), update_frequency_(-1), TF_rate_(-1),
-        modified_drug_half_life_(-1), modified_mutation_factor_(-1), modified_daily_cost_of_resistance_(-1),
-        modified_mutation_probability_(-1),
-        using_free_recombination_(false), report_frequency_(-1), tf_testing_day_(-1),
-        using_age_dependent_bitting_level_(false), using_variable_probability_infectious_bites_cause_infection_(false),
-        start_intervention_day_(-1), total_time_(-1), start_treatment_day_(-1), start_collect_data_day_(-1),
-        number_of_locations_(-1), number_of_age_classes_(-1),
-        p_infection_from_an_infectious_bite_(-1), birth_rate_(-1),
-        number_of_tracking_days_(-1), tf_window_size_(-1), fraction_mosquitoes_interrupted_feeding_(0),
-        location_db_(), inflation_factor_{1} {
-
-}
+Config::Config(Model* model) :
+  model_(model), total_time_(-1), start_treatment_day_(-1), start_collect_data_day_(-1), number_of_locations_(-1),
+  number_of_age_classes_(-1), number_of_parasite_types_(-1), p_infection_from_an_infectious_bite_(-1),
+  birth_rate_(-1), number_of_tracking_days_(-1), log_parasite_density_level_(),
+  relative_infectivity_(), strategy_(nullptr),
+  drug_db_(nullptr), genotype_db_(nullptr),
+  therapy_db_(), strategy_db_(), initial_parasite_info_(),
+  days_to_clinical_under_five_(-1), days_to_clinical_over_five_(-1), days_mature_gametocyte_under_five_(-1),
+  days_mature_gametocyte_over_five_(-1), p_compliance_{-1}, min_dosing_days_(-1),
+  gametocyte_level_under_artemisinin_action_(-1), gametocyte_level_full_(-1), p_relapse_(-1),
+  relapse_duration_(-1),
+  allow_new_coinfection_to_cause_symtoms_(false), update_frequency_(-1), report_frequency_(-1),
+  TF_rate_(-1), tme_strategy_(nullptr),
+  modified_mutation_factor_(-1), modified_drug_half_life_(-1), using_free_recombination_(false), tf_testing_day_(-1),
+  tf_window_size_(-1), using_age_dependent_bitting_level_(false),
+  using_variable_probability_infectious_bites_cause_infection_(false), fraction_mosquitoes_interrupted_feeding_(0),
+  start_intervention_day_(-1), modified_daily_cost_of_resistance_(-1), modified_mutation_probability_(-1),
+  location_db_(), inflation_factor_{1} {}
 
 Config::~Config() {
   //    DeletePointer<Strategy>(strategy_);
@@ -54,7 +55,7 @@ Config::~Config() {
   DeletePointer<DrugDatabase>(drug_db_);
   DeletePointer<IntGenotypeDatabase>(genotype_db_);
 
-  for (auto &i : strategy_db_) {
+  for (auto& i : strategy_db_) {
     delete i;
   }
 
@@ -62,7 +63,7 @@ Config::~Config() {
 
   strategy_ = nullptr;
 
-  for (auto &i : therapy_db_) {
+  for (auto& i : therapy_db_) {
     delete i;
   }
   therapy_db_.clear();
@@ -70,7 +71,8 @@ Config::~Config() {
   DeletePointer<SpatialModel>(spatial_model_);
 }
 
-void Config::read_from_file(const std::string &config_file_name) {
+
+void Config::read_from_file(const std::string& config_file_name) {
 
   YAML::Node config = YAML::LoadFile(config_file_name);
   total_time_ = config["total_time"].as<int>();
@@ -136,7 +138,8 @@ void Config::read_from_file(const std::string &config_file_name) {
       tme_info_.MDA_coverage.push_back(config["tme_info"]["mda_coverage"][0].as<double>());
       tme_info_.MDA_duration.push_back(config["tme_info"]["mda_duration"][0].as<int>());
     }
-  } else {
+  }
+  else {
     for (int location = 0; location < number_of_locations_; location++) {
       tme_info_.MDA_coverage.push_back(config["tme_info"]["mda_coverage"][location].as<double>());
       tme_info_.MDA_duration.push_back(config["tme_info"]["mda_duration"][location].as<int>());
@@ -146,25 +149,29 @@ void Config::read_from_file(const std::string &config_file_name) {
   tf_window_size_ = config["tf_window_size"].as<int>();
 
   using_age_dependent_bitting_level_ = config["using_age_dependent_bitting_level"].as<bool>();
-  using_variable_probability_infectious_bites_cause_infection_ = config["using_variable_probability_infectious_bites_cause_infection"].as<bool>();
+  using_variable_probability_infectious_bites_cause_infection_ = config[
+    "using_variable_probability_infectious_bites_cause_infection"].as<bool>();
   fraction_mosquitoes_interrupted_feeding_ = config["fraction_mosquitoes_interrupted_feeding"].as<double>();
   inflation_factor_ = config["inflation_factor"].as<double>();
 
 }
 
-void Config::read_parasite_density_level(const YAML::Node &config) {
+void Config::read_parasite_density_level(const YAML::Node& config) {
 
   log_parasite_density_level_.log_parasite_density_cured = config["log_parasite_density_cured"].as<double>();
   log_parasite_density_level_.log_parasite_density_from_liver = config["log_parasite_density_from_liver"].as<double>();
-  log_parasite_density_level_.log_parasite_density_asymptomatic = config["log_parasite_density_asymptomatic"].as<double>();
+  log_parasite_density_level_.log_parasite_density_asymptomatic = config["log_parasite_density_asymptomatic"].as<double
+  >();
   log_parasite_density_level_.log_parasite_density_clinical = config["log_parasite_density_clinical"].as<double>();
-  log_parasite_density_level_.log_parasite_density_clinical_from = config["log_parasite_density_clinical_from"].as<double>();
-  log_parasite_density_level_.log_parasite_density_clinical_to = config["log_parasite_density_clinical_to"].as<double>();
+  log_parasite_density_level_.log_parasite_density_clinical_from = config["log_parasite_density_clinical_from"].as<
+    double>();
+  log_parasite_density_level_.log_parasite_density_clinical_to = config["log_parasite_density_clinical_to"].as<double
+  >();
   log_parasite_density_level_.log_parasite_density_detectable = config["log_parasite_density_detectable"].as<double>();
   log_parasite_density_level_.log_parasite_density_pyrogenic = config["log_parasite_density_pyrogenic"].as<double>();
 }
 
-void Config::read_immune_system_information(const YAML::Node &config) {
+void Config::read_immune_system_information(const YAML::Node& config) {
 
   immune_system_information_.acquire_rate = config["b1"].as<double>();
   immune_system_information_.decay_rate = config["b2"].as<double>();
@@ -178,12 +185,13 @@ void Config::read_immune_system_information(const YAML::Node &config) {
   if (NumberHelpers::is_equal(sd_initial_condition, 0.0)) {
     immune_system_information_.alpha_immune = mean_initial_condition;
     immune_system_information_.beta_immune = 0.0;
-  } else {
+  }
+  else {
     immune_system_information_.alpha_immune =
-            mean_initial_condition * mean_initial_condition * (1 - mean_initial_condition) /
-            (sd_initial_condition * sd_initial_condition) - mean_initial_condition;
+      mean_initial_condition * mean_initial_condition * (1 - mean_initial_condition) /
+      (sd_initial_condition * sd_initial_condition) - mean_initial_condition;
     immune_system_information_.beta_immune = immune_system_information_.alpha_immune / mean_initial_condition -
-                                             immune_system_information_.alpha_immune;
+      immune_system_information_.alpha_immune;
   }
 
   immune_system_information_.immune_inflation_rate = config["immune_inflation_rate"].as<double>();
@@ -191,20 +199,22 @@ void Config::read_immune_system_information(const YAML::Node &config) {
   immune_system_information_.min_clinical_probability = config["min_clinical_probability"].as<double>();
   immune_system_information_.max_clinical_probability = config["max_clinical_probability"].as<double>();
 
-  immune_system_information_.immune_effect_on_progression_to_clinical = config["immune_effect_on_progression_to_clinical"].as<double>();
+  immune_system_information_.immune_effect_on_progression_to_clinical = config[
+    "immune_effect_on_progression_to_clinical"].as<double>();
 
   immune_system_information_.c_min = pow(10, -(log_parasite_density_level_.log_parasite_density_asymptomatic -
-                                               log_parasite_density_level_.log_parasite_density_cured) /
-                                             immune_system_information_.duration_for_fully_immune);
+                                           log_parasite_density_level_.log_parasite_density_cured) /
+                                         immune_system_information_.duration_for_fully_immune);
   immune_system_information_.c_max = pow(10, -(log_parasite_density_level_.log_parasite_density_asymptomatic -
-                                               log_parasite_density_level_.log_parasite_density_cured) /
-                                             immune_system_information_.duration_for_naive);
+                                           log_parasite_density_level_.log_parasite_density_cured) /
+                                         immune_system_information_.duration_for_naive);
   //    std::cout << immune_system_information_.c_min << std::endl;
   //    std::cout << immune_system_information_.c_max << std::endl;
 
 
   immune_system_information_.age_mature_immunity = config["age_mature_immunity"].as<double>();
-  immune_system_information_.factor_effect_age_mature_immunity = config["factor_effect_age_mature_immunity"].as<double>();
+  immune_system_information_.factor_effect_age_mature_immunity = config["factor_effect_age_mature_immunity"].as<double
+  >();
 
   // implement inlation rate
   double acR = immune_system_information_.acquire_rate;
@@ -227,7 +237,7 @@ void Config::read_immune_system_information(const YAML::Node &config) {
 
 }
 
-void Config::read_strategy_therapy_and_drug_information(const YAML::Node &config) {
+void Config::read_strategy_therapy_and_drug_information(const YAML::Node& config) {
   read_genotype_info(config);
   build_drug_and_parasite_db(config);
 
@@ -236,43 +246,43 @@ void Config::read_strategy_therapy_and_drug_information(const YAML::Node &config
 
   //    read_all_therapy
   for (int i = 0; i < config["TherapyInfo"].size(); i++) {
-    Therapy *t = read_therapy(config["TherapyInfo"], i);
+    Therapy* t = read_therapy(config["TherapyInfo"], i);
     therapy_db_.push_back(t);
   }
 
   for (int i = 0; i < config["StrategyInfo"].size(); i++) {
-    IStrategy *s = read_strategy(config["StrategyInfo"], i);
+    IStrategy* s = read_strategy(config["StrategyInfo"], i);
     strategy_db_.push_back(s);
   }
 
   strategy_ = strategy_db_[config["main_strategy_id"].as<int>()];
 
   if (strategy_->get_type() == IStrategy::NestedSwitching) {
-    ((NestedSwitchingStrategy *) strategy_)->initialize_update_time();
+    ((NestedSwitchingStrategy *)strategy_)->initialize_update_time();
   }
 
   if (strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
-    ((NestedSwitchingDifferentDistributionByLocationStrategy *) strategy_)->initialize_update_time();
+    ((NestedSwitchingDifferentDistributionByLocationStrategy *)strategy_)->initialize_update_time();
   }
 }
 
-IStrategy *Config::read_strategy(const YAML::Node &n, const int &strategy_id) {
+IStrategy* Config::read_strategy(const YAML::Node& n, const int& strategy_id) {
   std::string s_id = NumberToString<int>(strategy_id);
 
-  IStrategy *result = StrategyBuilder::build(n[s_id], strategy_id);
+  IStrategy* result = StrategyBuilder::build(n[s_id], strategy_id);
 
-//    std::cout << result->to_string() << std::endl;
+  //    std::cout << result->to_string() << std::endl;
   return result;
 }
 
-Therapy *Config::read_therapy(const YAML::Node &n, const int &therapy_id) {
+Therapy* Config::read_therapy(const YAML::Node& n, const int& therapy_id) {
   std::string t_id = NumberToString<int>(therapy_id);
-  Therapy *t = TherapyBuilder::build(n[t_id], therapy_id);
+  Therapy* t = TherapyBuilder::build(n[t_id], therapy_id);
 
   return t;
 }
 
-void Config::build_drug_and_parasite_db(const YAML::Node &config) {
+void Config::build_drug_and_parasite_db(const YAML::Node& config) {
   // build parasite db
   build_parasite_db();
 
@@ -281,7 +291,7 @@ void Config::build_drug_and_parasite_db(const YAML::Node &config) {
 
 }
 
-void Config::read_genotype_info(const YAML::Node &config) {
+void Config::read_genotype_info(const YAML::Node& config) {
   genotype_info_.loci_vector.clear();
   for (int i = 0; i < config["genotype_info"]["loci"].size(); i++) {
     Locus l;
@@ -294,11 +304,12 @@ void Config::read_genotype_info(const YAML::Node &config) {
       al.name = config["genotype_info"]["loci"][i]["alleles"][j]["allele_name"].as<std::string>();
       al.short_name = config["genotype_info"]["loci"][i]["alleles"][j]["short_name"].as<std::string>();
       al.mutation_level = config["genotype_info"]["loci"][i]["alleles"][j]["mutation_level"].as<int>();
-      al.daily_cost_of_resistance = config["genotype_info"]["loci"][i]["alleles"][j]["daily_cost_of_resistance"].as<double>();
+      al.daily_cost_of_resistance = config["genotype_info"]["loci"][i]["alleles"][j]["daily_cost_of_resistance"].as<
+        double>();
       for (int c = 0; c < config["genotype_info"]["loci"][i]["alleles"][j]["can_mutate_to"].size(); c++) {
         //                al.mutation_value_up.push_back(config["genotype_info"]["loci"][i]["alleles"][j]["mutation_up"][c].as<int>());
         al.mutation_values.push_back(
-                config["genotype_info"]["loci"][i]["alleles"][j]["can_mutate_to"][c].as<int>());
+          config["genotype_info"]["loci"][i]["alleles"][j]["can_mutate_to"][c].as<int>());
       }
 
       l.alleles.push_back(al);
@@ -313,12 +324,12 @@ void Config::read_genotype_info(const YAML::Node &config) {
   //    }
 }
 
-void Config::build_drug_db(const YAML::Node &config) {
+void Config::build_drug_db(const YAML::Node& config) {
   DeletePointer<DrugDatabase>(drug_db_);
   drug_db_ = new DrugDatabase();
 
   for (int i = 0; i < config["drugInfo"].size(); i++) {
-    DrugType *dt = read_drugtype(config, i);
+    DrugType* dt = read_drugtype(config, i);
     //        std::cout << i << std::endl;
     drug_db_->add(dt);
 
@@ -349,12 +360,12 @@ void Config::build_parasite_db() {
   genotype_db_ = new IntGenotypeDatabase();
 
   int number_of_genotypes = 1;
-  for (auto &i : genotype_info_.loci_vector) {
+  for (auto& i : genotype_info_.loci_vector) {
     number_of_genotypes *= i.alleles.size();
   }
 
   for (int i = 0; i < number_of_genotypes; i++) {
-    auto *int_genotype = new IntGenotype(i);
+    auto* int_genotype = new IntGenotype(i);
     //        std::cout << *int_genotype << std::endl;
     genotype_db_->add(int_genotype);
   }
@@ -363,12 +374,12 @@ void Config::build_parasite_db() {
   number_of_parasite_types_ = static_cast<int>(genotype_db_->db().size());
 }
 
-DrugType *Config::read_drugtype(const YAML::Node &config, const int &drug_id) {
-  auto *dt = new DrugType();
+DrugType* Config::read_drugtype(const YAML::Node& config, const int& drug_id) {
+  auto* dt = new DrugType();
   dt->set_id(drug_id);
 
   std::string drug_id_s = NumberToString<int>(drug_id);
-  const YAML::Node &n = config["drugInfo"][drug_id_s];
+  const YAML::Node& n = config["drugInfo"][drug_id_s];
 
   dt->set_drug_half_life(n["half_life"].as<double>());
   dt->set_maximum_parasite_killing_rate(n["maximum_parasite_killing_rate"].as<double>());
@@ -378,7 +389,7 @@ DrugType *Config::read_drugtype(const YAML::Node &config, const int &drug_id) {
   //    std::cout <<dt->drug_half_life() << "-" << dt->maximum_parasite_killing_rate() << "-" << dt->n() << "-" << dt->EC50() << std::endl;
   for (int i = 0; i < n["age_specific_drug_concentration_sd"].size(); i++) {
     dt->age_group_specific_drug_concentration_sd().push_back(
-            n["age_specific_drug_concentration_sd"][i].as<double>());
+      n["age_specific_drug_concentration_sd"][i].as<double>());
   }
   //    assert(dt->age_group_specific_drug_concentration_sd().size() == 15);
 
@@ -398,7 +409,7 @@ DrugType *Config::read_drugtype(const YAML::Node &config, const int &drug_id) {
     }
   }
 
-  dt->set_ec50map(n["EC50"].as<std::map<std::string, double> >());
+  dt->set_ec50map(n["EC50"].as<std::map<std::string, double>>());
 
   //    auto ec50Node = n["EC50"];
   //    for (YAML::const_iterator it = ec50Node.begin(); it != ec50Node.end(); it++) {
@@ -412,16 +423,18 @@ DrugType *Config::read_drugtype(const YAML::Node &config, const int &drug_id) {
 
   if (drug_id == config["artemisinin_drug_id"].as<int>()) {
     dt->set_drug_family(DrugType::Artemisinin);
-  } else if (drug_id == config["lumefantrine_drug_id"].as<int>()) {
+  }
+  else if (drug_id == config["lumefantrine_drug_id"].as<int>()) {
     dt->set_drug_family(DrugType::Lumefantrine);
-  } else {
+  }
+  else {
     dt->set_drug_family(DrugType::Other);
   }
   return dt;
 }
 
-void Config::read_relative_biting_rate_info(const YAML::Node &config) {
-  const YAML::Node &n = config["relative_bitting_info"];
+void Config::read_relative_biting_rate_info(const YAML::Node& config) {
+  const YAML::Node& n = config["relative_bitting_info"];
 
   relative_bitting_information_.max_relative_biting_value = n["max_relative_biting_value"].as<double>();
 
@@ -447,7 +460,7 @@ void Config::calculate_relative_biting_density() {
   double max = relative_bitting_information_.max_relative_biting_value - 1; //maxRelativeBiting -1
   int numberOfLevel = relative_bitting_information_.number_of_biting_levels;
 
-  double step = max / (double) (numberOfLevel - 1);
+  double step = max / (double)(numberOfLevel - 1);
 
   int j = 0;
   double oldP = 0;
@@ -468,20 +481,20 @@ void Config::calculate_relative_biting_density() {
 
   //normalized
   double t = 0;
-  for (double &i : relative_bitting_information_.v_biting_level_density) {
+  for (double& i : relative_bitting_information_.v_biting_level_density) {
     i = i + (1 - sum) / relative_bitting_information_.v_biting_level_density.size();
     t += i;
   }
 
 
   assert(relative_bitting_information_.number_of_biting_levels ==
-         relative_bitting_information_.v_biting_level_density.size());
+    relative_bitting_information_.v_biting_level_density.size());
   assert(relative_bitting_information_.number_of_biting_levels ==
-         relative_bitting_information_.v_biting_level_value.size());
+    relative_bitting_information_.v_biting_level_value.size());
   assert(fabs(t - 1) < 0.0001);
   if (Model::RANDOM != nullptr) {
     Model::RANDOM->bitting_level_generator().set_level_density(
-            &relative_bitting_information_.v_biting_level_density);
+      &relative_bitting_information_.v_biting_level_density);
   }
 
 
@@ -493,8 +506,8 @@ void Config::calculate_relative_biting_density() {
 
 }
 
-void Config::read_spatial_info(const YAML::Node &config) {
-  const YAML::Node &n = config["circulation_information"];
+void Config::read_spatial_info(const YAML::Node& config) {
+  const YAML::Node& n = config["circulation_information"];
 
   circulation_information_.max_relative_moving_value = n["max_relative_moving_value"].as<double>();
 
@@ -518,7 +531,7 @@ void Config::read_spatial_info(const YAML::Node &config) {
   double max = circulation_information_.max_relative_moving_value - 1; //maxRelativeBiting -1
   int numberOfLevel = circulation_information_.number_of_moving_levels;
 
-  double step = max / (double) (numberOfLevel - 1);
+  double step = max / (double)(numberOfLevel - 1);
 
   int j = 0;
   double oldP = 0;
@@ -538,7 +551,7 @@ void Config::read_spatial_info(const YAML::Node &config) {
 
   //normalized
   double t = 0;
-  for (double &i : circulation_information_.v_moving_level_density) {
+  for (double& i : circulation_information_.v_moving_level_density) {
     i = i + (1 - sum) / circulation_information_.v_moving_level_density.size();
     t += i;
   }
@@ -564,14 +577,15 @@ void Config::read_spatial_info(const YAML::Node &config) {
   }
 }
 
-void Config::read_external_population_circulation_info(const YAML::Node &config) {
-  const YAML::Node &n = config["external_population_circulation_information"];
+void Config::read_external_population_circulation_info(const YAML::Node& config) {
+  const YAML::Node& n = config["external_population_circulation_information"];
 
   external_population_circulation_information_.max_relative_moving_value = n["max_relative_moving_value"].as<double>();
 
   external_population_circulation_information_.number_of_moving_levels = n["number_of_moving_levels"].as<int>();
 
-  external_population_circulation_information_.scale = n["moving_level_distribution"]["Exponential"]["scale"].as<double>();
+  external_population_circulation_information_.scale = n["moving_level_distribution"]["Exponential"]["scale"].as<double
+  >();
 
   external_population_circulation_information_.mean = n["moving_level_distribution"]["Gamma"]["mean"].as<double>();
   external_population_circulation_information_.sd = n["moving_level_distribution"]["Gamma"]["sd"].as<double>();
@@ -589,7 +603,7 @@ void Config::read_external_population_circulation_info(const YAML::Node &config)
   double max = external_population_circulation_information_.max_relative_moving_value - 1; //maxRelativeBiting -1
   int numberOfLevel = external_population_circulation_information_.number_of_moving_levels;
 
-  double step = max / (double) (numberOfLevel - 1);
+  double step = max / (double)(numberOfLevel - 1);
 
   int j = 0;
   double oldP = 0;
@@ -609,23 +623,23 @@ void Config::read_external_population_circulation_info(const YAML::Node &config)
 
   //normalized
   double t = 0;
-  for (double &i : external_population_circulation_information_.v_moving_level_density) {
+  for (double& i : external_population_circulation_information_.v_moving_level_density) {
     i = i + (1 - sum) / circulation_information_.v_moving_level_density.size();
     t += i;
   }
 
 
   assert(external_population_circulation_information_.number_of_moving_levels ==
-         external_population_circulation_information_.v_moving_level_density.size());
+    external_population_circulation_information_.v_moving_level_density.size());
   assert(external_population_circulation_information_.number_of_moving_levels ==
-         external_population_circulation_information_.v_moving_level_value.size());
+    external_population_circulation_information_.v_moving_level_value.size());
   assert(fabs(t - 1) < 0.0001);
 
 
   for (int i = 0; i < number_of_locations_; i++) {
     int input_loc = n["circulation_percent"].size() < number_of_locations_ ? 0 : i;
     external_population_circulation_information_.circulation_percent.push_back(
-            n["circulation_percent"][input_loc].as<double>());
+      n["circulation_percent"][input_loc].as<double>());
     external_population_circulation_information_.daily_EIR.push_back(n["daily_EIR"][input_loc].as<double>());
 
   }
@@ -638,7 +652,7 @@ void Config::read_external_population_circulation_info(const YAML::Node &config)
     int input_loc = n["seasonal_EIR"]["a"].size() < number_of_locations_ ? 0 : i;
 
     external_population_circulation_information_.seasonal_EIR.A.push_back(
-            n["seasonal_EIR"]["a"][input_loc].as<double>());
+      n["seasonal_EIR"]["a"][input_loc].as<double>());
 
     auto period = n["seasonal_EIR"]["period"].as<double>();
     auto B = 2 * M_PI / period;
@@ -667,13 +681,13 @@ void Config::read_external_population_circulation_info(const YAML::Node &config)
 
   if (Model::RANDOM != nullptr) {
     Model::RANDOM->external_population_moving_level_generator().set_level_density(
-            &external_population_circulation_information_.v_moving_level_density);
+      &external_population_circulation_information_.v_moving_level_density);
   }
   //    external_population_circulation_information_.daily_EIR = n["daily_EIR"].as<double>();
 }
 
-void Config::read_initial_parasite_info(const YAML::Node &config) {
-  const YAML::Node &n = config["initial_parasite_info"];
+void Config::read_initial_parasite_info(const YAML::Node& config) {
+  const YAML::Node& n = config["initial_parasite_info"];
 
   for (int i = 0; i < n.size(); i++) {
     auto location = n[i]["location_id"].as<int>();
@@ -685,7 +699,8 @@ void Config::read_initial_parasite_info(const YAML::Node &config) {
         auto prevalence = n[i]["parasite_info"][j]["prevalence"].as<double>();
         initial_parasite_info_.emplace_back(location, parasite_type_id, prevalence);
       }
-    } else if (location == -1) {
+    }
+    else if (location == -1) {
       //apply for all location
       for (int loc = 0; loc < number_of_locations(); ++loc) {
         for (int j = 0; j < n[i]["parasite_info"].size(); j++) {
@@ -700,8 +715,8 @@ void Config::read_initial_parasite_info(const YAML::Node &config) {
   }
 }
 
-void Config::read_importation_parasite_info(const YAML::Node &config) {
-  const YAML::Node &n = config["introduce_parasite"];
+void Config::read_importation_parasite_info(const YAML::Node& config) {
+  const YAML::Node& n = config["introduce_parasite"];
 
   for (int i = 0; i < n.size(); i++) {
     auto location = n[i]["location"].as<int>();
@@ -720,8 +735,8 @@ void Config::read_importation_parasite_info(const YAML::Node &config) {
 
 }
 
-void Config::read_importation_parasite_periodically_info(const YAML::Node &config) {
-  const YAML::Node &n = config["introduce_parasite_periodically"];
+void Config::read_importation_parasite_periodically_info(const YAML::Node& config) {
+  const YAML::Node& n = config["introduce_parasite_periodically"];
   for (int i = 0; i < n.size(); i++) {
     auto location = n[i]["location"].as<int>();
     if (location < number_of_locations_) {
@@ -739,8 +754,8 @@ void Config::read_importation_parasite_periodically_info(const YAML::Node &confi
 
 }
 
-void Config::read_relative_infectivity_info(const YAML::Node &config) {
-  const YAML::Node &n = config["relative_infectivity"];
+void Config::read_relative_infectivity_info(const YAML::Node& config) {
+  const YAML::Node& n = config["relative_infectivity"];
 
   relative_infectivity_.sigma = n["sigma"].as<double>();
   auto ro = n["ro"].as<double>();
@@ -754,12 +769,12 @@ void Config::read_relative_infectivity_info(const YAML::Node &config) {
   //    std::cout << relative_infectivity_.sigma << "\t" << relative_infectivity_.ro_star<< std::endl;
 }
 
-void Config::override_parameters(const std::string &override_file, const int &pos) {
+void Config::override_parameters(const std::string& override_file, const int& pos) {
+
   if (pos == -1) return;
   std::ifstream ifs(override_file.c_str());
-  if (!ifs && !override_file.empty()) {
-    std::cout << "Error" << std::endl;
-    exit(1);
+  if (!OSHelpers::file_exists(override_file)) {
+	  LOG(FATAL) << fmt::format("Override input file [{0}] is not exists", override_file);
   }
 
   std::string buf;
@@ -770,8 +785,7 @@ void Config::override_parameters(const std::string &override_file, const int &po
 
 
   //goto the pos line in the file
-  for (int i = 0; (i < pos) && getline(ifs, buf); i++) {
-  }
+  for (int i = 0; (i < pos) && getline(ifs, buf); i++) { }
   //buff contain the parameters
   std::vector<std::string> override_parameters = split(buf, '\t');
 
@@ -785,7 +799,7 @@ void Config::override_parameters(const std::string &override_file, const int &po
   //    CalculateDependentVariables();
 }
 
-void Config::override_1_parameter(const std::string &parameter_name, const std::string &parameter_value) {
+void Config::override_1_parameter(const std::string& parameter_name, const std::string& parameter_value) {
   if (parameter_name == "population_size") {
     Model::CONFIG->location_db()[0].populationSize = atoi(parameter_value.c_str());
   }
@@ -799,14 +813,14 @@ void Config::override_1_parameter(const std::string &parameter_name, const std::
   }
 
   if (parameter_name == "f") {
-//        p_treatment_ = atof(parameter_value.c_str());
+    //        p_treatment_ = atof(parameter_value.c_str());
   }
 
   if (parameter_name == "daily_cost_of_resistance_factor") {
     modified_daily_cost_of_resistance_ = atof(parameter_value.c_str());
 
-    for (auto &i : genotype_info_.loci_vector) {
-      for (auto &allele : i.alleles) {
+    for (auto& i : genotype_info_.loci_vector) {
+      for (auto& allele : i.alleles) {
         allele.daily_cost_of_resistance *= modified_daily_cost_of_resistance_;
       }
     }
@@ -818,11 +832,11 @@ void Config::override_1_parameter(const std::string &parameter_name, const std::
     // modify allele 4 5 6 7 of the mdr locus
     genotype_info_.loci_vector[1].alleles[4].daily_cost_of_resistance = dcr;
     genotype_info_.loci_vector[1].alleles[5].daily_cost_of_resistance =
-            1 - (1 - genotype_info_.loci_vector[1].alleles[1].daily_cost_of_resistance) * (1 - dcr);
+      1 - (1 - genotype_info_.loci_vector[1].alleles[1].daily_cost_of_resistance) * (1 - dcr);
     genotype_info_.loci_vector[1].alleles[6].daily_cost_of_resistance =
-            1 - (1 - genotype_info_.loci_vector[1].alleles[2].daily_cost_of_resistance) * (1 - dcr);
+      1 - (1 - genotype_info_.loci_vector[1].alleles[2].daily_cost_of_resistance) * (1 - dcr);
     genotype_info_.loci_vector[1].alleles[7].daily_cost_of_resistance =
-            1 - (1 - genotype_info_.loci_vector[1].alleles[3].daily_cost_of_resistance) * (1 - dcr);
+      1 - (1 - genotype_info_.loci_vector[1].alleles[3].daily_cost_of_resistance) * (1 - dcr);
     build_parasite_db();
   }
 
@@ -860,7 +874,7 @@ void Config::override_1_parameter(const std::string &parameter_name, const std::
 
   if (parameter_name == "k") {
     modified_mutation_factor_ = atof(parameter_value.c_str());
-    for (auto &it : drug_db_->drug_db()) {
+    for (auto& it : drug_db_->drug_db()) {
       it.second->set_k(modified_mutation_factor_);
     }
   }
@@ -874,15 +888,15 @@ void Config::override_1_parameter(const std::string &parameter_name, const std::
     int strategy_id = atoi(parameter_value.c_str());
     strategy_ = strategy_db_[strategy_id];
     if (strategy_->get_type() == IStrategy::NestedSwitching) {
-      ((NestedSwitchingStrategy *) strategy_)->initialize_update_time();
+      ((NestedSwitchingStrategy *)strategy_)->initialize_update_time();
     }
   }
 
   if (parameter_name == "dosing_days") {
     int dosing_days = atoi(parameter_value.c_str());
-    for (auto &it : therapy_db_) {
+    for (auto& it : therapy_db_) {
 
-      auto *scTherapy = dynamic_cast<SCTherapy *> (it);
+      auto* scTherapy = dynamic_cast<SCTherapy *>(it);
       if (scTherapy != nullptr) {
         scTherapy->set_dosing_day(dosing_days);
       }
@@ -891,7 +905,7 @@ void Config::override_1_parameter(const std::string &parameter_name, const std::
 
   if (parameter_name == "mutation_probability") {
     modified_mutation_probability_ = atof(parameter_value.c_str());
-    for (auto &it : drug_db_->drug_db()) {
+    for (auto& it : drug_db_->drug_db()) {
       it.second->set_p_mutation(modified_mutation_probability_);
 
     }
@@ -900,7 +914,7 @@ void Config::override_1_parameter(const std::string &parameter_name, const std::
 
   if (parameter_name == "mutation_factor") {
     double mutation_factor = atof(parameter_value.c_str());
-    for (auto &it : drug_db_->drug_db()) {
+    for (auto& it : drug_db_->drug_db()) {
       it.second->set_p_mutation(it.second->p_mutation() * mutation_factor);
     }
   }
@@ -913,7 +927,7 @@ void Config::override_1_parameter(const std::string &parameter_name, const std::
 
   if (parameter_name == "importation_period") {
     int importation_period = atoi(parameter_value.c_str());
-    for (auto &i : importation_parasite_periodically_info_) {
+    for (auto& i : importation_parasite_periodically_info_) {
       if (i.parasite_type_id == -1) {
         i.duration = importation_period;
       }
@@ -922,7 +936,7 @@ void Config::override_1_parameter(const std::string &parameter_name, const std::
 
   if (parameter_name == "fraction_non_art_replacement") {
     double fnar = atof(parameter_value.c_str());
-    auto *s = dynamic_cast<NovelNonACTSwitchingStrategy *> (Model::CONFIG->strategy());
+    auto* s = dynamic_cast<NovelNonACTSwitchingStrategy *>(Model::CONFIG->strategy());
     if (s != nullptr) {
       s->set_fraction_non_art_replacement(fnar);
     }
@@ -932,7 +946,7 @@ void Config::override_1_parameter(const std::string &parameter_name, const std::
 
 }
 
-void Config::read_spatial_information(const YAML::Node &config) {
+void Config::read_spatial_information(const YAML::Node& config) {
 
   build_location_db(config["spatial_information"]);
 
@@ -941,11 +955,11 @@ void Config::read_spatial_information(const YAML::Node &config) {
     spatial_distance_matrix_[from_location].resize(static_cast<unsigned long long int>(number_of_locations_));
     for (int to_location = 0; to_location < number_of_locations_; to_location++) {
       spatial_distance_matrix_[from_location][to_location] = Coordinate::calculate_distance_in_km(
-              *location_db_[from_location].coordinate,
-              *location_db_[to_location].coordinate);
-//
-//            std::cout << "distance[" << from_location << "," << to_location << "]: "
-//                      << spatial_distance_matrix_[from_location][to_location] << std::endl;
+        *location_db_[from_location].coordinate,
+        *location_db_[to_location].coordinate);
+      //
+      //            std::cout << "distance[" << from_location << "," << to_location << "]: "
+      //                      << spatial_distance_matrix_[from_location][to_location] << std::endl;
     }
   }
 
@@ -955,7 +969,7 @@ void Config::read_spatial_information(const YAML::Node &config) {
 
 }
 
-void Config::read_seasonal_information(const YAML::Node &config) {
+void Config::read_seasonal_information(const YAML::Node& config) {
   seasonal_beta_.A.clear();
   seasonal_beta_.B.clear();
   seasonal_beta_.C.clear();
@@ -978,7 +992,7 @@ void Config::read_seasonal_information(const YAML::Node &config) {
   }
 }
 
-void Config::read_age_structure_information(const YAML::Node &config) {
+void Config::read_age_structure_information(const YAML::Node& config) {
   number_of_age_classes_ = config["number_of_age_classes"].as<int>();
   age_structure_.clear();
   for (int i = 0; i < number_of_age_classes_; i++) {
@@ -990,7 +1004,7 @@ void Config::read_age_structure_information(const YAML::Node &config) {
   }
 }
 
-void Config::read_biodemography_information(const YAML::Node &config) {
+void Config::read_biodemography_information(const YAML::Node& config) {
   birth_rate_ = config["birth_rate"].as<double>();
 
   death_rate_by_age_.clear();
@@ -1001,31 +1015,33 @@ void Config::read_biodemography_information(const YAML::Node &config) {
   mortality_when_treatment_fail_by_age_class_.clear();
   for (int i = 0; i < number_of_age_classes_; i++) {
     mortality_when_treatment_fail_by_age_class_.push_back(
-            config["mortality_when_treatment_fail_by_age"][i].as<double>());
+      config["mortality_when_treatment_fail_by_age"][i].as<double>());
   }
 }
 
-double Config::seasonal_factor_for_beta(const int &current_time) {
-// TODO: implement this in actual calendar year
+double Config::seasonal_factor_for_beta(const int& current_time) {
+  // TODO: implement this in actual calendar year
   double result = 0;
   if (current_time % Constants::DAYS_IN_YEAR() >= seasonal_beta_.phi) {
-    result = current_time % Constants::DAYS_IN_YEAR() <= seasonal_beta_.phi + 183 ?
-             (seasonal_beta_.A[0] - seasonal_beta_.min_value) *
-             sin(seasonal_beta_.B[0] * current_time + seasonal_beta_.C[0]) +
-             seasonal_beta_.min_value : seasonal_beta_.min_value;
-  } else {
+    result = current_time % Constants::DAYS_IN_YEAR() <= seasonal_beta_.phi + 183
+               ? (seasonal_beta_.A[0] - seasonal_beta_.min_value) *
+               sin(seasonal_beta_.B[0] * current_time + seasonal_beta_.C[0]) +
+               seasonal_beta_.min_value
+               : seasonal_beta_.min_value;
+  }
+  else {
     result = seasonal_beta_.min_value;
   }
 
 
   return result;
-//    if (amplitude == 0) return 1;
-//    return (((current_time % Constants::DAYS_IN_YEAR()) > (Constants::DAYS_IN_YEAR() / 2))) ? amplitude * (cos(2 * PI * (current_time + phi) / Constants::DAYS_IN_YEAR()) + 2) : (
-//            cos(2 * PI * (current_time + phi_lower) / Constants::DAYS_IN_YEAR()) + 2);
-//    //        return amplitude * cos(2 * PI * (current_time + phi) / Constants::DAYS_IN_YEAR()) + 2;
+  //    if (amplitude == 0) return 1;
+  //    return (((current_time % Constants::DAYS_IN_YEAR()) > (Constants::DAYS_IN_YEAR() / 2))) ? amplitude * (cos(2 * PI * (current_time + phi) / Constants::DAYS_IN_YEAR()) + 2) : (
+  //            cos(2 * PI * (current_time + phi_lower) / Constants::DAYS_IN_YEAR()) + 2);
+  //    //        return amplitude * cos(2 * PI * (current_time + phi) / Constants::DAYS_IN_YEAR()) + 2;
 }
 
-void Config::build_location_db(const YAML::Node &node) {
+void Config::build_location_db(const YAML::Node& node) {
   for (int i = 0; i < node["location_info"].size(); i++) {
     location_db_.emplace_back(node["location_info"][i][0].as<int>(),
                               node["location_info"][i][1].as<float>(),
@@ -1039,7 +1055,7 @@ void Config::build_location_db(const YAML::Node &node) {
 
     for (int i = 0; i < node["age_distribution_by_location"][input_loc].size(); i++) {
       location_db_[loc].age_distribution.push_back(
-              node["age_distribution_by_location"][input_loc][i].as<double>());
+        node["age_distribution_by_location"][input_loc][i].as<double>());
     }
   }
 
@@ -1063,6 +1079,6 @@ void Config::build_location_db(const YAML::Node &node) {
     location_db_[loc].populationSize = node["population_size_by_location"][input_loc].as<int>();
   }
 
-//    location_db()[0].populationSize = 1000;
-//    std::cout << location_db()[number_of_locations()-1] << std::endl;
+  //    location_db()[0].populationSize = 1000;
+  //    std::cout << location_db()[number_of_locations()-1] << std::endl;
 }

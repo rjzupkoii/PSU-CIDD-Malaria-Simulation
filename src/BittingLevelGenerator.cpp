@@ -11,7 +11,7 @@
 #include "Random.h"
 #include <cassert>
 
-// TODO: writing test 
+// TODO: writing test && rename to Multinomial Generator
 
 BittingLevelGenerator::BittingLevelGenerator():
   level_density_(nullptr) {}

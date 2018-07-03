@@ -25,9 +25,9 @@ public:
 
     void after_time_step() override;
 
-    void print_PfPR_0_5_by_location();
+  static void print_PfPR_0_5_by_location();
 
-    void print_monthly_incidence_by_location();
+  static void print_monthly_incidence_by_location();
 };
 
 

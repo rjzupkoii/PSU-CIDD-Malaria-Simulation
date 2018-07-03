@@ -11,7 +11,7 @@ add_dependencies(MaSim date args)
 target_link_libraries(MaSim
     yaml-cpp
     GSL::gsl GSL::gslcblas	
-	fmt::fmt
+	fmt::fmt fmt::fmt-header-only
     )
 
 target_compile_features(MaSim PRIVATE cxx_range_for)

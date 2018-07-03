@@ -25,14 +25,13 @@ Scheduler::~Scheduler() {
   clear_all_events();
 }
 
-void Scheduler::initialize(const int& start_year, const unsigned int& start_month, const unsigned int& start_day,
-                           const int& total_time) {
+void Scheduler::initialize( const date::year_month_day& starting_date, const int& total_time) {
   set_total_time(total_time);
   set_current_time(0);
 
-  const year_month_day ymd{year{start_year}, month{start_month}, day{start_day}};
+  
   // because day 0 is the previous day of start_day, we have to subtract 1 day from the starting day
-  calendar_date = sys_days(ymd) - days{1};
+  calendar_date = sys_days(starting_date) - days{1};
 }
 
 void Scheduler::clear_all_events() {
@@ -85,8 +84,7 @@ void Scheduler::run() {
   current_time_ = 0;
 
 
-  for (current_time_ = 0; !can_stop(); current_time_++) {
-    std::cout << calendar_date << std::endl;
+  for (current_time_ = 0; !can_stop(); current_time_++) {    
     begin_time_step();
 
     for (auto& event : timed_events_list_[current_time_]) {

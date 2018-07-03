@@ -1,5 +1,5 @@
 {
-  "name": "PSU-CIDD-Malaria-Simulation",
+  "name": "pcms",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:maciekboni/PSU-CIDD-Malaria-Simulation.git",

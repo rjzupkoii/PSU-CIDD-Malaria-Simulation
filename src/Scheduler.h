@@ -44,8 +44,8 @@ public:
 
   virtual void cancel(Event* event);
 
-  void initialize(const int& start_year, const unsigned int& start_month, const unsigned int& start_day,
-                  const int& total_time);
+  void initialize(
+    const date::year_month_day& starting_date, const int& total_time);
 
   void run();
 

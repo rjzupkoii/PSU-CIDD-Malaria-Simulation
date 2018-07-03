@@ -10,17 +10,13 @@
 #include "Model.h"
 #include "easylogging++.h"
 #include "args.hxx"
+#include "Helpers/OSHelpers.h"
 
 INITIALIZE_EASYLOGGINGPP
 
 using namespace std;
 
 void handle_cli(Model* model, int argc, char** argv);
-
-inline bool file_exists(const std::string& name) {
-  ifstream f(name.c_str());
-  return f.good();
-}
 
 void config_logger() {
   el::Configurations default_conf;
@@ -37,6 +33,7 @@ void config_logger() {
   default_conf.setGlobally(el::ConfigurationType::ToFile, "false");
   default_conf.setGlobally(el::ConfigurationType::ToStandardOutput, "true");
   default_conf.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
+  el::Loggers::reconfigureLogger("default", default_conf);
 
   el::Configurations reporter_logger;
   reporter_logger.setToDefault();
@@ -119,7 +116,7 @@ void handle_cli(Model* model, int argc, char** argv) {
     LOG(INFO) << fmt::format("Used default input file: {0}", input);
   }
 
-  if (!file_exists(input)) {
+  if (!OSHelpers::file_exists(input)) {
     LOG(FATAL) << fmt::format("File {0} is not exists", input);
   }
   model->set_config_filename(input);
