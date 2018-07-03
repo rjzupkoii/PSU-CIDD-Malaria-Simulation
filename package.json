@@ -1,0 +1,11 @@
+{
+  "name": "PSU-CIDD-Malaria-Simulation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:maciekboni/PSU-CIDD-Malaria-Simulation.git",
+  "author": "Nguyen Tran <merlinvn@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
