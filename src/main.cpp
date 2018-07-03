@@ -6,14 +6,12 @@
  */
 
 #include <iostream>
-#include <clara.hpp>
 #include <fmt/format.h>
 #include "Model.h"
 #include "easylogging++.h"
-#include "Args.hpp"
+#include "args.hxx"
 
 INITIALIZE_EASYLOGGINGPP
-
 
 using namespace std;
 
