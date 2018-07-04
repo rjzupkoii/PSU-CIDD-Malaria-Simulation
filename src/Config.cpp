@@ -32,7 +32,8 @@
 using namespace Spatial;
 
 Config::Config(Model* model) :
-	model_(model), total_time_(-1), starting_date_{}, start_treatment_day_(-1), start_collect_data_day_(-1), number_of_locations_(-1),
+  model_(model), total_time_(-1), starting_date_{}, start_treatment_day_(-1), start_collect_data_day_(-1),
+  number_of_locations_(-1),
   number_of_age_classes_(-1), number_of_parasite_types_(-1), seasonal_beta_(),
   p_infection_from_an_infectious_bite_(-1),
   birth_rate_(-1), number_of_tracking_days_(-1), log_parasite_density_level_(), relative_bitting_information_(),
@@ -496,10 +497,7 @@ void Config::calculate_relative_biting_density() {
   assert(relative_bitting_information_.number_of_biting_levels ==
     relative_bitting_information_.v_biting_level_value.size());
   assert(fabs(t - 1) < 0.0001);
-  if (Model::RANDOM != nullptr) {
-    Model::RANDOM->bitting_level_generator().set_level_density(
-      &relative_bitting_information_.v_biting_level_density);
-  }
+  bitting_level_generator_.set_level_density(&relative_bitting_information_.v_biting_level_density);
 
 
   //    for (int i = 0; i < relative_bitting_information_.v_biting_level_density.size(); i++) {
@@ -575,10 +573,8 @@ void Config::read_spatial_info(const YAML::Node& config) {
 
   circulation_information_.length_of_stay_theta = theta;
   circulation_information_.length_of_stay_k = k;
+  moving_level_generator_.set_level_density(&circulation_information_.v_moving_level_density);
 
-  if (Model::RANDOM != nullptr) {
-    Model::RANDOM->moving_level_generator().set_level_density(&circulation_information_.v_moving_level_density);
-  }
 }
 
 void Config::read_external_population_circulation_info(const YAML::Node& config) {
@@ -683,10 +679,10 @@ void Config::read_external_population_circulation_info(const YAML::Node& config)
   external_population_circulation_information_.length_of_stay_theta = theta;
   external_population_circulation_information_.length_of_stay_k = k;
 
-  if (Model::RANDOM != nullptr) {
-    Model::RANDOM->external_population_moving_level_generator().set_level_density(
-      &external_population_circulation_information_.v_moving_level_density);
-  }
+
+  external_population_moving_level_generator_.set_level_density(
+    &external_population_circulation_information_.v_moving_level_density);
+
   //    external_population_circulation_information_.daily_EIR = n["daily_EIR"].as<double>();
 }
 

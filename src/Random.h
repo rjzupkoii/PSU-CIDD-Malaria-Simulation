@@ -8,24 +8,20 @@
 #ifndef RANDOM_H
 #define	RANDOM_H
 
-#include <gsl/gsl_rng.h> // random number generators from Gnu Scientific Library
+#include <gsl/gsl_rng.h>
 #include "PropertyMacro.h"
-#include "BittingLevelGenerator.h"
 
 class Model;
 
 class Random {
-VIRTUAL_PROPERTY(unsigned long, seed);
-READ_ONLY_PROPERTY_REF(BittingLevelGenerator, bitting_level_generator)
-READ_ONLY_PROPERTY_REF(BittingLevelGenerator, moving_level_generator)
-READ_ONLY_PROPERTY_REF(BittingLevelGenerator, external_population_moving_level_generator)
-POINTER_PROPERTY(Model, model)
+DISALLOW_COPY_AND_ASSIGN(Random)
+DISALLOW_MOVE(Random)
 
-
+VIRTUAL_PROPERTY(unsigned long, seed)
 public:
   gsl_rng* G_RNG;
 
-  Random(Model* model = nullptr, gsl_rng* g_rng = nullptr);
+  explicit Random(gsl_rng* g_rng = nullptr);
 
   virtual ~Random();
 
@@ -33,8 +29,7 @@ public:
 
   void release() const;
 
-  virtual int random_poisson(const double& poissonMeans);
-
+  virtual int random_poisson(const double& poisson_mean);
   virtual unsigned long random_uniform(unsigned long range);
   virtual unsigned long random_uniform_int(const unsigned long& from, const unsigned long& to);
   virtual double random_uniform_double(const double& from, const double& to);
@@ -44,7 +39,6 @@ public:
    * This function will return a random number in [0,1)
    */
   virtual double random_uniform();
-
   virtual double random_normal(const double& mean, const double& sd);
   virtual double random_normal_truncated(const double& mean, const double& sd);
 
@@ -64,15 +58,10 @@ public:
   virtual void random_multinomial(const size_t& K, const unsigned& N, double p[], unsigned n[]);
 
   virtual void random_shuffle(void* base, size_t base_length, size_t size_of_type);
-
-  virtual int random_biting_level();
-  virtual int random_moving_level();
-  virtual int random_external_population_moving_level();
-
-
+  
   virtual double cdf_standard_normal_distribution(const double& p);
 
-  virtual int random_binomial(const double& p, const unsigned int& n);  
+  virtual int random_binomial(const double& p, const unsigned int& n);
 };
 
 #endif	/* RANDOM_H */

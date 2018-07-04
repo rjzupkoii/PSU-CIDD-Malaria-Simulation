@@ -17,9 +17,7 @@ set(SRC_FILES ${SRC_FILES}
 	${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h 
 	${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc
 	${PROJECT_SOURCE_DIR}/src/Random.cpp 
-	${PROJECT_SOURCE_DIR}/src/Random.h
-	${PROJECT_SOURCE_DIR}/src/BittingLevelGenerator.h
-	${PROJECT_SOURCE_DIR}/src/BittingLevelGenerator.cpp	)
+	${PROJECT_SOURCE_DIR}/src/Random.h)
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} ${SRC_FILES})
 add_dependencies(${PROJECT_TEST_NAME} date)

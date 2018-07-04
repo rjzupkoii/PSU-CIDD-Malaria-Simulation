@@ -26,7 +26,7 @@
 #include "PersonIndexByLocationExternalPopulationMovingLevel.h"
 #include "MoveToExternalPopulationEvent.h"
 
-Population::Population(Model *model) : model_(model) {
+Population::Population(Model* model) : model_(model) {
   person_index_list_ = new PersonIndexPtrList();
   all_persons_ = new PersonIndexAll();
 
@@ -36,7 +36,7 @@ Population::Population(Model *model) : model_(model) {
 Population::~Population() {
   //release memory for all persons
   if (all_persons_ != nullptr) {
-    for (auto &person : all_persons_->vPerson()) {
+    for (auto& person : all_persons_->vPerson()) {
       DeletePointer<Person>(person);
     }
     all_persons_->vPerson().clear();
@@ -47,7 +47,7 @@ Population::~Population() {
 
   if (person_index_list_ != nullptr) {
 
-    for (PersonIndex *person_index: *person_index_list_) {
+    for (PersonIndex* person_index : *person_index_list_) {
       DeletePointer<PersonIndex>(person_index);
     }
 
@@ -56,9 +56,9 @@ Population::~Population() {
   }
 }
 
-void Population::add_person(Person *person) {
+void Population::add_person(Person* person) {
 
-  for (PersonIndex *person_index: *person_index_list_) {
+  for (PersonIndex* person_index : *person_index_list_) {
     person_index->add(person);
   }
   person->set_population(this);
@@ -68,68 +68,66 @@ void Population::add_person(Person *person) {
   }
 }
 
-void Population::remove_person(Person *person) {
+void Population::remove_person(Person* person) {
   if (person->host_state() != Person::DEAD) {
     person->all_clonal_parasite_populations()->remove_all_infection_force();
   }
 
-  for (PersonIndex *person_index: *person_index_list_) {
+  for (PersonIndex* person_index : *person_index_list_) {
     person_index->remove(person);
   }
 }
 
-void Population::remove_dead_person(Person *person) {
+void Population::remove_dead_person(Person* person) {
   remove_person(person);
   DeletePointer<Person>(person);
 }
 
-void Population::notify_change(Person *p, const Person::PersonProperties &property, const void *oldValue,
-                               const void *newValue) {
+void Population::notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue,
+                               const void* newValue) {
 
-  for (PersonIndex *person_index: *person_index_list_) {
+  for (PersonIndex* person_index : *person_index_list_) {
     person_index->notify_change(p, property, oldValue, newValue);
   }
 }
 
-int Population::size(const int &location, const int &age_class) {
+int Population::size(const int& location, const int& age_class) {
   if (location == -1) {
     return all_persons_->size();
-  } else {
-    auto pi_lsa = get_person_index<PersonIndexByLocationStateAgeClass>();
-
-    if (pi_lsa == nullptr) {
-      return 0;
-    }
-    int temp = 0;
-    if (age_class == -1) {
-
-      for (int state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
-        for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-          temp += pi_lsa->vPerson()[location][state][ac].size();
-        }
-      }
-    } else {
-      for (int state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
-        temp += pi_lsa->vPerson()[location][state][age_class].size();
-      }
-    }
-    return temp;
-
   }
+  auto pi_lsa = get_person_index<PersonIndexByLocationStateAgeClass>();
+
+  if (pi_lsa == nullptr) {
+    return 0;
+  }
+  int temp = 0;
+  if (age_class == -1) {
+
+    for (int state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
+      for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+        temp += pi_lsa->vPerson()[location][state][ac].size();
+      }
+    }
+  }
+  else {
+    for (int state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
+      temp += pi_lsa->vPerson()[location][state][age_class].size();
+    }
+  }
+  return temp;
 }
 
-int Population::size(const int &location, const Person::HostStates &hs, const int &age_class) {
+int Population::size(const int& location, const Person::HostStates& hs, const int& age_class) {
   if (location == -1) {
     return all_persons_->size();
-  } else {
-    auto pi_lsa = get_person_index<PersonIndexByLocationStateAgeClass>();
-    return static_cast<int>(pi_lsa->vPerson()[location][hs][age_class].size());
   }
+  auto pi_lsa = get_person_index<PersonIndexByLocationStateAgeClass>();
+  return static_cast<int>(pi_lsa->vPerson()[location][hs][age_class].size());
 }
 
 
 //new
-int Population::size_residents_only(const int &location) {
+int Population::size_residents_only(const int& location) {
   if (location == -1) {
     return all_persons_->size();
   }
@@ -160,15 +158,15 @@ void Population::perform_infection_event() {
     for (int parasite_type_id = 0;
          parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
       double force_of_infection = force_of_infection_for7days_by_location_parasite_type_[
-              Model::SCHEDULER->current_time() % Model::CONFIG->number_of_tracking_days()][loc][parasite_type_id];
+        Model::SCHEDULER->current_time() % Model::CONFIG->number_of_tracking_days()][loc][parasite_type_id];
       if (force_of_infection <= 0.000001)
         continue;
 
       // TODO: turn on/off seasonality in the input file
 
-//            double newBeta = Model::CONFIG->location_db()[loc].beta *
-//                    Model::CONFIG->seasonal_factor_for_beta(Model::SCHEDULER->current_time());
-//
+      //            double newBeta = Model::CONFIG->location_db()[loc].beta *
+      //                    Model::CONFIG->seasonal_factor_for_beta(Model::SCHEDULER->current_time());
+      //
       double newBeta = Model::CONFIG->location_db()[loc].beta;
 
       double poisson_means = newBeta * force_of_infection;
@@ -191,7 +189,7 @@ void Population::perform_infection_event() {
 
       for (int i = 0; i < Model::CONFIG->relative_bitting_information().number_of_biting_levels; i++) {
         double temp = Model::CONFIG->relative_bitting_information().v_biting_level_value[i] *
-                      pi->vPerson()[loc][i].size();
+          pi->vPerson()[loc][i].size();
         vLevelDensity.push_back(temp);
       }
 
@@ -208,7 +206,7 @@ void Population::perform_infection_event() {
 
           //select 1 random person from level i
           int index = model_->random()->random_uniform(size);
-          Person *p = pi->vPerson()[loc][bitting_level][index];
+          Person* p = pi->vPerson()[loc][bitting_level][index];
 
           assert(p->host_state() != Person::DEAD);
           p->increase_number_of_times_bitten();
@@ -222,7 +220,8 @@ void Population::perform_infection_event() {
                 today_infections.push_back(p);
               }
             }
-          } else if (pInfectious <= Model::CONFIG->p_infection_from_an_infectious_bite()) {
+          }
+          else if (pInfectious <= Model::CONFIG->p_infection_from_an_infectious_bite()) {
             if (p->host_state() != Person::EXPOSED && p->liver_parasite_type() == nullptr) {
               p->today_infections()->push_back(parasite_type_id);
               today_infections.push_back(p);
@@ -237,7 +236,7 @@ void Population::perform_infection_event() {
   //solve Multiple infections
   if (today_infections.size() == 0) return;
 
-  for (Person *p: today_infections) {
+  for (Person* p : today_infections) {
     p->randomly_choose_parasite();
   }
 
@@ -258,18 +257,18 @@ void Population::initialize() {
     int number_of_parasite_type = Model::CONFIG->number_of_parasite_types();
 
     current_force_of_infection_by_location_parasite_type_ =
-            DoubleVector2(number_of_location,
-                          DoubleVector(
-                                  number_of_parasite_type,
-                                  0));
+      DoubleVector2(number_of_location,
+                    DoubleVector(
+                      number_of_parasite_type,
+                      0));
     interupted_feeding_force_of_infection_by_location_parasite_type_ = DoubleVector2(
-            number_of_location, DoubleVector(number_of_parasite_type, 0));
+      number_of_location, DoubleVector(number_of_parasite_type, 0));
 
     force_of_infection_for7days_by_location_parasite_type_ =
-            std::vector<DoubleVector2>(
-                    Model::CONFIG->number_of_tracking_days(),
-                    DoubleVector2
-                            (number_of_location, DoubleVector(number_of_parasite_type, 0)));
+      std::vector<DoubleVector2>(
+        Model::CONFIG->number_of_tracking_days(),
+        DoubleVector2
+        (number_of_location, DoubleVector(number_of_parasite_type, 0)));
 
     //initalize other person index
     initialize_person_indices();
@@ -283,9 +282,10 @@ void Population::initialize() {
         int number_of_individual_by_loc_ageclass = 0;
         if (age_class == Model::CONFIG->initial_age_structure().size() - 1) {
           number_of_individual_by_loc_ageclass = popsize_by_location - temp_sum;
-        } else {
+        }
+        else {
           number_of_individual_by_loc_ageclass =
-                  static_cast<int>(popsize_by_location * Model::CONFIG->location_db()[loc].age_distribution[age_class]);
+            static_cast<int>(popsize_by_location * Model::CONFIG->location_db()[loc].age_distribution[age_class]);
           temp_sum += number_of_individual_by_loc_ageclass;
         }
 
@@ -321,26 +321,28 @@ void Population::initialize() {
             SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,
                                                                                    p->birthday() +
                                                                                    Constants::DAYS_IN_YEAR() / 2);
-          } else {
+          }
+          else {
             p->immune_system()->set_immune_component(new NonInfantImmuneComponent());
           }
 
           double immune_value = Model::RANDOM->random_beta(
-                  Model::CONFIG->immune_system_information().alpha_immune,
-                  Model::CONFIG->immune_system_information().beta_immune);
+            Model::CONFIG->immune_system_information().alpha_immune,
+            Model::CONFIG->immune_system_information().beta_immune);
           p->immune_system()->immune_component()->set_latest_value(immune_value);
           p->immune_system()->set_increase(false);
           //                    p->draw_random_immune();
 
           //set_relative_biting_rate
-          p->set_bitting_level(Model::RANDOM->random_biting_level());
+          p->set_bitting_level(Model::CONFIG->bitting_level_generator().draw_random_level(Model::RANDOM));
           p->set_base_bitting_level_value(
-                  Model::CONFIG->relative_bitting_information().v_biting_level_value[p->bitting_level()]);
+            Model::CONFIG->relative_bitting_information().v_biting_level_value[p->bitting_level()]);
           //                    p->update_bitting_level();
 
 
-          p->set_moving_level(Model::RANDOM->random_moving_level());
-          p->set_external_population_moving_level(Model::RANDOM->random_external_population_moving_level());
+          p->set_moving_level(Model::CONFIG->moving_level_generator().draw_random_level(Model::RANDOM));
+          p->set_external_population_moving_level(
+            Model::CONFIG->external_population_moving_level_generator().draw_random_level(Model::RANDOM));
 
           p->set_latest_update_time(0);
 
@@ -358,10 +360,10 @@ void Population::initialize() {
 void Population::introduce_initial_cases() {
   if (model_ != nullptr) {
 
-    for (InitialParasiteInfo p_info: Model::CONFIG->initial_parasite_info()) {
+    for (InitialParasiteInfo p_info : Model::CONFIG->initial_parasite_info()) {
       int num_of_infections = size(p_info.location) * p_info.prevalence;
       //            std::cout << num_of_infections << std::endl;
-      IntGenotype *genotype = Model::CONFIG->genotype_db()->db()[p_info.parasite_type_id];
+      IntGenotype* genotype = Model::CONFIG->genotype_db()->db()[p_info.parasite_type_id];
       //std::cout << p_info.location << "-" << p_info.parasite_type_id << "-" << num_of_infections << std::endl;
       introduce_parasite(p_info.location, genotype, num_of_infections);
 
@@ -370,14 +372,15 @@ void Population::introduce_initial_cases() {
     for (int d = 0; d < Model::CONFIG->number_of_tracking_days(); d++) {
       for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
         for (int ptype = 0; ptype < Model::CONFIG->number_of_parasite_types(); ptype++) {
-          force_of_infection_for7days_by_location_parasite_type_[d][loc][ptype] = current_force_of_infection_by_location_parasite_type_[loc][ptype];
+          force_of_infection_for7days_by_location_parasite_type_[d][loc][ptype] =
+            current_force_of_infection_by_location_parasite_type_[loc][ptype];
         }
       }
     }
   }
 }
 
-void Population::introduce_parasite(const int &location, IntGenotype *parasite_type, const int &num_of_infections) {
+void Population::introduce_parasite(const int& location, IntGenotype* parasite_type, const int& num_of_infections) {
 
   if (model_ != nullptr) {
 
@@ -386,7 +389,7 @@ void Population::introduce_parasite(const int &location, IntGenotype *parasite_t
 
     for (int i = 0; i < Model::CONFIG->relative_bitting_information().number_of_biting_levels; i++) {
       double temp = Model::CONFIG->relative_bitting_information().v_biting_level_value[i] *
-                    pi->vPerson()[location][i].size();
+        pi->vPerson()[location][i].size();
       vLevelDensity.push_back(temp);
     }
 
@@ -402,7 +405,7 @@ void Population::introduce_parasite(const int &location, IntGenotype *parasite_t
         //                std::cout << vIntNumberOfBites[bitting_level] << "-" << j << std::endl;
         //select 1 random person from level i
         int index = model_->random()->random_uniform(size);
-        Person *p = pi->vPerson()[location][bitting_level][index];
+        Person* p = pi->vPerson()[location][bitting_level][index];
 
         initial_infection(p, parasite_type);
       }
@@ -410,17 +413,17 @@ void Population::introduce_parasite(const int &location, IntGenotype *parasite_t
   }
 }
 
-void Population::initial_infection(Person *p, IntGenotype *parasite_type) {
+void Population::initial_infection(Person* p, IntGenotype* parasite_type) {
 
   p->immune_system()->set_increase(true);
   p->set_host_state(Person::ASYMPTOMATIC);
 
-  ClonalParasitePopulation *blood_parasite = p->add_new_parasite_to_blood(parasite_type);
+  ClonalParasitePopulation* blood_parasite = p->add_new_parasite_to_blood(parasite_type);
   //    std::cout << "hello"<< std::endl;
 
   double size = model_->random()->random_flat(
-          Model::CONFIG->log_parasite_density_level().log_parasite_density_from_liver,
-          Model::CONFIG->log_parasite_density_level().log_parasite_density_clinical);
+    Model::CONFIG->log_parasite_density_level().log_parasite_density_from_liver,
+    Model::CONFIG->log_parasite_density_level().log_parasite_density_clinical);
 
   blood_parasite->set_gametocyte_level(Model::CONFIG->gametocyte_level_full());
   blood_parasite->set_last_update_log10_parasite_density(size);
@@ -435,21 +438,22 @@ void Population::initial_infection(Person *p, IntGenotype *parasite_type) {
     p->schedule_progress_to_clinical_event_by(blood_parasite);
 
 
-  } else {
+  }
+  else {
     //only progress to clearance by Immune system
     //progress to clearance
     blood_parasite->set_update_function(model_->immunity_clearance_update_function());
   }
 }
 
-void Population::notify_change_in_force_of_infection(const int &location, const int &parasite_type_id,
-                                                     const double &relative_force_of_infection) {
+void Population::notify_change_in_force_of_infection(const int& location, const int& parasite_type_id,
+                                                     const double& relative_force_of_infection) {
   current_force_of_infection_by_location_parasite_type_[location][parasite_type_id] += relative_force_of_infection;
 }
 
 void Population::update() {
 
-  for (PersonIndex *person_index: *person_index_list_) {
+  for (PersonIndex* person_index : *person_index_list_) {
     person_index->update();
   }
 
@@ -465,14 +469,14 @@ void Population::perform_birth_event() {
     for (int i = 0; i < numberOfBirths; i++) {
       give_1_birth(loc);
       Model::DATA_COLLECTOR->update_person_days_by_years(loc, Constants::DAYS_IN_YEAR() -
-                                                              Model::SCHEDULER->current_day_in_year());
+                                                         Model::SCHEDULER->current_day_in_year());
     }
   }
 
   //    std::cout << "End Birth Event" << std::endl;
 }
 
-void Population::give_1_birth(const int &location) {
+void Population::give_1_birth(const int& location) {
   auto p = new Person();
   p->init();
   p->set_age(0);
@@ -480,10 +484,6 @@ void Population::give_1_birth(const int &location) {
   p->set_age_class(0);
   p->set_location(location);
   p->set_residence_location(location);
-  //    p->residentLocation = location;
-  //    p->indexInDeepestNestedVector = vPersonIndex[location][SusceptibleState][0].size();
-  //    p->population = this;
-  //initial immune value
   p->immune_system()->set_immune_component(new InfantImmuneComponent());
   p->immune_system()->set_latest_immune_value(1.0);
   p->immune_system()->set_increase(false);
@@ -492,13 +492,14 @@ void Population::give_1_birth(const int &location) {
   //                    p->draw_random_immune();
 
   //set_relative_biting_rate
-  p->set_bitting_level(Model::RANDOM->random_biting_level());
+  p->set_bitting_level(Model::CONFIG->bitting_level_generator().draw_random_level(Model::RANDOM));
   p->set_base_bitting_level_value(
-          Model::CONFIG->relative_bitting_information().v_biting_level_value[p->bitting_level()]);
+    Model::CONFIG->relative_bitting_information().v_biting_level_value[p->bitting_level()]);
   //    p->update_bitting_level();
 
-  p->set_moving_level(Model::RANDOM->random_moving_level());
-  p->set_external_population_moving_level(Model::RANDOM->random_external_population_moving_level());
+  p->set_moving_level(Model::CONFIG->moving_level_generator().draw_random_level(Model::RANDOM));
+  p->set_external_population_moving_level(
+    Model::CONFIG->external_population_moving_level_generator().draw_random_level(Model::RANDOM));
 
   // TODO: implement this using actual calendar day
   p->set_birthday(Model::SCHEDULER->current_time());
@@ -538,7 +539,7 @@ void Population::perform_death_event() {
           //change state to Death;
           int index = Model::RANDOM->random_uniform(size);
           //                    std::cout << index << "-" << pi->vPerson()[loc][hs][ac].size() << std::endl;
-          Person *p = pi->vPerson()[loc][hs][ac][index];
+          Person* p = pi->vPerson()[loc][hs][ac][index];
           p->cancel_all_events_except(nullptr);
           p->set_host_state(Person::DEAD);
         }
@@ -563,7 +564,7 @@ void Population::clear_all_dead_state_individual() {
     }
   }
 
-  for (Person *p: removePersons) {
+  for (Person* p : removePersons) {
     remove_dead_person(p);
   }
 }
@@ -578,7 +579,7 @@ void Population::perform_circulation_event() {
   std::vector<int> v_number_of_residents_by_location(Model::CONFIG->number_of_locations(), 0);
 
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-//        v_number_of_residents_by_location[target_location] = (size(target_location));
+    //        v_number_of_residents_by_location[target_location] = (size(target_location));
     v_number_of_residents_by_location[location] = Model::DATA_COLLECTOR->popsize_residence_by_location()[location];
     //        std::cout << v_original_pop_size_by_location[target_location] << std::endl;
   }
@@ -592,20 +593,20 @@ void Population::perform_circulation_event() {
 
     DoubleVector v_relative_outmovement_to_destination(Model::CONFIG->number_of_locations(), 0);
     v_relative_outmovement_to_destination = Model::CONFIG->spatial_model()->get_v_relative_outmovement_to_destination(
-            from_location, Model::CONFIG->number_of_locations(),
-            Model::CONFIG->spatial_distance_matrix()[from_location],
-            v_number_of_residents_by_location);
+      from_location, Model::CONFIG->number_of_locations(),
+      Model::CONFIG->spatial_distance_matrix()[from_location],
+      v_number_of_residents_by_location);
 
-//        for (int target_location = 0; target_location < Model::CONFIG->number_of_locations(); target_location++) {
-//            if (target_location == from_location) {
-//                v_relative_outmovement_to_destination[target_location] = 0;
-//            } else {
-//                v_relative_outmovement_to_destination[target_location] = v_original_pop_size_by_location[target_location];
-//            }
-//        }
+    //        for (int target_location = 0; target_location < Model::CONFIG->number_of_locations(); target_location++) {
+    //            if (target_location == from_location) {
+    //                v_relative_outmovement_to_destination[target_location] = 0;
+    //            } else {
+    //                v_relative_outmovement_to_destination[target_location] = v_original_pop_size_by_location[target_location];
+    //            }
+    //        }
 
     std::vector<unsigned int> v_num_leavers_to_destination(
-            static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()));
+      static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()));
 
     Model::RANDOM->random_multinomial(static_cast<int>(v_relative_outmovement_to_destination.size()),
                                       static_cast<unsigned int>(number_of_circulating_from_this_location),
@@ -614,8 +615,8 @@ void Population::perform_circulation_event() {
     for (int target_location = 0; target_location < Model::CONFIG->number_of_locations(); target_location++) {
       //            std::cout << v_num_leavers_to_destination[target_location] << std::endl;
       if (v_num_leavers_to_destination[target_location] == 0) continue;
-//            std::cout << Model::SCHEDULER->current_time() << "\t" << from_location << "\t" << target_location << "\t"
-//                      << v_num_leavers_to_destination[target_location] << std::endl;
+      //            std::cout << Model::SCHEDULER->current_time() << "\t" << from_location << "\t" << target_location << "\t"
+      //                      << v_num_leavers_to_destination[target_location] << std::endl;
       perform_circulation_for_1_location(from_location, target_location,
                                          v_num_leavers_to_destination[target_location],
                                          today_circulations);
@@ -624,7 +625,7 @@ void Population::perform_circulation_event() {
 
   }
 
-  for (Person *p: today_circulations) {
+  for (Person* p : today_circulations) {
     p->randomly_choose_target_location();
   }
 
@@ -632,22 +633,22 @@ void Population::perform_circulation_event() {
 
 }
 
-void Population::perform_circulation_for_1_location(const int &from_location, const int &target_location,
-                                                    const int &number_of_circulation,
-                                                    PersonPtrVector &today_circulations) {
+void Population::perform_circulation_for_1_location(const int& from_location, const int& target_location,
+                                                    const int& number_of_circulation,
+                                                    PersonPtrVector& today_circulations) {
   DoubleVector vLevelDensity;
   auto pi = get_person_index<PersonIndexByLocationMovingLevel>();
 
   for (int i = 0; i < Model::CONFIG->circulation_information().number_of_moving_levels; i++) {
     double temp = Model::CONFIG->circulation_information().v_moving_level_value[i] *
-                  pi->vPerson()[from_location][i].size();
+      pi->vPerson()[from_location][i].size();
     vLevelDensity.push_back(temp);
   }
 
   std::vector<unsigned int> vIntNumberOfCirculation(vLevelDensity.size());
 
   model_->random()->random_multinomial(static_cast<int>(vLevelDensity.size()),
-                                       (unsigned int) number_of_circulation, &vLevelDensity[0],
+                                       (unsigned int)number_of_circulation, &vLevelDensity[0],
                                        &vIntNumberOfCirculation[0]);
 
 
@@ -659,7 +660,7 @@ void Population::perform_circulation_for_1_location(const int &from_location, co
 
       //select 1 random person from level i
       int index = model_->random()->random_uniform(size);
-      Person *p = pi->vPerson()[from_location][moving_level][index];
+      Person* p = pi->vPerson()[from_location][moving_level][index];
       assert(p->host_state() != Person::DEAD);
 
       p->today_target_locations()->push_back(target_location);
@@ -695,16 +696,16 @@ void Population::initialize_person_indices() {
   person_index_list_->push_back(p_index_by_l_s_a);
 
   auto p_index_location_bitting_level = new PersonIndexByLocationBittingLevel(
-          number_of_location, Model::CONFIG->relative_bitting_information().number_of_biting_levels);
+    number_of_location, Model::CONFIG->relative_bitting_information().number_of_biting_levels);
   person_index_list_->push_back(p_index_location_bitting_level);
 
   auto p_index_location_moving_level = new PersonIndexByLocationMovingLevel(
-          number_of_location, Model::CONFIG->circulation_information().number_of_moving_levels);
+    number_of_location, Model::CONFIG->circulation_information().number_of_moving_levels);
   person_index_list_->push_back(p_index_location_moving_level);
 
   //ad external population moving level here
   auto p_index_location_external_moving_level = new PersonIndexByLocationExternalPopulationMovingLevel(
-          number_of_location, Model::CONFIG->external_population_circulation_information().number_of_moving_levels);
+    number_of_location, Model::CONFIG->external_population_circulation_information().number_of_moving_levels);
   person_index_list_->push_back(p_index_location_external_moving_level);
 }
 
@@ -716,7 +717,7 @@ void Population::perform_moving_to_external_population_event() {
     ///find number of movements to external population
 
     double poisson_means = size(location) *
-                           Model::CONFIG->external_population_circulation_information().circulation_percent[location];
+      Model::CONFIG->external_population_circulation_information().circulation_percent[location];
     if (poisson_means == 0)continue;
     int number_of_movements = Model::RANDOM->random_poisson(poisson_means);
 
@@ -726,7 +727,7 @@ void Population::perform_moving_to_external_population_event() {
 
     for (int i = 0; i < Model::CONFIG->external_population_circulation_information().number_of_moving_levels; i++) {
       double temp = Model::CONFIG->external_population_circulation_information().v_moving_level_value[i] *
-                    pi->vPerson()[location][i].size();
+        pi->vPerson()[location][i].size();
       vLevelDensity.push_back(temp);
     }
 
@@ -743,7 +744,7 @@ void Population::perform_moving_to_external_population_event() {
 
         //select 1 random person from level i
         int index = model_->random()->random_uniform(size);
-        Person *p = pi->vPerson()[location][moving_level][index];
+        Person* p = pi->vPerson()[location][moving_level][index];
         assert(p->host_state() != Person::DEAD);
 
         //                today_circulations.push_back(p);
@@ -754,7 +755,7 @@ void Population::perform_moving_to_external_population_event() {
 
     //schedule for the movement in the next day
 
-    for (Person *p: today_move_to_external_population) {
+    for (Person* p : today_move_to_external_population) {
       if (p->is_moving_to_external_population()) {
         p->set_is_moving_to_external_population(false);
         MoveToExternalPopulationEvent::schedule_event(Model::SCHEDULER, p,
@@ -782,13 +783,14 @@ void Population::perform_interupted_feeding_recombination() {
   for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     for (int parasite_type_id = 0;
          parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
-      interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] = current_force_of_infection_by_location_parasite_type_[loc][parasite_type_id];
+      interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] =
+        current_force_of_infection_by_location_parasite_type_[loc][parasite_type_id];
       Y[loc][parasite_type_id] =
-              interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] *
-              (1 - Model::CONFIG->fraction_mosquitoes_interrupted_feeding());
+        interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] *
+        (1 - Model::CONFIG->fraction_mosquitoes_interrupted_feeding());
       Z[loc][parasite_type_id] =
-              interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] *
-              Model::CONFIG->fraction_mosquitoes_interrupted_feeding();
+        interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] *
+        Model::CONFIG->fraction_mosquitoes_interrupted_feeding();
     }
   }
 
@@ -845,7 +847,8 @@ void Population::perform_interupted_feeding_recombination() {
             double weight = Z[loc][i] * Z[loc][i];
             eafar[loc][i] += weight;
             //                        sumEafar += weight;
-          } else {
+          }
+          else {
             double weight = 2 * Z[loc][i] * Z[loc][j];
             for (int p = 0; p < Model::CONFIG->number_of_parasite_types(); p++) {
               if (Model::CONFIG->genotype_db()->mating_matrix()[i][j][p] == 0) continue;
@@ -882,7 +885,7 @@ void Population::perform_interupted_feeding_recombination() {
            parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
         Z[loc][parasite_type_id] = newZ[parasite_type_id] / a;
         interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] =
-                Y[loc][parasite_type_id] + Z[loc][parasite_type_id];
+          Y[loc][parasite_type_id] + Z[loc][parasite_type_id];
       }
     }
   }

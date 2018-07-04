@@ -8,7 +8,6 @@
 #ifndef MODEL_H
 #define	MODEL_H
 
-#include <memory>
 #include <vector>
 #include "PropertyMacro.h"
 #include "Scheduler.h"

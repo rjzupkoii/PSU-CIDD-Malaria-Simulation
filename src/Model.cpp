@@ -45,7 +45,7 @@ Population* Model::POPULATION = nullptr;
 
 Model::Model(const int& object_pool_size) {
   initialize_object_pool(object_pool_size);
-  random_ = new Random(this);
+  random_ = new Random();
   config_ = new Config(this);
   scheduler_ = new Scheduler(this);
   population_ = new Population(this);

@@ -1,24 +1,22 @@
 /* 
- * File:   BittingLevelGenerator.cpp
+ * File:   MultinomialDistributionGenerator.cpp
  * Author: Merlin
  * 
  * Created on July 4, 2013, 5:21 PM
  */
 
-#include "BittingLevelGenerator.h"
-#include "Model.h"
-#include "Config.h"
-#include "Random.h"
 #include <cassert>
+#include "Random.h"
+#include "MultinomialDistributionGenerator.h"
 
-// TODO: writing test && rename to Multinomial Generator
+// TODO: writing test
 
-BittingLevelGenerator::BittingLevelGenerator():
+MultinomialDistributionGenerator::MultinomialDistributionGenerator():
   level_density_(nullptr) {}
 
-BittingLevelGenerator::~BittingLevelGenerator() = default;
+MultinomialDistributionGenerator::~MultinomialDistributionGenerator() = default;
 
-int BittingLevelGenerator::draw_random_level(Random* random) {
+int MultinomialDistributionGenerator::draw_random_level(Random* random) {
   if (data_.empty()) {
     allocate(random);
   }
@@ -28,7 +26,7 @@ int BittingLevelGenerator::draw_random_level(Random* random) {
   return temp;
 }
 
-void BittingLevelGenerator::allocate(Random* random) {
+void MultinomialDistributionGenerator::allocate(Random* random) {
   const auto chunk_size = 100000;
 
   const int size = level_density_->size();

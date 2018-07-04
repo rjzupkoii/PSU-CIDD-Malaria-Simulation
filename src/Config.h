@@ -10,16 +10,15 @@
 
 #include <string>
 #include <vector>
-#include <set>
 #include <yaml-cpp/yaml.h>
-#include <memory>
+#include <date/date.h>
 #include "PropertyMacro.h"
 #include "TypeDef.h"
 #include "DrugDatabase.h"
 #include "IntGenotypeDatabase.h"
 #include "Spatial/Location.h"
 #include "Spatial/SpatialModel.h"
-#include <date/date.h>
+#include "MultinomialDistributionGenerator.h"
 
 class Model;
 
@@ -55,26 +54,26 @@ VIRTUAL_PROPERTY_REF(IntVector, initial_age_structure)
 
 VIRTUAL_PROPERTY_REF(double, birth_rate)
 
-VIRTUAL_PROPERTY_REF(DoubleVector, death_rate_by_age);
+VIRTUAL_PROPERTY_REF(DoubleVector, death_rate_by_age)
 
-VIRTUAL_PROPERTY_REF(int, number_of_tracking_days);
+VIRTUAL_PROPERTY_REF(int, number_of_tracking_days)
 
-VIRTUAL_PROPERTY_REF(DoubleVector, mortality_when_treatment_fail_by_age_class);
+VIRTUAL_PROPERTY_REF(DoubleVector, mortality_when_treatment_fail_by_age_class)
 
-VIRTUAL_PROPERTY_REF(ParasiteDensityLevel, log_parasite_density_level);
+VIRTUAL_PROPERTY_REF(ParasiteDensityLevel, log_parasite_density_level)
 
-VIRTUAL_PROPERTY_REF(ImmuneSystemInformation, immune_system_information);
+VIRTUAL_PROPERTY_REF(ImmuneSystemInformation, immune_system_information)
 
-VIRTUAL_PROPERTY_REF(RelativeBittingInformation, relative_bitting_information);
-VIRTUAL_PROPERTY_REF(RelativeInfectivity, relative_infectivity);
+VIRTUAL_PROPERTY_REF(RelativeBittingInformation, relative_bitting_information)
+VIRTUAL_PROPERTY_REF(RelativeInfectivity, relative_infectivity)
 
-POINTER_PROPERTY(IStrategy, strategy);
-POINTER_PROPERTY(DrugDatabase, drug_db);
-POINTER_PROPERTY(IntGenotypeDatabase, genotype_db);
-VIRTUAL_PROPERTY_REF(GenotypeInfo, genotype_info);
+POINTER_PROPERTY(IStrategy, strategy)
+POINTER_PROPERTY(DrugDatabase, drug_db)
+POINTER_PROPERTY(IntGenotypeDatabase, genotype_db)
+VIRTUAL_PROPERTY_REF(GenotypeInfo, genotype_info)
 
-VIRTUAL_PROPERTY_REF(TherapyPtrVector, therapy_db);
-VIRTUAL_PROPERTY_REF(StrategyPtrVector, strategy_db);
+VIRTUAL_PROPERTY_REF(TherapyPtrVector, therapy_db)
+VIRTUAL_PROPERTY_REF(StrategyPtrVector, strategy_db)
 
 VIRTUAL_PROPERTY_REF(std::vector<InitialParasiteInfo>, initial_parasite_info)
 
@@ -82,32 +81,32 @@ VIRTUAL_PROPERTY_REF(std::vector<ImportationParasiteInfo>, importation_parasite_
 
 VIRTUAL_PROPERTY_REF(std::vector<ImportationParasitePeriodicallyInfo>, importation_parasite_periodically_info)
 
-VIRTUAL_PROPERTY_REF(int, days_to_clinical_under_five);
-VIRTUAL_PROPERTY_REF(int, days_to_clinical_over_five);
-VIRTUAL_PROPERTY_REF(int, days_mature_gametocyte_under_five);
-VIRTUAL_PROPERTY_REF(int, days_mature_gametocyte_over_five);
+VIRTUAL_PROPERTY_REF(int, days_to_clinical_under_five)
+VIRTUAL_PROPERTY_REF(int, days_to_clinical_over_five)
+VIRTUAL_PROPERTY_REF(int, days_mature_gametocyte_under_five)
+VIRTUAL_PROPERTY_REF(int, days_mature_gametocyte_over_five)
 
-VIRTUAL_PROPERTY_REF(double, p_compliance);
-VIRTUAL_PROPERTY_REF(int, min_dosing_days);
+VIRTUAL_PROPERTY_REF(double, p_compliance)
+VIRTUAL_PROPERTY_REF(int, min_dosing_days)
 
-VIRTUAL_PROPERTY_REF(double, gametocyte_level_under_artemisinin_action);
-VIRTUAL_PROPERTY_REF(double, gametocyte_level_full);
+VIRTUAL_PROPERTY_REF(double, gametocyte_level_under_artemisinin_action)
+VIRTUAL_PROPERTY_REF(double, gametocyte_level_full)
 
-VIRTUAL_PROPERTY_REF(double, p_relapse);
-VIRTUAL_PROPERTY_REF(int, relapse_duration);
+VIRTUAL_PROPERTY_REF(double, p_relapse)
+VIRTUAL_PROPERTY_REF(int, relapse_duration)
 
-VIRTUAL_PROPERTY_REF(bool, allow_new_coinfection_to_cause_symtoms);
-VIRTUAL_PROPERTY_REF(int, update_frequency);
-VIRTUAL_PROPERTY_REF(int, report_frequency);
+VIRTUAL_PROPERTY_REF(bool, allow_new_coinfection_to_cause_symtoms)
+VIRTUAL_PROPERTY_REF(int, update_frequency)
+VIRTUAL_PROPERTY_REF(int, report_frequency)
 
-VIRTUAL_PROPERTY_REF(RelativeMovingInformation, circulation_information);
-VIRTUAL_PROPERTY_REF(ExternalPopulationInformation, external_population_circulation_information);
+VIRTUAL_PROPERTY_REF(RelativeMovingInformation, circulation_information)
+VIRTUAL_PROPERTY_REF(ExternalPopulationInformation, external_population_circulation_information)
 
 VIRTUAL_PROPERTY_REF(double, TF_rate)
 
 VIRTUAL_PROPERTY_REF(TMEInfo, tme_info)
 
-POINTER_PROPERTY(IStrategy, tme_strategy);
+POINTER_PROPERTY(IStrategy, tme_strategy)
 VIRTUAL_PROPERTY_REF(double, modified_mutation_factor)
 
 VIRTUAL_PROPERTY_REF(double, modified_drug_half_life)
@@ -124,7 +123,7 @@ VIRTUAL_PROPERTY_REF(bool, using_variable_probability_infectious_bites_cause_inf
 
 VIRTUAL_PROPERTY_REF(double, fraction_mosquitoes_interrupted_feeding)
 
-VIRTUAL_PROPERTY_REF(int, start_intervention_day);
+VIRTUAL_PROPERTY_REF(int, start_intervention_day)
 
 VIRTUAL_PROPERTY_REF(double, modified_daily_cost_of_resistance)
 
@@ -137,6 +136,10 @@ VIRTUAL_PROPERTY_REF(DoubleVector2, spatial_distance_matrix)
 POINTER_PROPERTY(Spatial::SpatialModel, spatial_model)
 
 VIRTUAL_PROPERTY_REF(double, inflation_factor)
+
+READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, bitting_level_generator)
+READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, moving_level_generator)
+READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, external_population_moving_level_generator)
 
 public:
   explicit Config(Model* model = nullptr);

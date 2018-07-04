@@ -15,7 +15,7 @@
 #include "Helpers/NumberHelpers.h"
 #include "easylogging++.h"
 
-Random::Random(Model* model, gsl_rng* g_rng) : seed_(0ul), model_(model), G_RNG(g_rng) {}
+Random::Random(gsl_rng* g_rng) : seed_(0ul), G_RNG(g_rng) {}
 
 Random::~Random() {
   release();
@@ -125,18 +125,6 @@ void Random::random_multinomial(const size_t& K, const unsigned& N, double p[], 
 
 void Random::random_shuffle(void* base, size_t base_length, size_t size_of_type) {
   gsl_ran_shuffle(G_RNG, base, base_length, size_of_type);
-}
-
-int Random::random_biting_level() {
-  return bitting_level_generator().draw_random_level(this);
-}
-
-int Random::random_moving_level() {
-  return moving_level_generator().draw_random_level(this);
-}
-
-int Random::random_external_population_moving_level() {
-  return external_population_moving_level_generator().draw_random_level(this);
 }
 
 double Random::cdf_standard_normal_distribution(const double& p) {
