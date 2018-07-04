@@ -4,9 +4,11 @@ set(TEST_SRC_FILES
     main.cpp
     sample_catch_test.cpp
     sample_yaml_cpp_test.cpp
+	#SimpleFakeItTest.cpp
     Spatial/CoordinateTest.cpp
     Spatial/LocationTest.cpp
 	Core/RandomTest.cpp
+	Core/TimeHelpersTest.cpp
 	)
 
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/Spatial/*.cpp)

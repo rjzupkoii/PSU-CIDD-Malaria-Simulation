@@ -14,6 +14,9 @@
 # equilibrium 
 total_time: 10
 
+# starting time point of the simulation (in yyyy/m/d format)
+starting_date: 1990/1/1
+
 # length of burn-in period
 start_treatment_day: 0
 

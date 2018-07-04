@@ -111,10 +111,9 @@ void Model::initialize() {
 
   LOG(INFO) << "Initialing scheduler";
 
-  const auto starting_date = date::year_month_day(date::year{ 1999 } / 12 / 1);
-  LOG(INFO) << "Starting day is " << starting_date;
+  LOG(INFO) << "Starting day is " << CONFIG->starting_date();
   //initialize scheduler
-  scheduler_->initialize(starting_date, config_->total_time() + 2000);
+  scheduler_->initialize(CONFIG->starting_date(), config_->total_time() + 2000);
 
   LOG(INFO) << "Initialing data collector";
   //initialize data_collector

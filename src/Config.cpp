@@ -27,27 +27,29 @@
 #include "Helpers/NumberHelpers.h"
 #include "easylogging++.h"
 #include "Helpers/OSHelpers.h"
+#include "Helpers/TimeHelpers.h"
 
 using namespace Spatial;
 
 Config::Config(Model* model) :
-  model_(model), total_time_(-1), start_treatment_day_(-1), start_collect_data_day_(-1), number_of_locations_(-1),
-  number_of_age_classes_(-1), number_of_parasite_types_(-1), p_infection_from_an_infectious_bite_(-1),
-  birth_rate_(-1), number_of_tracking_days_(-1), log_parasite_density_level_(),
+	model_(model), total_time_(-1), starting_date_{}, start_treatment_day_(-1), start_collect_data_day_(-1), number_of_locations_(-1),
+  number_of_age_classes_(-1), number_of_parasite_types_(-1), seasonal_beta_(),
+  p_infection_from_an_infectious_bite_(-1),
+  birth_rate_(-1), number_of_tracking_days_(-1), log_parasite_density_level_(), relative_bitting_information_(),
   relative_infectivity_(), strategy_(nullptr),
   drug_db_(nullptr), genotype_db_(nullptr),
-  therapy_db_(), strategy_db_(), initial_parasite_info_(),
   days_to_clinical_under_five_(-1), days_to_clinical_over_five_(-1), days_mature_gametocyte_under_five_(-1),
   days_mature_gametocyte_over_five_(-1), p_compliance_{-1}, min_dosing_days_(-1),
   gametocyte_level_under_artemisinin_action_(-1), gametocyte_level_full_(-1), p_relapse_(-1),
-  relapse_duration_(-1),
-  allow_new_coinfection_to_cause_symtoms_(false), update_frequency_(-1), report_frequency_(-1),
-  TF_rate_(-1), tme_strategy_(nullptr),
+  relapse_duration_(-1), allow_new_coinfection_to_cause_symtoms_(false), update_frequency_(-1), report_frequency_(-1),
+  circulation_information_(), external_population_circulation_information_(),
+  TF_rate_(-1), tme_info_(), tme_strategy_(nullptr),
   modified_mutation_factor_(-1), modified_drug_half_life_(-1), using_free_recombination_(false), tf_testing_day_(-1),
   tf_window_size_(-1), using_age_dependent_bitting_level_(false),
   using_variable_probability_infectious_bites_cause_infection_(false), fraction_mosquitoes_interrupted_feeding_(0),
   start_intervention_day_(-1), modified_daily_cost_of_resistance_(-1), modified_mutation_probability_(-1),
-  location_db_(), inflation_factor_{1} {}
+  spatial_model_(nullptr),
+  inflation_factor_{1} {}
 
 Config::~Config() {
   //    DeletePointer<Strategy>(strategy_);
@@ -76,6 +78,8 @@ void Config::read_from_file(const std::string& config_file_name) {
 
   YAML::Node config = YAML::LoadFile(config_file_name);
   total_time_ = config["total_time"].as<int>();
+  starting_date_ = TimeHelpers::convert_to<date::year_month_day>(config["starting_date"].as<std::string>());
+
   start_treatment_day_ = config["start_treatment_day"].as<int>();
   start_collect_data_day_ = config["start_collect_data_day"].as<int>();
   start_intervention_day_ = config["start_intervention_day"].as<int>();
@@ -179,8 +183,8 @@ void Config::read_immune_system_information(const YAML::Node& config) {
   immune_system_information_.duration_for_fully_immune = config["duration_for_fully_immune"].as<double>();
   immune_system_information_.duration_for_naive = config["duration_for_naive"].as<double>();
 
-  auto mean_initial_condition = config["mean_initial_condition"].as<double>();
-  auto sd_initial_condition = config["sd_initial_condition"].as<double>();
+  const auto mean_initial_condition = config["mean_initial_condition"].as<double>();
+  const auto sd_initial_condition = config["sd_initial_condition"].as<double>();
 
   if (NumberHelpers::is_equal(sd_initial_condition, 0.0)) {
     immune_system_information_.alpha_immune = mean_initial_condition;
@@ -774,7 +778,7 @@ void Config::override_parameters(const std::string& override_file, const int& po
   if (pos == -1) return;
   std::ifstream ifs(override_file.c_str());
   if (!OSHelpers::file_exists(override_file)) {
-	  LOG(FATAL) << fmt::format("Override input file [{0}] is not exists", override_file);
+    LOG(FATAL) << fmt::format("Override input file [{0}] is not exists", override_file);
   }
 
   std::string buf;

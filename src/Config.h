@@ -19,15 +19,19 @@
 #include "IntGenotypeDatabase.h"
 #include "Spatial/Location.h"
 #include "Spatial/SpatialModel.h"
+#include <date/date.h>
 
 class Model;
 
 class Config {
 DISALLOW_COPY_AND_ASSIGN(Config)
+DISALLOW_MOVE(Config)
 
 POINTER_PROPERTY(Model, model)
 
 VIRTUAL_PROPERTY_REF(int, total_time)
+
+VIRTUAL_PROPERTY_REF(date::year_month_day, starting_date)
 
 VIRTUAL_PROPERTY_REF(int, start_treatment_day)
 
@@ -135,7 +139,7 @@ POINTER_PROPERTY(Spatial::SpatialModel, spatial_model)
 VIRTUAL_PROPERTY_REF(double, inflation_factor)
 
 public:
-  Config(Model* model = nullptr);
+  explicit Config(Model* model = nullptr);
 
   virtual ~Config();
 
@@ -165,7 +169,7 @@ public:
 
   IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id);
 
-  Therapy* read_therapy(const YAML::Node& config, const int& therapy_id);
+  Therapy* read_therapy(const YAML::Node& n, const int& therapy_id);
 
   DrugType* read_drugtype(const YAML::Node& config, const int& drug_id);
 

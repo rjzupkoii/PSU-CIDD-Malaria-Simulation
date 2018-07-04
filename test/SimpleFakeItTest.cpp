@@ -3,12 +3,12 @@
 //
 #include <string>
 #include "fakeit.hpp"
-#include <catch/catch.hpp>
 #include <iostream>
 
 using namespace fakeit;
 
 struct SomeInterface {
+  virtual ~SomeInterface() = default;
   virtual int foo(int) = 0;
 
   virtual int bar(std::string) = 0;
@@ -22,7 +22,7 @@ TEST_CASE("FAKEIT test", "[fakeit]") {
   When(Method(mock, foo)).Return(1); // Method mock.foo will return 1 once.
 
 // Fetch the mock instance.
-  SomeInterface &i = mock.get();
+  auto& i = mock.get();
 
 // Will print "1".
   std::cout << i.foo(0);
