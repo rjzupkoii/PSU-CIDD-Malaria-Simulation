@@ -62,6 +62,7 @@ public:
 
 OBJECTPOOL(Person)
 DISALLOW_COPY_AND_ASSIGN(Person)
+DISALLOW_MOVE(Person)
 
 POINTER_PROPERTY(Population, population)
 PROPERTY_HEADER(int, location)
@@ -71,6 +72,8 @@ PROPERTY_HEADER(HostStates, host_state)
 PROPERTY_HEADER(int, age)
 PROPERTY_HEADER(int, age_class)
 
+  // birthday has the unit of time in the scheduler
+  // if birthday is -100 which is that person was born 100 day before the simulation start
 PROPERTY_REF(int, birthday)
 
 POINTER_PROPERTY_HEADER(ImmuneSystem, immune_system)
@@ -84,18 +87,18 @@ PROPERTY_REF(double, base_bitting_level_value)
 PROPERTY_HEADER(int, moving_level)
 PROPERTY_HEADER(int, external_population_moving_level)
 
-POINTER_PROPERTY(DrugsInBlood, drugs_in_blood);
-POINTER_PROPERTY(IntGenotype, liver_parasite_type);
+POINTER_PROPERTY(DrugsInBlood, drugs_in_blood)
+POINTER_PROPERTY(IntGenotype, liver_parasite_type)
 
-POINTER_PROPERTY(IntVector, today_infections);
-POINTER_PROPERTY(IntVector, today_target_locations);
+POINTER_PROPERTY(IntVector, today_infections)
+POINTER_PROPERTY(IntVector, today_target_locations)
 
-PROPERTY_REF(int, number_of_times_bitten);
-PROPERTY_REF(int, number_of_trips_taken);
+PROPERTY_REF(int, number_of_times_bitten)
+PROPERTY_REF(int, number_of_trips_taken)
   //    PROPERTY_REF(bool, is_tracking_treatment_number);
-PROPERTY_REF(int, last_therapy_id);
+PROPERTY_REF(int, last_therapy_id)
 
-PROPERTY_REF(bool, is_moving_to_external_population);
+PROPERTY_REF(bool, is_moving_to_external_population)
 
 public:
   Person();
@@ -113,10 +116,8 @@ public:
   void NotifyChange(const PersonProperties& property, const void* oldValue, const void* newValue);
   virtual void increase_age_by_1_year();
 
-  bool is_infant(const int& current_time);
-
   //    BloodParasite* add_new_parasite_to_blood(Genotype* parasite_type);
-  ClonalParasitePopulation* add_new_parasite_to_blood(IntGenotype* parasite_type);
+  ClonalParasitePopulation* add_new_parasite_to_blood(IntGenotype* parasite_type) const;
 
   virtual void notify_change_in_force_of_infection(const double& sign, const int& parasite_type_id,
                                                    const double& blood_parasite_log_relative_density,
@@ -131,13 +132,14 @@ public:
   virtual bool will_progress_to_death_when_recieve_treatment();
 
 
-  void cancel_all_other_progress_to_clinical_events_except(Event* event);
-  void cancel_all_events_except(Event* event);
+  void cancel_all_other_progress_to_clinical_events_except(Event* event) const;
+  void cancel_all_events_except(Event* event) const;
   //    void record_treatment_failure_for_test_treatment_failure_events();
 
-  void change_all_parasite_update_function(ParasiteDensityUpdateFunction* from, ParasiteDensityUpdateFunction* to);
+  void change_all_parasite_update_function(ParasiteDensityUpdateFunction* from,
+                                           ParasiteDensityUpdateFunction* to) const;
 
-  int complied_dosing_days(const int& dosing_day);
+  int complied_dosing_days(const int& dosing_day) const;
 
   void receive_therapy(Therapy* therapy, ClonalParasitePopulation* clincial_caused_parasite_);
   void add_drug_to_blood(DrugType* dt, const int& dosing_days);
@@ -171,30 +173,30 @@ public:
 
   void schedule_move_to_target_location_next_day_event(const int& location);
 
-  bool has_return_to_residence_event();
-  void cancel_all_return_to_residence_events();
+  bool has_return_to_residence_event() const;
+  void cancel_all_return_to_residence_events() const;
 
-  bool has_detectable_parasite();
+  bool has_detectable_parasite() const;
 
   void increase_number_of_times_bitten();
 
-  void move_to_external_population();
+  static void move_to_external_population();
   void return_to_normal_population();
 
   void move_to_population(Population* population);
 
-  bool is_in_external_population();
+  bool is_in_external_population() const;
 
-  bool has_birthday_event();
-  bool has_update_by_having_drug_event();
+  bool has_birthday_event() const;
+  bool has_update_by_having_drug_event() const;
 
-  double get_age_dependent_biting_factor();
+  double get_age_dependent_biting_factor() const;
 
   void update_bitting_level();
 
-  double p_infection_from_an_infectious_bite();
+  double p_infection_from_an_infectious_bite() const;
 
-  bool isGametocytaemic();
+  bool isGametocytaemic() const;
 
 private:
 

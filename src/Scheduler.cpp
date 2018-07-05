@@ -27,11 +27,9 @@ Scheduler::~Scheduler() {
 
 void Scheduler::initialize( const date::year_month_day& starting_date, const int& total_time) {
   set_total_time(total_time);
-  set_current_time(0);
-
+  set_current_time(0); 
   
-  // because day 0 is the previous day of start_day, we have to subtract 1 day from the starting day
-  calendar_date = sys_days(starting_date) - days{1};
+  calendar_date = sys_days(starting_date);
 }
 
 void Scheduler::clear_all_events() {
@@ -63,9 +61,9 @@ void Scheduler::set_total_time(const int& value) {
 void Scheduler::schedule(Event* event) {
   // Schedule event in the future
   //1. Compare current time with event time
-  //2. Event time cannot exceed total time or less than and equal to current time
-  if (event->time() > total_time_ || event->time() <= current_time_) {
-    std::cout << "Error to schedule event " << event->name() << " at " << event->time() << "with current_time: "
+  //2. Event time cannot exceed total time or less than current time
+  if (event->time() > total_time_ || event->time() < current_time_) {
+    std::cout << "Error to schedule event " << event->name() << " at " << event->time() << " with current_time: "
       << current_time_ << std::endl;
     DeletePointer<Event>(event);
   }

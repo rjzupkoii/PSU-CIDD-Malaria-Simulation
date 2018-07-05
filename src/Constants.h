@@ -5,9 +5,7 @@
 #ifndef PCMS_CONSTANTS_H
 #define PCMS_CONSTANTS_H
 
-#include <chrono>
-
-#define CONST(constant_type, constant_name, constant_value)\
+#define MY_CONSTANT(constant_type, constant_name, constant_value)\
 public:\
   static constant_type const &constant_name(){\
     static constant_type constant_name##_{constant_value};\
@@ -15,13 +13,12 @@ public:\
   }
 
 class Constants {
-CONST(std::chrono::hours, ONE_DAY, 24)
-CONST(int, DAYS_IN_YEAR, 365)
+MY_CONSTANT(int, DAYS_IN_YEAR, 365)
 
-//  static std::chrono::hours const &ONE_DAY() {
-//    static std::chrono::hours one_day_{24};
-//    return one_day_;
-//  }
+  //  static std::chrono::hours const &ONE_DAY() {
+  //    static std::chrono::hours one_day_{24};
+  //    return one_day_;
+  //  }
 };
 
 #endif //PCMS_CONSTANTS_H

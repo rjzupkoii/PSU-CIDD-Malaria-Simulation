@@ -98,7 +98,7 @@ public:
 
     void introduce_parasite(const int &location, IntGenotype *parasite_type, const int &num_of_infections);
 
-    void initial_infection(Person *p, IntGenotype *parasite_type);
+    void initial_infection(Person *p, IntGenotype *parasite_type) const;
 
     virtual void notify_change_in_force_of_infection(const int &location, const int &parasite_type_id,
                                                      const double &relative_force_of_infection);

@@ -25,6 +25,8 @@
 #include "SingleHostClonalParasitePopulations.h"
 #include "PersonIndexByLocationExternalPopulationMovingLevel.h"
 #include "MoveToExternalPopulationEvent.h"
+#include "Helpers/TimeHelpers.h"
+#include "easylogging++.h"
 
 Population::Population(Model* model) : model_(model) {
   person_index_list_ = new PersonIndexPtrList();
@@ -100,17 +102,17 @@ int Population::size(const int& location, const int& age_class) {
   if (pi_lsa == nullptr) {
     return 0;
   }
-  int temp = 0;
+  auto temp = 0;
   if (age_class == -1) {
 
-    for (int state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
-      for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+    for (auto state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
+      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         temp += pi_lsa->vPerson()[location][state][ac].size();
       }
     }
   }
   else {
-    for (int state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
+    for (auto state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
       temp += pi_lsa->vPerson()[location][state][age_class].size();
     }
   }
@@ -137,10 +139,10 @@ int Population::size_residents_only(const int& location) {
   if (pi_lsa == nullptr) {
     return 0;
   }
-  int temp = 0;
-  for (int state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
-    for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-      for (int i = 0; i < pi_lsa->vPerson()[location][state][ac].size(); i++) {
+  auto temp = 0;
+  for (auto state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
+    for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+      for (auto i = 0; i < pi_lsa->vPerson()[location][state][ac].size(); i++) {
         if (pi_lsa->vPerson()[location][state][ac][i]->residence_location() == location) {
           temp++;
         }
@@ -154,12 +156,12 @@ void Population::perform_infection_event() {
   //    std::cout << "Infection Event" << std::endl;
 
   PersonPtrVector today_infections;
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (int parasite_type_id = 0;
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (auto parasite_type_id = 0;
          parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
-      double force_of_infection = force_of_infection_for7days_by_location_parasite_type_[
+      const double force_of_infection = force_of_infection_for7days_by_location_parasite_type_[
         Model::SCHEDULER->current_time() % Model::CONFIG->number_of_tracking_days()][loc][parasite_type_id];
-      if (force_of_infection <= 0.000001)
+      if (force_of_infection <= DBL_EPSILON)
         continue;
 
       // TODO: turn on/off seasonality in the input file
@@ -167,11 +169,11 @@ void Population::perform_infection_event() {
       //            double newBeta = Model::CONFIG->location_db()[loc].beta *
       //                    Model::CONFIG->seasonal_factor_for_beta(Model::SCHEDULER->current_time());
       //
-      double newBeta = Model::CONFIG->location_db()[loc].beta;
+      const double new_beta = Model::CONFIG->location_db()[loc].beta;
 
-      double poisson_means = newBeta * force_of_infection;
+      auto poisson_means = new_beta * force_of_infection;
 
-      int number_of_bites = Model::RANDOM->random_poisson(poisson_means);
+      auto number_of_bites = Model::RANDOM->random_poisson(poisson_means);
       if (number_of_bites <= 0)
         continue;
 
@@ -199,11 +201,9 @@ void Population::perform_infection_event() {
 
 
       for (int bitting_level = 0; bitting_level < vIntNumberOfBites.size(); bitting_level++) {
-        int size = pi->vPerson()[loc][bitting_level].size();
+        const int size = pi->vPerson()[loc][bitting_level].size();
         if (size == 0) continue;
-        for (int j = 0; j < vIntNumberOfBites[bitting_level]; j++) {
-
-
+        for (auto j = 0; j < vIntNumberOfBites[bitting_level]; j++) {
           //select 1 random person from level i
           int index = model_->random()->random_uniform(size);
           Person* p = pi->vPerson()[loc][bitting_level][index];
@@ -211,17 +211,17 @@ void Population::perform_infection_event() {
           assert(p->host_state() != Person::DEAD);
           p->increase_number_of_times_bitten();
 
-          double pInfectious = Model::RANDOM->random_flat(0.0, 1.0);
+          const double p_infectious = Model::RANDOM->random_flat(0.0, 1.0);
           //only infect with real infectious bite
           if (Model::CONFIG->using_variable_probability_infectious_bites_cause_infection()) {
-            if (pInfectious <= p->p_infection_from_an_infectious_bite()) {
+            if (p_infectious <= p->p_infection_from_an_infectious_bite()) {
               if (p->host_state() != Person::EXPOSED && p->liver_parasite_type() == nullptr) {
                 p->today_infections()->push_back(parasite_type_id);
                 today_infections.push_back(p);
               }
             }
           }
-          else if (pInfectious <= Model::CONFIG->p_infection_from_an_infectious_bite()) {
+          else if (p_infectious <= Model::CONFIG->p_infection_from_an_infectious_bite()) {
             if (p->host_state() != Person::EXPOSED && p->liver_parasite_type() == nullptr) {
               p->today_infections()->push_back(parasite_type_id);
               today_infections.push_back(p);
@@ -234,7 +234,7 @@ void Population::perform_infection_event() {
   }
   //    std::cout << "Solve infections"<< std::endl;
   //solve Multiple infections
-  if (today_infections.size() == 0) return;
+  if (today_infections.empty()) return;
 
   for (Person* p : today_infections) {
     p->randomly_choose_parasite();
@@ -274,12 +274,12 @@ void Population::initialize() {
     initialize_person_indices();
 
     //initialize population
-    for (int loc = 0; loc < number_of_location; loc++) {
-      int popsize_by_location = Model::CONFIG->location_db()[loc].populationSize;
+    for (auto loc = 0; loc < number_of_location; loc++) {
+      const auto popsize_by_location = Model::CONFIG->location_db()[loc].populationSize;
 
-      int temp_sum = 0;
-      for (int age_class = 0; age_class < Model::CONFIG->initial_age_structure().size(); age_class++) {
-        int number_of_individual_by_loc_ageclass = 0;
+      auto temp_sum = 0;
+      for (auto age_class = 0; age_class < Model::CONFIG->initial_age_structure().size(); age_class++) {
+        auto number_of_individual_by_loc_ageclass = 0;
         if (age_class == Model::CONFIG->initial_age_structure().size() - 1) {
           number_of_individual_by_loc_ageclass = popsize_by_location - temp_sum;
         }
@@ -290,7 +290,7 @@ void Population::initialize() {
         }
 
         //                std::cout << loc << "\t" << age_class << "\t" << number_of_individual_by_loc_ageclass << std::endl;
-        for (int i = 0; i < number_of_individual_by_loc_ageclass; i++) {
+        for (auto i = 0; i < number_of_individual_by_loc_ageclass; i++) {
           auto p = new Person();
           p->init();
 
@@ -298,8 +298,8 @@ void Population::initialize() {
           p->set_residence_location(loc);
           p->set_host_state(Person::SUSCEPTIBLE);
 
-          int age_from = (age_class == 0) ? 0 : Model::CONFIG->initial_age_structure()[age_class - 1];
-          int age_to = Model::CONFIG->initial_age_structure()[age_class];
+          const int age_from = (age_class == 0) ? 0 : Model::CONFIG->initial_age_structure()[age_class - 1];
+          const int age_to = Model::CONFIG->initial_age_structure()[age_class];
 
           //                    std::cout << i << "\t" << age_class << "\t" << age_from << "\t" << age_to << std::endl;
 
@@ -308,25 +308,34 @@ void Population::initialize() {
           //                    std::cout << p->age() << " \t" << p->age_class() << std::endl;
           //                    p->set_age_class(age_class);
 
-          // TODO: implement this using actual calendar day
-          p->set_birthday(static_cast<const int &>(-Model::RANDOM->random_uniform(Constants::DAYS_IN_YEAR())));
+          int days_to_next_birthday = Model::RANDOM->random_uniform(Constants::DAYS_IN_YEAR());
 
-          BirthdayEvent::schedule_event(Model::SCHEDULER, p, p->birthday() + Constants::DAYS_IN_YEAR());
+          auto simulation_time_birthday = TimeHelpers::get_simulation_time_birthday(
+            days_to_next_birthday, p->age(), Model::SCHEDULER->calendar_date);
+          p->set_birthday(simulation_time_birthday);
 
+          LOG_IF(simulation_time_birthday>0,FATAL) <<
+ "simulation_time_birthday have to be <= 0 when initilizing population";
+
+          BirthdayEvent::schedule_event(Model::SCHEDULER, p, days_to_next_birthday);
+
+          // TODO: check this
           //set immune component
-          if (p->is_infant(0)) {
+          if (simulation_time_birthday + Constants::DAYS_IN_YEAR() / 2 >= 0) {
+            LOG_IF(p->age() > 0, FATAL) << "Error in calculating simulation_time_birthday";
+            // LOG(INFO) << "Infant: " << p->age() << " - " << simulation_time_birthday;
             p->immune_system()->set_immune_component(new InfantImmuneComponent());
-            // TODO: implement this using actual calendar day
             //schedule for switch
             SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,
-                                                                                   p->birthday() +
+                                                                                   simulation_time_birthday +
                                                                                    Constants::DAYS_IN_YEAR() / 2);
           }
           else {
+            // LOG(INFO) << "Adult: " << p->age() << " - " << simulation_time_birthday;
             p->immune_system()->set_immune_component(new NonInfantImmuneComponent());
           }
 
-          double immune_value = Model::RANDOM->random_beta(
+          auto immune_value = Model::RANDOM->random_beta(
             Model::CONFIG->immune_system_information().alpha_immune,
             Model::CONFIG->immune_system_information().beta_immune);
           p->immune_system()->immune_component()->set_latest_value(immune_value);
@@ -360,10 +369,10 @@ void Population::initialize() {
 void Population::introduce_initial_cases() {
   if (model_ != nullptr) {
 
-    for (InitialParasiteInfo p_info : Model::CONFIG->initial_parasite_info()) {
+    for (const auto p_info : Model::CONFIG->initial_parasite_info()) {
       int num_of_infections = size(p_info.location) * p_info.prevalence;
       //            std::cout << num_of_infections << std::endl;
-      IntGenotype* genotype = Model::CONFIG->genotype_db()->db()[p_info.parasite_type_id];
+      auto* genotype = Model::CONFIG->genotype_db()->db()[p_info.parasite_type_id];
       //std::cout << p_info.location << "-" << p_info.parasite_type_id << "-" << num_of_infections << std::endl;
       introduce_parasite(p_info.location, genotype, num_of_infections);
 
@@ -387,7 +396,7 @@ void Population::introduce_parasite(const int& location, IntGenotype* parasite_t
     DoubleVector vLevelDensity;
     auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
-    for (int i = 0; i < Model::CONFIG->relative_bitting_information().number_of_biting_levels; i++) {
+    for (auto i = 0; i < Model::CONFIG->relative_bitting_information().number_of_biting_levels; i++) {
       double temp = Model::CONFIG->relative_bitting_information().v_biting_level_value[i] *
         pi->vPerson()[location][i].size();
       vLevelDensity.push_back(temp);
@@ -398,9 +407,9 @@ void Population::introduce_parasite(const int& location, IntGenotype* parasite_t
                                          &vIntNumberOfBites[0]);
 
     for (int bitting_level = 0; bitting_level < vIntNumberOfBites.size(); bitting_level++) {
-      int size = pi->vPerson()[location][bitting_level].size();
+      const int size = pi->vPerson()[location][bitting_level].size();
       if (size == 0) continue;
-      for (int j = 0; j < vIntNumberOfBites[bitting_level]; j++) {
+      for (auto j = 0; j < vIntNumberOfBites[bitting_level]; j++) {
 
         //                std::cout << vIntNumberOfBites[bitting_level] << "-" << j << std::endl;
         //select 1 random person from level i
@@ -413,7 +422,7 @@ void Population::introduce_parasite(const int& location, IntGenotype* parasite_t
   }
 }
 
-void Population::initial_infection(Person* p, IntGenotype* parasite_type) {
+void Population::initial_infection(Person* p, IntGenotype* parasite_type) const {
 
   p->immune_system()->set_increase(true);
   p->set_host_state(Person::ASYMPTOMATIC);
@@ -429,8 +438,8 @@ void Population::initial_infection(Person* p, IntGenotype* parasite_type) {
   blood_parasite->set_last_update_log10_parasite_density(size);
 
 
-  double PClinical = p->get_probability_progress_to_clinical();
-  double P = model_->random()->random_flat(0.0, 1.0);
+  const double PClinical = p->get_probability_progress_to_clinical();
+  const double P = model_->random()->random_flat(0.0, 1.0);
 
   if (P < PClinical) {
     //progress to clinical after several days
@@ -463,10 +472,10 @@ void Population::perform_birth_event() {
   //    std::cout << "Birth Event" << std::endl;
 
   for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    double poisson_means = size(loc) * Model::CONFIG->birth_rate() / Constants::DAYS_IN_YEAR();
-    int numberOfBirths = Model::RANDOM->random_poisson(poisson_means);
+    auto poisson_means = size(loc) * Model::CONFIG->birth_rate() / Constants::DAYS_IN_YEAR();
+    const auto number_of_births = Model::RANDOM->random_poisson(poisson_means);
 
-    for (int i = 0; i < numberOfBirths; i++) {
+    for (auto i = 0; i < number_of_births; i++) {
       give_1_birth(loc);
       Model::DATA_COLLECTOR->update_person_days_by_years(loc, Constants::DAYS_IN_YEAR() -
                                                          Model::SCHEDULER->current_day_in_year());
@@ -503,12 +512,13 @@ void Population::give_1_birth(const int& location) {
 
   // TODO: implement this using actual calendar day
   p->set_birthday(Model::SCHEDULER->current_time());
-  BirthdayEvent::schedule_event(Model::SCHEDULER, p, p->birthday() + Constants::DAYS_IN_YEAR());
+  const auto next_birthday = TimeHelpers::number_of_days_to_next_year(Model::SCHEDULER->calendar_date);
+  BirthdayEvent::schedule_event(Model::SCHEDULER, p, Model::SCHEDULER->current_time() + next_birthday);
 
-  // TODO: implement this using actual calendar day
   //schedule for switch
   SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,
-                                                                         p->birthday() + Constants::DAYS_IN_YEAR() / 2);
+                                                                         Model::SCHEDULER->current_time() + Constants::
+                                                                         DAYS_IN_YEAR() / 2);
 
   //    p->startLivingTime = (Global::startTreatmentDay > Global::scheduler->currentTime) ? Global::startTreatmentDay : Global::scheduler->currentTime;
   p->schedule_update_every_K_days_event(Model::CONFIG->update_frequency());
@@ -686,9 +696,9 @@ bool Population::has_0_case() {
 
 void Population::initialize_person_indices() {
 
-  int number_of_location = Model::CONFIG->number_of_locations();
-  int number_of_hoststate = Person::NUMBER_OF_STATE;
-  int number_of_ageclasses = Model::CONFIG->number_of_age_classes();
+  const auto number_of_location = Model::CONFIG->number_of_locations();
+  const int number_of_hoststate = Person::NUMBER_OF_STATE;
+  const auto number_of_ageclasses = Model::CONFIG->number_of_age_classes();
 
   auto p_index_by_l_s_a = new PersonIndexByLocationStateAgeClass(number_of_location,
                                                                  number_of_hoststate,
@@ -737,9 +747,9 @@ void Population::perform_moving_to_external_population_event() {
                                          &vIntNumberOfCirculation[0]);
 
     for (int moving_level = 0; moving_level < vIntNumberOfCirculation.size(); moving_level++) {
-      int size = static_cast<int>(pi->vPerson()[location][moving_level].size());
+      const int size = static_cast<int>(pi->vPerson()[location][moving_level].size());
       if (size == 0) continue;
-      for (int j = 0; j < vIntNumberOfCirculation[moving_level]; j++) {
+      for (auto j = 0; j < vIntNumberOfCirculation[moving_level]; j++) {
 
 
         //select 1 random person from level i

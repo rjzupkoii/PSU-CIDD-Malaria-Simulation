@@ -11,12 +11,12 @@ gulp.task("wd", function () {
 });
 
 gulp.task("test", function () {
-	spawn("bin\\masim_test.exe", {
+	spawn("bin/masim_test.exe", {
         stdio: "inherit" // <== IMPORTANT: use this option to inherit the parent's environment
     });
 });
 gulp.task("dev", function () {
-  spawn("bin\\MaSim.exe",["-i","misc\\input.yml"], {
+  spawn("bin/MaSim.exe",["-i","misc\\input.yml"], {
         stdio: "inherit" // <== IMPORTANT: use this option to inherit the parent's environment
     });
 });

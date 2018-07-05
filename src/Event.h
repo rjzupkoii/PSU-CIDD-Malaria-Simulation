@@ -17,10 +17,10 @@ class Scheduler;
 class Event : public IndexHandler {
     DISALLOW_COPY_AND_ASSIGN(Event)
 
-    POINTER_PROPERTY(Scheduler, scheduler);
-    POINTER_PROPERTY(Dispatcher, dispatcher);
-    PROPERTY_REF(bool, executable);
-    PROPERTY_REF(int, time);
+    POINTER_PROPERTY(Scheduler, scheduler)
+    POINTER_PROPERTY(Dispatcher, dispatcher)
+    PROPERTY_REF(bool, executable)
+    PROPERTY_REF(int, time)
 
 public:
     Event();

@@ -13,21 +13,19 @@
 class Person;
 
 class BirthdayEvent : public Event {
-    OBJECTPOOL(BirthdayEvent)
-    DISALLOW_COPY_AND_ASSIGN(BirthdayEvent)
+OBJECTPOOL(BirthdayEvent)
+DISALLOW_COPY_AND_ASSIGN(BirthdayEvent)
 public:
-    BirthdayEvent();
-//    BirthdayEvent(const BirthdayEvent& orig);
-    virtual ~BirthdayEvent();
+  BirthdayEvent();
+  //    BirthdayEvent(const BirthdayEvent& orig);
+  virtual ~BirthdayEvent();
 
-    static void schedule_event(Scheduler* scheduler, Person* p, const int& time);
-    
-    virtual std::string name(){
-        return "Birthday Event";
-    }
+  static void schedule_event(Scheduler* scheduler, Person* p, const int& time);
+
+  std::string name() override;
+
 private:
-    virtual void execute();
+  void execute() override;
 };
 
 #endif	/* BIRTHDAYEVENT_H */
-
