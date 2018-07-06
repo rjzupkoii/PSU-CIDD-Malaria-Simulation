@@ -43,7 +43,7 @@ public:
 
     double get_current_parasite_density(const int& current_time);
 
-    double get_log10_relative_density();
+    double get_log10_relative_density() const;
 
     void mutate_to(IntGenotype* genotype);
 

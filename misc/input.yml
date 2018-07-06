@@ -9,14 +9,16 @@
 # ---------------------------------------------------------------
 
 
-# total number of days the simulation is run, including the burn-in period which we normally set to 4000
-# days; during the burn-in period, no one receives malaria treatement and the system sets into a natural 
-# equilibrium 
+# total number of days the simulation is run
 total_time: 10
 
 # starting time point of the simulation (in yyyy/m/d format) 
 # which is day 0 in the simulation
+# including the burn-in period which we normally set to 4000# days;
 starting_date: 1990/1/1
+
+# ending time point of the simulation (in yyyy/m/d format) 
+ending_date: 2040/1/1
 
 # length of burn-in period
 start_treatment_day: 0
@@ -100,12 +102,12 @@ circulation_information:
 
 
 
-# this functionality works, but it was not used in any analyses for the 2015 LGH paper
-# seasonality parameters, by location
+# seasonality parameters for all location
+# to turn off seasonality, set a to 0
 seasonal_beta:
   a: [1]
   phi: [180]
-  period: 360
+  period: 365
   min_value: 0.1
 
 # probability that an infectious bite on a human causes a blood stage malaria infection

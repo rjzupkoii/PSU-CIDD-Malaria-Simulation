@@ -41,7 +41,7 @@ public:
 // TODO: Consider removing effecting_loci and selecting alleles
     VIRTUAL_PROPERTY_REF(IntVector, affecting_loci)
     VIRTUAL_PROPERTY_REF(IntVector2, selecting_alleles)
-    VIRTUAL_PROPERTY_REF(ec50map_type, ec50map)
+    VIRTUAL_PROPERTY_REF(ec50map_type, ec50_map)
 
 
 public:
@@ -56,14 +56,14 @@ public:
     virtual double n();
     virtual void set_n(const double& n);
 
-    int get_total_duration_of_drug_activity(const int &dosing_days);
+    int get_total_duration_of_drug_activity(const int &dosing_days) const;
 
-    bool is_artemisinin();
-    bool is_lumefantrine();
+    bool is_artemisinin() const;
+    bool is_lumefantrine() const;
 
     int select_mutation_locus();
 
-    double inferEC50(IntGenotype* genotype);
+    double infer_ec50(IntGenotype* genotype);
 
 private:
     double n_;

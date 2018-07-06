@@ -23,7 +23,10 @@ public:
   static int number_of_days_to_next_year(const date::sys_days& today);
   static int get_simulation_time_birthday(const int& days_to_next_birthday, const int& age, const date::sys_days&
                                           starting_day);
-  // static int get_next_birthday(const date::sys_days& starting_day, const int& simulation_time_birthday);
+  static int day_of_year(const int& y, const unsigned& m, const unsigned& d);
+
+  static int day_of_year(const date::sys_days& day);
+
 };
 
 inline int TimeHelpers::number_of_days(const int& y1, const unsigned int& m1, const unsigned int& d1, const int& y2,
@@ -58,6 +61,20 @@ inline int TimeHelpers::get_simulation_time_birthday(const int& days_to_next_bir
 
   return number_of_days(starting_day, calendar_birthday);
 
+}
+
+inline int TimeHelpers::day_of_year(const int& y, const unsigned& m, const unsigned& d) {
+  using namespace date;
+
+  if (m < 1 || m > 12 || d < 1 || d > 31) return 0;
+
+  return (sys_days{year{y} / month{m} / day{d}} -
+    sys_days{year{y} / jan / 0}).count();
+}
+
+inline int TimeHelpers::day_of_year(const date::sys_days& day) {
+  date::year_month_day ymd{day};
+  return number_of_days(date::sys_days{ymd.year() / 1 / 0}, day);
 }
 
 

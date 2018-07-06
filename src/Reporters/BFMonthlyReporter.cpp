@@ -11,6 +11,7 @@
 #include "../Strategies/IStrategy.h"
 #include "../Helpers/TimeHelpers.h"
 #include "../Constants.h"
+#include "../Population.h"
 
 BFMonthlyReporter::BFMonthlyReporter() {
 
@@ -35,15 +36,14 @@ void BFMonthlyReporter::begin_time_step() {
 
 void BFMonthlyReporter::after_time_step() {
 
-  // TODO: use input parameter to select day in month for monthly report
-  if (Model::SCHEDULER->is_monthly_reporting_day()) {
+  if (Model::SCHEDULER->is_today_monthly_reporting_day()) {
 //    std::cout << Model::SCHEDULER->calendar_date << std::endl;
 //    if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
 
     std::cout << Model::SCHEDULER->current_time() << "\t";
     std::cout << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << "\t";
     std::cout << date::format("%Y\t%m\t%d", Model::SCHEDULER->calendar_date) << "\t";
-    std::cout << Model::CONFIG->seasonal_factor_for_beta(Model::SCHEDULER->current_time()) << "\t";
+    std::cout << Model::CONFIG->get_seasonal_factor(Model::SCHEDULER->calendar_date) << "\t";
     print_PfPR_0_5_by_location();
 
 //        std::cout << "-1111\t";

@@ -72,5 +72,17 @@ TEST_CASE("TimeHelpers", "[Core]") {
 	  auto birthday{ date::sys_days{ 1999_y / 1 / 19 } };
 	  REQUIRE(expected == TimeHelpers::number_of_days(today, birthday));
   }
+  SECTION("get day of year ") {
+	  using namespace date::literals;
+	  date::sys_days d1{ 2018_y / 1 / 30 };
+	  REQUIRE(30 == TimeHelpers::day_of_year(d1));
+
+	  date::sys_days d2{ 2018_y / 6 / 24 };
+	  REQUIRE(175 == TimeHelpers::day_of_year(d2));
+
+	  date::sys_days d3{ 2000_y / 6 / 24 };
+	  REQUIRE(176 == TimeHelpers::day_of_year(d3));
+
+  }
 
 }

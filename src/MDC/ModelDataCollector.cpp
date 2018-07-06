@@ -505,7 +505,7 @@ void ModelDataCollector::update_average_number_bitten(const int& location, const
                                                          ? 1
                                                          : Model::SCHEDULER->current_time() + 1 -
                                                          Model::CONFIG->start_collect_data_day();
-  auto average_bites = number_of_times_bitten / static_cast<double>(time_living_from_start_collect_data_day);
+  const auto average_bites = number_of_times_bitten / static_cast<double>(time_living_from_start_collect_data_day);
 
   average_number_biten_by_location_person_[location].push_back(average_bites);
 }

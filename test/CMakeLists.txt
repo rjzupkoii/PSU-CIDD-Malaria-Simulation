@@ -9,6 +9,7 @@ set(TEST_SRC_FILES
     Spatial/LocationTest.cpp
 	Core/RandomTest.cpp
 	Core/TimeHelpersTest.cpp
+	Core/StringHelpersTest.cpp
 	)
 
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/Spatial/*.cpp)

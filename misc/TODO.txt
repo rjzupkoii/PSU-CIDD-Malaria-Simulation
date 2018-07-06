@@ -1,6 +1,4 @@
 TODO:
-
- - Report real date for monthly Jan 31 day, Feb 28/29 days (leap year count),...
- - Check birth day for each individual to match with the new calendar
+  - remove total day in the input files
 
  - Use Docker to do memory check with Valgrind

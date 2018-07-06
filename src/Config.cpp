@@ -20,14 +20,13 @@
 #include "TherapyBuilder.h"
 #include "Strategies/NovelNonACTSwitchingStrategy.h"
 #include "Strategies/NestedSwitchingStrategy.h"
-#include "StringSplitHelper.h"
 #include "Spatial/SpatialModelBuilder.h"
 #include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
-#include "Constants.h"
 #include "Helpers/NumberHelpers.h"
 #include "easylogging++.h"
 #include "Helpers/OSHelpers.h"
 #include "Helpers/TimeHelpers.h"
+#include "Helpers/StringHelpers.h"
 
 using namespace Spatial;
 
@@ -347,7 +346,7 @@ void Config::build_drug_db(const YAML::Node& config) {
 
   for (int g_id = 0; g_id < genotype_db_->db().size(); g_id++) {
     for (int i = 0; i < drug_db_->drug_db().size(); i++) {
-      EC50_power_n_table_[g_id].push_back(drug_db_->drug_db()[i]->inferEC50(genotype_db_->db()[g_id]));
+      EC50_power_n_table_[g_id].push_back(drug_db_->drug_db()[i]->infer_ec50(genotype_db_->db()[g_id]));
     }
   }
   //    std::cout << "ok " << std::endl;
@@ -414,7 +413,7 @@ DrugType* Config::read_drugtype(const YAML::Node& config, const int& drug_id) {
     }
   }
 
-  dt->set_ec50map(n["EC50"].as<std::map<std::string, double>>());
+  dt->set_ec50_map(n["EC50"].as<std::map<std::string, double>>());
 
   //    auto ec50Node = n["EC50"];
   //    for (YAML::const_iterator it = ec50Node.begin(); it != ec50Node.end(); it++) {
@@ -781,13 +780,13 @@ void Config::override_parameters(const std::string& override_file, const int& po
   getline(ifs, buf);
 
   //header of file containt all overrides parameters name
-  std::vector<std::string> override_header = split(buf, '\t');
+  auto override_header = StringHelpers::split(buf, '\t');
 
 
   //goto the pos line in the file
   for (int i = 0; (i < pos) && getline(ifs, buf); i++) { }
   //buff contain the parameters
-  std::vector<std::string> override_parameters = split(buf, '\t');
+  std::vector<std::string> override_parameters = StringHelpers::split(buf, '\t');
 
   //override parameter
   for (int i = 0; i < override_parameters.size(); i++) {
@@ -964,7 +963,7 @@ void Config::read_spatial_information(const YAML::Node& config) {
   }
 
   //read spatial_model
-  std::string sm_name = config["spatial_information"]["spatial_model"].as<std::string>();
+  const std::string sm_name = config["spatial_information"]["spatial_model"].as<std::string>();
   spatial_model_ = SpatialModelBuilder::Build(sm_name, config["spatial_information"][sm_name]);
 
 }
@@ -975,10 +974,10 @@ void Config::read_seasonal_information(const YAML::Node& config) {
   seasonal_beta_.C.clear();
 
   for (int i = 0; i < number_of_locations_; i++) {
-    int input_loc = config["seasonal_beta"]["a"].size() < number_of_locations_ ? 0 : i;
+    auto input_loc = config["seasonal_beta"]["a"].size() < number_of_locations_ ? 0 : i;
     seasonal_beta_.A.push_back(config["seasonal_beta"]["a"][input_loc].as<double>());
 
-    auto period = config["seasonal_beta"]["period"].as<double>();
+    const auto period = config["seasonal_beta"]["period"].as<double>();
     auto B = 2 * M_PI / period;
 
     seasonal_beta_.B.push_back(B);
@@ -1019,27 +1018,6 @@ void Config::read_biodemography_information(const YAML::Node& config) {
   }
 }
 
-double Config::seasonal_factor_for_beta(const int& current_time) {
-  // TODO: implement this in actual calendar year
-  double result = 0;
-  if (current_time % Constants::DAYS_IN_YEAR() >= seasonal_beta_.phi) {
-    result = current_time % Constants::DAYS_IN_YEAR() <= seasonal_beta_.phi + 183
-               ? (seasonal_beta_.A[0] - seasonal_beta_.min_value) *
-               sin(seasonal_beta_.B[0] * current_time + seasonal_beta_.C[0]) +
-               seasonal_beta_.min_value
-               : seasonal_beta_.min_value;
-  }
-  else {
-    result = seasonal_beta_.min_value;
-  }
-
-
-  return result;
-  //    if (amplitude == 0) return 1;
-  //    return (((current_time % Constants::DAYS_IN_YEAR()) > (Constants::DAYS_IN_YEAR() / 2))) ? amplitude * (cos(2 * PI * (current_time + phi) / Constants::DAYS_IN_YEAR()) + 2) : (
-  //            cos(2 * PI * (current_time + phi_lower) / Constants::DAYS_IN_YEAR()) + 2);
-  //    //        return amplitude * cos(2 * PI * (current_time + phi) / Constants::DAYS_IN_YEAR()) + 2;
-}
 
 void Config::build_location_db(const YAML::Node& node) {
   for (int i = 0; i < node["location_info"].size(); i++) {
@@ -1081,4 +1059,21 @@ void Config::build_location_db(const YAML::Node& node) {
 
   //    location_db()[0].populationSize = 1000;
   //    std::cout << location_db()[number_of_locations()-1] << std::endl;
+}
+
+
+// TODO: write test for this
+
+double Config::get_seasonal_factor(const date::sys_days &today) const {
+  if (NumberHelpers::is_equal(Model::CONFIG->seasonal_beta().A[0], 0.0)) {
+    return 1;
+  }
+  const auto day_of_year = TimeHelpers::day_of_year(today);
+
+  return (day_of_year >= Model::CONFIG->seasonal_beta().phi) && (day_of_year <= Model::CONFIG->seasonal_beta().phi + 183
+         )
+           ? (Model::CONFIG->seasonal_beta().A[0] - Model::CONFIG->seasonal_beta().min_value) *
+           sin(Model::CONFIG->seasonal_beta().B[0] * day_of_year + Model::CONFIG->seasonal_beta().C[0]) +
+           Model::CONFIG->seasonal_beta().min_value
+           : Model::CONFIG->seasonal_beta().min_value;
 }

@@ -25,7 +25,7 @@ ProgressToClinicalEvent::ProgressToClinicalEvent() {}
 ProgressToClinicalEvent::~ProgressToClinicalEvent() {}
 
 void ProgressToClinicalEvent::execute() {
-  Person* person = (Person *)dispatcher();
+  auto* person = (Person *)dispatcher();
   if (person->all_clonal_parasite_populations()->size() == 0) {
     //parasites might be cleaned by immune system or other things else
     return;
@@ -47,7 +47,7 @@ void ProgressToClinicalEvent::execute() {
   //    Random* random = model->random();
   //    Config* config = model->config();
 
-  double density = Model::RANDOM->random_uniform_double(
+  const auto density = Model::RANDOM->random_uniform_double(
     Model::CONFIG->log_parasite_density_level().log_parasite_density_clinical_from,
     Model::CONFIG->log_parasite_density_level().log_parasite_density_clinical_to);
 
@@ -69,16 +69,16 @@ void ProgressToClinicalEvent::execute() {
   //Statistic collect cumulative clinical episodes
   Model::DATA_COLLECTOR->collect_1_clinical_episode(person->location(), person->age(), person->age_class());
 
-  double P = Model::RANDOM->random_flat(0.0, 1.0);
-  double P_treatment_by_age =
+    const auto p = Model::RANDOM->random_flat(0.0, 1.0);
+  const double p_treatment_by_age =
     person->age() <= 5
       ? Model::CONFIG->location_db()[person->location()].p_treatment_less_than_5
       : Model::CONFIG->location_db()[person->location()].p_treatment_more_than_5;
 
-  double P_treatment = (Model::MODEL->scheduler()->current_time() >= Model::CONFIG->start_treatment_day())
-                         ? P_treatment_by_age
+  const auto p_treatment = (Model::MODEL->scheduler()->current_time() >= Model::CONFIG->start_treatment_day())
+                         ? p_treatment_by_age
                          : -1;
-  if (P <= P_treatment) {
+  if (p <= p_treatment) {
     Therapy* therapy = Model::CONFIG->strategy()->get_therapy(person);
     person->receive_therapy(therapy, clinical_caused_parasite_);
     //Statistic increase today treatments

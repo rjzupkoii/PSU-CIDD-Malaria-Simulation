@@ -65,7 +65,7 @@ public:
 
   bool is_last_day_of_month() const;
 
-  bool is_monthly_reporting_day() const;
+  bool is_today_monthly_reporting_day() const;
 
   bool is_last_day_of_year() const;
 

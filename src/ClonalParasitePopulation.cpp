@@ -45,7 +45,7 @@ void ClonalParasitePopulation::mutate_to(IntGenotype *genotype) {
   set_genotype(genotype);
 }
 
-double ClonalParasitePopulation::get_log10_relative_density() {
+double ClonalParasitePopulation::get_log10_relative_density() const {
 
   if (NumberHelpers::is_equal(last_update_log10_parasite_density_, LOG_ZERO_PARASITE_DENSITY) ||
       NumberHelpers::is_equal(gametocyte_level_, 0.0))

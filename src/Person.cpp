@@ -96,14 +96,11 @@ void Person::set_location(const int& value) {
   if (location_ != value) {
     all_clonal_parasite_populations_->remove_all_infection_force();
     if (Model::DATA_COLLECTOR != nullptr) {
-      // TODO: change Constants::DAYS_IN_YEAR() to # of actual days in current year
+      const auto day_diff = (Constants::DAYS_IN_YEAR() - Model::SCHEDULER->current_day_in_year());
       if (location_ != -1) {
-        Model::DATA_COLLECTOR->update_person_days_by_years(location_,
-                                                           -(Constants::DAYS_IN_YEAR() -
-                                                             Model::SCHEDULER->current_day_in_year()));
+        Model::DATA_COLLECTOR->update_person_days_by_years(location_, -day_diff);
       }
-      Model::DATA_COLLECTOR->update_person_days_by_years(value, (Constants::DAYS_IN_YEAR() -
-                                                           Model::SCHEDULER->current_day_in_year()));
+      Model::DATA_COLLECTOR->update_person_days_by_years(value, day_diff);
     }
 
     Model::DATA_COLLECTOR->record_1_migration(this, location_, value);
@@ -744,38 +741,28 @@ double Person::get_age_dependent_biting_factor() const {
   //3.00 - 4.00  -  15.5
   //4.00 - 5.00  -  17.5
   // + 2.75kg until 20
-
-  // TODO: calculate age by actual calendar
+  // then divide by 61.5
 
   if (age_ < 1) {
     const auto age = ((Model::SCHEDULER->current_time() - birthday_) % Constants::DAYS_IN_YEAR()) /
       static_cast<double>(Constants::DAYS_IN_YEAR());
     if (age < 0.25)
       return 0.106;
-    //            return 6.5 / 61.5;
     if (age < 0.5)
       return 0.13;
-    //            return 8.0 / 61.5;
     if (age < 0.75)
       return 0.1463;
-    //            return 9.0 / 61.5;
     return 0.1545;
-    //            return 9.5 / 61.5;
   }
   if (age_ < 2)
     return 0.1789;
-  //        return 11 / 61.5;
   if (age_ < 3)
     return 0.2195;
-  //        return 13.5 / 61.5;
   if (age_ < 4)
     return 0.2520;
-  //        return 15.5 / 61.5;
   if (age_ < 20)
     return (17.5 + (age_ - 4) * 2.75) / 61.5;
-
   return 1.0;
-
 }
 
 double Person::p_infection_from_an_infectious_bite() const {

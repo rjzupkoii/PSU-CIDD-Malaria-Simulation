@@ -35,7 +35,6 @@ void PersonIndexByLocationStateAgeClass::Initialize(const int& no_location, cons
 }
 
 void PersonIndexByLocationStateAgeClass::add(Person* p) {
-    //TODO: add exception later    
     assert(vPerson_.size() > p->location() && p->location() >= 0);
     assert(vPerson_[p->location()].size() > p->host_state());
     assert(vPerson_[p->location()][p->host_state()].size() > p->age_class());

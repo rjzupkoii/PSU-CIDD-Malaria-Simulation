@@ -188,8 +188,6 @@ public:
 
   void read_genotype_info(const YAML::Node& config);
 
-  double seasonal_factor_for_beta(const int& current_time);
-
   void read_spatial_information(const YAML::Node& config);
 
   void read_seasonal_information(const YAML::Node& config);
@@ -199,6 +197,8 @@ public:
   void read_biodemography_information(const YAML::Node& config);
 
   void build_location_db(const YAML::Node& node);
+
+  double get_seasonal_factor(const date::sys_days &today) const;
 };
 
 #endif /* CONFIG_H */

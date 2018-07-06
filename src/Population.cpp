@@ -127,7 +127,6 @@ int Population::size(const int& location, const Person::HostStates& hs, const in
   return static_cast<int>(pi_lsa->vPerson()[location][hs][age_class].size());
 }
 
-
 //new
 int Population::size_residents_only(const int& location) {
   if (location == -1) {
@@ -164,12 +163,8 @@ void Population::perform_infection_event() {
       if (force_of_infection <= DBL_EPSILON)
         continue;
 
-      // TODO: turn on/off seasonality in the input file
-
-      //            double newBeta = Model::CONFIG->location_db()[loc].beta *
-      //                    Model::CONFIG->seasonal_factor_for_beta(Model::SCHEDULER->current_time());
-      //
-      const double new_beta = Model::CONFIG->location_db()[loc].beta;
+      const auto new_beta = Model::CONFIG->location_db()[loc].beta * Model::CONFIG->get_seasonal_factor(
+        Model::SCHEDULER->calendar_date);
 
       auto poisson_means = new_beta * force_of_infection;
 
@@ -319,7 +314,6 @@ void Population::initialize() {
 
           BirthdayEvent::schedule_event(Model::SCHEDULER, p, days_to_next_birthday);
 
-          // TODO: check this
           //set immune component
           if (simulation_time_birthday + Constants::DAYS_IN_YEAR() / 2 >= 0) {
             LOG_IF(p->age() > 0, FATAL) << "Error in calculating simulation_time_birthday";
@@ -363,7 +357,6 @@ void Population::initialize() {
       }
     }
   }
-  //TODO: throw exception if model is nullptr
 }
 
 void Population::introduce_initial_cases() {
@@ -510,10 +503,9 @@ void Population::give_1_birth(const int& location) {
   p->set_external_population_moving_level(
     Model::CONFIG->external_population_moving_level_generator().draw_random_level(Model::RANDOM));
 
-  // TODO: implement this using actual calendar day
   p->set_birthday(Model::SCHEDULER->current_time());
-  const auto next_birthday = TimeHelpers::number_of_days_to_next_year(Model::SCHEDULER->calendar_date);
-  BirthdayEvent::schedule_event(Model::SCHEDULER, p, Model::SCHEDULER->current_time() + next_birthday);
+  const auto number_of_days_to_next_birthday = TimeHelpers::number_of_days_to_next_year(Model::SCHEDULER->calendar_date);
+  BirthdayEvent::schedule_event(Model::SCHEDULER, p, Model::SCHEDULER->current_time() + number_of_days_to_next_birthday);
 
   //schedule for switch
   SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,

@@ -6,7 +6,6 @@
  */
 
 #include <vector>
-#include "Constants.h"
 #include "Scheduler.h"
 #include "Event.h"
 #include "HelperFunction.h"
@@ -16,6 +15,7 @@
 #include "Population.h"
 #include "MDC/ModelDataCollector.h"
 #include "Strategies/IStrategy.h"
+#include "Helpers/TimeHelpers.h"
 
 using namespace date;
 
@@ -167,8 +167,7 @@ bool Scheduler::can_stop() const {
 }
 
 int Scheduler::current_day_in_year() const {
-  //TODO: implement using calendar day
-  return (current_time_ - Model::CONFIG->start_collect_data_day()) % Constants::DAYS_IN_YEAR();
+	return TimeHelpers::day_of_year(calendar_date);
 }
 
 
@@ -188,7 +187,7 @@ bool Scheduler::is_last_day_of_year() const {
   return (ymd.month() - January).count() == 12 && (ymd.day() - 0_d).count() == 31;
 }
 
-bool Scheduler::is_monthly_reporting_day() const {
+bool Scheduler::is_today_monthly_reporting_day() const {
   year_month_day ymd{calendar_date};
   return (ymd.day() - 0_d).count() == 1;
 }
