@@ -7,7 +7,6 @@
 #include <fmt/format.h>
 #include "Model.h"
 #include "Population.h"
-#include "HelperFunction.h"
 #include "Config.h"
 #include "Person.h"
 #include "Random.h"
@@ -33,6 +32,7 @@
 #include "ImportationPeriodicallyEvent.h"
 #include "ImportationEvent.h"
 #include "easylogging++.h"
+#include "Helpers/ObjectHelpers.h"
 
 Model* Model::MODEL = nullptr;
 Config* Model::CONFIG = nullptr;
@@ -98,10 +98,10 @@ void Model::initialize() {
                                                                     override_parameter_filename_,
                                                                     override_parameter_line_number_);
   config_->override_parameters(override_parameter_filename_, override_parameter_line_number_);
-  
+
   //add reporter here
   add_reporter(Reporter::MakeReport(Reporter::BFREPORTER));
-  
+
   LOG(INFO) << "Initialing reports";
   //initialize reporters  
   for (Reporter* reporter : reporters_) {
@@ -222,14 +222,14 @@ void Model::run() {
 }
 
 void Model::before_run() {
-	LOG(INFO) << "Perform before run events";
+  LOG(INFO) << "Perform before run events";
   for (Reporter* reporter : reporters_) {
     reporter->before_run();
   }
 }
 
 void Model::after_run() {
-	LOG(INFO) << "Perform after run events";
+  LOG(INFO) << "Perform after run events";
 
   DATA_COLLECTOR->update_after_run();
 
@@ -240,21 +240,21 @@ void Model::after_run() {
 
 void Model::release() {
   //    std::cout << "Model Release" << std::endl;
-  DeletePointer<ClinicalUpdateFunction>(progress_to_clinical_update_function_);
-  DeletePointer<ImmunityClearanceUpdateFunction>(immunity_clearance_update_function_);
-  DeletePointer<ImmunityClearanceUpdateFunction>(having_drug_update_function_);
-  DeletePointer<ImmunityClearanceUpdateFunction>(clinical_update_function_);
+  ObjectHelpers::delete_pointer<ClinicalUpdateFunction>(progress_to_clinical_update_function_);
+  ObjectHelpers::delete_pointer<ImmunityClearanceUpdateFunction>(immunity_clearance_update_function_);
+  ObjectHelpers::delete_pointer<ImmunityClearanceUpdateFunction>(having_drug_update_function_);
+  ObjectHelpers::delete_pointer<ImmunityClearanceUpdateFunction>(clinical_update_function_);
 
-  DeletePointer<Population>(population_);
-  //    DeletePointer<ExternalPopulation>(external_population_);
-  DeletePointer<Scheduler>(scheduler_);
-  DeletePointer<ModelDataCollector>(data_collector_);
+  ObjectHelpers::delete_pointer<Population>(population_);
+  //   ObjectHelpers::DeletePointer<ExternalPopulation>(external_population_);
+  ObjectHelpers::delete_pointer<Scheduler>(scheduler_);
+  ObjectHelpers::delete_pointer<ModelDataCollector>(data_collector_);
 
-  DeletePointer<Config>(config_);
-  DeletePointer<Random>(random_);
+  ObjectHelpers::delete_pointer<Config>(config_);
+  ObjectHelpers::delete_pointer<Random>(random_);
 
   for (Reporter* reporter : reporters_) {
-    DeletePointer<Reporter>(reporter);
+    ObjectHelpers::delete_pointer<Reporter>(reporter);
   }
   reporters_.clear();
 

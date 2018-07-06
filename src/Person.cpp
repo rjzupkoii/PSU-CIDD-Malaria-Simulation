@@ -29,7 +29,6 @@
 #include "UpdateEveryKDaysEvent.h"
 #include "ReturnToResidenceEvent.h"
 #include "CirculateToTargetLocationNextDayEvent.h"
-#include "HelperFunction.h"
 #include "MDC/ModelDataCollector.h"
 #include "ExternalPopulation.h"
 #include "BirthdayEvent.h"
@@ -38,6 +37,7 @@
 #include "Constants.h"
 #include <algorithm>
 #include <cmath>
+#include "Helpers/ObjectHelpers.h"
 
 OBJECTPOOL_IMPL(Person)
 
@@ -75,11 +75,11 @@ void Person::init() {
 
 Person::~Person() {
   Dispatcher::clear_events();
-  DeletePointer<ImmuneSystem>(immune_system_);
-  DeletePointer<SingleHostClonalParasitePopulations>(all_clonal_parasite_populations_);
-  DeletePointer<DrugsInBlood>(drugs_in_blood_);
-  DeletePointer<IntVector>(today_infections_);
-  DeletePointer<IntVector>(today_target_locations_);
+  ObjectHelpers::delete_pointer<ImmuneSystem>(immune_system_);
+  ObjectHelpers::delete_pointer<SingleHostClonalParasitePopulations>(all_clonal_parasite_populations_);
+  ObjectHelpers::delete_pointer<DrugsInBlood>(drugs_in_blood_);
+  ObjectHelpers::delete_pointer<IntVector>(today_infections_);
+  ObjectHelpers::delete_pointer<IntVector>(today_target_locations_);
 }
 
 void Person::NotifyChange(const PersonProperties& property, const void* oldValue, const void* newValue) {

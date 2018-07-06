@@ -170,11 +170,11 @@ public:
 
   void read_relative_infectivity_info(const YAML::Node& config);
 
-  IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id);
+  IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id) const;
 
-  Therapy* read_therapy(const YAML::Node& n, const int& therapy_id);
+  Therapy* read_therapy(const YAML::Node& n, const int& therapy_id) const;
 
-  DrugType* read_drugtype(const YAML::Node& config, const int& drug_id);
+  DrugType* read_drugtype(const YAML::Node& config, const int& drug_id) const;
 
   void override_parameters(const std::string& override_file, const int& pos);
 

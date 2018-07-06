@@ -8,7 +8,6 @@
 #include <vector>
 #include "Scheduler.h"
 #include "Event.h"
-#include "HelperFunction.h"
 #include "Dispatcher.h"
 #include "Model.h"
 #include "Config.h"
@@ -16,6 +15,7 @@
 #include "MDC/ModelDataCollector.h"
 #include "Strategies/IStrategy.h"
 #include "Helpers/TimeHelpers.h"
+#include "Helpers/ObjectHelpers.h"
 
 using namespace date;
 
@@ -25,10 +25,10 @@ Scheduler::~Scheduler() {
   clear_all_events();
 }
 
-void Scheduler::initialize( const date::year_month_day& starting_date, const int& total_time) {
+void Scheduler::initialize(const date::year_month_day& starting_date, const int& total_time) {
   set_total_time(total_time);
-  set_current_time(0); 
-  
+  set_current_time(0);
+
   calendar_date = sys_days(starting_date);
 }
 
@@ -38,7 +38,7 @@ void Scheduler::clear_all_events() {
       if (event->dispatcher() != nullptr) {
         event->dispatcher()->remove(event);
       }
-      DeletePointer<Event>(event);
+      ObjectHelpers::delete_pointer<Event>(event);
     }
     events_list.clear();
   }
@@ -65,7 +65,7 @@ void Scheduler::schedule(Event* event) {
   if (event->time() > total_time_ || event->time() < current_time_) {
     std::cout << "Error to schedule event " << event->name() << " at " << event->time() << " with current_time: "
       << current_time_ << std::endl;
-    DeletePointer<Event>(event);
+    ObjectHelpers::delete_pointer<Event>(event);
   }
   else {
     timed_events_list_[event->time()].push_back(event);
@@ -82,12 +82,12 @@ void Scheduler::run() {
   current_time_ = 0;
 
 
-  for (current_time_ = 0; !can_stop(); current_time_++) {    
+  for (current_time_ = 0; !can_stop(); current_time_++) {
     begin_time_step();
 
     for (auto& event : timed_events_list_[current_time_]) {
       event->perform_execute();
-      DeletePointer<Event>(event);
+      ObjectHelpers::delete_pointer<Event>(event);
     }
 
     timed_events_list_[current_time_].clear();
@@ -167,7 +167,7 @@ bool Scheduler::can_stop() const {
 }
 
 int Scheduler::current_day_in_year() const {
-	return TimeHelpers::day_of_year(calendar_date);
+  return TimeHelpers::day_of_year(calendar_date);
 }
 
 

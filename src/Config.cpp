@@ -11,7 +11,6 @@
 #include <fstream>
 #include <fmt/format.h>
 #include "Config.h"
-#include "HelperFunction.h"
 #include "Strategies/IStrategy.h"
 #include "Model.h"
 #include "Random.h"
@@ -27,6 +26,7 @@
 #include "Helpers/OSHelpers.h"
 #include "Helpers/TimeHelpers.h"
 #include "Helpers/StringHelpers.h"
+#include "Helpers/ObjectHelpers.h"
 
 using namespace Spatial;
 
@@ -52,10 +52,10 @@ Config::Config(Model* model) :
   inflation_factor_{1} {}
 
 Config::~Config() {
-  //    DeletePointer<Strategy>(strategy_);
-  DeletePointer<IStrategy>(tme_strategy_);
-  DeletePointer<DrugDatabase>(drug_db_);
-  DeletePointer<IntGenotypeDatabase>(genotype_db_);
+  //   ObjectHelpers::DeletePointer<Strategy>(strategy_);
+	ObjectHelpers::delete_pointer<IStrategy>(tme_strategy_);
+	ObjectHelpers::delete_pointer<DrugDatabase>(drug_db_);
+	ObjectHelpers::delete_pointer<IntGenotypeDatabase>(genotype_db_);
 
   for (auto& i : strategy_db_) {
     delete i;
@@ -70,7 +70,7 @@ Config::~Config() {
   }
   therapy_db_.clear();
 
-  DeletePointer<SpatialModel>(spatial_model_);
+  ObjectHelpers::delete_pointer<SpatialModel>(spatial_model_);
 }
 
 
@@ -270,18 +270,18 @@ void Config::read_strategy_therapy_and_drug_information(const YAML::Node& config
   }
 }
 
-IStrategy* Config::read_strategy(const YAML::Node& n, const int& strategy_id) {
-  std::string s_id = NumberToString<int>(strategy_id);
+IStrategy* Config::read_strategy(const YAML::Node& n, const int& strategy_id) const {
+  const auto s_id = NumberHelpers::number_to_string<int>(strategy_id);
 
-  IStrategy* result = StrategyBuilder::build(n[s_id], strategy_id);
+  auto* result = StrategyBuilder::build(n[s_id], strategy_id);
 
   //    std::cout << result->to_string() << std::endl;
   return result;
 }
 
-Therapy* Config::read_therapy(const YAML::Node& n, const int& therapy_id) {
-  std::string t_id = NumberToString<int>(therapy_id);
-  Therapy* t = TherapyBuilder::build(n[t_id], therapy_id);
+Therapy* Config::read_therapy(const YAML::Node& n, const int& therapy_id) const {
+  const auto t_id = NumberHelpers::number_to_string<int>(therapy_id);
+  auto* t = TherapyBuilder::build(n[t_id], therapy_id);
 
   return t;
 }
@@ -329,7 +329,7 @@ void Config::read_genotype_info(const YAML::Node& config) {
 }
 
 void Config::build_drug_db(const YAML::Node& config) {
-  DeletePointer<DrugDatabase>(drug_db_);
+ ObjectHelpers::delete_pointer<DrugDatabase>(drug_db_);
   drug_db_ = new DrugDatabase();
 
   for (int i = 0; i < config["drugInfo"].size(); i++) {
@@ -360,7 +360,7 @@ void Config::build_drug_db(const YAML::Node& config) {
 
 void Config::build_parasite_db() {
 
-  DeletePointer<IntGenotypeDatabase>(genotype_db_);
+ ObjectHelpers::delete_pointer<IntGenotypeDatabase>(genotype_db_);
   genotype_db_ = new IntGenotypeDatabase();
 
   int number_of_genotypes = 1;
@@ -378,12 +378,12 @@ void Config::build_parasite_db() {
   number_of_parasite_types_ = static_cast<int>(genotype_db_->db().size());
 }
 
-DrugType* Config::read_drugtype(const YAML::Node& config, const int& drug_id) {
+DrugType* Config::read_drugtype(const YAML::Node& config, const int& drug_id) const {
   auto* dt = new DrugType();
   dt->set_id(drug_id);
 
-  std::string drug_id_s = NumberToString<int>(drug_id);
-  const YAML::Node& n = config["drugInfo"][drug_id_s];
+  const auto drug_id_s = NumberHelpers::number_to_string<int>(drug_id);
+  const auto& n = config["drugInfo"][drug_id_s];
 
   dt->set_drug_half_life(n["half_life"].as<double>());
   dt->set_maximum_parasite_killing_rate(n["maximum_parasite_killing_rate"].as<double>());
@@ -1064,7 +1064,7 @@ void Config::build_location_db(const YAML::Node& node) {
 
 // TODO: write test for this
 
-double Config::get_seasonal_factor(const date::sys_days &today) const {
+double Config::get_seasonal_factor(const date::sys_days& today) const {
   if (NumberHelpers::is_equal(Model::CONFIG->seasonal_beta().A[0], 0.0)) {
     return 1;
   }

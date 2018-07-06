@@ -8,23 +8,7 @@
 #ifndef HELPERFUNCTION_H
 #define	HELPERFUNCTION_H
 
-#include <string>
-#include <sstream>
-#include <vector>
-template <typename T>
-void DeletePointer(T*& p) {
-    if (p != nullptr) {
-        delete p;
-        p = nullptr;
-    }
-}
 
-template <typename T>
-std::string NumberToString(T Number) {
-    std::ostringstream ss;
-    ss << Number;
-    return ss.str();
-}
 
 #endif	/* HELPERFUNCTION_H */
 

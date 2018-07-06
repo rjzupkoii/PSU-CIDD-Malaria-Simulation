@@ -23,7 +23,7 @@ ExternalPopulation::~ExternalPopulation() {
 //    //release memory for all persons
 //    if (all_persons() != nullptr) {
 //        for (int i = 0; i < all_persons()->vPerson().size(); i++) {
-//            DeletePointer<Person>(all_persons()->vPerson()[i]);
+//           ObjectHelpers::DeletePointer<Person>(all_persons()->vPerson()[i]);
 //        }
 //        all_persons()->vPerson().clear();
 //        set_all_persons(nullptr);
@@ -33,7 +33,7 @@ ExternalPopulation::~ExternalPopulation() {
 //    if (person_index_list() != nullptr) {
 //
 //        for( PersonIndex* person_index :  *person_index_list()) {
-//            DeletePointer<PersonIndex>(person_index);
+//           ObjectHelpers::DeletePointer<PersonIndex>(person_index);
 //        }
 //
 //        person_index_list()->clear();

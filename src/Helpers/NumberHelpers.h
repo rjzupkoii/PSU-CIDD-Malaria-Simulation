@@ -57,6 +57,12 @@ public:
     return c;
   }
 
+  template <typename T>
+  static std::string number_to_string(T number) {
+	  std::ostringstream ss;
+	  ss << number;
+	  return ss.str();
+  }
 };
 
 

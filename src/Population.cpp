@@ -10,7 +10,6 @@
 #include "Population.h"
 #include "Model.h"
 #include "PersonIndexAll.h"
-#include "HelperFunction.h"
 #include "Config.h"
 #include "PersonIndexByLocationStateAgeClass.h"
 #include "InfantImmuneComponent.h"
@@ -27,6 +26,7 @@
 #include "MoveToExternalPopulationEvent.h"
 #include "Helpers/TimeHelpers.h"
 #include "easylogging++.h"
+#include "Helpers/ObjectHelpers.h"
 
 Population::Population(Model* model) : model_(model) {
   person_index_list_ = new PersonIndexPtrList();
@@ -39,7 +39,7 @@ Population::~Population() {
   //release memory for all persons
   if (all_persons_ != nullptr) {
     for (auto& person : all_persons_->vPerson()) {
-      DeletePointer<Person>(person);
+      ObjectHelpers::delete_pointer<Person>(person);
     }
     all_persons_->vPerson().clear();
     all_persons_ = nullptr;
@@ -50,11 +50,11 @@ Population::~Population() {
   if (person_index_list_ != nullptr) {
 
     for (PersonIndex* person_index : *person_index_list_) {
-      DeletePointer<PersonIndex>(person_index);
+      ObjectHelpers::delete_pointer<PersonIndex>(person_index);
     }
 
     person_index_list_->clear();
-    DeletePointer<PersonIndexPtrList>(person_index_list_);
+    ObjectHelpers::delete_pointer<PersonIndexPtrList>(person_index_list_);
   }
 }
 
@@ -82,7 +82,7 @@ void Population::remove_person(Person* person) {
 
 void Population::remove_dead_person(Person* person) {
   remove_person(person);
-  DeletePointer<Person>(person);
+  ObjectHelpers::delete_pointer<Person>(person);
 }
 
 void Population::notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue,
@@ -504,8 +504,10 @@ void Population::give_1_birth(const int& location) {
     Model::CONFIG->external_population_moving_level_generator().draw_random_level(Model::RANDOM));
 
   p->set_birthday(Model::SCHEDULER->current_time());
-  const auto number_of_days_to_next_birthday = TimeHelpers::number_of_days_to_next_year(Model::SCHEDULER->calendar_date);
-  BirthdayEvent::schedule_event(Model::SCHEDULER, p, Model::SCHEDULER->current_time() + number_of_days_to_next_birthday);
+  const auto number_of_days_to_next_birthday = TimeHelpers::
+    number_of_days_to_next_year(Model::SCHEDULER->calendar_date);
+  BirthdayEvent::schedule_event(Model::SCHEDULER, p,
+                                Model::SCHEDULER->current_time() + number_of_days_to_next_birthday);
 
   //schedule for switch
   SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,

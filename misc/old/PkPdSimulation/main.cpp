@@ -48,7 +48,7 @@ int main(int argc, const char * argv[]) {
     m->initialize();
 
     BOOST_FOREACH(Reporter* reporter, m->reporters()) {
-        DeletePointer<Reporter>(reporter);
+       ObjectHelpers::DeletePointer<Reporter>(reporter);
     }
     m->reporters().clear();
     m->add_reporter(new PkPdReporter());
