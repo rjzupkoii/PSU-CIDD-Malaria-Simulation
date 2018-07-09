@@ -12,117 +12,111 @@
 #include "../Helpers/TimeHelpers.h"
 #include "../Constants.h"
 #include "../Population.h"
+#include "easylogging++.h"
 
-BFMonthlyReporter::BFMonthlyReporter() {
+BFMonthlyReporter::BFMonthlyReporter() {}
 
-}
+BFMonthlyReporter::~BFMonthlyReporter() {}
 
-BFMonthlyReporter::~BFMonthlyReporter() {
+void BFMonthlyReporter::initialize() {}
 
-}
-
-void BFMonthlyReporter::initialize() {
-
-}
-
-void BFMonthlyReporter::before_run() {
-
-}
+void BFMonthlyReporter::before_run() {}
 
 
-void BFMonthlyReporter::begin_time_step() {
-
-}
+void BFMonthlyReporter::begin_time_step() {}
 
 void BFMonthlyReporter::after_time_step() {
 
   if (Model::SCHEDULER->is_today_monthly_reporting_day()) {
-//    std::cout << Model::SCHEDULER->calendar_date << std::endl;
-//    if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
+    //    ss << Model::SCHEDULER->calendar_date << std::endl;
+    //    if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
 
-    std::cout << Model::SCHEDULER->current_time() << "\t";
-    std::cout << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << "\t";
-    std::cout << date::format("%Y\t%m\t%d", Model::SCHEDULER->calendar_date) << "\t";
-    std::cout << Model::CONFIG->get_seasonal_factor(Model::SCHEDULER->calendar_date) << "\t";
+    ss << Model::SCHEDULER->current_time() << "\t";
+    ss << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << "\t";
+    ss << date::format("%Y\t%m\t%d", Model::SCHEDULER->calendar_date) << "\t";
+    ss << Model::CONFIG->get_seasonal_factor(Model::SCHEDULER->calendar_date) << "\t";
     print_PfPR_0_5_by_location();
 
-//        std::cout << "-1111\t";
-//
-//        print_monthly_incidence_by_location();
-//
-//        std::cout << "-1111" << "\t";
-//
-//        for (int i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
-//            std::cout << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[i] << "\t";
-//        }
-//
-//        std::cout << "-1111" << "\t";
-//
-//        for (int i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
-//            std::cout << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[i] << "\t";
-//        }
-//
-//        std::cout << "-1111" << "\t";
-//        for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-//            for (int i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
-//                std::cout << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count_by_location()[loc][i]
-//                          << "\t";
-//            }
-//        }
+    //        ss << "-1111\t";
+    //
+    //        print_monthly_incidence_by_location();
+    //
+    //        ss << "-1111" << "\t";
+    //
+    //        for (int i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
+    //            ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[i] << "\t";
+    //        }
+    //
+    //        ss << "-1111" << "\t";
+    //
+    //        for (int i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
+    //            ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[i] << "\t";
+    //        }
+    //
+    //        ss << "-1111" << "\t";
+    //        for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    //            for (int i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
+    //                ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count_by_location()[loc][i]
+    //                          << "\t";
+    //            }
+    //        }
 
-    std::cout << std::endl;
+    CLOG(INFO, "monthly_reporter") << ss.str();
+    ss.str("");
   }
 }
 
 
 void BFMonthlyReporter::after_run() {
-  std::cout << Model::RANDOM->seed() << "\t" << Model::CONFIG->number_of_locations() << "\t";
+  ss.str("");
+  ss << Model::RANDOM->seed() << "\t" << Model::CONFIG->number_of_locations() << "\t";
 
   //output strategy information
-  std::cout << Model::CONFIG->strategy()->id << "\t";
+  ss << Model::CONFIG->strategy()->id << "\t";
 
   //output NTF
-  double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
-                               (double) Constants::DAYS_IN_YEAR();
+  auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
+    static_cast<double>(Constants::DAYS_IN_YEAR());
 
-  double sumNTF = 0.0;
-  ul popSize = 0;
+  auto sum_ntf = 0.0;
+  ul pop_size = 0;
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-    sumNTF += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
-    popSize += Model::DATA_COLLECTOR->popsize_by_location()[location];
+    sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
+    pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
   }
 
-  std::cout << (sumNTF * 100 / popSize) / total_time_in_years << "\t";
+  ss << (sum_ntf * 100 / pop_size) / total_time_in_years << "\t";
 
-//    std::cout << "-1111\t";
-//    for (int age = 0; age < 80; age++) {
-//        int sum = 0;
-//        for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-//            sum += Model::DATA_COLLECTOR->number_of_treatments_by_location_age_year()[location][age];
-//
-//        }
-//        std::cout << sum << "\t";
-//    }
+  //    ss << "-1111\t";
+  //    for (int age = 0; age < 80; age++) {
+  //        int sum = 0;
+  //        for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+  //            sum += Model::DATA_COLLECTOR->number_of_treatments_by_location_age_year()[location][age];
+  //
+  //        }
+  //        ss << sum << "\t";
+  //    }
 
 
-  std::cout << std::endl;
+  // CLOG(INFO, "monthly_reporter") << ss.str();
+  ss.str("");
 }
 
 void BFMonthlyReporter::print_PfPR_0_5_by_location() {
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
-    std::cout << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 0, 5) * 100 << "\t";
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 0, 5) * 100 << "\t";
   }
 }
 
 void BFMonthlyReporter::print_monthly_incidence_by_location() {
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
-    std::cout << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << "\t";
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << "\t";
   }
 
-  std::cout << "-1111\t";
+  ss << "-1111\t";
 
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
-    std::cout << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << "\t";
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << "\t";
   }
 
 }

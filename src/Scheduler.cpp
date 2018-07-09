@@ -16,6 +16,7 @@
 #include "Strategies/IStrategy.h"
 #include "Helpers/TimeHelpers.h"
 #include "Helpers/ObjectHelpers.h"
+#include "easylogging++.h"
 
 using namespace date;
 
@@ -79,10 +80,12 @@ void Scheduler::cancel(Event* event) {
 
 
 void Scheduler::run() {
+  LOG(INFO) << "Simulation is running";
   current_time_ = 0;
 
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
+    LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
     begin_time_step();
 
     for (auto& event : timed_events_list_[current_time_]) {
@@ -188,6 +191,7 @@ bool Scheduler::is_last_day_of_year() const {
 }
 
 bool Scheduler::is_today_monthly_reporting_day() const {
+  // return true;
   year_month_day ymd{calendar_date};
   return (ymd.day() - 0_d).count() == 1;
 }

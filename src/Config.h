@@ -31,6 +31,7 @@ POINTER_PROPERTY(Model, model)
 VIRTUAL_PROPERTY_REF(int, total_time)
 
 VIRTUAL_PROPERTY_REF(date::year_month_day, starting_date)
+VIRTUAL_PROPERTY_REF(date::year_month_day, ending_date)
 
 VIRTUAL_PROPERTY_REF(int, start_treatment_day)
 

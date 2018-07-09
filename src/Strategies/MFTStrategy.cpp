@@ -8,7 +8,7 @@
 #include "MFTStrategy.h"
 #include "../Random.h"
 #include "../Model.h"
-#include <assert.h>
+#include <cassert>
 #include <sstream>
 #include "IStrategy.h"
 #include "../Therapy.h"

@@ -10,7 +10,7 @@
 #include "Scheduler.h"
 #include "ImmuneSystem.h"
 #include "NonInfantImmuneComponent.h"
-#include <assert.h>
+#include <cassert>
 
 OBJECTPOOL_IMPL(SwitchImmuneComponentEvent)
 

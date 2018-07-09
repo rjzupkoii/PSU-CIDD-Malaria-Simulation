@@ -8,7 +8,7 @@
 #include "PersonIndexByLocationMovingLevel.h"
 #include "Config.h"
 #include "Model.h"
-#include <assert.h>
+#include <cassert>
 
 PersonIndexByLocationMovingLevel::PersonIndexByLocationMovingLevel(const int& no_location, const int& no_level) {
 	Initialize(no_location, no_level);

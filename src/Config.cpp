@@ -27,11 +27,13 @@
 #include "Helpers/TimeHelpers.h"
 #include "Helpers/StringHelpers.h"
 #include "Helpers/ObjectHelpers.h"
+#include "Constants.h"
 
 using namespace Spatial;
 
 Config::Config(Model* model) :
-  model_(model), total_time_(-1), starting_date_{}, start_treatment_day_(-1), start_collect_data_day_(-1),
+  model_(model), total_time_(-1), starting_date_{}, ending_date_{}, start_treatment_day_(-1),
+  start_collect_data_day_(-1),
   number_of_locations_(-1),
   number_of_age_classes_(-1), number_of_parasite_types_(-1), seasonal_beta_(),
   p_infection_from_an_infectious_bite_(-1),
@@ -53,9 +55,9 @@ Config::Config(Model* model) :
 
 Config::~Config() {
   //   ObjectHelpers::DeletePointer<Strategy>(strategy_);
-	ObjectHelpers::delete_pointer<IStrategy>(tme_strategy_);
-	ObjectHelpers::delete_pointer<DrugDatabase>(drug_db_);
-	ObjectHelpers::delete_pointer<IntGenotypeDatabase>(genotype_db_);
+  ObjectHelpers::delete_pointer<IStrategy>(tme_strategy_);
+  ObjectHelpers::delete_pointer<DrugDatabase>(drug_db_);
+  ObjectHelpers::delete_pointer<IntGenotypeDatabase>(genotype_db_);
 
   for (auto& i : strategy_db_) {
     delete i;
@@ -77,8 +79,11 @@ Config::~Config() {
 void Config::read_from_file(const std::string& config_file_name) {
 
   YAML::Node config = YAML::LoadFile(config_file_name);
-  total_time_ = config["total_time"].as<int>();
+
   starting_date_ = TimeHelpers::convert_to<date::year_month_day>(config["starting_date"].as<std::string>());
+  ending_date_ = TimeHelpers::convert_to<date::year_month_day>(config["ending_date"].as<std::string>());
+  total_time_ = (date::sys_days{ending_date_} - date::sys_days(starting_date_)).count();
+
 
   start_treatment_day_ = config["start_treatment_day"].as<int>();
   start_collect_data_day_ = config["start_collect_data_day"].as<int>();
@@ -250,23 +255,23 @@ void Config::read_strategy_therapy_and_drug_information(const YAML::Node& config
 
   //    read_all_therapy
   for (int i = 0; i < config["TherapyInfo"].size(); i++) {
-    Therapy* t = read_therapy(config["TherapyInfo"], i);
+    auto* t = read_therapy(config["TherapyInfo"], i);
     therapy_db_.push_back(t);
   }
 
-  for (int i = 0; i < config["StrategyInfo"].size(); i++) {
-    IStrategy* s = read_strategy(config["StrategyInfo"], i);
+  for (auto i = 0; i < config["StrategyInfo"].size(); i++) {
+    auto* s = read_strategy(config["StrategyInfo"], i);
     strategy_db_.push_back(s);
   }
 
   strategy_ = strategy_db_[config["main_strategy_id"].as<int>()];
 
   if (strategy_->get_type() == IStrategy::NestedSwitching) {
-    ((NestedSwitchingStrategy *)strategy_)->initialize_update_time();
+    static_cast<NestedSwitchingStrategy *>(strategy_)->initialize_update_time();
   }
 
   if (strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
-    ((NestedSwitchingDifferentDistributionByLocationStrategy *)strategy_)->initialize_update_time();
+    static_cast<NestedSwitchingDifferentDistributionByLocationStrategy *>(strategy_)->initialize_update_time();
   }
 }
 
@@ -329,7 +334,7 @@ void Config::read_genotype_info(const YAML::Node& config) {
 }
 
 void Config::build_drug_db(const YAML::Node& config) {
- ObjectHelpers::delete_pointer<DrugDatabase>(drug_db_);
+  ObjectHelpers::delete_pointer<DrugDatabase>(drug_db_);
   drug_db_ = new DrugDatabase();
 
   for (int i = 0; i < config["drugInfo"].size(); i++) {
@@ -360,7 +365,7 @@ void Config::build_drug_db(const YAML::Node& config) {
 
 void Config::build_parasite_db() {
 
- ObjectHelpers::delete_pointer<IntGenotypeDatabase>(genotype_db_);
+  ObjectHelpers::delete_pointer<IntGenotypeDatabase>(genotype_db_);
   genotype_db_ = new IntGenotypeDatabase();
 
   int number_of_genotypes = 1;
@@ -1069,9 +1074,13 @@ double Config::get_seasonal_factor(const date::sys_days& today) const {
     return 1;
   }
   const auto day_of_year = TimeHelpers::day_of_year(today);
+  const auto is_rainy_period = Model::CONFIG->seasonal_beta().phi < Constants::DAYS_IN_YEAR() / 2.0
+                                 ? day_of_year >= Model::CONFIG->seasonal_beta().phi
+                                 && day_of_year <= Model::CONFIG->seasonal_beta().phi + Constants::DAYS_IN_YEAR() / 2.0
+                                 : day_of_year >= Model::CONFIG->seasonal_beta().phi
+                                 || day_of_year <= Model::CONFIG->seasonal_beta().phi - Constants::DAYS_IN_YEAR() / 2.0;
 
-  return (day_of_year >= Model::CONFIG->seasonal_beta().phi) && (day_of_year <= Model::CONFIG->seasonal_beta().phi + 183
-         )
+  return (is_rainy_period)
            ? (Model::CONFIG->seasonal_beta().A[0] - Model::CONFIG->seasonal_beta().min_value) *
            sin(Model::CONFIG->seasonal_beta().B[0] * day_of_year + Model::CONFIG->seasonal_beta().C[0]) +
            Model::CONFIG->seasonal_beta().min_value

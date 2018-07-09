@@ -10,7 +10,7 @@
 #include "Config.h"
 #include "Model.h"
 
-#include <assert.h>
+#include <cassert>
 
 PersonIndexByLocationStateAgeClass::PersonIndexByLocationStateAgeClass(const int& no_location, const int& no_host_state, const int& no_age_class) {
     Initialize(no_location, no_host_state, no_age_class);

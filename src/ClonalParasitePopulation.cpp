@@ -13,7 +13,7 @@
 #include "Scheduler.h"
 #include "Config.h"
 #include "Helpers/NumberHelpers.h"
-#include <math.h>
+#include <cmath>
 
 OBJECTPOOL_IMPL(ClonalParasitePopulation)
 const double ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY = -1000;

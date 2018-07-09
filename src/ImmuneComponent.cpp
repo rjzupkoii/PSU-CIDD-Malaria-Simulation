@@ -12,7 +12,7 @@
 #include "Model.h"
 #include "Config.h"
 #include "Random.h"
-#include <math.h>
+#include <cmath>
 
 ////OBJECTPOOL_IMPL(ImmuneComponent)
 

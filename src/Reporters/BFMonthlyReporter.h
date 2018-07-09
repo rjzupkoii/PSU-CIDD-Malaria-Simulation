@@ -7,27 +7,30 @@
 
 
 #include "Reporter.h"
+#include <sstream>
 
 class BFMonthlyReporter : public Reporter {
 DISALLOW_COPY_AND_ASSIGN(BFMonthlyReporter)
 
 public:
-    BFMonthlyReporter();
-    virtual ~BFMonthlyReporter();
+  std::stringstream ss;
 
-    void initialize() override;
+  BFMonthlyReporter();
+  virtual ~BFMonthlyReporter();
 
-    void before_run() override;
+  void initialize() override;
 
-    void after_run() override;
+  void before_run() override;
 
-    void begin_time_step() override;
+  void after_run() override;
 
-    void after_time_step() override;
+  void begin_time_step() override;
 
-  static void print_PfPR_0_5_by_location();
+  void after_time_step() override;
 
-  static void print_monthly_incidence_by_location();
+  void print_PfPR_0_5_by_location();
+
+  void print_monthly_incidence_by_location();
 };
 
 

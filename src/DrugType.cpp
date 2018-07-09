@@ -6,7 +6,7 @@
  */
 
 #include "DrugType.h"
-#include <math.h>
+#include <cmath>
 #include "IntGenotype.h"
 #include "Model.h"
 #include "Config.h"

@@ -24,7 +24,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <typeinfo> 
-#include <assert.h>
+#include <cassert>
 
 #define OBJECTPOOL_IMPL(class_name)\
     ObjectPool<class_name>* class_name::object_pool = nullptr;\

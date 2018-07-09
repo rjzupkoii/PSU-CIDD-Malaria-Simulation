@@ -8,7 +8,7 @@
 #include "PersonIndexByLocationBittingLevel.h"
 #include "Config.h"
 #include "Model.h"
-#include <assert.h>
+#include <cassert>
 
 PersonIndexByLocationBittingLevel::PersonIndexByLocationBittingLevel(const int& no_location, const int& no_level) {
     Initialize(no_location, no_level);

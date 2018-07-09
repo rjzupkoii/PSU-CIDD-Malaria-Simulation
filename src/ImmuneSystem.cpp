@@ -10,7 +10,7 @@
 #include "Person.h"
 #include "Model.h"
 #include "Config.h"
-#include <math.h>
+#include <cmath>
 #include "Helpers/ObjectHelpers.h"
 
 OBJECTPOOL_IMPL(ImmuneSystem)

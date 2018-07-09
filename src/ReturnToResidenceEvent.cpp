@@ -5,7 +5,7 @@
  * Created on August 2, 2013, 11:20 AM
  */
 
-#include <assert.h>
+#include <cassert>
 
 #include "ReturnToResidenceEvent.h"
 #include "Person.h"

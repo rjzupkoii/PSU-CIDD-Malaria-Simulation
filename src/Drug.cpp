@@ -14,7 +14,7 @@
 #include "Scheduler.h"
 #include "Config.h"
 #include "Helpers/NumberHelpers.h"
-#include <math.h>
+#include <cmath>
 
 OBJECTPOOL_IMPL(Drug)
 

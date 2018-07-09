@@ -18,7 +18,7 @@
 #include "Random.h"
 #include "MDC/ModelDataCollector.h"
 #include "Helpers/NumberHelpers.h"
-#include <math.h>
+#include <cmath>
 #include "Helpers/ObjectHelpers.h"
 
 OBJECTPOOL_IMPL(SingleHostClonalParasitePopulations)

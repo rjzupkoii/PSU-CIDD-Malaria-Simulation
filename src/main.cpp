@@ -35,30 +35,30 @@ void config_logger() {
   default_conf.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
   el::Loggers::reconfigureLogger("default", default_conf);
 
-  el::Configurations reporter_logger;
-  reporter_logger.setToDefault();
-  reporter_logger.set(el::Level::Debug, el::ConfigurationType::Format,
+  el::Configurations monthly_reporter_logger;
+  monthly_reporter_logger.setToDefault();
+  monthly_reporter_logger.set(el::Level::Debug, el::ConfigurationType::Format,
                       "[%level] [%logger] [%host] [%func] [%loc] %msg");
-  reporter_logger.set(el::Level::Error, el::ConfigurationType::Format,
+  monthly_reporter_logger.set(el::Level::Error, el::ConfigurationType::Format,
                       "[%level] [%logger] [%host] [%func] [%loc] %msg");
-  reporter_logger.set(el::Level::Fatal, el::ConfigurationType::Format,
+  monthly_reporter_logger.set(el::Level::Fatal, el::ConfigurationType::Format,
                       "[%level] [%logger] [%host] [%func] [%loc] %msg");
-  reporter_logger.set(el::Level::Trace, el::ConfigurationType::Format,
+  monthly_reporter_logger.set(el::Level::Trace, el::ConfigurationType::Format,
                       "[%level] [%logger] [%host] [%func] [%loc] %msg");
-  reporter_logger.set(el::Level::Info, el::ConfigurationType::Format, "[%level] [%logger] %msg");
-  reporter_logger.set(el::Level::Warning, el::ConfigurationType::Format, "[%level] [%logger] %msg");
-  reporter_logger.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] [%logger] %msg");
+  monthly_reporter_logger.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
+  monthly_reporter_logger.set(el::Level::Warning, el::ConfigurationType::Format, "[%level] [%logger] %msg");
+  monthly_reporter_logger.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] [%logger] %msg");
 
 
-  reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
-  reporter_logger.setGlobally(el::ConfigurationType::Filename, "reporter.txt");
-  reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
-  reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
+  monthly_reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
+  monthly_reporter_logger.setGlobally(el::ConfigurationType::Filename, "monthly_data.txt");
+  monthly_reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");  
+  monthly_reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
   // default logger uses default configurations
-  el::Loggers::reconfigureLogger("reporter", reporter_logger);
+  el::Loggers::reconfigureLogger("monthly_reporter", monthly_reporter_logger);
   //
-  // CLOG(INFO, "reporter") << "test reporter log";
-  // CLOG(INFO, "reporter") << "test reporter log2";
+  // CLOG(INFO, "monthly_reporter") << "test reporter log";
+  // CLOG(INFO, "monthly_reporter") << "test reporter log2";
 }
 
 int main(const int argc, char** argv) {

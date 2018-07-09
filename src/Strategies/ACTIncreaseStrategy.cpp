@@ -14,7 +14,7 @@
 #include "ACTIncreaseStrategy.h"
 #include "../Random.h"
 #include "../Model.h"
-#include <assert.h>
+#include <cassert>
 #include "../Therapy.h"
 #include "../Config.h"
 #include <sstream>

@@ -9,7 +9,7 @@
 #include "Model.h"
 #include "Person.h"
 #include "ImmuneSystem.h"
-#include <math.h>
+#include <cmath>
 
 //OBJECTPOOL_IMPL(InfantImmuneComponent)
 

@@ -5,7 +5,7 @@
  * Created on June 3, 2013, 8:00 PM
  */
 
-#include <assert.h>
+#include <cassert>
 #include "SFTStrategy.h"
 #include "../Therapy.h"
 #include "IStrategy.h"

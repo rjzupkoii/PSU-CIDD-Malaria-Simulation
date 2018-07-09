@@ -9,16 +9,15 @@
 # ---------------------------------------------------------------
 
 
-# total number of days the simulation is run
-total_time: 10
-
 # starting time point of the simulation (in yyyy/m/d format) 
 # which is day 0 in the simulation
 # including the burn-in period which we normally set to 4000# days;
 starting_date: 1990/1/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 2040/1/1
+ending_date: 1992/1/1
+
+# total number of days the simulation will be calculated from starting_date and ending_date
 
 # length of burn-in period
 start_treatment_day: 0
@@ -106,7 +105,7 @@ circulation_information:
 # to turn off seasonality, set a to 0
 seasonal_beta:
   a: [1]
-  phi: [180]
+  phi: [250]
   period: 365
   min_value: 0.1
 
