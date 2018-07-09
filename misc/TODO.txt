@@ -1,4 +1,5 @@
 TODO:
-  - remove total day in the input files
+  - Using event to change treatment coverage / strategy and set up those event from input file
+  - 
 
  - Use Docker to do memory check with Valgrind
