@@ -8,7 +8,7 @@
 #ifndef PERSONINDEXALLHANDLER_H
 #define	PERSONINDEXALLHANDLER_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "IndexHandler.h"
 
 class PersonIndexAllHandler: public IndexHandler {

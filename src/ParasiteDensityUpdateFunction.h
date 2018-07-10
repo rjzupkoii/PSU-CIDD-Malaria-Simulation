@@ -8,7 +8,7 @@
 #ifndef PARASITEDENSITYUPDATEFUNCTION_H
 #define	PARASITEDENSITYUPDATEFUNCTION_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class ClonalParasitePopulation;
 

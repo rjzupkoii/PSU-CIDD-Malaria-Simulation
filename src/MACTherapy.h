@@ -7,7 +7,7 @@
 
 #ifndef MACTHERAPY_H
 #define	MACTHERAPY_H
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include <vector>
 #include "Therapy.h"
 

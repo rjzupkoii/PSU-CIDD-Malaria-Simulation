@@ -9,7 +9,7 @@
 #define	RANDOM_H
 
 #include <gsl/gsl_rng.h>
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class Model;
 

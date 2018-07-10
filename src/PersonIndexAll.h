@@ -9,7 +9,7 @@
 #define	PERSONINDEXALL_H
 
 #include "PersonIndex.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "TypeDef.h"
 
 class PersonIndexAll: public PersonIndex {

@@ -12,7 +12,7 @@
 #include <vector>
 #include <yaml-cpp/yaml.h>
 #include <date/date.h>
-#include "../../PropertyMacro.h"
+#include "../PropertyMacro.h"
 #include "../../TypeDef.h"
 #include "../../DrugDatabase.h"
 #include "../../IntGenotypeDatabase.h"

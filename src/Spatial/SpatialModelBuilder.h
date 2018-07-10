@@ -5,7 +5,7 @@
 #ifndef SPATIAL_SPATIALMODELBUILDER_H
 #define SPATIAL_SPATIALMODELBUILDER_H
 
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 #include "SpatialModel.h"
 #include "yaml-cpp/yaml.h"
 

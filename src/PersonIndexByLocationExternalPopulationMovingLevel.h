@@ -7,7 +7,7 @@
 
 #ifndef PERSONINDEXBYLOCATIONEXTERNALPOPULATIONMOVINGLEVEL_H
 #define	PERSONINDEXBYLOCATIONEXTERNALPOPULATIONMOVINGLEVEL_H
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "TypeDef.h"
 #include "Person.h"
 #include "PersonIndex.h"

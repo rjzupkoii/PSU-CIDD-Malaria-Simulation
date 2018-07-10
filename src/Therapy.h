@@ -8,7 +8,7 @@
 #ifndef THERAPY_H
 #define	THERAPY_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include <vector>
 
 class DrugType;

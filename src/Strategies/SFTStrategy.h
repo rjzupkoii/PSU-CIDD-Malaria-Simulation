@@ -8,7 +8,7 @@
 #ifndef SFTSTRATEGY_H
 #define SFTSTRATEGY_H
 
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 #include "IStrategy.h"
 
 class SFTStrategy : public IStrategy {

@@ -8,7 +8,7 @@
 #ifndef RESISTANCETRACKER_H
 #define    RESISTANCETRACKER_H
 
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 #include "../TypeDef.h"
 
 class ResistanceTracker {

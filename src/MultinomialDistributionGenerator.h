@@ -8,7 +8,7 @@
 #ifndef MULTINOMIALDISTRIBUTIONGENERATOR_H
 #define	MULTINOMIALDISTRIBUTIONGENERATOR_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "TypeDef.h"
 class Random;
 

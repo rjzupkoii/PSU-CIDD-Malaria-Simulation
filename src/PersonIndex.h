@@ -7,7 +7,7 @@
 
 #ifndef PERSONINDEX_H
 #define	PERSONINDEX_H
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "Person.h"
 
 class PersonIndex {

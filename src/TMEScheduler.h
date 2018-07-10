@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "TypeDef.h"
 
 class Model;

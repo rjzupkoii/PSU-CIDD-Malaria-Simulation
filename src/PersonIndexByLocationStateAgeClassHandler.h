@@ -8,7 +8,7 @@
 #ifndef PERSONINDEXBYLOCATIONSTATEAGECLASSHANDLER_H
 #define	PERSONINDEXBYLOCATIONSTATEAGECLASSHANDLER_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "IndexHandler.h"
 
 class PersonIndexByLocationStateAgeClassHandler: public IndexHandler {

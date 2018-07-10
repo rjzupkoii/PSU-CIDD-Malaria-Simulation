@@ -8,7 +8,7 @@
 #ifndef MODELDATACOLLECTOR_H
 #define MODELDATACOLLECTOR_H
 
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 #include "../TypeDef.h"
 #include "ResistanceTracker.h"
 

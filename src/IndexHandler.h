@@ -7,7 +7,7 @@
 
 #ifndef PERSONINDEXHANDLER_H
 #define	PERSONINDEXHANDLER_H
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 class IndexHandler {
     DISALLOW_COPY_AND_ASSIGN(IndexHandler)
     PROPERTY_REF(int,index)

@@ -9,7 +9,7 @@
 #define	CLINICALUPDATEFUNCTION_H
 
 #include "ParasiteDensityUpdateFunction.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class Model;
 

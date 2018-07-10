@@ -8,7 +8,7 @@
 #ifndef SCTHERAPY_H
 #define	SCTHERAPY_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "Therapy.h"
 #include <vector>
 

@@ -7,7 +7,7 @@
 
 #ifndef IMMUNESYSTEM_H
 #define	IMMUNESYSTEM_H
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include <vector>
 #include "TypeDef.h"
 #include "ObjectPool.h"

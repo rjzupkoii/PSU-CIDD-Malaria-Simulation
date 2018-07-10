@@ -7,7 +7,7 @@
 
 #ifndef DRUG_H
 #define	DRUG_H
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "ObjectPool.h"
 #include "DrugsInBlood.h"
 

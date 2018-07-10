@@ -9,7 +9,7 @@
 #define	IMPORTATIONPERIODICALLYEVENT_H
 #include "Event.h"
 #include "ObjectPool.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class ImportationPeriodicallyEvent : public Event {
     DISALLOW_COPY_AND_ASSIGN(ImportationPeriodicallyEvent);

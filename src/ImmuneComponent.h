@@ -7,7 +7,7 @@
 
 #ifndef IMMUNECOMPONENT_H
 #define	IMMUNECOMPONENT_H
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 //#include "ObjectPool.h"
 class ImmuneSystem;
 class Model;

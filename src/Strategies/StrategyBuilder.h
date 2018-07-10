@@ -17,7 +17,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include "../TypeDef.h"
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 class IStrategy;
 
 class StrategyBuilder {

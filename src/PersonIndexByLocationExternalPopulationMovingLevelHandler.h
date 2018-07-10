@@ -9,7 +9,7 @@
 #define	PERSONINDEXBYLOCATIONEXTERNALPOPULATIONMOVINGLEVELHANDLER_H
 
 #include "IndexHandler.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class PersonIndexByLocationExternalPopulationMovingLevelHandler: public IndexHandler {
     DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationExternalPopulationMovingLevelHandler)

@@ -9,7 +9,7 @@
 #define	EVENT_H
 
 #include "IndexHandler.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include <string>
 class Dispatcher;
 class Scheduler;

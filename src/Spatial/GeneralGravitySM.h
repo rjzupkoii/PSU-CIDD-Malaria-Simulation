@@ -5,7 +5,7 @@
 #ifndef POMS_GENERALGRAVITYSM_H
 #define POMS_GENERALGRAVITYSM_H
 
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 #include "SpatialModel.h"
 
 namespace Spatial {

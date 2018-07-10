@@ -9,7 +9,7 @@
 #define	TESTTREATMENTFAILUREEVENT_H
 #include "Event.h"
 #include "ObjectPool.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class ClonalParasitePopulation;
 class Scheduler;

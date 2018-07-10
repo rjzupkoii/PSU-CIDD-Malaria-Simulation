@@ -7,7 +7,7 @@
 
 #ifndef INDIVIDUALSFILEREPORTER_H
 #define	INDIVIDUALSFILEREPORTER_H
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "Reporter.h"
 #include <fstream>
 #include <string>

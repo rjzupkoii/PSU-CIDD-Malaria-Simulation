@@ -8,7 +8,7 @@
 #ifndef EXTERNALPOPULATION_H
 #define	EXTERNALPOPULATION_H
 #include "TypeDef.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "Population.h"
 
 class Model;

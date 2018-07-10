@@ -15,7 +15,7 @@
 #define BURINFARMREPORTER_H
 
 #include "Reporter.h"
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 
 class BurninFarmReporter : public Reporter {
     DISALLOW_COPY_AND_ASSIGN(BurninFarmReporter)

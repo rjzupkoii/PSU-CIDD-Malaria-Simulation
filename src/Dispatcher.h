@@ -8,7 +8,7 @@
 #ifndef DISPATCHER_H
 #define	DISPATCHER_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "TypeDef.h"
 
 class Event;

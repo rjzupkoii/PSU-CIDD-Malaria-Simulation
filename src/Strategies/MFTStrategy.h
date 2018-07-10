@@ -9,7 +9,7 @@
 #define MFTSTRATEGY_H
 
 #include "IStrategy.h"
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 
 class Random;
 class Therapy;

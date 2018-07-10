@@ -8,7 +8,7 @@
 #ifndef REPORTER_H
 #define REPORTER_H
 
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 
 class Model;
 

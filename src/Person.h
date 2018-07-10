@@ -8,7 +8,7 @@
 #ifndef PERSON_H
 #define	PERSON_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "PersonIndexAllHandler.h"
 #include "PersonIndexByLocationStateAgeClassHandler.h"
 #include "ObjectPool.h"

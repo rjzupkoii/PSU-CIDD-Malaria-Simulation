@@ -8,7 +8,7 @@
 #ifndef SINGLEHOSTCLONALPARASITEPOPULATIONS_H
 #define	SINGLEHOSTCLONALPARASITEPOPULATIONS_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "ObjectPool.h"
 #include "TypeDef.h"
 #include <vector>

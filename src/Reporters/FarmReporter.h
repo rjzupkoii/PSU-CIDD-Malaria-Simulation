@@ -9,7 +9,7 @@
 #define	FARMREPORTER_H
 
 #include "Reporter.h"
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 
 class FarmReporter : public Reporter {
     DISALLOW_COPY_AND_ASSIGN(FarmReporter)

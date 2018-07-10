@@ -9,7 +9,7 @@
 #define	MOVETOEXTERNALPOPULATIONEVENT_H
 
 #include "Event.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "ObjectPool.h"
 
 class Scheduler;

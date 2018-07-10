@@ -8,7 +8,7 @@
 #ifndef DRUGDATABASE_H
 #define	DRUGDATABASE_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "DrugType.h"
 #include <map>
 

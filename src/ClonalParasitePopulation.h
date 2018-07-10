@@ -8,7 +8,7 @@
 #ifndef CLONALPARASITEPOPULATION_H
 #define	CLONALPARASITEPOPULATION_H
 
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "ParasiteDensityUpdateFunction.h"
 #include "IndexHandler.h"
 #include "DrugType.h"

@@ -9,7 +9,7 @@
 #define	IMPORTATIONEVENT_H
 #include "Event.h"
 #include "ObjectPool.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class ImportationEvent : public Event {
     DISALLOW_COPY_AND_ASSIGN(ImportationEvent);

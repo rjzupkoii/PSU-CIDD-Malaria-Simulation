@@ -6,7 +6,7 @@
 #define SPATIAL_COORDINATE_H
 
 #include <ostream>
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 
 namespace Spatial {
     class Coordinate {

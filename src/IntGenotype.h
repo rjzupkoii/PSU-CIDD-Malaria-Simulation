@@ -8,7 +8,7 @@
 #ifndef INTGENOTYPE_H
 #define INTGENOTYPE_H
 #include "TypeDef.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class DrugDatabase;
 class DrugType;

@@ -9,7 +9,7 @@
 #define	MODEL_H
 
 #include <vector>
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "Scheduler.h"
 #include "ClinicalUpdateFunction.h"
 #include "ImmunityClearanceUpdateFunction.h"

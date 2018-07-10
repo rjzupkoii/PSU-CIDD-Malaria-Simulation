@@ -8,7 +8,7 @@
 #ifndef DRUGTYPE_H
 #define DRUGTYPE_H
 #include "TypeDef.h"
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 typedef std::map<std::string, double> ec50map_type;
 

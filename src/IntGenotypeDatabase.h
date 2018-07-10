@@ -7,7 +7,7 @@
 
 #ifndef INTPARASITEDATABASE_H
 #define	INTPARASITEDATABASE_H
-#include "PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "TypeDef.h"
 #include "IntGenotype.h"
 #include <map>

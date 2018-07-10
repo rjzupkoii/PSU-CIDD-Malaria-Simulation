@@ -15,7 +15,7 @@
 #define NESTEDSWITCHINGSTRATEGY_H
 
 #include "IStrategy.h"
-#include "../PropertyMacro.h"
+#include "../Core/PropertyMacro.h"
 
 class NestedSwitchingStrategy : public IStrategy {
     DISALLOW_COPY_AND_ASSIGN(NestedSwitchingStrategy)
