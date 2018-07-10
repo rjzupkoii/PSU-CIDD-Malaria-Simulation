@@ -10,7 +10,7 @@
 
 #include "PersonIndex.h"
 #include "Core/PropertyMacro.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 
 class PersonIndexAll: public PersonIndex {
     DISALLOW_COPY_AND_ASSIGN(PersonIndexAll)

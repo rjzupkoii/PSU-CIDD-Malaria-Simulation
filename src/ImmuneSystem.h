@@ -9,7 +9,7 @@
 #define	IMMUNESYSTEM_H
 #include "Core/PropertyMacro.h"
 #include <vector>
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 #include "ObjectPool.h"
 
 class Model;

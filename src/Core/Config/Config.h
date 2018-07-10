@@ -13,7 +13,7 @@
 #include <yaml-cpp/yaml.h>
 #include <date/date.h>
 #include "Core/PropertyMacro.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 #include "DrugDatabase.h"
 #include "IntGenotypeDatabase.h"
 #include "Spatial/Location.h"

@@ -10,7 +10,7 @@
 
 #include "Core/PropertyMacro.h"
 #include "ObjectPool.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 #include <vector>
 
 class ClonalParasitePopulation;

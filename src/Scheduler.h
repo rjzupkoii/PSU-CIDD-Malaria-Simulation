@@ -11,7 +11,7 @@
 #include <chrono>
 #include "date/date.h"
 #include "Core/PropertyMacro.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 
 class Model;
 

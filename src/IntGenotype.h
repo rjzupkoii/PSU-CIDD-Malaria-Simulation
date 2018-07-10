@@ -7,7 +7,7 @@
 
 #ifndef INTGENOTYPE_H
 #define INTGENOTYPE_H
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 #include "Core/PropertyMacro.h"
 
 class DrugDatabase;

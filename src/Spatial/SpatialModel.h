@@ -7,7 +7,7 @@
 
 
 #include "Core/PropertyMacro.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 
 namespace Spatial {
     class SpatialModel {

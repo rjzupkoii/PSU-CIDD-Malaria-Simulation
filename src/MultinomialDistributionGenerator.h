@@ -9,7 +9,7 @@
 #define	MULTINOMIALDISTRIBUTIONGENERATOR_H
 
 #include "Core/PropertyMacro.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 class Random;
 
 class MultinomialDistributionGenerator {

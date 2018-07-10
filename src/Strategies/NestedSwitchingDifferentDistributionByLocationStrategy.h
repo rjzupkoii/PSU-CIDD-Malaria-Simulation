@@ -6,7 +6,7 @@
 #define POMS_NESTEDSWITCHINGDIFFERENTDISTRIBUTIONBYLOCATION_H
 
 #include "IStrategy.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 
 
 class NestedSwitchingDifferentDistributionByLocationStrategy  : public IStrategy {

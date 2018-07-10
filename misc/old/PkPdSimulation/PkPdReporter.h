@@ -8,7 +8,7 @@
 #ifndef PKPDREPORTER_H
 #define	PKPDREPORTER_H
 #include "Reporter.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 
 
 class PkPdReporter : public Reporter {

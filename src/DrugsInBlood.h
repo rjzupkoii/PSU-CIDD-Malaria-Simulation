@@ -8,7 +8,7 @@
 #ifndef DRUGSINBLOOD_H
 #define	DRUGSINBLOOD_H
 #include "Core/PropertyMacro.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 #include "ObjectPool.h"
 
 class Person;

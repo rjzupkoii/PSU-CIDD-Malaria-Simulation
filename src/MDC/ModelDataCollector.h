@@ -9,7 +9,7 @@
 #define MODELDATACOLLECTOR_H
 
 #include "Core/PropertyMacro.h"
-#include "TypeDef.h"
+#include "Core/TypeDef.h"
 #include "ResistanceTracker.h"
 
 class Model;
