@@ -6,13 +6,13 @@
  */
 
 #include "AdaptiveCyclingStrategy.h"
-#include "../Model.h"
-#include "../MDC/ModelDataCollector.h"
-#include "../Core/Config/Config.h"
+#include "Model.h"
+#include "MDC/ModelDataCollector.h"
+#include "Core/Config/Config.h"
 #include <iostream>
 #include <sstream>
 #include "IStrategy.h"
-#include "../Therapy.h"
+#include "Therapy.h"
 
 AdaptiveCyclingStrategy::AdaptiveCyclingStrategy() : trigger_value_(0), delay_until_actual_trigger_(0),
                                                      turn_off_days_(0), latest_switch_time_(0) {

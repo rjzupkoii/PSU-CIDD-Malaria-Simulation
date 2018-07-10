@@ -4,17 +4,17 @@
 
 #include <sstream>
 #include "NestedSwitchingDifferentDistributionByLocationStrategy.h"
-#include "../Model.h"
-#include "../Core/Config/Config.h"
-#include "../Random.h"
-#include "../Person.h"
-#include "../Scheduler.h"
-#include "../Therapy.h"
+#include "Model.h"
+#include "Core/Config/Config.h"
+#include "Random.h"
+#include "Person.h"
+#include "Scheduler.h"
+#include "Therapy.h"
 #include "MFTRebalancingStrategy.h"
 #include "CyclingStrategy.h"
 #include "AdaptiveCyclingStrategy.h"
 #include "NestedSwitchingStrategy.h"
-#include "../Constants.h"
+#include "Constants.h"
 
 // TODO: check if it match with the calendar day
 

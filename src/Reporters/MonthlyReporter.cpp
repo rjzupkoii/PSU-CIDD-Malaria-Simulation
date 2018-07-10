@@ -12,9 +12,9 @@
  */
 
 #include "MonthlyReporter.h"
-#include "../Model.h"
-#include "../MDC/ModelDataCollector.h"
-#include "../Core/Config/Config.h"
+#include "Model.h"
+#include "MDC/ModelDataCollector.h"
+#include "Core/Config/Config.h"
 
 MonthlyReporter::MonthlyReporter(const std::string &file_name) : file_name_(file_name) {
 

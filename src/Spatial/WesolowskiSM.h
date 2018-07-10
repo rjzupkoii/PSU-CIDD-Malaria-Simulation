@@ -5,7 +5,7 @@
 #ifndef SPATIAL_WESOLOWSKISM_H
 #define SPATIAL_WESOLOWSKISM_H
 
-#include "../Core/PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "SpatialModel.h"
 #include "yaml-cpp/yaml.h"
 

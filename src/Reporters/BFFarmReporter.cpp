@@ -3,11 +3,11 @@
 //
 
 #include "BFFarmReporter.h"
-#include "../Model.h"
-#include "../Population.h"
-#include "../Random.h"
-#include "../Core/Config/Config.h"
-#include "../PersonIndexAll.h"
+#include "Model.h"
+#include "Population.h"
+#include "Random.h"
+#include "Core/Config/Config.h"
+#include "PersonIndexAll.h"
 
 BFFarmReporter::BFFarmReporter() {
 

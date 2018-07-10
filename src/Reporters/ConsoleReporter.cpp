@@ -8,13 +8,13 @@
 #include <iostream>
 #include "fmt/printf.h"
 #include "ConsoleReporter.h"
-#include "../Model.h"
-#include "../Random.h"
-#include "../Core/Config/Config.h"
-#include "../Population.h"
-#include "../PersonIndexByLocationStateAgeClass.h"
-#include "../MDC/ModelDataCollector.h"
-#include "../Constants.h"
+#include "Model.h"
+#include "Random.h"
+#include "Core/Config/Config.h"
+#include "Population.h"
+#include "PersonIndexByLocationStateAgeClass.h"
+#include "MDC/ModelDataCollector.h"
+#include "Constants.h"
 
 ConsoleReporter::ConsoleReporter() {
 }

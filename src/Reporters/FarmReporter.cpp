@@ -7,13 +7,13 @@
 #include <iostream>
 #include "fmt/format.h"
 #include "FarmReporter.h"
-#include "../Model.h"
-#include "../Random.h"
-#include "../MDC/ModelDataCollector.h"
-#include "../Core/Config/Config.h"
-#include "../Strategies/IStrategy.h"
-#include "../SCTherapy.h"
-#include "../Constants.h"
+#include "Model.h"
+#include "Random.h"
+#include "MDC/ModelDataCollector.h"
+#include "Core/Config/Config.h"
+#include "Strategies/IStrategy.h"
+#include "SCTherapy.h"
+#include "Constants.h"
 
 FarmReporter::FarmReporter() {
 }

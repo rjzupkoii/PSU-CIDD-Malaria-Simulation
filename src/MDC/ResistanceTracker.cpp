@@ -7,10 +7,10 @@
 
 #include <numeric>
 #include "ResistanceTracker.h"
-#include "../Model.h"
-#include "../Core/Config/Config.h"
-#include "../IntGenotype.h"
-#include "../IntGenotypeDatabase.h"
+#include "Model.h"
+#include "Core/Config/Config.h"
+#include "IntGenotype.h"
+#include "IntGenotypeDatabase.h"
 
 
 ResistanceTracker::ResistanceTracker() : total_{0} {

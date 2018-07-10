@@ -3,7 +3,7 @@ file(GLOB SRC_FILES *.cpp *.h Spatial/*.cpp Spatial/*.h Reporters/*.cpp Reporter
 	Core/*.h Core/*.cpp
 	Core/Config/*.h Core/Config/*.cpp)
 
-include_directories(${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
+include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
 add_executable(MaSim ${SRC_FILES} 
 	${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h 

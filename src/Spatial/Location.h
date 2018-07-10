@@ -5,7 +5,7 @@
 #ifndef SPATIAL_LOCATION_H
 #define SPATIAL_LOCATION_H
 
-#include "../Core/PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 #include "Coordinate.h"
 #include <memory>
 #include <ostream>

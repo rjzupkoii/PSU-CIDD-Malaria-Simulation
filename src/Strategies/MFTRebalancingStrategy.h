@@ -15,7 +15,7 @@
 #define SMARTMFTSTRATEGY_H
 
 #include "MFTStrategy.h"
-#include "../Core/PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class MFTRebalancingStrategy : public MFTStrategy {
     DISALLOW_COPY_AND_ASSIGN(MFTRebalancingStrategy)

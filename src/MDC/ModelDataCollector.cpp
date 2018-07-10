@@ -9,16 +9,16 @@
 #include <cmath>
 #include <algorithm>
 #include "ModelDataCollector.h"
-#include "../Model.h"
-#include "../Core/Config/Config.h"
-#include "../Person.h"
-#include "../PersonIndexByLocationStateAgeClass.h"
-#include "../Population.h"
-#include "../ImmuneSystem.h"
-#include "../SingleHostClonalParasitePopulations.h"
-#include "../SCTherapy.h"
-#include "../ClonalParasitePopulation.h"
-#include "../Constants.h"
+#include "Model.h"
+#include "Core/Config/Config.h"
+#include "Person.h"
+#include "PersonIndexByLocationStateAgeClass.h"
+#include "Population.h"
+#include "ImmuneSystem.h"
+#include "SingleHostClonalParasitePopulations.h"
+#include "SCTherapy.h"
+#include "ClonalParasitePopulation.h"
+#include "Constants.h"
 
 ModelDataCollector::ModelDataCollector(Model* model) : model_(model), current_utl_duration_(0),
                                                        AMU_per_parasite_pop_(0),

@@ -6,12 +6,12 @@
  */
 
 #include "YearlyReporterV1.h"
-#include "../Model.h"
-#include "../Scheduler.h"
-#include "../Random.h"
-#include "../Core/Config/Config.h"
-#include "../MDC/ModelDataCollector.h"
-#include "../Constants.h"
+#include "Model.h"
+#include "Scheduler.h"
+#include "Random.h"
+#include "Core/Config/Config.h"
+#include "MDC/ModelDataCollector.h"
+#include "Constants.h"
 
 YearlyReporterV1::YearlyReporterV1(const std::string &file_name) : file_name_(file_name) {
 

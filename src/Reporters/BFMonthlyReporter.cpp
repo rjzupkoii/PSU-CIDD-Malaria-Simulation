@@ -3,15 +3,15 @@
 //
 
 #include "BFMonthlyReporter.h"
-#include "../Model.h"
-#include "../Core/Config/Config.h"
-#include "../MDC/ModelDataCollector.h"
-#include "../MDC/ResistanceTracker.h"
-#include "../Random.h"
-#include "../Strategies/IStrategy.h"
-#include "../Helpers/TimeHelpers.h"
-#include "../Constants.h"
-#include "../Population.h"
+#include "Model.h"
+#include "Core/Config/Config.h"
+#include "MDC/ModelDataCollector.h"
+#include "MDC/ResistanceTracker.h"
+#include "Random.h"
+#include "Strategies/IStrategy.h"
+#include "Helpers/TimeHelpers.h"
+#include "Constants.h"
+#include "Population.h"
 #include "easylogging++.h"
 
 BFMonthlyReporter::BFMonthlyReporter() {}

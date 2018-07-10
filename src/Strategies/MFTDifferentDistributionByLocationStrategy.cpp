@@ -4,11 +4,11 @@
 
 #include <sstream>
 #include "MFTDifferentDistributionByLocationStrategy.h"
-#include "../Therapy.h"
-#include "../Model.h"
-#include "../Random.h"
-#include "../Person.h"
-#include "../Core/Config/Config.h"
+#include "Therapy.h"
+#include "Model.h"
+#include "Random.h"
+#include "Person.h"
+#include "Core/Config/Config.h"
 
 MFTDifferentDistributionByLocationStrategy::MFTDifferentDistributionByLocationStrategy() : distribution_by_location_() {
 

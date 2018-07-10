@@ -8,8 +8,8 @@
 #ifndef RESISTANCETRACKER_H
 #define    RESISTANCETRACKER_H
 
-#include "../Core/PropertyMacro.h"
-#include "../TypeDef.h"
+#include "Core/PropertyMacro.h"
+#include "TypeDef.h"
 
 class ResistanceTracker {
 DISALLOW_COPY_AND_ASSIGN(ResistanceTracker)

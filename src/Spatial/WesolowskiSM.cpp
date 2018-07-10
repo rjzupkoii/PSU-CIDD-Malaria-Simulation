@@ -3,7 +3,7 @@
 //
 
 #include "WesolowskiSM.h"
-#include "../Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.h"
 #include <cmath>
 
 namespace Spatial {

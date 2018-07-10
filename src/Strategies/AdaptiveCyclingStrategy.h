@@ -10,7 +10,7 @@
 
 #include <vector>
 #include "IStrategy.h"
-#include "../Core/PropertyMacro.h"
+#include "Core/PropertyMacro.h"
 
 class AdaptiveCyclingStrategy : public IStrategy {
     DISALLOW_COPY_AND_ASSIGN(AdaptiveCyclingStrategy)

@@ -12,13 +12,13 @@
 #include <vector>
 #include <yaml-cpp/yaml.h>
 #include <date/date.h>
-#include "../PropertyMacro.h"
-#include "../../TypeDef.h"
-#include "../../DrugDatabase.h"
-#include "../../IntGenotypeDatabase.h"
-#include "../../Spatial/Location.h"
-#include "../../Spatial/SpatialModel.h"
-#include "../../MultinomialDistributionGenerator.h"
+#include "Core/PropertyMacro.h"
+#include "TypeDef.h"
+#include "DrugDatabase.h"
+#include "IntGenotypeDatabase.h"
+#include "Spatial/Location.h"
+#include "Spatial/SpatialModel.h"
+#include "MultinomialDistributionGenerator.h"
 
 class Model;
 

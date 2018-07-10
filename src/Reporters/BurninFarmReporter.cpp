@@ -13,15 +13,15 @@
 
 #include <fmt/format.h>
 #include "BurninFarmReporter.h"
-#include "../Model.h"
-#include "../Random.h"
-#include "../MDC/ModelDataCollector.h"
-#include "../Core/Config/Config.h"
-#include "../Therapy.h"
-#include "../SCTherapy.h"
-#include "../Population.h"
-#include "../Strategies/MFTStrategy.h"
-#include "../Constants.h"
+#include "Model.h"
+#include "Random.h"
+#include "MDC/ModelDataCollector.h"
+#include "Core/Config/Config.h"
+#include "Therapy.h"
+#include "SCTherapy.h"
+#include "Population.h"
+#include "Strategies/MFTStrategy.h"
+#include "Constants.h"
 
 BurninFarmReporter::BurninFarmReporter() {
 }

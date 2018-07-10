@@ -12,14 +12,14 @@
  */
 
 #include "NestedSwitchingStrategy.h"
-#include "../Core/Config/Config.h"
-#include "../Model.h"
-#include "../Random.h"
-#include "../Scheduler.h"
+#include "Core/Config/Config.h"
+#include "Model.h"
+#include "Random.h"
+#include "Scheduler.h"
 #include "MFTRebalancingStrategy.h"
 #include "CyclingStrategy.h"
 #include "AdaptiveCyclingStrategy.h"
-#include "../Therapy.h"
+#include "Therapy.h"
 
 
 // TODO: check if it match with calendar day

@@ -8,8 +8,8 @@
 #ifndef MODELDATACOLLECTOR_H
 #define MODELDATACOLLECTOR_H
 
-#include "../Core/PropertyMacro.h"
-#include "../TypeDef.h"
+#include "Core/PropertyMacro.h"
+#include "TypeDef.h"
 #include "ResistanceTracker.h"
 
 class Model;

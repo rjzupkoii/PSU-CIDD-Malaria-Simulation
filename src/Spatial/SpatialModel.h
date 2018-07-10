@@ -6,8 +6,8 @@
 #define SPATIAL_SPATIALMODEL_H
 
 
-#include "../Core/PropertyMacro.h"
-#include "../TypeDef.h"
+#include "Core/PropertyMacro.h"
+#include "TypeDef.h"
 
 namespace Spatial {
     class SpatialModel {

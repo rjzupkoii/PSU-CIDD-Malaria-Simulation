@@ -7,7 +7,7 @@
 
 
 #include "IStrategy.h"
-#include "../TypeDef.h"
+#include "TypeDef.h"
 
 
 class MFTDifferentDistributionByLocationStrategy : public IStrategy {

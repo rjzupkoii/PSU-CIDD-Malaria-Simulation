@@ -12,11 +12,11 @@
  */
 
 #include "ACTIncreaseStrategy.h"
-#include "../Random.h"
-#include "../Model.h"
+#include "Random.h"
+#include "Model.h"
 #include <cassert>
-#include "../Therapy.h"
-#include "../Core/Config/Config.h"
+#include "Therapy.h"
+#include "Core/Config/Config.h"
 #include <sstream>
 
 ACTIncreaseStrategy::ACTIncreaseStrategy() {

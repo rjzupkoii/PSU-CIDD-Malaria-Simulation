@@ -6,12 +6,12 @@
  */
 
 #include "CyclingStrategy.h"
-#include "../Model.h"
-#include "../Core/Config/Config.h"
-#include "../MDC/ModelDataCollector.h"
+#include "Model.h"
+#include "Core/Config/Config.h"
+#include "MDC/ModelDataCollector.h"
 #include <sstream>
 #include "IStrategy.h"
-#include "../Therapy.h"
+#include "Therapy.h"
 
 CyclingStrategy::CyclingStrategy() : index_(0), cycling_time_(0) {
 }

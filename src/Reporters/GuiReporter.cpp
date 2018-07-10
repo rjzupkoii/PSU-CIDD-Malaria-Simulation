@@ -6,15 +6,15 @@
  */
 
 #include "GuiReporter.h"
-#include "../Model.h"
-#include "../Core/Config/Config.h"
-#include "../Strategies/IStrategy.h"
-#include "../HelperFunction.h"
-#include "../Random.h"
-#include "../MDC/ModelDataCollector.h"
-#include "../Population.h"
-#include "../Drug.h"
-#include "../IntGenotype.h"
+#include "Model.h"
+#include "Core/Config/Config.h"
+#include "Strategies/IStrategy.h"
+#include "HelperFunction.h"
+#include "Random.h"
+#include "MDC/ModelDataCollector.h"
+#include "Population.h"
+#include "Drug.h"
+#include "IntGenotype.h"
 
 
 std::string GuiReporter::prevalanceChart = "PrevalenceChart";

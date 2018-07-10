@@ -8,17 +8,17 @@
 #include <fmt/format.h>
 
 #include "AMUReporter.h"
-#include "../Random.h"
-#include "../Model.h"
-#include "../Random.h"
-#include "../MDC/ModelDataCollector.h"
-#include "../Core/Config/Config.h"
-#include "../Therapy.h"
-#include "../Population.h"
-#include "../MDC/ResistanceTracker.h"
-#include "../PersonIndexByLocationStateAgeClass.h"
-#include "../Strategies/IStrategy.h"
-#include "../Constants.h"
+#include "Random.h"
+#include "Model.h"
+#include "Random.h"
+#include "MDC/ModelDataCollector.h"
+#include "Core/Config/Config.h"
+#include "Therapy.h"
+#include "Population.h"
+#include "MDC/ResistanceTracker.h"
+#include "PersonIndexByLocationStateAgeClass.h"
+#include "Strategies/IStrategy.h"
+#include "Constants.h"
 
 
 AMUReporter::AMUReporter() : last_reported_NTF_(0) {

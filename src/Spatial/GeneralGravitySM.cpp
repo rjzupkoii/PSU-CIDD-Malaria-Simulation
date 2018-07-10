@@ -3,7 +3,7 @@
 //
 
 #include "GeneralGravitySM.h"
-#include "../Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.h"
 
 namespace Spatial {
 

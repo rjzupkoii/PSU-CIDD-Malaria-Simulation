@@ -4,7 +4,7 @@
 
 #include <cmath>
 #include "BarabasiSM.h"
-#include "../Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.h"
 
 namespace Spatial {
 
