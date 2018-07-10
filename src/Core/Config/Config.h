@@ -14,24 +14,29 @@
 #include <date/date.h>
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
+#include "ConfigItem.h"
 #include "DrugDatabase.h"
 #include "IntGenotypeDatabase.h"
 #include "Spatial/Location.h"
 #include "Spatial/SpatialModel.h"
 #include "MultinomialDistributionGenerator.h"
 
+class IConfigItem;
 class Model;
 
 class Config {
 DISALLOW_COPY_AND_ASSIGN(Config)
 DISALLOW_MOVE(Config)
 
+public:
+  std::vector<IConfigItem*> config_items{};
 POINTER_PROPERTY(Model, model)
 
-VIRTUAL_PROPERTY_REF(int, total_time)
+  CONFIG_ITEM(starting_date, date::year_month_day , date::year_month_day{ date::year{ 1999 } / 1 / 1 })
+  CONFIG_ITEM(ending_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 2 })
 
-VIRTUAL_PROPERTY_REF(date::year_month_day, starting_date)
-VIRTUAL_PROPERTY_REF(date::year_month_day, ending_date)
+  ConfigItem<int> total_time{"total_time", 100, this};
+
 
 VIRTUAL_PROPERTY_REF(int, start_treatment_day)
 
@@ -142,6 +147,7 @@ READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, bitting_level_generator
 READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, moving_level_generator)
 READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, external_population_moving_level_generator)
 
+
 public:
   explicit Config(Model* model = nullptr);
 
@@ -199,7 +205,7 @@ public:
 
   void build_location_db(const YAML::Node& node);
 
-  double get_seasonal_factor(const date::sys_days &today) const;
+  double get_seasonal_factor(const date::sys_days& today) const;
 };
 
 #endif /* CONFIG_H */

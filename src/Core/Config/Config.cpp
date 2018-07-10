@@ -32,7 +32,7 @@
 using namespace Spatial;
 
 Config::Config(Model* model) :
-  model_(model), total_time_(-1), starting_date_{}, ending_date_{}, start_treatment_day_(-1),
+  model_(model), start_treatment_day_(-1),
   start_collect_data_day_(-1),
   number_of_locations_(-1),
   number_of_age_classes_(-1), number_of_parasite_types_(-1), seasonal_beta_(),
@@ -78,11 +78,23 @@ Config::~Config() {
 
 void Config::read_from_file(const std::string& config_file_name) {
 
-  YAML::Node config = YAML::LoadFile(config_file_name);
+  YAML::Node config;
+  try {
+	  config = YAML::LoadFile(config_file_name);
+  }
+  catch (YAML::BadFile& ex) {
+	  //FATAL??
+	  std::cout << config_file_name << " not found or err..." << std::endl;
+  }
+  catch (YAML::Exception& ex) {
+	  //FATAL
+	  std::cout << "error: " << ex.msg << " at line " << ex.mark.line + 1 << ":" << ex.mark.column + 1 << std::endl;
+  }
 
-  starting_date_ = TimeHelpers::convert_to<date::year_month_day>(config["starting_date"].as<std::string>());
-  ending_date_ = TimeHelpers::convert_to<date::year_month_day>(config["ending_date"].as<std::string>());
-  total_time_ = (date::sys_days{ending_date_} - date::sys_days(starting_date_)).count();
+  for (auto& config_item : config_items) {
+	  config_item->set_value(config);
+  }
+  total_time() = (date::sys_days{ending_date()} - date::sys_days(starting_date())).count();
 
 
   start_treatment_day_ = config["start_treatment_day"].as<int>();
@@ -809,7 +821,7 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
   }
 
   if (parameter_name == "total_time") {
-    total_time_ = atoi(parameter_value.c_str());
+    total_time() = atoi(parameter_value.c_str());
   }
 
   if (parameter_name == "beta") {

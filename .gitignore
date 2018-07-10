@@ -6,3 +6,4 @@ bin
 node_modules
 Testing
 cmake-*
+monthly_data\.txt

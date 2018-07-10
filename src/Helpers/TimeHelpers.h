@@ -9,6 +9,12 @@
 #include <iostream>
 #include "date/date.h"
 
+inline std::ostream& operator<<(std::ostream& stream, const date::sys_days& o_days) {
+  stream << date::year_month_day{o_days};
+  return stream;
+}
+
+
 class TimeHelpers {
 public:
   static int number_of_days(

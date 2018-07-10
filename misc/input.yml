@@ -15,7 +15,7 @@
 starting_date: 1990/1/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 1992/1/1
+ending_date: 1990/1/30
 
 # total number of days the simulation will be calculated from starting_date and ending_date
 
