@@ -17,8 +17,8 @@ file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/Spatial/*.cpp)
 set(SRC_FILES ${SRC_FILES} 
 	${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h 
 	${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc
-	${PROJECT_SOURCE_DIR}/src/Random.cpp 
-	${PROJECT_SOURCE_DIR}/src/Random.h)
+	${PROJECT_SOURCE_DIR}/src/Core/Random.cpp 
+	${PROJECT_SOURCE_DIR}/src/Core/Random.h)
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} ${SRC_FILES})
 add_dependencies(${PROJECT_TEST_NAME} date)

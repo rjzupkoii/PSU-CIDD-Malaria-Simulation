@@ -9,7 +9,7 @@
 #include "Population.h"
 #include "Core/Config/Config.h"
 #include "Person.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
 #include "BirthdayEvent.h"
 #include "ProgressToClinicalEvent.h"

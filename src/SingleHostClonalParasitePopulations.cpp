@@ -15,7 +15,7 @@
 #include "Core/Config/Config.h"
 #include "DrugsInBlood.h"
 #include "Drug.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
 #include "Helpers/NumberHelpers.h"
 #include <cmath>

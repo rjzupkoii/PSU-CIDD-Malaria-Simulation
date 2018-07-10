@@ -17,7 +17,7 @@
 #include "Core/Config/Config.h"
 #include "Person.h"
 #include "Population.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "PkPdReporter.h"
 #include "IndividualsFileReporter.h"
 #include "SCTherapy.h"

@@ -23,7 +23,7 @@
 #include "EndClinicalByNoTreatmentEvent.h"
 #include "DrugsInBlood.h"
 #include "Drug.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "MoveParasiteToBloodEvent.h"
 #include "MatureGametocyteEvent.h"
 #include "UpdateEveryKDaysEvent.h"

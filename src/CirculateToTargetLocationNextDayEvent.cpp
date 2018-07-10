@@ -8,7 +8,7 @@
 #include "CirculateToTargetLocationNextDayEvent.h"
 #include "Person.h"
 #include "Model.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Core/Config/Config.h"
 #include "ReturnToResidenceEvent.h"
 

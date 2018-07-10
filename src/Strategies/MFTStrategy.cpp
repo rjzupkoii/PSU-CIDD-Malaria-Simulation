@@ -6,7 +6,7 @@
  */
 
 #include "MFTStrategy.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Model.h"
 #include <cassert>
 #include <sstream>

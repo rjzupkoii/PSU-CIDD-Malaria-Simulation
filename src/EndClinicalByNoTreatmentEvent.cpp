@@ -13,7 +13,7 @@
 #include "SingleHostClonalParasitePopulations.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
-#include "Random.h"
+#include "Core/Random.h"
 
 OBJECTPOOL_IMPL(EndClinicalByNoTreatmentEvent)
 

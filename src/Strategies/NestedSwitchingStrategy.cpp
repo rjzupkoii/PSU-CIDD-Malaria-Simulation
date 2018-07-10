@@ -14,7 +14,7 @@
 #include "NestedSwitchingStrategy.h"
 #include "Core/Config/Config.h"
 #include "Model.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Scheduler.h"
 #include "MFTRebalancingStrategy.h"
 #include "CyclingStrategy.h"

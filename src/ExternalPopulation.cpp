@@ -12,7 +12,7 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Person.h"
-#include "Random.h"
+#include "Core/Random.h"
 
 ExternalPopulation::ExternalPopulation(Model* model) : Population(model) {
 

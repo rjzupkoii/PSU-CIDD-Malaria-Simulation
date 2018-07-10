@@ -15,7 +15,7 @@
 #include "Strategies/IStrategy.h"
 #include "SCTherapy.h"
 #include "ClonalParasitePopulation.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
 
 OBJECTPOOL_IMPL(ProgressToClinicalEvent)

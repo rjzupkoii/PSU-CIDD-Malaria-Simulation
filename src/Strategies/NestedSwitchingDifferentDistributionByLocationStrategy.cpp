@@ -6,7 +6,7 @@
 #include "NestedSwitchingDifferentDistributionByLocationStrategy.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Person.h"
 #include "Scheduler.h"
 #include "Therapy.h"

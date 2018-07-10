@@ -9,7 +9,7 @@
 #include "DrugDatabase.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "SCTherapy.h"
 
 IntGenotype::IntGenotype(const int &id) : genotype_id_(id) {

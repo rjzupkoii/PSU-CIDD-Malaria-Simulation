@@ -9,7 +9,7 @@
 #include "fmt/printf.h"
 #include "ConsoleReporter.h"
 #include "Model.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Core/Config/Config.h"
 #include "Population.h"
 #include "PersonIndexByLocationStateAgeClass.h"

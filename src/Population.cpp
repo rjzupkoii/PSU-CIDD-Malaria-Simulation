@@ -18,7 +18,7 @@
 #include "SwitchImmuneComponentEvent.h"
 #include "BirthdayEvent.h"
 #include "PersonIndexByLocationBittingLevel.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "PersonIndexByLocationMovingLevel.h"
 #include "MDC/ModelDataCollector.h"
 #include "SingleHostClonalParasitePopulations.h"

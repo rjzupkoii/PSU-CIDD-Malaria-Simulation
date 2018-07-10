@@ -6,7 +6,7 @@
  */
 
 #include <cassert>
-#include "Random.h"
+#include "Core/Random.h"
 #include "MultinomialDistributionGenerator.h"
 
 // TODO: writing test

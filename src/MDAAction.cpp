@@ -12,7 +12,7 @@
 #include "Population.h"
 #include "PersonIndexByLocationStateAgeClass.h"
 #include "Person.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Core/Config/Config.h"
 #include "Strategies/IStrategy.h"
 #include "ReceiveMDADrugEvent.h"

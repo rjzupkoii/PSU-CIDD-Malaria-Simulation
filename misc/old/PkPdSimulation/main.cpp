@@ -7,7 +7,7 @@
 
 #include <cstdlib>
 #include "Model.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "ezOptionParser.hpp"
 #include <boost/foreach.hpp>
 #include "Reporter.h"

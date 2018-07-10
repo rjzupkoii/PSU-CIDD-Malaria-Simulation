@@ -6,7 +6,7 @@
 #include "MFTDifferentDistributionByLocationStrategy.h"
 #include "Therapy.h"
 #include "Model.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Person.h"
 #include "Core/Config/Config.h"
 

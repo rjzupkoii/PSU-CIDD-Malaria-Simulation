@@ -12,7 +12,7 @@
 #include "ClonalParasitePopulation.h"
 #include "Core/Config/Config.h"
 #include "PersonIndexAll.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
 #include "PersonIndexByLocationStateAgeClass.h"
 

@@ -13,7 +13,7 @@
 #include "MultipleLocationGuiReporter.h"
 #include "YearlyReporterV1.h"
 #include "Model.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "MonthlyReporter.h"
 #include "MonthlyReporterConsole.h"
 #include "BurninMonthlyReporter.h"

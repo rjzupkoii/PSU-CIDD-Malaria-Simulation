@@ -10,7 +10,7 @@
 #include "IntGenotype.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
-#include "Random.h"
+#include "Core/Random.h"
 
 #ifndef LOG2_10
 #define LOG2_10 3.32192809489

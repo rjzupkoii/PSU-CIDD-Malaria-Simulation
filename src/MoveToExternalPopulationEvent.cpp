@@ -9,7 +9,7 @@
 #include "MoveToExternalPopulationEvent.h"
 #include "Person.h"
 #include "Model.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Scheduler.h"
 #include "Core/Config/Config.h"
 #include "ReturnToNormalPopulationEvent.h"

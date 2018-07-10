@@ -9,7 +9,7 @@
 #include "Person.h"
 #include "ImmuneSystem.h"
 #include "Model.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Core/Config/Config.h"
 #include "ClonalParasitePopulation.h"
 #include "DrugsInBlood.h"

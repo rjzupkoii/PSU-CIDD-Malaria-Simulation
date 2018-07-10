@@ -13,7 +13,7 @@
 #include "Config.h"
 #include "Strategies/IStrategy.h"
 #include "Model.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "SCTherapy.h"
 #include "Strategies/StrategyBuilder.h"
 #include "TherapyBuilder.h"

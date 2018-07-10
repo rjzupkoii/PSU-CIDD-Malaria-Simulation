@@ -7,7 +7,7 @@
 #include "Core/Config/Config.h"
 #include "MDC/ModelDataCollector.h"
 #include "MDC/ResistanceTracker.h"
-#include "Random.h"
+#include "Core/Random.h"
 #include "Strategies/IStrategy.h"
 #include "Helpers/TimeHelpers.h"
 #include "Constants.h"
