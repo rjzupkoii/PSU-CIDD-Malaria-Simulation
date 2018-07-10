@@ -12,7 +12,7 @@
 #include "SingleHostClonalParasitePopulations.h"
 #include "Model.h"
 #include "ClonalParasitePopulation.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 
 OBJECTPOOL_IMPL(EndClinicalDueToDrugResistanceEvent)
 

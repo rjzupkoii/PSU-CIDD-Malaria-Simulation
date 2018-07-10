@@ -10,7 +10,7 @@
 #include "Event.h"
 #include "Dispatcher.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Population.h"
 #include "MDC/ModelDataCollector.h"
 #include "Strategies/IStrategy.h"

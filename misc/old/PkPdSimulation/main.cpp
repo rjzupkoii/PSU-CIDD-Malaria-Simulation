@@ -15,7 +15,7 @@
 #include "PkPdReporter.h"
 #include "IntGenotype.h"
 #include "IntGenotypeDatabase.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Population.h"
 #include "PersonIndexAll.h"
 #include "ClonalParasitePopulation.h"

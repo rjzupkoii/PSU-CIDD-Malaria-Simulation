@@ -1,5 +1,6 @@
 file(GLOB SRC_FILES *.cpp *.h Spatial/*.cpp Spatial/*.h Reporters/*.cpp Reporters/*.h Strategies/*.cpp Strategies/*.h
-    MDC/*.cpp MDC/*.h Helpers/*.cpp Helpers/*.h)
+    MDC/*.cpp MDC/*.h Helpers/*.cpp Helpers/*.h
+	Core/Config/*.h Core/Config/*.cpp)
 
 include_directories(${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 

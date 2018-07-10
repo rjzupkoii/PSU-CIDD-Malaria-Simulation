@@ -10,7 +10,7 @@
 #include "Population.h"
 #include "ImmuneSystem.h"
 #include "ClonalParasitePopulation.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "PersonIndexAll.h"
 #include "Random.h"
 #include "MDC/ModelDataCollector.h"

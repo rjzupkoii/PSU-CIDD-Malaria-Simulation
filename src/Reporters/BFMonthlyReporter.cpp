@@ -4,7 +4,7 @@
 
 #include "BFMonthlyReporter.h"
 #include "../Model.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../MDC/ModelDataCollector.h"
 #include "../MDC/ResistanceTracker.h"
 #include "../Random.h"

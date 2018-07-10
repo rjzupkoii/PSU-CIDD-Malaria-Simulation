@@ -8,7 +8,7 @@
 #include "MonthlyReporterConsole.h"
 #include "../Model.h"
 #include "../MDC/ModelDataCollector.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 
 MonthlyReporterConsole::MonthlyReporterConsole() {
 

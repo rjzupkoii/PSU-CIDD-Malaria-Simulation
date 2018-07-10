@@ -12,7 +12,7 @@
  */
 
 #include "NestedSwitchingStrategy.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../Model.h"
 #include "../Random.h"
 #include "../Scheduler.h"

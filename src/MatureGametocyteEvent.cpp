@@ -12,7 +12,7 @@
 #include "SingleHostClonalParasitePopulations.h"
 #include "DrugsInBlood.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 
 OBJECTPOOL_IMPL(MatureGametocyteEvent)
 

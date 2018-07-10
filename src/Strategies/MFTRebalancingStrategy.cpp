@@ -13,7 +13,7 @@
 
 #include "MFTRebalancingStrategy.h"
 #include "../Model.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../MDC/ModelDataCollector.h"
 #include "../Therapy.h"
 #include <string>

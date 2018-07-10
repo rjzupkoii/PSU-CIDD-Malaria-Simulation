@@ -12,7 +12,7 @@
 #include "Scheduler.h"
 #include "DrugsInBlood.h"
 #include "SingleHostClonalParasitePopulations.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Model.h"
 
 OBJECTPOOL_IMPL(UpdateWhenDrugIsPresentEvent)

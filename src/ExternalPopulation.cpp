@@ -10,7 +10,7 @@
 #include "PersonIndexByLocationStateAgeClass.h"
 #include "HelperFunction.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Person.h"
 #include "Random.h"
 

@@ -8,7 +8,7 @@
 #include "../Model.h"
 #include "../Random.h"
 #include "../Person.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 
 MFTDifferentDistributionByLocationStrategy::MFTDifferentDistributionByLocationStrategy() : distribution_by_location_() {
 

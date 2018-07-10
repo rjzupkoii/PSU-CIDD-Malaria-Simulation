@@ -11,7 +11,7 @@
 #include "SingleHostClonalParasitePopulations.h"
 #include "Population.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Strategies/IStrategy.h"
 #include "SCTherapy.h"
 #include "ClonalParasitePopulation.h"

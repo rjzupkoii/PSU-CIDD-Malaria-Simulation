@@ -14,7 +14,7 @@
 #include "NovelNonACTSwitchingStrategy.h"
 #include "MFTStrategy.h"
 #include "../Model.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../MDC/ModelDataCollector.h"
 #include "../Scheduler.h"
 #include <sstream>

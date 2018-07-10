@@ -14,7 +14,7 @@
 #include "TACTSwitchingStrategy.h"
 #include "../Model.h"
 #include "../Scheduler.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 
 // TODO: check if it match with calendar day
 

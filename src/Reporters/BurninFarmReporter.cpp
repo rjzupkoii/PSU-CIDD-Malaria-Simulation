@@ -16,7 +16,7 @@
 #include "../Model.h"
 #include "../Random.h"
 #include "../MDC/ModelDataCollector.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../Therapy.h"
 #include "../SCTherapy.h"
 #include "../Population.h"

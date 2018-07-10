@@ -7,7 +7,7 @@
 #include <fmt/format.h>
 #include "Model.h"
 #include "Population.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Person.h"
 #include "Random.h"
 #include "MDC/ModelDataCollector.h"

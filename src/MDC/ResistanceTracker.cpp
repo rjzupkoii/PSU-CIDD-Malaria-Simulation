@@ -8,7 +8,7 @@
 #include <numeric>
 #include "ResistanceTracker.h"
 #include "../Model.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../IntGenotype.h"
 #include "../IntGenotypeDatabase.h"
 

@@ -12,7 +12,7 @@
 #include "DrugType.h"
 #include "Population.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "DrugsInBlood.h"
 #include "Drug.h"
 #include "Random.h"

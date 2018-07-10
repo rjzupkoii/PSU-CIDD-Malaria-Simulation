@@ -9,7 +9,7 @@
 #include "Person.h"
 #include "Model.h"
 #include "Random.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "ReturnToResidenceEvent.h"
 
 OBJECTPOOL_IMPL(CirculateToTargetLocationNextDayEvent)

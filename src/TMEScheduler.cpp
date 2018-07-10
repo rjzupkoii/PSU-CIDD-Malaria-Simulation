@@ -8,7 +8,7 @@
 #include "TMEScheduler.h"
 #include "CSVRow.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "TMEActionFactory.h"
 #include "TMEAction.h"
 #include <iostream>     // std::cout

@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Person.h"
 #include "Population.h"
 #include "Random.h"

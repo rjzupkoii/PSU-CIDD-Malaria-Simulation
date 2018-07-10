@@ -9,7 +9,7 @@
 #include "../Model.h"
 #include "../Scheduler.h"
 #include "../Random.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../MDC/ModelDataCollector.h"
 #include "../Constants.h"
 

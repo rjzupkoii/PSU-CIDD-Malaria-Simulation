@@ -11,7 +11,7 @@
 #include "Scheduler.h"
 #include "SingleHostClonalParasitePopulations.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "MDC/ModelDataCollector.h"
 
 OBJECTPOOL_IMPL(TestTreatmentFailureEvent)

@@ -5,7 +5,7 @@
 #include <sstream>
 #include "NestedSwitchingDifferentDistributionByLocationStrategy.h"
 #include "../Model.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../Random.h"
 #include "../Person.h"
 #include "../Scheduler.h"

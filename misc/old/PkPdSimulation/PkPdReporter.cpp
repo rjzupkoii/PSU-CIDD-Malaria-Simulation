@@ -9,7 +9,7 @@
 #include "Model.h"
 #include "Random.h"
 #include "ModelDataCollector.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Population.h"
 #include "PersonIndexAll.h"
 #include "Person.h"

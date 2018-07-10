@@ -6,7 +6,7 @@
  */
 
 #include "PersonIndexByLocationBittingLevel.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Model.h"
 #include <cassert>
 

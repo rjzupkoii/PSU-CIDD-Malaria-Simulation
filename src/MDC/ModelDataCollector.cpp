@@ -10,7 +10,7 @@
 #include <algorithm>
 #include "ModelDataCollector.h"
 #include "../Model.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../Person.h"
 #include "../PersonIndexByLocationStateAgeClass.h"
 #include "../Population.h"

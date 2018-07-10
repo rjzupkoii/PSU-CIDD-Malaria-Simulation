@@ -6,7 +6,7 @@
  */
 
 #include "SCTherapy.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Model.h"
 
 SCTherapy::SCTherapy() : drug_ids_(), dosing_day_(-1), artemisinin_id_(-1) {

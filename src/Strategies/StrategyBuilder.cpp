@@ -14,7 +14,7 @@
 #include "StrategyBuilder.h"
 #include "IStrategy.h"
 #include "SFTStrategy.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../Model.h"
 #include "CyclingStrategy.h"
 #include "AdaptiveCyclingStrategy.h"

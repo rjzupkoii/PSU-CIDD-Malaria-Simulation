@@ -10,7 +10,7 @@
 #include "ConsoleReporter.h"
 #include "../Model.h"
 #include "../Random.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../Population.h"
 #include "../PersonIndexByLocationStateAgeClass.h"
 #include "../MDC/ModelDataCollector.h"

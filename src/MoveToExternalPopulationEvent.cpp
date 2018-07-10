@@ -11,7 +11,7 @@
 #include "Model.h"
 #include "Random.h"
 #include "Scheduler.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "ReturnToNormalPopulationEvent.h"
 
 OBJECTPOOL_IMPL(MoveToExternalPopulationEvent)

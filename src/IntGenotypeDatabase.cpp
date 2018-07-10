@@ -8,7 +8,7 @@
 #include "IntGenotypeDatabase.h"
 #include "IntGenotype.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
 
 IntGenotypeDatabase::IntGenotypeDatabase() {

@@ -8,7 +8,7 @@
 #include "IntGenotype.h"
 #include "DrugDatabase.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Random.h"
 #include "SCTherapy.h"
 

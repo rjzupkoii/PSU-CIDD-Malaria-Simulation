@@ -7,7 +7,7 @@
 
 #include "ClinicalUpdateFunction.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 
 ClinicalUpdateFunction::ClinicalUpdateFunction(Model* model) : model_(model) {
 }

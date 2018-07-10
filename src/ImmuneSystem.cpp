@@ -9,7 +9,7 @@
 #include "ImmuneComponent.h"
 #include "Person.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include <cmath>
 #include "Helpers/ObjectHelpers.h"
 

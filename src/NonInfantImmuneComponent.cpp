@@ -7,7 +7,7 @@
 
 #include "NonInfantImmuneComponent.h"
 #include "Model.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 
 
 //OBJECTPOOL_IMPL(NonInfantImmuneComponent)

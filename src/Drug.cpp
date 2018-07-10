@@ -12,7 +12,7 @@
 #include "Population.h"
 #include "Model.h"
 #include "Scheduler.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
 #include <cmath>
 

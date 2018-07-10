@@ -6,7 +6,7 @@
  */
 
 #include "PersonIndexByLocationExternalPopulationMovingLevel.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Model.h"
 
 PersonIndexByLocationExternalPopulationMovingLevel::PersonIndexByLocationExternalPopulationMovingLevel(const int& no_location, const int& no_level) {

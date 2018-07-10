@@ -10,7 +10,7 @@
 #include "PersonIndexAll.h"
 #include "Person.h"
 #include "Population.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "Scheduler.h"
 #include "ClonalParasitePopulation.h"
 #include "SingleHostClonalParasitePopulations.h"

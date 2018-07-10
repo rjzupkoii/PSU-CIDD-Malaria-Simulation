@@ -6,7 +6,7 @@
 #include "../Model.h"
 #include "../Population.h"
 #include "../Random.h"
-#include "../Config.h"
+#include "../Core/Config/Config.h"
 #include "../PersonIndexAll.h"
 
 BFFarmReporter::BFFarmReporter() {

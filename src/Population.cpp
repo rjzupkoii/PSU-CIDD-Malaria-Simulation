@@ -10,7 +10,7 @@
 #include "Population.h"
 #include "Model.h"
 #include "PersonIndexAll.h"
-#include "Config.h"
+#include "Core/Config/Config.h"
 #include "PersonIndexByLocationStateAgeClass.h"
 #include "InfantImmuneComponent.h"
 #include "NonInfantImmuneComponent.h"
