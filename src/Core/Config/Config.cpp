@@ -41,7 +41,7 @@ Config::Config(Model* model) :
   days_mature_gametocyte_over_five_(-1), p_compliance_{-1}, min_dosing_days_(-1),
   gametocyte_level_under_artemisinin_action_(-1), gametocyte_level_full_(-1), p_relapse_(-1),
   relapse_duration_(-1), allow_new_coinfection_to_cause_symtoms_(false), update_frequency_(-1), report_frequency_(-1),
-  circulation_information_(), TF_rate_(-1), tme_info_(), tme_strategy_(nullptr),
+  circulation_information_(), TF_rate_(-1),
   modified_mutation_factor_(-1), modified_drug_half_life_(-1), using_free_recombination_(false), tf_testing_day_(-1),
   tf_window_size_(-1), using_age_dependent_bitting_level_(false),
   using_variable_probability_infectious_bites_cause_infection_(false), fraction_mosquitoes_interrupted_feeding_(0),
@@ -51,7 +51,6 @@ Config::Config(Model* model) :
 
 Config::~Config() {
   //   ObjectHelpers::DeletePointer<Strategy>(strategy_);
-  ObjectHelpers::delete_pointer<IStrategy>(tme_strategy_);
   ObjectHelpers::delete_pointer<DrugDatabase>(drug_db_);
   ObjectHelpers::delete_pointer<IntGenotypeDatabase>(genotype_db_);
 
@@ -136,22 +135,6 @@ void Config::read_from_file(const std::string& config_file_name) {
 
   TF_rate_ = config["TF_rate"].as<double>();
 
-  tme_info_.tme_starting_day = config["tme_info"]["tme_starting_day"].as<int>();
-  tme_info_.MDA_coverage.clear();
-  tme_info_.MDA_duration.clear();
-
-  if (config["tme_info"]["mda_coverage"].size() < number_of_locations()) {
-    for (int location = 0; location < number_of_locations(); location++) {
-      tme_info_.MDA_coverage.push_back(config["tme_info"]["mda_coverage"][0].as<double>());
-      tme_info_.MDA_duration.push_back(config["tme_info"]["mda_duration"][0].as<int>());
-    }
-  }
-  else {
-    for (int location = 0; location < number_of_locations(); location++) {
-      tme_info_.MDA_coverage.push_back(config["tme_info"]["mda_coverage"][location].as<double>());
-      tme_info_.MDA_duration.push_back(config["tme_info"]["mda_duration"][location].as<int>());
-    }
-  }
   using_free_recombination_ = config["using_free_recombination"].as<bool>();
   tf_window_size_ = config["tf_window_size"].as<int>();
 

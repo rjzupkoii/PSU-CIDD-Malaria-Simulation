@@ -222,13 +222,6 @@ struct RelativeInfectivity {
 
 };
 
-struct TMEInfo {
-  int tme_starting_day;
-
-  DoubleVector MDA_coverage;
-  IntVector MDA_duration;
-};
-
 struct Allele {
   int value; //we can do char later or map from char to int
   std::string name;

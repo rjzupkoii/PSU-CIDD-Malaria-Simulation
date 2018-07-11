@@ -117,9 +117,6 @@ VIRTUAL_PROPERTY_REF(RelativeMovingInformation, circulation_information)
 
 VIRTUAL_PROPERTY_REF(double, TF_rate)
 
-VIRTUAL_PROPERTY_REF(TMEInfo, tme_info)
-
-POINTER_PROPERTY(IStrategy, tme_strategy)
 VIRTUAL_PROPERTY_REF(double, modified_mutation_factor)
 
 VIRTUAL_PROPERTY_REF(double, modified_drug_half_life)
