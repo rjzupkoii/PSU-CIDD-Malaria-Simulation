@@ -31,13 +31,11 @@
 
 using namespace Spatial;
 
+
 Config::Config(Model* model) :
-  model_(model), start_treatment_day_(-1),
-  start_collect_data_day_(-1),
-  number_of_locations_(-1),
-  number_of_age_classes_(-1), number_of_parasite_types_(-1), seasonal_beta_(),
-  p_infection_from_an_infectious_bite_(-1),
-  birth_rate_(-1), number_of_tracking_days_(-1), log_parasite_density_level_(), relative_bitting_information_(),
+  model_(model),
+  number_of_locations_(-1), number_of_parasite_types_(-1), seasonal_beta_(), log_parasite_density_level_(),
+  relative_bitting_information_(),
   relative_infectivity_(), strategy_(nullptr),
   drug_db_(nullptr), genotype_db_(nullptr),
   days_to_clinical_under_five_(-1), days_to_clinical_over_five_(-1), days_mature_gametocyte_under_five_(-1),
@@ -49,7 +47,7 @@ Config::Config(Model* model) :
   modified_mutation_factor_(-1), modified_drug_half_life_(-1), using_free_recombination_(false), tf_testing_day_(-1),
   tf_window_size_(-1), using_age_dependent_bitting_level_(false),
   using_variable_probability_infectious_bites_cause_infection_(false), fraction_mosquitoes_interrupted_feeding_(0),
-  start_intervention_day_(-1), modified_daily_cost_of_resistance_(-1), modified_mutation_probability_(-1),
+  modified_daily_cost_of_resistance_(-1), modified_mutation_probability_(-1),
   spatial_model_(nullptr),
   inflation_factor_{1} {}
 
@@ -80,33 +78,20 @@ void Config::read_from_file(const std::string& config_file_name) {
 
   YAML::Node config;
   try {
-	  config = YAML::LoadFile(config_file_name);
+    config = YAML::LoadFile(config_file_name);
   }
   catch (YAML::BadFile& ex) {
-	  //FATAL??
-	  std::cout << config_file_name << " not found or err..." << std::endl;
+    //FATAL??
+    LOG(FATAL) << config_file_name << " not found or err...";
   }
   catch (YAML::Exception& ex) {
-	  //FATAL
-	  std::cout << "error: " << ex.msg << " at line " << ex.mark.line + 1 << ":" << ex.mark.column + 1 << std::endl;
+    //FATAL
+    LOG(FATAL) << "error: " << ex.msg << " at line " << ex.mark.line + 1 << ":" << ex.mark.column + 1;
   }
 
   for (auto& config_item : config_items) {
-	  config_item->set_value(config);
+    config_item->set_value(config);
   }
-  total_time() = (date::sys_days{ending_date()} - date::sys_days(starting_date())).count();
-
-
-  start_treatment_day_ = config["start_treatment_day"].as<int>();
-  start_collect_data_day_ = config["start_collect_data_day"].as<int>();
-  start_intervention_day_ = config["start_intervention_day"].as<int>();
-
-
-  p_infection_from_an_infectious_bite_ = config["p_infection_from_an_infectious_bite"].as<double>();
-
-  number_of_tracking_days_ = config["number_of_tracking_days"].as<int>();
-
-  read_age_structure_information(config);
 
   read_spatial_information(config);
 
@@ -1008,28 +993,17 @@ void Config::read_seasonal_information(const YAML::Node& config) {
   }
 }
 
-void Config::read_age_structure_information(const YAML::Node& config) {
-  number_of_age_classes_ = config["number_of_age_classes"].as<int>();
-  age_structure_.clear();
-  for (int i = 0; i < number_of_age_classes_; i++) {
-    age_structure_.push_back(config["age_structure"][i].as<int>());
-  }
-  initial_age_structure_.clear();
-  for (int i = 0; i < config["initial_age_structure"].size(); i++) {
-    initial_age_structure_.push_back(config["initial_age_structure"][i].as<int>());
-  }
-}
 
 void Config::read_biodemography_information(const YAML::Node& config) {
   birth_rate_ = config["birth_rate"].as<double>();
 
   death_rate_by_age_.clear();
-  for (int i = 0; i < number_of_age_classes_; i++) {
+  for (int i = 0; i < number_of_age_classes(); i++) {
     death_rate_by_age_.push_back(config["death_rate_by_age"][i].as<double>());
   }
 
   mortality_when_treatment_fail_by_age_class_.clear();
-  for (int i = 0; i < number_of_age_classes_; i++) {
+  for (int i = 0; i < number_of_age_classes(); i++) {
     mortality_when_treatment_fail_by_age_class_.push_back(
       config["mortality_when_treatment_fail_by_age"][i].as<double>());
   }

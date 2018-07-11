@@ -1,4 +1,5 @@
 TODO:
+  - Bring in Test for Config
   - build Core library
   - Using event to change treatment coverage / strategy and set up those event from input file
   - 

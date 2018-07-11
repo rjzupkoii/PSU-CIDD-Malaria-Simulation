@@ -1,7 +1,8 @@
 file(GLOB SRC_FILES *.cpp *.h Spatial/*.cpp Spatial/*.h Reporters/*.cpp Reporters/*.h Strategies/*.cpp Strategies/*.h
     MDC/*.cpp MDC/*.h Helpers/*.cpp Helpers/*.h
 	Core/*.h Core/*.cpp
-	Core/Config/*.h Core/Config/*.cpp)
+	Core/Config/*.h Core/Config/*.cpp
+	Core/YAML/*.h /YAML/*.cpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
@@ -14,6 +15,7 @@ target_link_libraries(MaSim
     yaml-cpp
     GSL::gsl GSL::gslcblas	
 	fmt::fmt fmt::fmt-header-only
+	#unofficial::date::date
     )
 
 target_compile_features(MaSim PRIVATE cxx_range_for)

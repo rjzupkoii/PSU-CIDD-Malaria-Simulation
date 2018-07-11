@@ -26,7 +26,8 @@ add_dependencies(${PROJECT_TEST_NAME} date)
 target_link_libraries(${PROJECT_TEST_NAME}
     yaml-cpp
 	fmt::fmt fmt::fmt-header-only	
-	GSL::gsl GSL::gslcblas	
+	GSL::gsl GSL::gslcblas		
+	#unofficial::date::date
     )
 
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_range_for)

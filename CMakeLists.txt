@@ -32,7 +32,7 @@ endif ()
 set(YAMLCPP_STATIC_LIBRARY TRUE)
 find_package(yaml-cpp REQUIRED)
 find_package(fmt REQUIRED)
-find_package(gflags REQUIRED)
+#find_package(unofficial-date REQUIRED)
 
 add_subdirectory(${EXT_PROJECTS_DIR}/date)
 add_subdirectory(${EXT_PROJECTS_DIR}/args)

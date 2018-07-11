@@ -8,10 +8,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <string>
-#include <vector>
-#include <yaml-cpp/yaml.h>
-#include <date/date.h>
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "ConfigItem.h"
@@ -20,49 +16,61 @@
 #include "Spatial/Location.h"
 #include "Spatial/SpatialModel.h"
 #include "MultinomialDistributionGenerator.h"
+#include "CustomConfigItem.h"
+#include <string>
+#include <vector>
+#include <date/date.h>
 
 class IConfigItem;
+
 class Model;
+
+
 
 class Config {
 DISALLOW_COPY_AND_ASSIGN(Config)
 DISALLOW_MOVE(Config)
 
 public:
-  std::vector<IConfigItem*> config_items{};
 POINTER_PROPERTY(Model, model)
+  std::vector<IConfigItem*> config_items{};
 
-  CONFIG_ITEM(starting_date, date::year_month_day , date::year_month_day{ date::year{ 1999 } / 1 / 1 })
-  CONFIG_ITEM(ending_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 2 })
+CONFIG_ITEM(starting_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 1 })
+CONFIG_ITEM(ending_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 2 })
 
-  ConfigItem<int> total_time{"total_time", 100, this};
+CUSTOM_CONFIG_ITEM(total_time, 100)
 
+CONFIG_ITEM(start_treatment_day, int, 0)
+CONFIG_ITEM(start_collect_data_day, int, 0)
+CONFIG_ITEM(start_intervention_day, int, 0)
 
-VIRTUAL_PROPERTY_REF(int, start_treatment_day)
+CONFIG_ITEM(number_of_tracking_days, int, 0)
+CONFIG_ITEM(p_infection_from_an_infectious_bite, double, 0.0)
 
-VIRTUAL_PROPERTY_REF(int, start_collect_data_day)
+CONFIG_ITEM(number_of_age_classes, int, 0)
+CONFIG_ITEM(age_structure, std::vector<int>, std::vector<int>{ (1,2,3,4,5) });
+CONFIG_ITEM(initial_age_structure, std::vector<int>, std::vector<int>{ (1,2,3,4,5) });
+
+// VIRTUAL_PROPERTY_REF(int, number_of_age_classes)
+// VIRTUAL_PROPERTY_REF(IntVector, age_structure)
+// VIRTUAL_PROPERTY_REF(IntVector, initial_age_structure)
 
 VIRTUAL_PROPERTY_REF(int, number_of_locations)
 
-VIRTUAL_PROPERTY_REF(int, number_of_age_classes)
 
 VIRTUAL_PROPERTY_REF(int, number_of_parasite_types)
 
+
 VIRTUAL_PROPERTY_REF(DoubleVector2, EC50_power_n_table)
+
 
 VIRTUAL_PROPERTY_REF(Seasonality, seasonal_beta)
 
-VIRTUAL_PROPERTY_REF(double, p_infection_from_an_infectious_bite)
-
-VIRTUAL_PROPERTY_REF(IntVector, age_structure)
-
-VIRTUAL_PROPERTY_REF(IntVector, initial_age_structure)
 
 VIRTUAL_PROPERTY_REF(double, birth_rate)
 
 VIRTUAL_PROPERTY_REF(DoubleVector, death_rate_by_age)
 
-VIRTUAL_PROPERTY_REF(int, number_of_tracking_days)
 
 VIRTUAL_PROPERTY_REF(DoubleVector, mortality_when_treatment_fail_by_age_class)
 
@@ -129,7 +137,6 @@ VIRTUAL_PROPERTY_REF(bool, using_variable_probability_infectious_bites_cause_inf
 
 VIRTUAL_PROPERTY_REF(double, fraction_mosquitoes_interrupted_feeding)
 
-VIRTUAL_PROPERTY_REF(int, start_intervention_day)
 
 VIRTUAL_PROPERTY_REF(double, modified_daily_cost_of_resistance)
 
@@ -198,8 +205,6 @@ public:
   void read_spatial_information(const YAML::Node& config);
 
   void read_seasonal_information(const YAML::Node& config);
-
-  void read_age_structure_information(const YAML::Node& config);
 
   void read_biodemography_information(const YAML::Node& config);
 

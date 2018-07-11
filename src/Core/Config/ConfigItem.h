@@ -2,9 +2,10 @@
 #define CONFIGITEM_H
 
 #include "IConfigItem.h"
-#include "YamlConverter.h"
-#include <yaml-cpp/node/node.h>
-#include <iostream>
+#include "Core/YAML/YamlConverter.h"
+#include <yaml-cpp/yaml.h>
+#include "easylogging++.h"
+#include <Helpers/StringHelpers.h>
 
 #define CONFIG_ITEM(name,type,default_value)\
   ConfigItem<type> name{#name,default_value, this};
@@ -54,9 +55,11 @@ public:
       value_ = node[name_].as<T>();
     }
     else {
-      std::cout << name_ << " has default value of " << value_ << std::endl;
+      // LOG(WARNING) << name_ << " used default value of " << value_ << std::endl;
+      LOG(WARNING) << name_ << " used default value." << std::endl;
     }
   }
+
   const std::string& name() override {
     return name_;
   }

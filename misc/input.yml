@@ -15,7 +15,7 @@
 starting_date: 1990/1/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 1990/1/30
+ending_date: 1990/2/1
 
 # total number of days the simulation will be calculated from starting_date and ending_date
 
@@ -28,6 +28,26 @@ start_collect_data_day: 0
 
 # the day at which the MDC will begin collecting NTF
 start_intervention_day: 0
+
+# number of days to keep track total number of parasites in population
+# in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
+# if an individual is infected today, the infection type and probability will be based 
+# on the biting that took place 11 days ago
+number_of_tracking_days: 11
+
+# probability that an infectious bite on a human causes a blood stage malaria infection
+p_infection_from_an_infectious_bite: 0.1
+
+# the simulation itself uses explicit ages and birthdays
+# but for reporting purposes and for age-specific mortality calculations, individuals are grouped into the following age classes
+number_of_age_classes: 15
+age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 20, 60, 100]
+
+# this is only used for initializing the population structure at time 0
+# the last four rows of the matrix below are ignored when the number of locations is 1
+initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35, 45, 55, 65, 100]
+
+
 
 spatial_information:
 #id, latitude, longitude
@@ -109,20 +129,6 @@ seasonal_beta:
   period: 365
   min_value: 0.1
 
-# probability that an infectious bite on a human causes a blood stage malaria infection
-p_infection_from_an_infectious_bite: 0.1
-
-
-# the simulation itself uses explicit ages and birthdays
-# but for reporting purposes and for age-specific mortality calculations, individuals are grouped into the following age classes
-number_of_age_classes: 15
-age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 20, 60, 100]
-
-
-# this is only used for initializing the population structure at time 0
-# the last four rows of the matrix below are ignored when the number of locations is 1
-initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35, 45, 55, 65, 100]
-
 
 # below value indicates 37.25 births per 1000 individuals per year
 birth_rate: 0.03725
@@ -131,11 +137,7 @@ birth_rate: 0.03725
 death_rate_by_age: [0.053979329, 0.018935757, 0.006867257, 0.001124347, 0.001136455, 0.001606066, 0.001953783, 0.001530096, 0.001299153, 0.001068073, 0.000978264, 0.000978264, 0.0055, 0.0055, 0.04450]
 
 
-# number of days to keep track total number of parasites in population
-# in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
-# if an individual is infected today, the infection type and probability will be based 
-# on the biting that took place 11 days ago
-number_of_tracking_days: 11
+
 
 
 # probability of death for patients who are not treated or patients who experience a treatment failure (due to drug resistance, or otherwise)

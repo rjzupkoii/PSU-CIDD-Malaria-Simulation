@@ -1,7 +1,7 @@
 #ifndef YAMLCONVERTER_H
 #define YAMLCONVERTER_H
 #include <date/date.h>
-#include <yaml-cpp/node/node.h>
+#include <yaml-cpp/yaml.h>
 
 namespace YAML {
   template <>
@@ -25,21 +25,33 @@ namespace YAML {
 
   template <>
   struct convert<date::year_month_day> {
-	  static Node encode(const date::year_month_day& rhs) {
-		  Node node;
-		  node.push_back(date::format("%Y/%m/%d", rhs));
-		  return node;
-	  }
+    static Node encode(const date::year_month_day& rhs) {
+      Node node;
+      node.push_back(date::format("%Y/%m/%d", rhs));
+      return node;
+    }
 
-	  static bool decode(const Node& node, date::year_month_day& rhs) {
+    static bool decode(const Node& node, date::year_month_day& rhs) {
 
-		  if (!node.IsScalar()) {
-			  return false;
-		  }
-		  std::stringstream ss(node.as<std::string>());
-		  date::from_stream(ss, "%Y/%m/%d", rhs);
-		  return true;
-	  }
+      if (!node.IsScalar()) {
+        return false;
+      }
+      std::stringstream ss(node.as<std::string>());
+      date::from_stream(ss, "%Y/%m/%d", rhs);
+      return true;
+    }
   };
+
+  inline std::ostream& operator<<(std::ostream& os, const std::vector<int>& n)
+  {
+	  if (!os.good())
+		  return os;
+
+	  for (auto i : n) {
+		  os << i << " , ";
+	  }
+	  return os;
+  }
+
 }
 #endif // YAMLCONVERTER_H
