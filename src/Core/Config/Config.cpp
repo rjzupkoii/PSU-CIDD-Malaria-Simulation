@@ -5,7 +5,7 @@
  * Created on March 27, 2013, 10:38 AM
  */
 
-#define _USE_MATH_DEFINES
+
 #include <gsl/gsl_cdf.h>
 #include <cmath>
 #include <fstream>
@@ -33,8 +33,7 @@ using namespace Spatial;
 
 
 Config::Config(Model* model) :
-  model_(model),
-  number_of_locations_(-1), number_of_parasite_types_(-1), seasonal_beta_(), log_parasite_density_level_(),
+  model_(model), number_of_parasite_types_(-1), log_parasite_density_level_(),
   relative_bitting_information_(),
   relative_infectivity_(), strategy_(nullptr),
   drug_db_(nullptr), genotype_db_(nullptr),
@@ -42,8 +41,7 @@ Config::Config(Model* model) :
   days_mature_gametocyte_over_five_(-1), p_compliance_{-1}, min_dosing_days_(-1),
   gametocyte_level_under_artemisinin_action_(-1), gametocyte_level_full_(-1), p_relapse_(-1),
   relapse_duration_(-1), allow_new_coinfection_to_cause_symtoms_(false), update_frequency_(-1), report_frequency_(-1),
-  circulation_information_(), external_population_circulation_information_(),
-  TF_rate_(-1), tme_info_(), tme_strategy_(nullptr),
+  circulation_information_(), TF_rate_(-1), tme_info_(), tme_strategy_(nullptr),
   modified_mutation_factor_(-1), modified_drug_half_life_(-1), using_free_recombination_(false), tf_testing_day_(-1),
   tf_window_size_(-1), using_age_dependent_bitting_level_(false),
   using_variable_probability_infectious_bites_cause_infection_(false), fraction_mosquitoes_interrupted_feeding_(0),
@@ -90,12 +88,16 @@ void Config::read_from_file(const std::string& config_file_name) {
   }
 
   for (auto& config_item : config_items) {
+    LOG(INFO) << "Reading config item: " << config_item->name();
     config_item->set_value(config);
   }
 
-  read_spatial_information(config);
+  // std::cout << number_of_locations() << std::endl;
 
-  read_seasonal_information(config);
+  //read spatial_model
+  const std::string sm_name = config["spatial_model"]["name"].as<std::string>();
+  spatial_model_ = SpatialModelBuilder::Build(sm_name, config["spatial_model"][sm_name]);
+  // std::cout << "hello" << std::endl;
 
   read_biodemography_information(config);
 
@@ -107,8 +109,7 @@ void Config::read_from_file(const std::string& config_file_name) {
 
   read_relative_biting_rate_info(config);
   read_spatial_info(config);
-  read_external_population_circulation_info(config);
-
+  
   read_initial_parasite_info(config);
   read_importation_parasite_info(config);
   read_importation_parasite_periodically_info(config);
@@ -139,14 +140,14 @@ void Config::read_from_file(const std::string& config_file_name) {
   tme_info_.MDA_coverage.clear();
   tme_info_.MDA_duration.clear();
 
-  if (config["tme_info"]["mda_coverage"].size() < number_of_locations_) {
-    for (int location = 0; location < number_of_locations_; location++) {
+  if (config["tme_info"]["mda_coverage"].size() < number_of_locations()) {
+    for (int location = 0; location < number_of_locations(); location++) {
       tme_info_.MDA_coverage.push_back(config["tme_info"]["mda_coverage"][0].as<double>());
       tme_info_.MDA_duration.push_back(config["tme_info"]["mda_duration"][0].as<int>());
     }
   }
   else {
-    for (int location = 0; location < number_of_locations_; location++) {
+    for (int location = 0; location < number_of_locations(); location++) {
       tme_info_.MDA_coverage.push_back(config["tme_info"]["mda_coverage"][location].as<double>());
       tme_info_.MDA_duration.push_back(config["tme_info"]["mda_duration"][location].as<int>());
     }
@@ -531,21 +532,21 @@ void Config::read_spatial_info(const YAML::Node& config) {
   circulation_information_.v_moving_level_density.clear();
   circulation_information_.v_moving_level_value.clear();
 
-  double max = circulation_information_.max_relative_moving_value - 1; //maxRelativeBiting -1
-  int numberOfLevel = circulation_information_.number_of_moving_levels;
+  const auto max = circulation_information_.max_relative_moving_value - 1; //maxRelativeBiting -1
+  const auto number_of_level = circulation_information_.number_of_moving_levels;
 
-  double step = max / (double)(numberOfLevel - 1);
+  const auto step = max / static_cast<double>(number_of_level - 1);
 
-  int j = 0;
-  double oldP = 0;
+  auto j = 0;
+  double old_p = 0;
   double sum = 0;
 
   for (double i = 0; i <= max + 0.0001; i += step) {
-    double p = gsl_cdf_gamma_P(i + step, a, b);
+    const auto p = gsl_cdf_gamma_P(i + step, a, b);
     double value = 0;
-    value = (j == 0) ? p : p - oldP;
+    value = (j == 0) ? p : p - old_p;
     circulation_information_.v_moving_level_density.push_back(value);
-    oldP = p;
+    old_p = p;
     circulation_information_.v_moving_level_value.push_back(i + 1);
     sum += value;
     j++;
@@ -554,7 +555,7 @@ void Config::read_spatial_info(const YAML::Node& config) {
 
   //normalized
   double t = 0;
-  for (double& i : circulation_information_.v_moving_level_density) {
+  for (auto& i : circulation_information_.v_moving_level_density) {
     i = i + (1 - sum) / circulation_information_.v_moving_level_density.size();
     t += i;
   }
@@ -565,12 +566,12 @@ void Config::read_spatial_info(const YAML::Node& config) {
 
   circulation_information_.circulation_percent = n["circulation_percent"].as<double>();
 
-  auto length_of_stay_mean = n["length_of_stay"]["mean"].as<double>();
-  auto length_of_stay_sd = n["length_of_stay"]["sd"].as<double>();
+  const auto length_of_stay_mean = n["length_of_stay"]["mean"].as<double>();
+  const auto length_of_stay_sd = n["length_of_stay"]["sd"].as<double>();
 
-  double stay_variance = length_of_stay_sd * length_of_stay_sd;
-  double k = stay_variance / length_of_stay_mean; //k
-  double theta = length_of_stay_mean / k; //theta
+  const auto stay_variance = length_of_stay_sd * length_of_stay_sd;
+  const auto k = stay_variance / length_of_stay_mean; //k
+  const auto theta = length_of_stay_mean / k; //theta
 
   circulation_information_.length_of_stay_theta = theta;
   circulation_information_.length_of_stay_k = k;
@@ -578,121 +579,12 @@ void Config::read_spatial_info(const YAML::Node& config) {
 
 }
 
-void Config::read_external_population_circulation_info(const YAML::Node& config) {
-  const YAML::Node& n = config["external_population_circulation_information"];
-
-  external_population_circulation_information_.max_relative_moving_value = n["max_relative_moving_value"].as<double>();
-
-  external_population_circulation_information_.number_of_moving_levels = n["number_of_moving_levels"].as<int>();
-
-  external_population_circulation_information_.scale = n["moving_level_distribution"]["Exponential"]["scale"].as<double
-  >();
-
-  external_population_circulation_information_.mean = n["moving_level_distribution"]["Gamma"]["mean"].as<double>();
-  external_population_circulation_information_.sd = n["moving_level_distribution"]["Gamma"]["sd"].as<double>();
-
-  //calculate density and level value here
-
-  double var = external_population_circulation_information_.sd * external_population_circulation_information_.sd;
-
-  double b = var / (external_population_circulation_information_.mean - 1); //theta
-  double a = (external_population_circulation_information_.mean - 1) / b; //k
-
-  external_population_circulation_information_.v_moving_level_density.clear();
-  external_population_circulation_information_.v_moving_level_value.clear();
-
-  double max = external_population_circulation_information_.max_relative_moving_value - 1; //maxRelativeBiting -1
-  int numberOfLevel = external_population_circulation_information_.number_of_moving_levels;
-
-  double step = max / (double)(numberOfLevel - 1);
-
-  int j = 0;
-  double oldP = 0;
-  double sum = 0;
-
-  for (double i = 0; i <= max + 0.0001; i += step) {
-    double p = gsl_cdf_gamma_P(i + step, a, b);
-    double value = 0;
-    value = (j == 0) ? p : p - oldP;
-    external_population_circulation_information_.v_moving_level_density.push_back(value);
-    oldP = p;
-    external_population_circulation_information_.v_moving_level_value.push_back(i + 1);
-    sum += value;
-    j++;
-
-  }
-
-  //normalized
-  double t = 0;
-  for (double& i : external_population_circulation_information_.v_moving_level_density) {
-    i = i + (1 - sum) / circulation_information_.v_moving_level_density.size();
-    t += i;
-  }
-
-
-  assert(external_population_circulation_information_.number_of_moving_levels ==
-    external_population_circulation_information_.v_moving_level_density.size());
-  assert(external_population_circulation_information_.number_of_moving_levels ==
-    external_population_circulation_information_.v_moving_level_value.size());
-  assert(fabs(t - 1) < 0.0001);
-
-
-  for (int i = 0; i < number_of_locations_; i++) {
-    int input_loc = n["circulation_percent"].size() < number_of_locations_ ? 0 : i;
-    external_population_circulation_information_.circulation_percent.push_back(
-      n["circulation_percent"][input_loc].as<double>());
-    external_population_circulation_information_.daily_EIR.push_back(n["daily_EIR"][input_loc].as<double>());
-
-  }
-  for (int i = 0; i < number_of_locations_; i++) {
-    int input_loc = n["daily_EIR"].size() < number_of_locations_ ? 0 : i;
-    external_population_circulation_information_.daily_EIR.push_back(n["daily_EIR"][input_loc].as<double>());
-  }
-
-  for (int i = 0; i < number_of_locations_; i++) {
-    int input_loc = n["seasonal_EIR"]["a"].size() < number_of_locations_ ? 0 : i;
-
-    external_population_circulation_information_.seasonal_EIR.A.push_back(
-      n["seasonal_EIR"]["a"][input_loc].as<double>());
-
-    auto period = n["seasonal_EIR"]["period"].as<double>();
-    auto B = 2 * M_PI / period;
-
-    external_population_circulation_information_.seasonal_EIR.B.push_back(B);
-
-    auto phi = n["seasonal_EIR"]["phi"][input_loc].as<double>();
-    auto C = -phi * B;
-    external_population_circulation_information_.seasonal_EIR.C.push_back(C);
-
-    external_population_circulation_information_.seasonal_EIR.min_value = n["seasonal_EIR"]["min_value"].as<float>();
-  }
-
-
-  //    external_population_circulation_information_.circulation_percent = n["circulation_percent"].as<double>();
-
-  auto length_of_stay_mean = n["length_of_stay"]["mean"].as<double>();
-  auto length_of_stay_sd = n["length_of_stay"]["sd"].as<double>();
-
-  double stay_variance = length_of_stay_sd * length_of_stay_sd;
-  double k = stay_variance / length_of_stay_mean; //k
-  double theta = length_of_stay_mean / k; //theta
-
-  external_population_circulation_information_.length_of_stay_theta = theta;
-  external_population_circulation_information_.length_of_stay_k = k;
-
-
-  external_population_moving_level_generator_.set_level_density(
-    &external_population_circulation_information_.v_moving_level_density);
-
-  //    external_population_circulation_information_.daily_EIR = n["daily_EIR"].as<double>();
-}
-
 void Config::read_initial_parasite_info(const YAML::Node& config) {
   const YAML::Node& n = config["initial_parasite_info"];
 
   for (int i = 0; i < n.size(); i++) {
     auto location = n[i]["location_id"].as<int>();
-    if (location < number_of_locations_ && location != -1) {
+    if (location < number_of_locations() && location != -1) {
       for (int j = 0; j < n[i]["parasite_info"].size(); j++) {
         //            InitialParasiteInfo ipi;
         //            ipi.location = location;
@@ -721,7 +613,7 @@ void Config::read_importation_parasite_info(const YAML::Node& config) {
 
   for (int i = 0; i < n.size(); i++) {
     auto location = n[i]["location"].as<int>();
-    if (location < number_of_locations_) {
+    if (location < number_of_locations()) {
       for (int j = 0; j < n[i]["parasite_info"].size(); j++) {
         //            InitialParasiteInfo ipi;
         //            ipi.location = location;
@@ -740,7 +632,7 @@ void Config::read_importation_parasite_periodically_info(const YAML::Node& confi
   const YAML::Node& n = config["introduce_parasite_periodically"];
   for (int i = 0; i < n.size(); i++) {
     auto location = n[i]["location"].as<int>();
-    if (location < number_of_locations_) {
+    if (location < number_of_locations()) {
       for (int j = 0; j < n[i]["parasite_info"].size(); j++) {
         //            InitialParasiteInfo ipi;
         //            ipi.location = location;
@@ -802,7 +694,7 @@ void Config::override_parameters(const std::string& override_file, const int& po
 
 void Config::override_1_parameter(const std::string& parameter_name, const std::string& parameter_value) {
   if (parameter_name == "population_size") {
-    Model::CONFIG->location_db()[0].populationSize = atoi(parameter_value.c_str());
+    Model::CONFIG->location_db()[0].population_size = atoi(parameter_value.c_str());
   }
 
   if (parameter_name == "total_time") {
@@ -936,7 +828,7 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
   }
 
   if (parameter_name == "fraction_non_art_replacement") {
-    double fnar = atof(parameter_value.c_str());
+    const auto fnar = atof(parameter_value.c_str());
     auto* s = dynamic_cast<NovelNonACTSwitchingStrategy *>(Model::CONFIG->strategy());
     if (s != nullptr) {
       s->set_fraction_non_art_replacement(fnar);
@@ -945,52 +837,6 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
 
   // TACT id and switching day will be modify by create new strategy in the .yml input file
 
-}
-
-void Config::read_spatial_information(const YAML::Node& config) {
-
-  build_location_db(config["spatial_information"]);
-
-  spatial_distance_matrix_.resize(static_cast<unsigned long long int>(number_of_locations_));
-  for (int from_location = 0; from_location < number_of_locations_; from_location++) {
-    spatial_distance_matrix_[from_location].resize(static_cast<unsigned long long int>(number_of_locations_));
-    for (int to_location = 0; to_location < number_of_locations_; to_location++) {
-      spatial_distance_matrix_[from_location][to_location] = Coordinate::calculate_distance_in_km(
-        *location_db_[from_location].coordinate,
-        *location_db_[to_location].coordinate);
-      //
-      //            std::cout << "distance[" << from_location << "," << to_location << "]: "
-      //                      << spatial_distance_matrix_[from_location][to_location] << std::endl;
-    }
-  }
-
-  //read spatial_model
-  const std::string sm_name = config["spatial_information"]["spatial_model"].as<std::string>();
-  spatial_model_ = SpatialModelBuilder::Build(sm_name, config["spatial_information"][sm_name]);
-
-}
-
-void Config::read_seasonal_information(const YAML::Node& config) {
-  seasonal_beta_.A.clear();
-  seasonal_beta_.B.clear();
-  seasonal_beta_.C.clear();
-
-  for (int i = 0; i < number_of_locations_; i++) {
-    auto input_loc = config["seasonal_beta"]["a"].size() < number_of_locations_ ? 0 : i;
-    seasonal_beta_.A.push_back(config["seasonal_beta"]["a"][input_loc].as<double>());
-
-    const auto period = config["seasonal_beta"]["period"].as<double>();
-    auto B = 2 * M_PI / period;
-
-    seasonal_beta_.B.push_back(B);
-
-    auto phi = config["seasonal_beta"]["phi"][input_loc].as<float>();
-    seasonal_beta_.phi = phi;
-    auto C = -phi * B;
-    seasonal_beta_.C.push_back(C);
-
-    seasonal_beta_.min_value = config["seasonal_beta"]["min_value"].as<float>();
-  }
 }
 
 
@@ -1010,65 +856,20 @@ void Config::read_biodemography_information(const YAML::Node& config) {
 }
 
 
-void Config::build_location_db(const YAML::Node& node) {
-  for (int i = 0; i < node["location_info"].size(); i++) {
-    location_db_.emplace_back(node["location_info"][i][0].as<int>(),
-                              node["location_info"][i][1].as<float>(),
-                              node["location_info"][i][2].as<float>(), 0);
-  }
-
-  number_of_locations_ = static_cast<int>(location_db_.size());
-
-  for (int loc = 0; loc < number_of_locations_; loc++) {
-    int input_loc = node["age_distribution_by_location"].size() < number_of_locations() ? 0 : loc;
-
-    for (int i = 0; i < node["age_distribution_by_location"][input_loc].size(); i++) {
-      location_db_[loc].age_distribution.push_back(
-        node["age_distribution_by_location"][input_loc][i].as<double>());
-    }
-  }
-
-  for (int loc = 0; loc < number_of_locations_; loc++) {
-    int input_loc = node["p_treatment_for_less_than_5_by_location"].size() < number_of_locations() ? 0 : loc;
-    location_db_[loc].p_treatment_less_than_5 = node["p_treatment_for_less_than_5_by_location"][input_loc].as<float>();
-  }
-
-  for (int loc = 0; loc < number_of_locations_; loc++) {
-    int input_loc = node["p_treatment_for_more_than_5_by_location"].size() < number_of_locations() ? 0 : loc;
-    location_db_[loc].p_treatment_more_than_5 = node["p_treatment_for_more_than_5_by_location"][input_loc].as<float>();
-  }
-
-  for (int loc = 0; loc < number_of_locations_; loc++) {
-    int input_loc = node["beta_by_location"].size() < number_of_locations() ? 0 : loc;
-    location_db_[loc].beta = node["beta_by_location"][input_loc].as<float>();
-  }
-
-  for (int loc = 0; loc < number_of_locations_; loc++) {
-    int input_loc = node["population_size_by_location"].size() < number_of_locations() ? 0 : loc;
-    location_db_[loc].populationSize = node["population_size_by_location"][input_loc].as<int>();
-  }
-
-  //    location_db()[0].populationSize = 1000;
-  //    std::cout << location_db()[number_of_locations()-1] << std::endl;
-}
-
-
-// TODO: write test for this
-
-double Config::get_seasonal_factor(const date::sys_days& today) const {
-  if (NumberHelpers::is_equal(Model::CONFIG->seasonal_beta().A[0], 0.0)) {
+double Config::get_seasonal_factor(const date::sys_days& today, const int& location) const {
+  if (!Model::CONFIG->seasonal_info().enable) {
     return 1;
-  }
+  }  
   const auto day_of_year = TimeHelpers::day_of_year(today);
-  const auto is_rainy_period = Model::CONFIG->seasonal_beta().phi < Constants::DAYS_IN_YEAR() / 2.0
-                                 ? day_of_year >= Model::CONFIG->seasonal_beta().phi
-                                 && day_of_year <= Model::CONFIG->seasonal_beta().phi + Constants::DAYS_IN_YEAR() / 2.0
-                                 : day_of_year >= Model::CONFIG->seasonal_beta().phi
-                                 || day_of_year <= Model::CONFIG->seasonal_beta().phi - Constants::DAYS_IN_YEAR() / 2.0;
+  const auto is_rainy_period = Model::CONFIG->seasonal_info().phi[location] < Constants::DAYS_IN_YEAR() / 2.0
+                                 ? day_of_year >= Model::CONFIG->seasonal_info().phi[location]
+                                 && day_of_year <= Model::CONFIG->seasonal_info().phi[location] + Constants::DAYS_IN_YEAR() / 2.0
+                                 : day_of_year >= Model::CONFIG->seasonal_info().phi[location]
+                                 || day_of_year <= Model::CONFIG->seasonal_info().phi[location] - Constants::DAYS_IN_YEAR() / 2.0;
 
   return (is_rainy_period)
-           ? (Model::CONFIG->seasonal_beta().A[0] - Model::CONFIG->seasonal_beta().min_value) *
-           sin(Model::CONFIG->seasonal_beta().B[0] * day_of_year + Model::CONFIG->seasonal_beta().C[0]) +
-           Model::CONFIG->seasonal_beta().min_value
-           : Model::CONFIG->seasonal_beta().min_value;
+           ? (Model::CONFIG->seasonal_info().A[location] - Model::CONFIG->seasonal_info().min_value[location]) *
+           sin(Model::CONFIG->seasonal_info().B[location] * day_of_year + Model::CONFIG->seasonal_info().C[location]) +
+           Model::CONFIG->seasonal_info().min_value[location]
+           : Model::CONFIG->seasonal_info().min_value[location];
 }

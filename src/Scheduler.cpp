@@ -85,8 +85,8 @@ void Scheduler::run() {
 
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
-    LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
     begin_time_step();
+    LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
 
     for (auto& event : timed_events_list_[current_time_]) {
       event->perform_execute();
@@ -122,9 +122,8 @@ void Scheduler::end_time_step() const {
   Model::POPULATION->perform_birth_event();
   ///for safety remove all dead by calling perform_death_event
   Model::POPULATION->perform_death_event();
-
   Model::POPULATION->perform_circulation_event();
-
+  
   update_end_of_time_step();
 
   report_end_of_time_step();

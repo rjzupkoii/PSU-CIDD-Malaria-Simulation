@@ -15,7 +15,6 @@
 #include "Dispatcher.h"
 #include "PersonIndexByLocationBittingLevelHandler.h"
 #include "PersonIndexByLocationMovingLevelHandler.h"
-#include "PersonIndexByLocationExternalPopulationMovingLevelHandler.h"
 #include "ClonalParasitePopulation.h"
 
 
@@ -38,7 +37,7 @@ class Genotype;
 
 class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAgeClassHandler,
                public PersonIndexByLocationBittingLevelHandler, public PersonIndexByLocationMovingLevelHandler,
-               public Dispatcher, public PersonIndexByLocationExternalPopulationMovingLevelHandler {
+               public Dispatcher{
 public:
 
   enum PersonProperties {
@@ -97,8 +96,6 @@ PROPERTY_REF(int, number_of_times_bitten)
 PROPERTY_REF(int, number_of_trips_taken)
   //    PROPERTY_REF(bool, is_tracking_treatment_number);
 PROPERTY_REF(int, last_therapy_id)
-
-PROPERTY_REF(bool, is_moving_to_external_population)
 
 public:
   Person();
@@ -183,9 +180,8 @@ public:
   static void move_to_external_population();
   void return_to_normal_population();
 
-  void move_to_population(Population* population);
+  void move_to_population(Population* target_population);
 
-  bool is_in_external_population() const;
 
   bool has_birthday_event() const;
   bool has_update_by_having_drug_event() const;

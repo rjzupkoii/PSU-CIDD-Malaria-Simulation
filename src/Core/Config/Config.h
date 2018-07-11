@@ -10,21 +10,21 @@
 
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
+#include "DependentConfigItem.h"
 #include "ConfigItem.h"
 #include "DrugDatabase.h"
 #include "IntGenotypeDatabase.h"
 #include "Spatial/Location.h"
 #include "Spatial/SpatialModel.h"
 #include "MultinomialDistributionGenerator.h"
-#include "CustomConfigItem.h"
 #include <string>
 #include <vector>
 #include <date/date.h>
+#include <chrono>
 
 class IConfigItem;
 
 class Model;
-
 
 
 class Config {
@@ -35,36 +35,36 @@ public:
 POINTER_PROPERTY(Model, model)
   std::vector<IConfigItem*> config_items{};
 
-CONFIG_ITEM(starting_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 1 })
-CONFIG_ITEM(ending_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 2 })
+  CONFIG_ITEM(starting_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 1 })
+  CONFIG_ITEM(ending_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 2 })
 
-CUSTOM_CONFIG_ITEM(total_time, 100)
+  DEPENDENT_CONFIG_ITEM(total_time, 100)
 
-CONFIG_ITEM(start_treatment_day, int, 0)
-CONFIG_ITEM(start_collect_data_day, int, 0)
-CONFIG_ITEM(start_intervention_day, int, 0)
+  CONFIG_ITEM(start_treatment_day, int, 0)
+  CONFIG_ITEM(start_collect_data_day, int, 0)
+  CONFIG_ITEM(start_intervention_day, int, 0)
 
-CONFIG_ITEM(number_of_tracking_days, int, 0)
-CONFIG_ITEM(p_infection_from_an_infectious_bite, double, 0.0)
+  CONFIG_ITEM(number_of_tracking_days, int, 0)
+  CONFIG_ITEM(p_infection_from_an_infectious_bite, double, 0.0)
 
-CONFIG_ITEM(number_of_age_classes, int, 0)
-CONFIG_ITEM(age_structure, std::vector<int>, std::vector<int>{ (1,2,3,4,5) });
-CONFIG_ITEM(initial_age_structure, std::vector<int>, std::vector<int>{ (1,2,3,4,5) });
+  CONFIG_ITEM(age_structure, std::vector<int>, std::vector<int>{ (1,2,3,4,5) })
+  CONFIG_ITEM(initial_age_structure, std::vector<int>, std::vector<int>{ (1,2,3,4,5) })
+  DEPENDENT_CONFIG_ITEM(number_of_age_classes, 0)
+  // TODO: test
+  CONFIG_ITEM(location_db, std::vector<Spatial::Location>, std::vector<Spatial::Location>{Spatial::Location(0,0,0,10000)})
+  DEPENDENT_CONFIG_ITEM(number_of_locations, 1)
 
-// VIRTUAL_PROPERTY_REF(int, number_of_age_classes)
-// VIRTUAL_PROPERTY_REF(IntVector, age_structure)
-// VIRTUAL_PROPERTY_REF(IntVector, initial_age_structure)
+  DEPENDENT_CONFIG_ITEM(spatial_distance_matrix, DoubleVector2())
 
-VIRTUAL_PROPERTY_REF(int, number_of_locations)
+  DEPENDENT_CONFIG_ITEM(seasonal_info, SeasonalInfo())
 
+
+POINTER_PROPERTY(Spatial::SpatialModel, spatial_model)
 
 VIRTUAL_PROPERTY_REF(int, number_of_parasite_types)
 
 
 VIRTUAL_PROPERTY_REF(DoubleVector2, EC50_power_n_table)
-
-
-VIRTUAL_PROPERTY_REF(Seasonality, seasonal_beta)
 
 
 VIRTUAL_PROPERTY_REF(double, birth_rate)
@@ -114,7 +114,6 @@ VIRTUAL_PROPERTY_REF(int, update_frequency)
 VIRTUAL_PROPERTY_REF(int, report_frequency)
 
 VIRTUAL_PROPERTY_REF(RelativeMovingInformation, circulation_information)
-VIRTUAL_PROPERTY_REF(ExternalPopulationInformation, external_population_circulation_information)
 
 VIRTUAL_PROPERTY_REF(double, TF_rate)
 
@@ -142,18 +141,10 @@ VIRTUAL_PROPERTY_REF(double, modified_daily_cost_of_resistance)
 
 VIRTUAL_PROPERTY_REF(double, modified_mutation_probability)
 
-VIRTUAL_PROPERTY_REF(std::vector<Spatial::Location>, location_db)
-
-VIRTUAL_PROPERTY_REF(DoubleVector2, spatial_distance_matrix)
-
-POINTER_PROPERTY(Spatial::SpatialModel, spatial_model)
-
 VIRTUAL_PROPERTY_REF(double, inflation_factor)
 
 READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, bitting_level_generator)
 READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, moving_level_generator)
-READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, external_population_moving_level_generator)
-
 
 public:
   explicit Config(Model* model = nullptr);
@@ -173,9 +164,7 @@ public:
   void calculate_relative_biting_density();
 
   void read_spatial_info(const YAML::Node& config);
-
-  void read_external_population_circulation_info(const YAML::Node& config);
-
+  
   void read_initial_parasite_info(const YAML::Node& config);
 
   void read_importation_parasite_info(const YAML::Node& config);
@@ -202,15 +191,9 @@ public:
 
   void read_genotype_info(const YAML::Node& config);
 
-  void read_spatial_information(const YAML::Node& config);
-
-  void read_seasonal_information(const YAML::Node& config);
-
   void read_biodemography_information(const YAML::Node& config);
 
-  void build_location_db(const YAML::Node& node);
-
-  double get_seasonal_factor(const date::sys_days& today) const;
+  double get_seasonal_factor(const date::sys_days& today, const int& location) const;
 };
 
 #endif /* CONFIG_H */

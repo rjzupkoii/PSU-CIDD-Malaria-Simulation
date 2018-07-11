@@ -64,223 +64,200 @@ typedef std::vector<Therapy*> TherapyPtrVector;
 typedef std::vector<IStrategy*> StrategyPtrVector;
 
 
-struct Seasonality {
-    DoubleVector A;
-    DoubleVector B;
-    DoubleVector C;
-    float phi;
-    float min_value;
+struct SeasonalInfo {
+  bool enable{false};
+  DoubleVector A;
+  DoubleVector B;
+  DoubleVector C;
+  DoubleVector phi;
+  DoubleVector min_value;
+  friend std::ostream &operator<<(std::ostream &os, const SeasonalInfo &seasonal_info);
 };
 
+inline std::ostream& operator<<(std::ostream& os, const SeasonalInfo& seasonal_info) {
+	os << "seasonal_info: ";
+	return os;
+}
+
 struct ImmuneSystemInformation {
-    double acquire_rate;
-    std::vector<double> acquire_rate_by_age;
-    double decay_rate;
+  double acquire_rate;
+  std::vector<double> acquire_rate_by_age;
+  double decay_rate;
 
-    double duration_for_fully_immune;
-    double duration_for_naive;
+  double duration_for_fully_immune;
+  double duration_for_naive;
 
-    //    double mean_initial_condition;
-    //    double sd_initial_condition;
+  //    double mean_initial_condition;
+  //    double sd_initial_condition;
 
-    double immune_inflation_rate;
+  double immune_inflation_rate;
 
-    double min_clinical_probability;
-    double max_clinical_probability;
+  double min_clinical_probability;
+  double max_clinical_probability;
 
-    double immune_effect_on_progression_to_clinical;
+  double immune_effect_on_progression_to_clinical;
 
-    double c_min;
-    double c_max;
+  double c_min;
+  double c_max;
 
-    double alpha_immune;
-    double beta_immune;
+  double alpha_immune;
+  double beta_immune;
 
-    double age_mature_immunity;
-    double factor_effect_age_mature_immunity;
+  double age_mature_immunity;
+  double factor_effect_age_mature_immunity;
 
-    ImmuneSystemInformation() : acquire_rate(-1), decay_rate(-1), duration_for_fully_immune(-1), duration_for_naive(-1),
-    immune_inflation_rate(-1), min_clinical_probability(-1), max_clinical_probability(-1), c_min(-1), c_max(-1),
-    alpha_immune(-1), beta_immune(-1) {
-    }
+  ImmuneSystemInformation() : acquire_rate(-1), decay_rate(-1), duration_for_fully_immune(-1), duration_for_naive(-1),
+                              immune_inflation_rate(-1), min_clinical_probability(-1), max_clinical_probability(-1), c_min(-1), c_max(-1),
+                              alpha_immune(-1), beta_immune(-1) { }
 };
 
 struct ParasiteDensityLevel {
-    double log_parasite_density_cured;
-    double log_parasite_density_from_liver;
-    double log_parasite_density_asymptomatic;
-    double log_parasite_density_clinical;
-    double log_parasite_density_clinical_from;
-    double log_parasite_density_clinical_to;
-    double log_parasite_density_detectable;
-    double log_parasite_density_pyrogenic;
+  double log_parasite_density_cured;
+  double log_parasite_density_from_liver;
+  double log_parasite_density_asymptomatic;
+  double log_parasite_density_clinical;
+  double log_parasite_density_clinical_from;
+  double log_parasite_density_clinical_to;
+  double log_parasite_density_detectable;
+  double log_parasite_density_pyrogenic;
 };
 
 struct RelativeBittingInformation {
-    double max_relative_biting_value;
-    int number_of_biting_levels;
+  double max_relative_biting_value;
+  int number_of_biting_levels;
 
-    //  biting_level_distribution:
-    //  #  distribution: Exponential
-    //    distribution: Gamma  
-    //    Exponential:
-    double scale;
+  //  biting_level_distribution:
+  //  #  distribution: Exponential
+  //    distribution: Gamma  
+  //    Exponential:
+  double scale;
 
-    double mean;
-    double sd;
-    DoubleVector v_biting_level_value;
-    DoubleVector v_biting_level_density;
+  double mean;
+  double sd;
+  DoubleVector v_biting_level_value;
+  DoubleVector v_biting_level_density;
 };
 
 struct RelativeMovingInformation {
-    double max_relative_moving_value;
-    int number_of_moving_levels;
+  double max_relative_moving_value;
+  int number_of_moving_levels;
 
-    //  biting_level_distribution:
-    //  #  distribution: Exponential
-    //    distribution: Gamma  
-    //    Exponential:
-    double scale;
+  //  biting_level_distribution:
+  //  #  distribution: Exponential
+  //    distribution: Gamma  
+  //    Exponential:
+  double scale;
 
-    double mean;
-    double sd;
-    DoubleVector v_moving_level_value;
-    DoubleVector v_moving_level_density;
+  double mean;
+  double sd;
+  DoubleVector v_moving_level_value;
+  DoubleVector v_moving_level_density;
 
-    double circulation_percent;
-    double length_of_stay_mean;
-    double length_of_stay_sd;
-    double length_of_stay_theta;
-    double length_of_stay_k;
+  double circulation_percent;
+  double length_of_stay_mean;
+  double length_of_stay_sd;
+  double length_of_stay_theta;
+  double length_of_stay_k;
 
-};
-
-struct ExternalPopulationInformation {
-    double max_relative_moving_value;
-    int number_of_moving_levels;
-
-    //  biting_level_distribution:
-    //  #  distribution: Exponential
-    //    distribution: Gamma  
-    //    Exponential:
-    double scale;
-
-    double mean;
-    double sd;
-    DoubleVector v_moving_level_value;
-    DoubleVector v_moving_level_density;
-
-    DoubleVector circulation_percent;
-    double length_of_stay_mean;
-    double length_of_stay_sd;
-    double length_of_stay_theta;
-    double length_of_stay_k;
-
-    DoubleVector daily_EIR;
-    Seasonality seasonal_EIR;
 };
 
 struct InitialParasiteInfo {
-    int location;
-    int parasite_type_id;
-    double prevalence;
+  int location;
+  int parasite_type_id;
+  double prevalence;
 
-    InitialParasiteInfo() : location(-1), parasite_type_id(-1), prevalence(-1.0) {
-    };
+  InitialParasiteInfo() : location(-1), parasite_type_id(-1), prevalence(-1.0) { };
 
-    InitialParasiteInfo(int loc, int p_type, double pre) : location(loc), parasite_type_id(p_type), prevalence(pre) {
-    };
+  InitialParasiteInfo(int loc, int p_type, double pre) : location(loc), parasite_type_id(p_type), prevalence(pre) { };
 
-    //    InitialParasiteInfo(const InitialParasiteInfo& orig){
-    //        location = orig.location;
-    //        parasite_type_id = orig.parasite_type_id;
-    //        prevalence = orig.prevalence;
-    //    }
+  //    InitialParasiteInfo(const InitialParasiteInfo& orig){
+  //        location = orig.location;
+  //        parasite_type_id = orig.parasite_type_id;
+  //        prevalence = orig.prevalence;
+  //    }
 
 };
 
 struct ImportationParasiteInfo {
-    int location;
-    int time;
-    int parasite_type_id;
-    int number;
+  int location;
+  int time;
+  int parasite_type_id;
+  int number;
 
-    ImportationParasiteInfo() : location(-1), parasite_type_id(-1), time(0), number(0) {
-    };
+  ImportationParasiteInfo() : location(-1), parasite_type_id(-1), time(0), number(0) { };
 
-    ImportationParasiteInfo(int loc, int p_type, int dur, int num) : location(loc), parasite_type_id(p_type), number(num), time(dur) {
-    };
+  ImportationParasiteInfo(int loc, int p_type, int dur, int num) : location(loc), parasite_type_id(p_type), number(num), time(dur) { };
 
-    //    InitialParasiteInfo(const InitialParasiteInfo& orig){
-    //        location = orig.location;
-    //        parasite_type_id = orig.parasite_type_id;
-    //        prevalence = orig.prevalence;
-    //    } 
+  //    InitialParasiteInfo(const InitialParasiteInfo& orig){
+  //        location = orig.location;
+  //        parasite_type_id = orig.parasite_type_id;
+  //        prevalence = orig.prevalence;
+  //    } 
 };
 
 struct ImportationParasitePeriodicallyInfo {
-    int location;
-    int duration;
-    int parasite_type_id;
-    int number;
-    int start_day;
-    // int end_day;
+  int location;
+  int duration;
+  int parasite_type_id;
+  int number;
+  int start_day;
+  // int end_day;
 
-    ImportationParasitePeriodicallyInfo() : location(-1), parasite_type_id(-1), duration(0), number(0) {
-    };
+  ImportationParasitePeriodicallyInfo() : location(-1), parasite_type_id(-1), duration(0), number(0) { };
 
-    ImportationParasitePeriodicallyInfo(int loc, int p_type, int dur, int num,int start_day) : location(loc), parasite_type_id(p_type), number(num), duration(dur), start_day(start_day) {
-    };
+  ImportationParasitePeriodicallyInfo(int loc, int p_type, int dur, int num, int start_day) : location(loc), parasite_type_id(p_type),
+                                                                                              number(num), duration(dur),
+                                                                                              start_day(start_day) { };
 
-    //    InitialParasiteInfo(const InitialParasiteInfo& orig){
-    //        location = orig.location;
-    //        parasite_type_id = orig.parasite_type_id;
-    //        prevalence = orig.prevalence;
-    //    } 
+  //    InitialParasiteInfo(const InitialParasiteInfo& orig){
+  //        location = orig.location;
+  //        parasite_type_id = orig.parasite_type_id;
+  //        prevalence = orig.prevalence;
+  //    } 
 };
 
 struct RelativeInfectivity {
-    double sigma;
-    double ro_star;
+  double sigma;
+  double ro_star;
 
 };
 
 struct TMEInfo {
-    int tme_starting_day;
+  int tme_starting_day;
 
-    DoubleVector MDA_coverage;
-    IntVector MDA_duration;
+  DoubleVector MDA_coverage;
+  IntVector MDA_duration;
 };
 
 struct Allele {
-    int value; //we can do char later or map from char to int
-    std::string name;
-    std::string short_name;
-    IntVector mutation_values;
-    int mutation_level;
-    double daily_cost_of_resistance;
+  int value; //we can do char later or map from char to int
+  std::string name;
+  std::string short_name;
+  IntVector mutation_values;
+  int mutation_level;
+  double daily_cost_of_resistance;
 
-    friend std::ostream& operator<<(std::ostream& os, const Allele& e) {
-        os << e.short_name;
-        return os;
-    }
+  friend std::ostream& operator<<(std::ostream& os, const Allele& e) {
+    os << e.short_name;
+    return os;
+  }
 };
 
 struct Locus {
-    std::vector<Allele> alleles;
-    int position;
-    friend std::ostream& operator<<(std::ostream& os, const Locus& l) {
-        for (std::vector<Allele>::const_iterator it = l.alleles.begin(); it != l.alleles.end(); ++it) {
-            os << *it;
-        }
+  std::vector<Allele> alleles;
+  int position;
 
-        return os;
+  friend std::ostream& operator<<(std::ostream& os, const Locus& l) {
+    for (std::vector<Allele>::const_iterator it = l.alleles.begin(); it != l.alleles.end(); ++it) {
+      os << *it;
     }
+
+    return os;
+  }
 };
 
 struct GenotypeInfo {
-    std::vector<Locus> loci_vector;
+  std::vector<Locus> loci_vector;
 };
 
 #endif /* TYPEDEF_H */
-

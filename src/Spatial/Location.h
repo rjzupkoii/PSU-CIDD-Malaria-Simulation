@@ -23,14 +23,14 @@ namespace Spatial {
 
     public:
         int id;
-        int populationSize;
+        int population_size;
         float beta;
         float p_treatment_less_than_5;
         float p_treatment_more_than_5;
         std::unique_ptr<Coordinate> coordinate;
         std::vector<double> age_distribution;
     public:
-        Location(int id, float latitude, float longitude, int populationSize);
+        Location(int id, float latitude, float longitude, int population_size);
 
         virtual ~Location();
 

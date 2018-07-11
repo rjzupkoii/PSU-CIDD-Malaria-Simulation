@@ -12,7 +12,7 @@ TEST_CASE("location test", "[spatial]") {
 
   REQUIRE(1 == loc.id);
   REQUIRE(0 == loc.beta);
-  REQUIRE(10000 == loc.populationSize);
+  REQUIRE(10000 == loc.population_size);
   REQUIRE(Approx(0.123) == loc.coordinate->latitude);
   REQUIRE(Approx(3.456) == loc.coordinate->longitude);
 }

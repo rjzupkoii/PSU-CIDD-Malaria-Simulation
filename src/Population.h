@@ -117,9 +117,7 @@ public:
   void clear_all_dead_state_individual();
 
   void perform_circulation_event();
-
-  void perform_moving_to_external_population_event();
-
+  
   void perform_circulation_for_1_location(const int& from_location, const int& target_location,
                                           const int& number_of_circulation,
                                           std::vector<Person *>& today_circulations);

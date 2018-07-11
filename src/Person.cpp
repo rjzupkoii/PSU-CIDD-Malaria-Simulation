@@ -30,7 +30,6 @@
 #include "ReturnToResidenceEvent.h"
 #include "CirculateToTargetLocationNextDayEvent.h"
 #include "MDC/ModelDataCollector.h"
-#include "ExternalPopulation.h"
 #include "BirthdayEvent.h"
 #include "MACTherapy.h"
 #include "ReceiveTherapyEvent.h"
@@ -46,8 +45,7 @@ Person::Person() :
   latest_update_time_(-1), bitting_level_(-1), base_bitting_level_value_(0), moving_level_(-1),
   external_population_moving_level_(-1), liver_parasite_type_(nullptr), number_of_times_bitten_(0),
   number_of_trips_taken_(0),
-  last_therapy_id_(0),
-  is_moving_to_external_population_(false) {
+  last_therapy_id_(0){
   population_ = nullptr;
   immune_system_ = nullptr;
   all_clonal_parasite_populations_ = nullptr;
@@ -645,7 +643,7 @@ void Person::randomly_choose_target_location() {
     target_location = today_target_locations_->at(0);
   }
   else {
-    int index_random_location = Model::RANDOM->random_uniform(today_target_locations_->size());
+    const int index_random_location = Model::RANDOM->random_uniform(today_target_locations_->size());
     target_location = today_target_locations_->at(index_random_location);
   }
 
@@ -706,9 +704,6 @@ void Person::return_to_normal_population() {
   move_to_population(Model::POPULATION);
 }
 
-bool Person::is_in_external_population() const {
-  return dynamic_cast<ExternalPopulation *>(population_) != nullptr;
-}
 
 bool Person::has_birthday_event() const {
 

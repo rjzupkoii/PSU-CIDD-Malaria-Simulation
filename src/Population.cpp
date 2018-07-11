@@ -22,7 +22,6 @@
 #include "PersonIndexByLocationMovingLevel.h"
 #include "MDC/ModelDataCollector.h"
 #include "SingleHostClonalParasitePopulations.h"
-#include "PersonIndexByLocationExternalPopulationMovingLevel.h"
 #include "MoveToExternalPopulationEvent.h"
 #include "Helpers/TimeHelpers.h"
 #include "easylogging++.h"
@@ -164,7 +163,7 @@ void Population::perform_infection_event() {
         continue;
 
       const auto new_beta = Model::CONFIG->location_db()[loc].beta * Model::CONFIG->get_seasonal_factor(
-        Model::SCHEDULER->calendar_date);
+        Model::SCHEDULER->calendar_date, loc);
 
       auto poisson_means = new_beta * force_of_infection;
 
@@ -247,15 +246,12 @@ void Population::initialize() {
     //        Config* Model::CONFIG = Model::CONFIG;
 
 
-    int number_of_location = Model::CONFIG->number_of_locations();
+    const auto number_of_location = Model::CONFIG->number_of_locations();
 
-    int number_of_parasite_type = Model::CONFIG->number_of_parasite_types();
+    const auto number_of_parasite_type = Model::CONFIG->number_of_parasite_types();
 
     current_force_of_infection_by_location_parasite_type_ =
-      DoubleVector2(number_of_location,
-                    DoubleVector(
-                      number_of_parasite_type,
-                      0));
+      DoubleVector2(number_of_location, DoubleVector(number_of_parasite_type, 0));
     interupted_feeding_force_of_infection_by_location_parasite_type_ = DoubleVector2(
       number_of_location, DoubleVector(number_of_parasite_type, 0));
 
@@ -270,8 +266,7 @@ void Population::initialize() {
 
     //initialize population
     for (auto loc = 0; loc < number_of_location; loc++) {
-      const auto popsize_by_location = Model::CONFIG->location_db()[loc].populationSize;
-
+      const auto popsize_by_location = Model::CONFIG->location_db()[loc].population_size;
       auto temp_sum = 0;
       for (auto age_class = 0; age_class < Model::CONFIG->initial_age_structure().size(); age_class++) {
         auto number_of_individual_by_loc_ageclass = 0;
@@ -293,10 +288,10 @@ void Population::initialize() {
           p->set_residence_location(loc);
           p->set_host_state(Person::SUSCEPTIBLE);
 
-          const int age_from = (age_class == 0) ? 0 : Model::CONFIG->initial_age_structure()[age_class - 1];
-          const int age_to = Model::CONFIG->initial_age_structure()[age_class];
+          const auto age_from = (age_class == 0) ? 0 : Model::CONFIG->initial_age_structure()[age_class - 1];
+          const auto age_to = Model::CONFIG->initial_age_structure()[age_class];
 
-          //                    std::cout << i << "\t" << age_class << "\t" << age_from << "\t" << age_to << std::endl;
+          // std::cout << i << "\t" << age_class << "\t" << age_from << "\t" << age_to << std::endl;
 
           //set age will also set ageclass
           p->set_age(static_cast<const int &>(Model::RANDOM->random_uniform_int(age_from, age_to + 1)));
@@ -329,6 +324,7 @@ void Population::initialize() {
             p->immune_system()->set_immune_component(new NonInfantImmuneComponent());
           }
 
+
           auto immune_value = Model::RANDOM->random_beta(
             Model::CONFIG->immune_system_information().alpha_immune,
             Model::CONFIG->immune_system_information().beta_immune);
@@ -344,14 +340,11 @@ void Population::initialize() {
 
 
           p->set_moving_level(Model::CONFIG->moving_level_generator().draw_random_level(Model::RANDOM));
-          p->set_external_population_moving_level(
-            Model::CONFIG->external_population_moving_level_generator().draw_random_level(Model::RANDOM));
 
           p->set_latest_update_time(0);
 
           int time = Model::RANDOM->random_uniform(Model::CONFIG->update_frequency()) + 1;
           p->schedule_update_every_K_days_event(time);
-
           add_person(p);
         }
       }
@@ -464,10 +457,9 @@ void Population::update() {
 void Population::perform_birth_event() {
   //    std::cout << "Birth Event" << std::endl;
 
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     auto poisson_means = size(loc) * Model::CONFIG->birth_rate() / Constants::DAYS_IN_YEAR();
     const auto number_of_births = Model::RANDOM->random_poisson(poisson_means);
-
     for (auto i = 0; i < number_of_births; i++) {
       give_1_birth(loc);
       Model::DATA_COLLECTOR->update_person_days_by_years(loc, Constants::DAYS_IN_YEAR() -
@@ -500,8 +492,6 @@ void Population::give_1_birth(const int& location) {
   //    p->update_bitting_level();
 
   p->set_moving_level(Model::CONFIG->moving_level_generator().draw_random_level(Model::RANDOM));
-  p->set_external_population_moving_level(
-    Model::CONFIG->external_population_moving_level_generator().draw_random_level(Model::RANDOM));
 
   p->set_birthday(Model::SCHEDULER->current_time());
   const auto number_of_days_to_next_birthday = TimeHelpers::
@@ -526,24 +516,24 @@ void Population::perform_death_event() {
   auto pi = get_person_index<PersonIndexByLocationStateAgeClass>();
   if (pi == nullptr) return;
 
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (int hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
       if (hs == Person::DEAD) continue;
-      for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-        int size = pi->vPerson()[loc][hs][ac].size();
+      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+        const int size = pi->vPerson()[loc][hs][ac].size();
         if (size == 0) continue;
-        double poisson_means = size * Model::CONFIG->death_rate_by_age()[ac] / Constants::DAYS_IN_YEAR();
+        auto poisson_means = size * Model::CONFIG->death_rate_by_age()[ac] / Constants::DAYS_IN_YEAR();
 
         assert(Model::CONFIG->death_rate_by_age().size() == Model::CONFIG->number_of_age_classes());
-        int numberOfDeaths = Model::RANDOM->random_poisson(poisson_means);
-        if (numberOfDeaths == 0) continue;
+        const auto number_of_deaths = Model::RANDOM->random_poisson(poisson_means);
+        if (number_of_deaths == 0) continue;
 
         //                std::cout << numberOfDeaths << std::endl;
-        for (int i = 0; i < numberOfDeaths; i++) {
+        for (int i = 0; i < number_of_deaths; i++) {
           //change state to Death;
-          int index = Model::RANDOM->random_uniform(size);
+          const int index = Model::RANDOM->random_uniform(size);
           //                    std::cout << index << "-" << pi->vPerson()[loc][hs][ac].size() << std::endl;
-          Person* p = pi->vPerson()[loc][hs][ac][index];
+          auto* p = pi->vPerson()[loc][hs][ac][index];
           p->cancel_all_events_except(nullptr);
           p->set_host_state(Person::DEAD);
         }
@@ -582,7 +572,7 @@ void Population::perform_circulation_event() {
 
   std::vector<int> v_number_of_residents_by_location(Model::CONFIG->number_of_locations(), 0);
 
-  for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     //        v_number_of_residents_by_location[target_location] = (size(target_location));
     v_number_of_residents_by_location[location] = Model::DATA_COLLECTOR->popsize_residence_by_location()[location];
     //        std::cout << v_original_pop_size_by_location[target_location] << std::endl;
@@ -590,9 +580,9 @@ void Population::perform_circulation_event() {
 
 
   for (int from_location = 0; from_location < Model::CONFIG->number_of_locations(); from_location++) {
-    double poisson_means = size(from_location) * Model::CONFIG->circulation_information().circulation_percent;
+    auto poisson_means = size(from_location) * Model::CONFIG->circulation_information().circulation_percent;
     if (poisson_means == 0)continue;
-    int number_of_circulating_from_this_location = Model::RANDOM->random_poisson(poisson_means);
+    const auto number_of_circulating_from_this_location = Model::RANDOM->random_poisson(poisson_means);
     if (number_of_circulating_from_this_location == 0) continue;
 
     DoubleVector v_relative_outmovement_to_destination(Model::CONFIG->number_of_locations(), 0);
@@ -600,14 +590,6 @@ void Population::perform_circulation_event() {
       from_location, Model::CONFIG->number_of_locations(),
       Model::CONFIG->spatial_distance_matrix()[from_location],
       v_number_of_residents_by_location);
-
-    //        for (int target_location = 0; target_location < Model::CONFIG->number_of_locations(); target_location++) {
-    //            if (target_location == from_location) {
-    //                v_relative_outmovement_to_destination[target_location] = 0;
-    //            } else {
-    //                v_relative_outmovement_to_destination[target_location] = v_original_pop_size_by_location[target_location];
-    //            }
-    //        }
 
     std::vector<unsigned int> v_num_leavers_to_destination(
       static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()));
@@ -629,7 +611,7 @@ void Population::perform_circulation_event() {
 
   }
 
-  for (Person* p : today_circulations) {
+  for (auto* p : today_circulations) {
     p->randomly_choose_target_location();
   }
 
@@ -637,9 +619,8 @@ void Population::perform_circulation_event() {
 
 }
 
-void Population::perform_circulation_for_1_location(const int& from_location, const int& target_location,
-                                                    const int& number_of_circulation,
-                                                    PersonPtrVector& today_circulations) {
+void Population::perform_circulation_for_1_location(const int& from_location, const int& target_location, const int& number_of_circulation,
+                                                    std::vector<Person*>& today_circulations) {
   DoubleVector vLevelDensity;
   auto pi = get_person_index<PersonIndexByLocationMovingLevel>();
 
@@ -652,7 +633,7 @@ void Population::perform_circulation_for_1_location(const int& from_location, co
   std::vector<unsigned int> vIntNumberOfCirculation(vLevelDensity.size());
 
   model_->random()->random_multinomial(static_cast<int>(vLevelDensity.size()),
-                                       (unsigned int)number_of_circulation, &vLevelDensity[0],
+                                       static_cast<unsigned int>(number_of_circulation), &vLevelDensity[0],
                                        &vIntNumberOfCirculation[0]);
 
 
@@ -673,6 +654,7 @@ void Population::perform_circulation_for_1_location(const int& from_location, co
     }
   }
 }
+
 
 bool Population::has_0_case() {
   auto pi = get_person_index<PersonIndexByLocationStateAgeClass>();
@@ -707,70 +689,8 @@ void Population::initialize_person_indices() {
     number_of_location, Model::CONFIG->circulation_information().number_of_moving_levels);
   person_index_list_->push_back(p_index_location_moving_level);
 
-  //ad external population moving level here
-  auto p_index_location_external_moving_level = new PersonIndexByLocationExternalPopulationMovingLevel(
-    number_of_location, Model::CONFIG->external_population_circulation_information().number_of_moving_levels);
-  person_index_list_->push_back(p_index_location_external_moving_level);
 }
 
-void Population::perform_moving_to_external_population_event() {
-
-  PersonPtrVector today_move_to_external_population;
-
-  for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-    ///find number of movements to external population
-
-    double poisson_means = size(location) *
-      Model::CONFIG->external_population_circulation_information().circulation_percent[location];
-    if (poisson_means == 0)continue;
-    int number_of_movements = Model::RANDOM->random_poisson(poisson_means);
-
-
-    DoubleVector vLevelDensity;
-    auto pi = get_person_index<PersonIndexByLocationMovingLevel>();
-
-    for (int i = 0; i < Model::CONFIG->external_population_circulation_information().number_of_moving_levels; i++) {
-      double temp = Model::CONFIG->external_population_circulation_information().v_moving_level_value[i] *
-        pi->vPerson()[location][i].size();
-      vLevelDensity.push_back(temp);
-    }
-
-    std::vector<unsigned int> vIntNumberOfCirculation(vLevelDensity.size());
-    model_->random()->random_multinomial(static_cast<const int &>(vLevelDensity.size()),
-                                         static_cast<const unsigned int &>(number_of_movements), &vLevelDensity[0],
-                                         &vIntNumberOfCirculation[0]);
-
-    for (int moving_level = 0; moving_level < vIntNumberOfCirculation.size(); moving_level++) {
-      const int size = static_cast<int>(pi->vPerson()[location][moving_level].size());
-      if (size == 0) continue;
-      for (auto j = 0; j < vIntNumberOfCirculation[moving_level]; j++) {
-
-
-        //select 1 random person from level i
-        int index = model_->random()->random_uniform(size);
-        Person* p = pi->vPerson()[location][moving_level][index];
-        assert(p->host_state() != Person::DEAD);
-
-        //                today_circulations.push_back(p);
-        p->set_is_moving_to_external_population(true);
-        today_move_to_external_population.push_back(p);
-      }
-    }
-
-    //schedule for the movement in the next day
-
-    for (Person* p : today_move_to_external_population) {
-      if (p->is_moving_to_external_population()) {
-        p->set_is_moving_to_external_population(false);
-        MoveToExternalPopulationEvent::schedule_event(Model::SCHEDULER, p,
-                                                      Model::SCHEDULER->current_time() + 1);
-      }
-
-    }
-
-    today_move_to_external_population.clear();
-  }
-}
 
 void Population::perform_interupted_feeding_recombination() {
   // calculate vector Y, Z
