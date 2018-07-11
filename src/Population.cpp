@@ -22,7 +22,6 @@
 #include "PersonIndexByLocationMovingLevel.h"
 #include "MDC/ModelDataCollector.h"
 #include "SingleHostClonalParasitePopulations.h"
-#include "MoveToExternalPopulationEvent.h"
 #include "Helpers/TimeHelpers.h"
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"

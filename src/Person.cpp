@@ -42,10 +42,10 @@ OBJECTPOOL_IMPL(Person)
 
 Person::Person() :
   location_(-1), residence_location_(-1), host_state_(SUSCEPTIBLE), age_(-1), age_class_(-1), birthday_(-1),
-  latest_update_time_(-1), bitting_level_(-1), base_bitting_level_value_(0), moving_level_(-1),
-  external_population_moving_level_(-1), liver_parasite_type_(nullptr), number_of_times_bitten_(0),
+  latest_update_time_(-1), bitting_level_(-1), base_bitting_level_value_(0), moving_level_(-1), liver_parasite_type_(nullptr),
+  number_of_times_bitten_(0),
   number_of_trips_taken_(0),
-  last_therapy_id_(0){
+  last_therapy_id_(0) {
   population_ = nullptr;
   immune_system_ = nullptr;
   all_clonal_parasite_populations_ = nullptr;
@@ -199,17 +199,6 @@ void Person::set_moving_level(const int& value) {
   if (moving_level_ != value) {
     NotifyChange(MOVING_LEVEL, &moving_level_, &value);
     moving_level_ = value;
-  }
-}
-
-int Person::external_population_moving_level() const {
-  return external_population_moving_level_;
-}
-
-void Person::set_external_population_moving_level(const int& value) {
-  if (external_population_moving_level_ != value) {
-    NotifyChange(EXTERNAL_POPULATION_MOVING_LEVEL, &external_population_moving_level_, &value);
-    external_population_moving_level_ = value;
   }
 }
 
@@ -694,16 +683,6 @@ void Person::move_to_population(Population* target_population) {
   population_->remove_person(this);
   target_population->add_person(this);
 }
-
-void Person::move_to_external_population() {
-  //TODO:: remove all other circulation events of this person???
-  //    move_to_population(Model::EXTERNAL_POPULATION);
-}
-
-void Person::return_to_normal_population() {
-  move_to_population(Model::POPULATION);
-}
-
 
 bool Person::has_birthday_event() const {
 

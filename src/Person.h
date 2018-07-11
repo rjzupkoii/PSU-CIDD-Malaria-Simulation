@@ -84,7 +84,6 @@ PROPERTY_HEADER(int, bitting_level)
 PROPERTY_REF(double, base_bitting_level_value)
 
 PROPERTY_HEADER(int, moving_level)
-PROPERTY_HEADER(int, external_population_moving_level)
 
 POINTER_PROPERTY(DrugsInBlood, drugs_in_blood)
 POINTER_PROPERTY(IntGenotype, liver_parasite_type)
@@ -177,8 +176,6 @@ public:
 
   void increase_number_of_times_bitten();
 
-  static void move_to_external_population();
-  void return_to_normal_population();
 
   void move_to_population(Population* target_population);
 
