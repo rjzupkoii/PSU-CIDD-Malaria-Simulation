@@ -8,7 +8,7 @@
 
 #include "DrugDatabase.h"
 
-DrugDatabase::DrugDatabase() : drug_db_() {
+DrugDatabase::DrugDatabase() {
 }
 
 DrugDatabase::~DrugDatabase() {

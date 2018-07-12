@@ -71,12 +71,12 @@ struct SeasonalInfo {
   DoubleVector C;
   DoubleVector phi;
   DoubleVector min_value;
-  friend std::ostream &operator<<(std::ostream &os, const SeasonalInfo &seasonal_info);
+  friend std::ostream& operator<<(std::ostream& os, const SeasonalInfo& seasonal_info);
 };
 
 inline std::ostream& operator<<(std::ostream& os, const SeasonalInfo& seasonal_info) {
-	os << "seasonal_info: ";
-	return os;
+  os << "seasonal_info: ";
+  return os;
 }
 
 struct ImmuneSystemInformation {
@@ -120,6 +120,20 @@ struct ParasiteDensityLevel {
   double log_parasite_density_clinical_to;
   double log_parasite_density_detectable;
   double log_parasite_density_pyrogenic;
+
+  friend std::ostream& operator<<(std::ostream& os, const ParasiteDensityLevel& pdl) {
+    os << "["
+      << pdl.log_parasite_density_cured << ","
+      << pdl.log_parasite_density_from_liver << ","
+      << pdl.log_parasite_density_asymptomatic << ","
+      << pdl.log_parasite_density_clinical << ","
+      << pdl.log_parasite_density_clinical_from << ","
+      << pdl.log_parasite_density_clinical_to << ","
+      << pdl.log_parasite_density_detectable << ","
+      << pdl.log_parasite_density_pyrogenic
+      << "]";
+    return os;
+  }
 };
 
 struct RelativeBittingInformation {
@@ -238,19 +252,24 @@ struct Allele {
 
 struct Locus {
   std::vector<Allele> alleles;
-  int position;
+  int position{};
 
   friend std::ostream& operator<<(std::ostream& os, const Locus& l) {
-    for (std::vector<Allele>::const_iterator it = l.alleles.begin(); it != l.alleles.end(); ++it) {
-      os << *it;
+    for (const auto& allele : l.alleles) {
+      os << allele;
     }
-
     return os;
   }
 };
 
 struct GenotypeInfo {
   std::vector<Locus> loci_vector;
+  friend std::ostream& operator<<(std::ostream& os, const GenotypeInfo& genotype_info) {
+	  for (const auto& loci: genotype_info.loci_vector) {
+		  os << loci;
+	  }
+	  return os;
+  }
 };
 
 #endif /* TYPEDEF_H */

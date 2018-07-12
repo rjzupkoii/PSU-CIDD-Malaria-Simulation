@@ -16,7 +16,7 @@
 #define LOG2_10 3.32192809489
 #endif
 
-DrugType::DrugType() : id_(0), drug_family_(Other), drug_half_life_(0), maximum_parasite_killing_rate_(0),
+DrugType::DrugType() : id_(0),  drug_half_life_(0), maximum_parasite_killing_rate_(0),
                        p_mutation_(0), k_(0), cut_off_percent_(0), n_(1) {}
 
 DrugType::~DrugType() = default;
@@ -68,14 +68,6 @@ int DrugType::get_total_duration_of_drug_activity(const int& dosing_days) const 
   //CutOffPercent is 10
   //log2(100.0 / 10.0) = 3.32192809489
   return dosing_days + ceil(drug_half_life_ * LOG2_10);
-}
-
-bool DrugType::is_artemisinin() const {
-  return drug_family_ == Artemisinin;
-}
-
-bool DrugType::is_lumefantrine() const {
-  return drug_family_ == Lumefantrine;
 }
 
 int DrugType::select_mutation_locus() {

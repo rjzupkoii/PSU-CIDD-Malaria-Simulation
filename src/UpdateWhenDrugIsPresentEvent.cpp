@@ -42,7 +42,7 @@ void UpdateWhenDrugIsPresentEvent::execute() {
     if (person->all_clonal_parasite_populations()->contain(clinical_caused_parasite_) && person->host_state() ==
       Person::CLINICAL) {
       if (clinical_caused_parasite_->last_update_log10_parasite_density() <= Model::CONFIG
-                                                                             ->log_parasite_density_level().
+                                                                             ->parasite_density_level().
                                                                              log_parasite_density_asymptomatic) {
         person->set_host_state(Person::ASYMPTOMATIC);
       }

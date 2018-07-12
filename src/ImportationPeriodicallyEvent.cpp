@@ -78,7 +78,7 @@ void ImportationPeriodicallyEvent::execute() {
             ClonalParasitePopulation* blood_parasite = p->add_new_parasite_to_blood(importedGenotype);
             //    std::cout << "hello"<< std::endl;
 
-            double size = Model::CONFIG->log_parasite_density_level().log_parasite_density_asymptomatic;
+            double size = Model::CONFIG->parasite_density_level().log_parasite_density_asymptomatic;
 
             blood_parasite->set_gametocyte_level(Model::CONFIG->gametocyte_level_full());
             blood_parasite->set_last_update_log10_parasite_density(size);

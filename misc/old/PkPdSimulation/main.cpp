@@ -60,7 +60,7 @@ int main(int argc, const char * argv[]) {
   
 
     BOOST_FOREACH(Person* person, Model::POPULATION->all_persons()->vPerson()) {
-        double density = Model::RANDOM->random_uniform_double(Model::CONFIG->log_parasite_density_level().log_parasite_density_clinical_from, Model::CONFIG->log_parasite_density_level().log_parasite_density_clinical_to);
+        double density = Model::RANDOM->random_uniform_double(Model::CONFIG->parasite_density_level().log_parasite_density_clinical_from, Model::CONFIG->parasite_density_level().log_parasite_density_clinical_to);
         ClonalParasitePopulation* blood_parasite = person->add_new_parasite_to_blood(genotype);
         person->immune_system()->set_increase(true);
         person->set_host_state(Person::EXPOSED);

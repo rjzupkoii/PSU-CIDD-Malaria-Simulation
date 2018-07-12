@@ -56,10 +56,6 @@ public:
 
     void change_all_parasite_update_function(ParasiteDensityUpdateFunction* from, ParasiteDensityUpdateFunction* to);
 
-    void active_astermisinin_on_gametocyte(DrugType* dt);
-
-    void deactive_astermisinin_on_gametocyte();
-
     void update();
 
     void clear_cured_parasites();

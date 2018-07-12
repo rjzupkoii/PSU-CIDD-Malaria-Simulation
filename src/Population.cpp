@@ -25,6 +25,7 @@
 #include "Helpers/TimeHelpers.h"
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
+#include "Spatial/SpatialModel.h"
 
 Population::Population(Model* model) : model_(model) {
   person_index_list_ = new PersonIndexPtrList();
@@ -416,8 +417,8 @@ void Population::initial_infection(Person* p, IntGenotype* parasite_type) const 
   //    std::cout << "hello"<< std::endl;
 
   double size = model_->random()->random_flat(
-    Model::CONFIG->log_parasite_density_level().log_parasite_density_from_liver,
-    Model::CONFIG->log_parasite_density_level().log_parasite_density_clinical);
+    Model::CONFIG->parasite_density_level().log_parasite_density_from_liver,
+    Model::CONFIG->parasite_density_level().log_parasite_density_clinical);
 
   blood_parasite->set_gametocyte_level(Model::CONFIG->gametocyte_level_full());
   blood_parasite->set_last_update_log10_parasite_density(size);
@@ -521,7 +522,7 @@ void Population::perform_death_event() {
       for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         const int size = pi->vPerson()[loc][hs][ac].size();
         if (size == 0) continue;
-        auto poisson_means = size * Model::CONFIG->death_rate_by_age()[ac] / Constants::DAYS_IN_YEAR();
+        auto poisson_means = size * Model::CONFIG->death_rate_by_age_class()[ac] / Constants::DAYS_IN_YEAR();
 
         assert(Model::CONFIG->death_rate_by_age().size() == Model::CONFIG->number_of_age_classes());
         const auto number_of_deaths = Model::RANDOM->random_poisson(poisson_means);

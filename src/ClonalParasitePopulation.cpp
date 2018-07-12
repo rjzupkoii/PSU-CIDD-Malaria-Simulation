@@ -110,14 +110,14 @@ void ClonalParasitePopulation::update() {
 void ClonalParasitePopulation::perform_drug_action(const double &percent_parasite_remove) {
   double newSize = last_update_log10_parasite_density_;
   if (percent_parasite_remove > 1) {
-    newSize = Model::CONFIG->log_parasite_density_level().log_parasite_density_cured;
+    newSize = Model::CONFIG->parasite_density_level().log_parasite_density_cured;
   } else {
     newSize += log10(1 - percent_parasite_remove);
   }
 
 
-  if (newSize < Model::CONFIG->log_parasite_density_level().log_parasite_density_cured) {
-    newSize = Model::CONFIG->log_parasite_density_level().log_parasite_density_cured;
+  if (newSize < Model::CONFIG->parasite_density_level().log_parasite_density_cured) {
+    newSize = Model::CONFIG->parasite_density_level().log_parasite_density_cured;
   }
   set_last_update_log10_parasite_density(newSize);
 }

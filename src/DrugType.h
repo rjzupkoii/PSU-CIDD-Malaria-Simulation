@@ -16,21 +16,9 @@ class IntGenotype;
 
 class DrugType {
 public:
-
-  enum DrugFamily {
-    Artemisinin = 0,
-    Lumefantrine = 1,
-    Amodiaquine = 2,
-    Piperaquine = 3,
-    Mefloquine = 4,
-    SP = 5,
-    Other
-  };
-
 DISALLOW_COPY_AND_ASSIGN(DrugType)
 VIRTUAL_PROPERTY_REF(int, id)
 
-VIRTUAL_PROPERTY_REF(DrugFamily, drug_family)
 VIRTUAL_PROPERTY_REF(double, drug_half_life)
 VIRTUAL_PROPERTY_REF(double, maximum_parasite_killing_rate)
 VIRTUAL_PROPERTY_REF(DoubleVector, age_group_specific_drug_concentration_sd);
@@ -58,9 +46,6 @@ public:
   virtual void set_n(const double& n);
 
   int get_total_duration_of_drug_activity(const int& dosing_days) const;
-
-  bool is_artemisinin() const;
-  bool is_lumefantrine() const;
 
   int select_mutation_locus();
 

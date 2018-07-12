@@ -47,7 +47,7 @@ void EndClinicalDueToDrugResistanceEvent::execute() {
         person->set_host_state(Person::ASYMPTOMATIC);
         
         if (person->all_clonal_parasite_populations()->contain(clinical_caused_parasite_)) {
-            clinical_caused_parasite_->set_last_update_log10_parasite_density(Model::CONFIG->log_parasite_density_level().log_parasite_density_asymptomatic);
+            clinical_caused_parasite_->set_last_update_log10_parasite_density(Model::CONFIG->parasite_density_level().log_parasite_density_asymptomatic);
 
             person->determine_relapse_or_not(clinical_caused_parasite_);
 
@@ -56,11 +56,11 @@ void EndClinicalDueToDrugResistanceEvent::execute() {
         //        person->determine_relapse_or_not(clinical_caused_parasite_);
         //        person->determine_clinical_or_not(clinical_caused_parasite_);
 
-        //        if (clinical_caused_parasite_->last_update_log10_parasite_density() < Model::CONFIG->log_parasite_density_level().log_parasite_density_asymptomatic) {
+        //        if (clinical_caused_parasite_->last_update_log10_parasite_density() < Model::CONFIG->parasite_density_level().log_parasite_density_asymptomatic) {
         //            std::cout << clinical_caused_parasite_->last_update_log10_parasite_density()<< std::endl;
         //            assert(false);
         //        }
-        //        clinical_caused_parasite_->set_last_update_log10_parasite_density(Model::CONFIG->log_parasite_density_level().log_parasite_density_asymptomatic);
+        //        clinical_caused_parasite_->set_last_update_log10_parasite_density(Model::CONFIG->parasite_density_level().log_parasite_density_asymptomatic);
         //        clinical_caused_parasite_->set_update_function(Model::MODEL->immunity_clearance_update_function());
         //        //        std::cout << "hello" << std::endl;
     }

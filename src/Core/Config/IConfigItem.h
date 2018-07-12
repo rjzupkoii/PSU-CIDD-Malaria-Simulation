@@ -12,7 +12,7 @@ protected:
 	Config* config_{nullptr};
 	std::string name_;
 public:
-	explicit IConfigItem(Config* config, std::string name) :config_{ config }, name_{std::move(name)} {}
+  explicit IConfigItem(Config* config, std::string name);
   virtual ~IConfigItem() = default;
 
   virtual const std::string& name() {
@@ -20,4 +20,6 @@ public:
   }
   virtual void set_value(const YAML::Node& node) = 0;
 };
+
+
 #endif // ICONFIGITEM_H

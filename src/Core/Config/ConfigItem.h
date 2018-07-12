@@ -10,7 +10,7 @@
 
 #define CONFIG_ITEM(name,type,default_value)\
   ConfigItem<type> name{#name,default_value, this};
-#define DEPENDENT_CONFIG_ITEM(name,default_value)\
+#define CUSTOM_CONFIG_ITEM(name,default_value)\
   name name{#name,default_value, this};
 
 class Config;
@@ -47,8 +47,6 @@ public:
 template <typename T>
 ConfigItem<T>::ConfigItem(std::string name, const T& default_value, Config* config) : IConfigItem(config, name),
                                                                                       value_{default_value} {
-  // ReSharper disable once CppClassIsIncomplete
-  config_->config_items.emplace_back(this);
 }
 
 template <typename T>
@@ -113,7 +111,6 @@ inline std::ostream& operator << (std::ostream& os, const std::vector<T>& v)
  ConfigItem(std::string name, std::vector<T> default_value, Config* config): IConfigItem(config, name),
                                                                              value_{std::move(default_value)} {
    // ReSharper disable once CppClassIsIncomplete
-   config_->config_items.emplace_back(this);
  }
 
  template <typename T>

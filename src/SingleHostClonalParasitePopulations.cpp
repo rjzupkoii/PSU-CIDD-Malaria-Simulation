@@ -313,38 +313,18 @@ bool SingleHostClonalParasitePopulations::contain(ClonalParasitePopulation* bloo
 
 void SingleHostClonalParasitePopulations::change_all_parasite_update_function(ParasiteDensityUpdateFunction* from,
                                                                               ParasiteDensityUpdateFunction* to) {
-  for (int i = 0; i < parasites_->size(); i++) {
-    if (parasites_->at(i)->update_function() == from) {
-      parasites_->at(i)->set_update_function(to);
+  for (auto* parasite : *parasites_) {
+    if (parasite->update_function() == from) {
+      parasite->set_update_function(to);
     }
   }
 
 }
 
-void SingleHostClonalParasitePopulations::active_astermisinin_on_gametocyte(DrugType* dt) {
-  //    Config* config = person_->population()->model()->config();
-  for (int i = 0; i < parasites_->size(); i++) {
-    if (!parasites_->at(i)->genotype()->resist_to(dt)) {
-      if (fabs(parasites_->at(i)->gametocyte_level() - 1.0) < 0.0001) {
-        parasites_->at(i)->set_gametocyte_level(Model::CONFIG->gametocyte_level_under_artemisinin_action());
-      }
-    }
-  }
-}
-
-void SingleHostClonalParasitePopulations::deactive_astermisinin_on_gametocyte() {
-  //    Config* config = person_->population()->model()->config();
-  for (int i = 0; i < parasites_->size(); i++) {
-    if (fabs(parasites_->at(i)->gametocyte_level() - Model::CONFIG->gametocyte_level_under_artemisinin_action()) <
-      0.0001) {
-      parasites_->at(i)->set_gametocyte_level(Model::CONFIG->gametocyte_level_full());
-    }
-  }
-}
 
 void SingleHostClonalParasitePopulations::update() {
 
-  for (ClonalParasitePopulation* bp : *parasites_) {
+  for (auto* bp : *parasites_) {
     bp->update();
   }
   //    std::vector<BloodParasite*>(*parasites_).swap(*parasites_);
@@ -355,7 +335,7 @@ void SingleHostClonalParasitePopulations::clear_cured_parasites() {
   //    std::vector<int> cured_parasites_index;
   for (int i = parasites_->size() - 1; i >= 0; i--) {
     if (parasites_->at(i)->last_update_log10_parasite_density() <=
-      Model::CONFIG->log_parasite_density_level().log_parasite_density_cured + 0.00001) {
+      Model::CONFIG->parasite_density_level().log_parasite_density_cured + 0.00001) {
       remove(i);
     }
   }
@@ -420,7 +400,7 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
 bool SingleHostClonalParasitePopulations::has_detectable_parasite() {
   for (auto& parasite : *parasites_) {
     if (parasite->last_update_log10_parasite_density() >=
-      Model::CONFIG->log_parasite_density_level().log_parasite_density_detectable) {
+      Model::CONFIG->parasite_density_level().log_parasite_density_detectable) {
       return true;
     }
   }

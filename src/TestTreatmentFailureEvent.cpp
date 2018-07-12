@@ -65,7 +65,7 @@ void TestTreatmentFailureEvent::execute() {
     //
     //    bool tf = false;
     //    if (person->all_clonal_parasite_populations()->contain(clinical_caused_parasite_)) {
-    //        if (clinical_caused_parasite_->last_update_log10_parasite_density() >= Model::CONFIG->log_parasite_density_level().log_parasite_density_detectable) {
+    //        if (clinical_caused_parasite_->last_update_log10_parasite_density() >= Model::CONFIG->parasite_density_level().log_parasite_density_detectable) {
     //            //treatment failure
     //            tf = true;
     //            Model::DATA_COLLECTOR->record_1_TF(person->location(), true);

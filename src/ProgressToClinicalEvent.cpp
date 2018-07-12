@@ -48,8 +48,8 @@ void ProgressToClinicalEvent::execute() {
   //    Config* config = model->config();
 
   const auto density = Model::RANDOM->random_uniform_double(
-    Model::CONFIG->log_parasite_density_level().log_parasite_density_clinical_from,
-    Model::CONFIG->log_parasite_density_level().log_parasite_density_clinical_to);
+    Model::CONFIG->parasite_density_level().log_parasite_density_clinical_from,
+    Model::CONFIG->parasite_density_level().log_parasite_density_clinical_to);
 
   clinical_caused_parasite_->set_last_update_log10_parasite_density(density);
 

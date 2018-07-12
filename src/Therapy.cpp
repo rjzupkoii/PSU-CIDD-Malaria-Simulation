@@ -19,15 +19,6 @@ void Therapy::add_drug(int drug_id) {
     drug_ids_.push_back(drug_id);
 }
 
-int Therapy::get_arteminsinin_id() {
-    for (int i = 0; i < drug_ids_.size(); i++) {
-        DrugType* dt = Model::CONFIG->drug_db()->get(drug_ids_[i]);
-        if (dt->is_artemisinin()) {
-            return dt->id();
-        }
-    }
-    return -1;
-}
 
 //int Therapy::get_therapy_duration(int dosing_day) {
 //    int result = 0;

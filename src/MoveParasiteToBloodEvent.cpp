@@ -51,7 +51,7 @@ void MoveParasiteToBloodEvent::execute() {
 
     ClonalParasitePopulation* new_parasite = person->add_new_parasite_to_blood(parasite_type);
 
-    new_parasite->set_last_update_log10_parasite_density(Model::RANDOM->random_normal_truncated(Model::CONFIG->log_parasite_density_level().log_parasite_density_asymptomatic, 0.5));
+    new_parasite->set_last_update_log10_parasite_density(Model::RANDOM->random_normal_truncated(Model::CONFIG->parasite_density_level().log_parasite_density_asymptomatic, 0.5));
 
     if (person->drugs_in_blood()->size() > 0) {
         //person has drug in blood

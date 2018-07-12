@@ -28,7 +28,6 @@ public:
 
     void add_drug(int drug_id);
 
-    int get_arteminsinin_id();
 
 //    int get_therapy_duration(int dosing_day);
 

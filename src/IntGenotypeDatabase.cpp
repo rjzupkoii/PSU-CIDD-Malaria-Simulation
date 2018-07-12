@@ -23,28 +23,26 @@ IntGenotypeDatabase::IntGenotypeDatabase() {
 }
 
 IntGenotypeDatabase::~IntGenotypeDatabase() {
-
-  for (auto &i :  db_) {
+  for (auto& i : db_) {
     delete i.second;
   }
   db_.clear();
-
 }
 
-void IntGenotypeDatabase::add(IntGenotype *genotype) {
+void IntGenotypeDatabase::add(IntGenotype* genotype) {
   if (db_.find(genotype->genotype_id()) != db_.end()) {
     delete db_[genotype->genotype_id()];
   }
   db_[genotype->genotype_id()] = genotype;
 }
 
-IntGenotype *IntGenotypeDatabase::get(const int &id) {
+IntGenotype* IntGenotypeDatabase::get(const int& id) {
   return db_.at(id);
 }
 
 void IntGenotypeDatabase::initialize_matting_matrix() {
   int size = db_.size();
-  mating_matrix_ = MatingMatrix(size, std::vector<std::vector<double> >(size, std::vector<double>()));
+  mating_matrix_ = MatingMatrix(size, std::vector<std::vector<double>>(size, std::vector<double>()));
 
   for (int m = 0; m < size; m++) {
     for (int f = 0; f < size; f++) {
@@ -53,7 +51,7 @@ void IntGenotypeDatabase::initialize_matting_matrix() {
   }
 }
 
-std::vector<double> IntGenotypeDatabase::generate_offspring_parasite_density(const IntVector &m, const IntVector &f) {
+std::vector<double> IntGenotypeDatabase::generate_offspring_parasite_density(const IntVector& m, const IntVector& f) {
   std::vector<IntVector> results;
   //add first one
   IntVector ge(m.size(), 0);
@@ -71,7 +69,7 @@ std::vector<double> IntGenotypeDatabase::generate_offspring_parasite_density(con
 
   std::vector<double> recombination_parasite_density(db_.size(), 0.0);
 
-  for (IntVector &ge_i :  results) {
+  for (IntVector& ge_i : results) {
     //        std::cout << ge_i << std::endl;
     recombination_parasite_density[get_id(ge_i)] += 1;
   }
@@ -86,7 +84,7 @@ std::vector<double> IntGenotypeDatabase::generate_offspring_parasite_density(con
 
 }
 
-int IntGenotypeDatabase::get_id(const IntVector &gene) {
+int IntGenotypeDatabase::get_id(const IntVector& gene) {
 
   int id = 0;
   for (int i = 0; i < gene.size(); i++) {

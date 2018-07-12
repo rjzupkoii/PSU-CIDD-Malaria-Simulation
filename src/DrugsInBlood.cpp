@@ -38,9 +38,11 @@ Drug* DrugsInBlood::add_drug(Drug* drug) {
     drug->set_person_drugs(this);
     drugs_->insert(std::pair<int, Drug*>(typeID, drug));
 
-    if (drug->drug_type()->is_artemisinin()) {
-      person_->all_clonal_parasite_populations()->active_astermisinin_on_gametocyte(drug->drug_type());
-    }
+
+    // TODO::review
+    // if (drug->drug_type()->is_artemisinin()) {
+    //   person_->all_clonal_parasite_populations()->active_astermisinin_on_gametocyte(drug->drug_type());
+    // }
   }
   else {
     //already have it
@@ -119,9 +121,11 @@ void DrugsInBlood::clear_cut_off_drugs_by_event(Event* event) {
       //Cut off at 10%
       if (pos->second->last_update_value() <= DRUG_CUT_OFF_VALUE) {
         //if drug is astermisinin then deActive Gametocyte
-        if (pos->second->drug_type()->is_artemisinin()) {
-          person_->all_clonal_parasite_populations()->deactive_astermisinin_on_gametocyte();
-        }
+
+        //TODO::review
+        // if (pos->second->drug_type()->is_artemisinin()) {
+        //   person_->all_clonal_parasite_populations()->deactive_astermisinin_on_gametocyte();
+        // }
 
         //                person->cancelClearDrugEvent(pos->first, eventID);
         delete pos->second;

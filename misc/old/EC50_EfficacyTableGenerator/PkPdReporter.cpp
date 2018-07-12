@@ -66,9 +66,9 @@ void PkPdReporter::after_time_step() {
 //                acc_q(person->all_clonal_parasite_populations()->parasites()->at(0)->last_update_log10_parasite_density());
 //                today_density.push_back(person->all_clonal_parasite_populations()->parasites()->at(0)->last_update_log10_parasite_density());
 //            } else {
-//                acc(Model::CONFIG->log_parasite_density_level().log_parasite_density_cured);
-//                acc_q(Model::CONFIG->log_parasite_density_level().log_parasite_density_cured);
-//                today_density.push_back(Model::CONFIG->log_parasite_density_level().log_parasite_density_cured);
+//                acc(Model::CONFIG->parasite_density_level().log_parasite_density_cured);
+//                acc_q(Model::CONFIG->parasite_density_level().log_parasite_density_cured);
+//                today_density.push_back(Model::CONFIG->parasite_density_level().log_parasite_density_cured);
 //            }
 //        }
 ////        std::cout << today_density.size() << std::endl;
@@ -85,7 +85,7 @@ void PkPdReporter::after_time_step() {
 //            } else {
 //                double t_density = today_density[i];
 //                double y_density = yesterday_density_[i];
-//                if (today_density[i] > Model::CONFIG->log_parasite_density_level().log_parasite_density_cured) {
+//                if (today_density[i] > Model::CONFIG->parasite_density_level().log_parasite_density_cured) {
 //                    PRR.push_back(pow(10, y_density - t_density));
 //                    acc_PRR(pow(10, y_density - t_density));
 //                    acc_q_PRR(pow(10, y_density - t_density));

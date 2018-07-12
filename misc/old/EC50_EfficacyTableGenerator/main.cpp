@@ -142,7 +142,7 @@ double getEfficacyForTherapy(IntGenotype* g, int therapy_id, double inferEC50[],
     IntGenotype* genotype = Model::CONFIG->genotype_db()->get(g->genotype_id());
 
     for (auto person : Model::POPULATION->all_persons()->vPerson()) {
-        double density = Model::CONFIG->log_parasite_density_level().log_parasite_density_from_liver;
+        double density = Model::CONFIG->parasite_density_level().log_parasite_density_from_liver;
         ClonalParasitePopulation* blood_parasite = person->add_new_parasite_to_blood(genotype);
 
         person->immune_system()->set_increase(true);

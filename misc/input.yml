@@ -108,8 +108,65 @@ spatial_model:
     alpha: 0.22268982
     beta: 0.14319618
     gamma: 0.83741484
+    
 
 
+# below value indicates 37.25 births per 1000 individuals per year
+birth_rate: 0.03725
+# annual death rate (probability) by age group
+death_rate_by_age_class: [0.053979329, 0.018935757, 0.006867257, 0.001124347, 0.001136455, 0.001606066, 0.001953783, 0.001530096, 0.001299153, 0.001068073, 0.000978264, 0.000978264, 0.0055, 0.0055, 0.04450]
+
+# probability of death for patients who are not treated or patients who experience a treatment failure (due to drug resistance, or otherwise)
+# when received treatment, this rate drop by factor of 10 in code
+mortality_when_treatment_fail_by_age_class: [0.040, 0.020,0.020,0.020,0.020,0.004,0.004,0.004,0.004,0.004,0.004, 0.001, 0.001, 0.001, 0.001]
+
+
+parasite_density_level:
+#  log_parasite_density_cured:        -2.699    # corresponds to 10,000 total parasites (0.002 per μl)
+  log_parasite_density_cured:        -4.699    # corresponds to 100 total parasites (0.00002 per μl)
+  log_parasite_density_from_liver:    -2.000    # corresponds to 50,000 total parasites (0.01 per μl)
+#  log_parasite_density_asymptomatic: 1.301    # corresponds to 20 parasites per microliter of blood
+#  log_parasite_density_asymptomatic: 2.69    # corresponds to 500 parasites per microliter of blood
+  log_parasite_density_asymptomatic: 3    # corresponds to 1000 parasites per microliter of blood
+  log_parasite_density_clinical:     4.301    # corresponds to 20,000 parasites per microliter of blood (total 10^11)
+  log_parasite_density_clinical_from:     3.301    # corresponds to 2000 parasites per microliter of blood (total 10^10)
+  log_parasite_density_clinical_to:     5.301    # corresponds to 200,000 parasites per microliter of blood (total 10^12)
+  log_parasite_density_detectable:   1.000    # corresponds to 10 parasites per microliter of blood
+  log_parasite_density_pyrogenic:    3.398    # corresponds to 2500 parasites per microliter of blood
+
+  
+immune_system_information:  
+  #rate at which antimalarial immune function increases when a host is parasitaemic
+  b1: 0.00125
+  
+  #rate at which antimalarial immune function decreases when a host is parasitaemic
+  b2: 0.0025
+  
+  # durations of infection of naive and fully-immune hosts. 
+  # these parameters are used to calculate max and min killing rate by immune system
+  duration_for_naive: 300
+  duration_for_fully_immune: 60
+
+  # initial conditions for the immune function of the population at time zero
+  mean_initial_condition: 0.1
+  sd_initial_condition: 0.1
+  
+  # (per year) age-dependent faster acquisition of immunity from age 1 to age 10
+  immune_inflation_rate: 0.01   
+
+  # mix and max probabilities of experiencing symptoms as a result of a new infection
+  # the actual probability will depend on the host's immunity
+  min_clinical_probability: 0.05
+  max_clinical_probability: 0.99
+
+  # slope of sigmoidal prob-v-immunity function (parameter z in supplement of 2015 LGH paper) 
+  immune_effect_on_progression_to_clinical: 4
+  
+  # age at which immune function is mature
+  age_mature_immunity: 10
+  
+  # parameter kappa in supplement of 2015 LGH paper
+  factor_effect_age_mature_immunity : 1
 
 
 # this functionality works, but it was not used in any analyses for the 2015 LGH paper
@@ -130,23 +187,6 @@ circulation_information:
     mean: 5
     sd: 10
 
-
-
-
-
-# below value indicates 37.25 births per 1000 individuals per year
-birth_rate: 0.03725
-
-# annual death rate (probability) by age group
-death_rate_by_age: [0.053979329, 0.018935757, 0.006867257, 0.001124347, 0.001136455, 0.001606066, 0.001953783, 0.001530096, 0.001299153, 0.001068073, 0.000978264, 0.000978264, 0.0055, 0.0055, 0.04450]
-
-
-
-
-
-# probability of death for patients who are not treated or patients who experience a treatment failure (due to drug resistance, or otherwise)
-# when received treatment, this rate drop by factor of 10 in code
-mortality_when_treatment_fail_by_age: [0.040, 0.020,0.020,0.020,0.020,0.004,0.004,0.004,0.004,0.004,0.004, 0.001, 0.001, 0.001, 0.001]
 
 
 genotype_info:
@@ -357,7 +397,7 @@ introduce_parasite_periodically:
 #       - set k=2 or k=4 for a piecewise-linear model where mutation probability increases from high concentrations
 #               to intermediate concentrations, and then decreases linearly from intermediate concentrations to zero
 #
-drugInfo:
+drug_db:
   0:
     name: "artmisinin"
     half_life: 0.0
@@ -754,53 +794,9 @@ TF_rate: 0.1
 
 # definitions of some log parasite density levels
 #
-parasite_density_level:
-#  log_parasite_density_cured:        -2.699    # corresponds to 10,000 total parasites (0.002 per μl)
-  log_parasite_density_cured:        -4.699    # corresponds to 100 total parasites (0.00002 per μl)
-  log_parasite_density_from_liver:    -2.000    # corresponds to 50,000 total parasites (0.01 per μl)
-#  log_parasite_density_asymptomatic: 1.301    # corresponds to 20 parasites per microliter of blood
-#  log_parasite_density_asymptomatic: 2.69    # corresponds to 500 parasites per microliter of blood
-  log_parasite_density_asymptomatic: 3    # corresponds to 1000 parasites per microliter of blood
-  log_parasite_density_clinical:     4.301    # corresponds to 20,000 parasites per microliter of blood (total 10^11)
-  log_parasite_density_clinical_from:     3.301    # corresponds to 2000 parasites per microliter of blood (total 10^10)
-  log_parasite_density_clinical_to:     5.301    # corresponds to 200,000 parasites per microliter of blood (total 10^12)
-  log_parasite_density_detectable:   1.000    # corresponds to 10 parasites per microliter of blood
-  log_parasite_density_pyrogenic:    3.398    # corresponds to 2500 parasites per microliter of blood
 
 
-immune_system_information:
-  
-  #rate at which antimalarial immune function increases when a host is parasitaemic
-  b1: 0.00125
-  
-  #rate at which antimalarial immune function decreases when a host is parasitaemic
-  b2: 0.0025
-  
-  # durations of infection of naive and fully-immune hosts. 
-  # these parameters are used to calculate max and min killing rate by immune system
-  duration_for_naive: 300
-  duration_for_fully_immune: 60
 
-  # initial conditions for the immune function of the population at time zero
-  mean_initial_condition: 0.1
-  sd_initial_condition: 0.1
-  
-  # (per year) age-dependent faster acquisition of immunity from age 1 to age 10
-  immune_inflation_rate: 0.01   
-
-  # mix and max probabilities of experiencing symptoms as a result of a new infection
-  # the actual probability will depend on the host's immunity
-  min_clinical_probability: 0.05
-  max_clinical_probability: 0.99
-
-  # slope of sigmoidal prob-v-immunity function (parameter z in supplement of 2015 LGH paper) 
-  immune_effect_on_progression_to_clinical: 4
-  
-  # age at which immune function is mature
-  age_mature_immunity: 10
-  
-  # parameter kappa in supplement of 2015 LGH paper
-  factor_effect_age_mature_immunity : 1
 
 # days from end of liver-stage infection to appearance of symptoms
 days_to_clinical_under_five: 4

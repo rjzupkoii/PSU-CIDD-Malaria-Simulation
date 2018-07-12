@@ -18,5 +18,5 @@ ClinicalUpdateFunction::~ClinicalUpdateFunction() {
 
 double ClinicalUpdateFunction::get_current_parasite_density(ClonalParasitePopulation* parasite, int duration) {
     
-    return model_->config()->log_parasite_density_level().log_parasite_density_asymptomatic;
+    return model_->config()->parasite_density_level().log_parasite_density_asymptomatic;
 }

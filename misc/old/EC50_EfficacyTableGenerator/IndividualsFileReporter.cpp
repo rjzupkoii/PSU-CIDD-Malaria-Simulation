@@ -45,7 +45,7 @@ void IndividualsFileReporter::after_time_step() {
             if (person->all_clonal_parasite_populations()->parasites()->size() >= 1) {
                 p_density = person->all_clonal_parasite_populations()->parasites()->at(0)->last_update_log10_parasite_density();
             } else {
-                p_density = Model::CONFIG->log_parasite_density_level().log_parasite_density_cured;
+                p_density = Model::CONFIG->parasite_density_level().log_parasite_density_cured;
             }
             fs_ << p_density << "\t";
         }

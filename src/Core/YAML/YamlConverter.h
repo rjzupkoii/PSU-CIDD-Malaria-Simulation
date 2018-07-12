@@ -4,6 +4,8 @@
 #include <yaml-cpp/yaml.h>
 #include "Spatial/Location.h"
 #include "Core/TypeDef.h"
+#include "Helpers/NumberHelpers.h"
+#include "DrugType.h"
 
 namespace YAML {
   template <>
@@ -92,6 +94,67 @@ namespace YAML {
     }
   };
 
+  template <>
+  struct convert<ParasiteDensityLevel> {
+    static Node encode(const ParasiteDensityLevel& rhs) {
+      Node node;
+      node.push_back("ParasiteDensityLevel");
+      return node;
+    }
 
+    static bool decode(const Node& node, ParasiteDensityLevel& parasite_density_level) {
+      //
+      // if (!node.IsScalar()) {
+      //   return false;
+      parasite_density_level.log_parasite_density_cured = node["log_parasite_density_cured"].as<double>();
+      parasite_density_level.log_parasite_density_from_liver = node["log_parasite_density_from_liver"].as<double>();
+      parasite_density_level.log_parasite_density_asymptomatic = node["log_parasite_density_asymptomatic"].as<double>();
+      parasite_density_level.log_parasite_density_clinical = node["log_parasite_density_clinical"].as<double>();
+      parasite_density_level.log_parasite_density_clinical_from = node["log_parasite_density_clinical_from"].as<double>();
+      parasite_density_level.log_parasite_density_clinical_to = node["log_parasite_density_clinical_to"].as<double>();
+      parasite_density_level.log_parasite_density_detectable = node["log_parasite_density_detectable"].as<double>();
+      parasite_density_level.log_parasite_density_pyrogenic = node["log_parasite_density_pyrogenic"].as<double>();
+
+      return true;
+    }
+  };
+
+  template <>
+  struct convert<GenotypeInfo> {
+    static Node encode(const GenotypeInfo& rhs) {
+      Node node;
+      node.push_back("ParasiteDensityLevel");
+      return node;
+    }
+
+    static bool decode(const Node& node, GenotypeInfo& genotype_info_) {
+      genotype_info_.loci_vector.clear();
+      for (auto i = 0; i < node["loci"].size(); i++) {
+        Locus l;
+        l.position = node["loci"][i]["position"].as<int>();
+
+
+        for (int j = 0; j < node["loci"][i]["alleles"].size(); j++) {
+          Allele al;
+          al.value = node["loci"][i]["alleles"][j]["value"].as<int>();
+          al.name = node["loci"][i]["alleles"][j]["allele_name"].as<std::string>();
+          al.short_name = node["loci"][i]["alleles"][j]["short_name"].as<std::string>();
+          al.mutation_level = node["loci"][i]["alleles"][j]["mutation_level"].as<int>();
+          al.daily_cost_of_resistance = node["loci"][i]["alleles"][j]["daily_cost_of_resistance"].as<
+            double>();
+          for (int c = 0; c < node["loci"][i]["alleles"][j]["can_mutate_to"].size(); c++) {
+            //                al.mutation_value_up.push_back(node["loci"][i]["alleles"][j]["mutation_up"][c].as<int>());
+            al.mutation_values.push_back(
+              node["loci"][i]["alleles"][j]["can_mutate_to"][c].as<int>());
+          }
+
+          l.alleles.push_back(al);
+        }
+
+        genotype_info_.loci_vector.push_back(l);
+      }
+      return true;
+    }
+  }; 
 }
 #endif // YAMLCONVERTER_H

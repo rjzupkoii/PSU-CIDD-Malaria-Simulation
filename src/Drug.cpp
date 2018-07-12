@@ -41,10 +41,8 @@ double Drug::get_current_drug_concentration(int currentTime) {
   }
 
   if (days <= dosing_days_) {
-    if (drug_type()->is_artemisinin()) {
-      //            std::cout << "hello" << std::endl;
-//            double sd = drug_type_->age_group_specific_drug_concentration_sd()[person_drugs_->person()->age_class()];
-//            starting_value_ = Model::RANDOM->random_normal_truncated(1.0, sd);
+    if (drug_type()->id()==0) {
+      //drug is artemisinin
       return starting_value_ + Model::RANDOM->random_uniform_double(-0.1, 0.1);
 //            return starting_value_;
     }
