@@ -17,6 +17,8 @@
 #include "IStrategy.h"
 #include "Core/PropertyMacro.h"
 
+class Config;
+
 class NestedSwitchingStrategy : public IStrategy {
     DISALLOW_COPY_AND_ASSIGN(NestedSwitchingStrategy)
     VIRTUAL_PROPERTY_REF(std::vector<IStrategy*>, strategy_list)
@@ -48,7 +50,7 @@ public:
 
     void adjustDisttribution(int time, int totaltime);
     
-    void initialize_update_time();
+    void initialize_update_time(Config* config);
 
 private:
 

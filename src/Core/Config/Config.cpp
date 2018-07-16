@@ -34,6 +34,7 @@ Config::Config(Model* model) :
   modified_mutation_factor_(-1), modified_drug_half_life_(-1),
   modified_daily_cost_of_resistance_(-1), modified_mutation_probability_(-1) {}
 
+
 Config::~Config() {
   //   ObjectHelpers::DeletePointer<Strategy>(strategy_);
 
@@ -76,13 +77,12 @@ void Config::read_from_file(const std::string& config_file_name) {
   // std::cout << "hello" << std::endl;  
 
   moving_level_generator_.set_level_density(&circulation_info().v_moving_level_density);
-  //TODO: rework here
   bitting_level_generator_.set_level_density(&relative_bitting_info().v_biting_level_density);
   //
-  // read_strategy_therapy_and_drug_information(config);
-  // read_initial_parasite_info(config);
-  // read_importation_parasite_info(config);
-  // read_importation_parasite_periodically_info(config);
+  read_strategy_therapy_and_drug_information(config);
+  read_initial_parasite_info(config);
+  read_importation_parasite_info(config);
+  read_importation_parasite_periodically_info(config);
 
 }
 
@@ -90,7 +90,7 @@ void Config::read_from_file(const std::string& config_file_name) {
 void Config::read_strategy_therapy_and_drug_information(const YAML::Node& config) {
 
   //    read_all_therapy
-  for (int i = 0; i < config["TherapyInfo"].size(); i++) {
+  for (auto i = 0; i < config["TherapyInfo"].size(); i++) {
     auto* t = read_therapy(config["TherapyInfo"], i);
     therapy_db_.push_back(t);
   }
@@ -102,18 +102,20 @@ void Config::read_strategy_therapy_and_drug_information(const YAML::Node& config
 
   strategy_ = strategy_db_[config["main_strategy_id"].as<int>()];
 
-  if (strategy_->get_type() == IStrategy::NestedSwitching) {
-    dynamic_cast<NestedSwitchingStrategy *>(strategy_)->initialize_update_time();
-  }
 
-  if (strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
-    dynamic_cast<NestedSwitchingDifferentDistributionByLocationStrategy *>(strategy_)->initialize_update_time();
-  }
+  // TODO::rework here
+   if (strategy_->get_type() == IStrategy::NestedSwitching) {
+     dynamic_cast<NestedSwitchingStrategy *>(strategy_)->initialize_update_time(this);
+   }
+  
+   if (strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
+     dynamic_cast<NestedSwitchingDifferentDistributionByLocationStrategy *>(strategy_)->initialize_update_time(this);
+   }
 }
 
-IStrategy* Config::read_strategy(const YAML::Node& n, const int& strategy_id) const {
+IStrategy* Config::read_strategy(const YAML::Node& n, const int& strategy_id) {
   const auto s_id = NumberHelpers::number_to_string<int>(strategy_id);
-  auto* result = StrategyBuilder::build(n[s_id], strategy_id);
+  auto* result = StrategyBuilder::build(n[s_id], strategy_id, this);
   //    std::cout << result->to_string() << std::endl;
   return result;
 }
@@ -318,7 +320,7 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
     int strategy_id = atoi(parameter_value.c_str());
     strategy_ = strategy_db_[strategy_id];
     if (strategy_->get_type() == IStrategy::NestedSwitching) {
-      ((NestedSwitchingStrategy *)strategy_)->initialize_update_time();
+      static_cast<NestedSwitchingStrategy *>(strategy_)->initialize_update_time(this);
     }
   }
 

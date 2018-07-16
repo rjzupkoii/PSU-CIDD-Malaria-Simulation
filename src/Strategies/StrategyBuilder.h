@@ -19,34 +19,32 @@
 #include "Core/TypeDef.h"
 #include "Core/PropertyMacro.h"
 class IStrategy;
+class Config;
 
 class StrategyBuilder {
-    DISALLOW_COPY_AND_ASSIGN(StrategyBuilder)
+DISALLOW_COPY_AND_ASSIGN(StrategyBuilder)
 public:
-    StrategyBuilder();
-    virtual ~StrategyBuilder();
+  StrategyBuilder();
+  virtual ~StrategyBuilder();
 
-    static IStrategy* build(const YAML::Node& ns, const int& strategy_id);
-    static void add_therapies(const YAML::Node& ns, IStrategy*& result);
-    static void add_distributions(const YAML::Node& ns, DoubleVector& v);
+  static IStrategy* build(const YAML::Node& ns, const int& strategy_id, Config* config);
+  static void add_therapies(const YAML::Node& ns, IStrategy* result, Config* config);
+  static void add_distributions(const YAML::Node& ns, DoubleVector& v);
 
-    static IStrategy* buildSFTStrategy(const YAML::Node& ns, const int& strategy_id);
-    static IStrategy* buildCyclingStrategy(const YAML::Node& ns, const int& strategy_id);
-    static IStrategy* buildAdaptiveCyclingStrategy(const YAML::Node& ns, const int& strategy_id);
-    static IStrategy* buildMFTStrategy(const YAML::Node& ns, const int& strategy_id);
-    static IStrategy* buildMFTRebalancingStrategy(const YAML::Node& ns, const int& strategy_id);
-    static IStrategy* buildACTIncreaseStrategy(const YAML::Node& ns, const int& strategy_id);
-    static IStrategy* buildNovelNonACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id);
-    static IStrategy* buildTACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id);
-    static IStrategy* buildNestedSwitchingStrategy(const YAML::Node& ns, const int& strategy_id);
+  static IStrategy* buildSFTStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
+  static IStrategy* buildCyclingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
+  static IStrategy* buildAdaptiveCyclingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
+  static IStrategy* buildMFTStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
+  static IStrategy* buildMFTRebalancingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
+  static IStrategy* buildACTIncreaseStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
+  static IStrategy* buildNovelNonACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
+  static IStrategy* buildTACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
+  static IStrategy* buildNestedSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
 
-private:
+  static IStrategy* buildMFTDifferentDistributionByLocationStrategy(const YAML::Node& node, const int& id, Config* config);
 
-    static IStrategy *buildMFTDifferentDistributionByLocationStrategy(const YAML::Node &node, const int &id);
-
-    static IStrategy *
-    buildNestedSwitchingDifferentDistributionByLocationStrategy(const YAML::Node &ns, const int &strategy_id);
+  static IStrategy* buildNestedSwitchingDifferentDistributionByLocationStrategy(const YAML::Node& ns, const int& strategy_id,
+                                                                                Config* config);
 };
 
 #endif /* STRATEGYBUILDER_H */
-

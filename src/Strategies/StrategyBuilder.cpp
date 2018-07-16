@@ -27,43 +27,43 @@
 #include "MFTDifferentDistributionByLocationStrategy.h"
 #include "NestedSwitchingDifferentDistributionByLocationStrategy.h"
 
-StrategyBuilder::StrategyBuilder() {}
+StrategyBuilder::StrategyBuilder() = default;
 
-StrategyBuilder::~StrategyBuilder() {}
+StrategyBuilder::~StrategyBuilder() = default;
 
-IStrategy* StrategyBuilder::build(const YAML::Node& ns, const int& strategy_id) {
-  IStrategy::StrategyType type = IStrategy::StrategyTypeMap[ns["type"].as<std::string>()];
+IStrategy* StrategyBuilder::build(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  const auto type = IStrategy::StrategyTypeMap[ns["type"].as<std::string>()];
   switch (type) {
   case IStrategy::SFT:
-    return buildSFTStrategy(ns, strategy_id);
+    return buildSFTStrategy(ns, strategy_id, config);
   case IStrategy::Cycling:
-    return buildCyclingStrategy(ns, strategy_id);
+    return buildCyclingStrategy(ns, strategy_id, config);
   case IStrategy::AdaptiveCycling:
-    return buildAdaptiveCyclingStrategy(ns, strategy_id);
+    return buildAdaptiveCyclingStrategy(ns, strategy_id, config);
   case IStrategy::MFT:
-    return buildMFTStrategy(ns, strategy_id);
+    return buildMFTStrategy(ns, strategy_id, config);
   case IStrategy::ACTIncreaseOvertime:
-    return buildACTIncreaseStrategy(ns, strategy_id);
+    return buildACTIncreaseStrategy(ns, strategy_id, config);
   case IStrategy::NovelNonACTSwitching:
-    return buildNovelNonACTSwitchingStrategy(ns, strategy_id);
+    return buildNovelNonACTSwitchingStrategy(ns, strategy_id, config);
   case IStrategy::TACTSwitching:
-    return buildTACTSwitchingStrategy(ns, strategy_id);
+    return buildTACTSwitchingStrategy(ns, strategy_id, config);
   case IStrategy::MFTRebalancing:
-    return buildMFTRebalancingStrategy(ns, strategy_id);
+    return buildMFTRebalancingStrategy(ns, strategy_id, config);
   case IStrategy::NestedSwitching:
-    return buildNestedSwitchingStrategy(ns, strategy_id);
+    return buildNestedSwitchingStrategy(ns, strategy_id, config);
   case IStrategy::MFTDifferentDistributionByLocation:
-    return buildMFTDifferentDistributionByLocationStrategy(ns, strategy_id);
+    return buildMFTDifferentDistributionByLocationStrategy(ns, strategy_id, config);
   case IStrategy::NestedSwitchingDifferentDistributionByLocation:
-    return buildNestedSwitchingDifferentDistributionByLocationStrategy(ns, strategy_id);
+    return buildNestedSwitchingDifferentDistributionByLocationStrategy(ns, strategy_id, config);
   default:
     return nullptr;
   }
 }
 
-void StrategyBuilder::add_therapies(const YAML::Node& ns, IStrategy*& result) {
+void StrategyBuilder::add_therapies(const YAML::Node& ns, IStrategy* result, Config* config) {
   for (int i = 0; i < ns["therapy_ids"].size(); i++) {
-    result->add_therapy(Model::CONFIG->therapy_db()[ns["therapy_ids"][i].as<int>()]);
+    result->add_therapy(config->therapy_db()[ns["therapy_ids"][i].as<int>()]);
   }
 }
 
@@ -73,190 +73,190 @@ void StrategyBuilder::add_distributions(const YAML::Node& ns, DoubleVector& v) {
   }
 }
 
-IStrategy* StrategyBuilder::buildSFTStrategy(const YAML::Node& ns, const int& strategy_id) {
-  IStrategy* result = new SFTStrategy();
+IStrategy* StrategyBuilder::buildSFTStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  auto* result = new SFTStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
-  result->add_therapy(Model::CONFIG->therapy_db()[ns["therapy_id"].as<int>()]);
+  result->add_therapy(config->therapy_db()[ns["therapy_id"].as<int>()]);
   return result;
 }
 
-IStrategy* StrategyBuilder::buildCyclingStrategy(const YAML::Node& ns, const int& strategy_id) {
-  IStrategy* result = new CyclingStrategy();
+IStrategy* StrategyBuilder::buildCyclingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  auto* result = new CyclingStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
-  ((CyclingStrategy *)result)->set_cycling_time(ns["cycling_time"].as<int>());
-  ((CyclingStrategy *)result)->set_next_switching_day(
-    Model::CONFIG->start_treatment_day() + ns["cycling_time"].as<int>());
+  result->set_cycling_time(ns["cycling_time"].as<int>());
+  result->set_next_switching_day(
+    config->start_treatment_day() + ns["cycling_time"].as<int>());
 
-  add_therapies(ns, result);
-
-  return result;
-}
-
-IStrategy* StrategyBuilder::buildAdaptiveCyclingStrategy(const YAML::Node& ns, const int& strategy_id) {
-  IStrategy* result = new AdaptiveCyclingStrategy();
-  result->id = strategy_id;
-  result->name = ns["name"].as<std::string>();
-
-  ((AdaptiveCyclingStrategy *)result)->set_trigger_value(ns["trigger_value"].as<double>());
-  ((AdaptiveCyclingStrategy *)result)->set_delay_until_actual_trigger(ns["delay_until_actual_trigger"].as<int>());
-  ((AdaptiveCyclingStrategy *)result)->set_turn_off_days(ns["turn_off_days"].as<int>());
-
-  add_therapies(ns, result);
-  return result;
-}
-
-IStrategy* StrategyBuilder::buildMFTStrategy(const YAML::Node& ns, const int& strategy_id) {
-  IStrategy* result = new MFTStrategy();
-  result->id = strategy_id;
-  result->name = ns["name"].as<std::string>();
-
-  add_distributions(ns["distribution"], ((MFTStrategy *)result)->distribution());
-  add_therapies(ns, result);
-  return result;
-}
-
-IStrategy* StrategyBuilder::buildACTIncreaseStrategy(const YAML::Node& ns, const int& strategy_id) {
-
-  IStrategy* result = new ACTIncreaseStrategy();
-  result->id = strategy_id;
-  result->name = ns["name"].as<std::string>();
-
-  add_distributions(ns["start_distribution"], ((ACTIncreaseStrategy *)result)->start_distribution());
-  add_distributions(ns["start_distribution"], ((ACTIncreaseStrategy *)result)->distribution());
-  add_distributions(ns["end_distribution"], ((ACTIncreaseStrategy *)result)->end_distribution());
-
-  add_therapies(ns, result);
+  add_therapies(ns, result, config);
 
   return result;
 }
 
-IStrategy* StrategyBuilder::buildNovelNonACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id) {
-  IStrategy* result = new NovelNonACTSwitchingStrategy();
+IStrategy* StrategyBuilder::buildAdaptiveCyclingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  auto* result = new AdaptiveCyclingStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
-  add_distributions(ns["distribution"], ((MFTStrategy *)result)->distribution());
-  add_therapies(ns, result);
+  result->set_trigger_value(ns["trigger_value"].as<double>());
+  result->set_delay_until_actual_trigger(ns["delay_until_actual_trigger"].as<int>());
+  result->set_turn_off_days(ns["turn_off_days"].as<int>());
+
+  add_therapies(ns, result, config);
+  return result;
+}
+
+IStrategy* StrategyBuilder::buildMFTStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  auto* result = new MFTStrategy();
+  result->id = strategy_id;
+  result->name = ns["name"].as<std::string>();
+
+  add_distributions(ns["distribution"], result->distribution());
+  add_therapies(ns, result, config);
+  return result;
+}
+
+IStrategy* StrategyBuilder::buildACTIncreaseStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+
+  auto* result = new ACTIncreaseStrategy();
+  result->id = strategy_id;
+  result->name = ns["name"].as<std::string>();
+
+  add_distributions(ns["start_distribution"], result->start_distribution());
+  add_distributions(ns["start_distribution"], result->distribution());
+  add_distributions(ns["end_distribution"], result->end_distribution());
+
+  add_therapies(ns, result, config);
+
+  return result;
+}
+
+IStrategy* StrategyBuilder::buildNovelNonACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  auto* result = new NovelNonACTSwitchingStrategy();
+  result->id = strategy_id;
+  result->name = ns["name"].as<std::string>();
+
+  add_distributions(ns["distribution"], result->distribution());
+  add_therapies(ns, result, config);
 
   //     non_artemisinin_switching_day: -1
   //        non_art_therapy_id: 3
   //        fraction_non_art_replacement: 0.33333
-  ((NovelNonACTSwitchingStrategy *)result)->set_non_artemisinin_switching_day(
+  result->set_non_artemisinin_switching_day(
     ns["non_artemisinin_switching_day"].as<int>());
-  ((NovelNonACTSwitchingStrategy *)result)->set_non_art_therapy_id(ns["non_art_therapy_id"].as<int>());
-  ((NovelNonACTSwitchingStrategy *)result)->set_fraction_non_art_replacement(
+  result->set_non_art_therapy_id(ns["non_art_therapy_id"].as<int>());
+  result->set_fraction_non_art_replacement(
     ns["fraction_non_art_replacement"].as<double>());
 
-  Model::CONFIG->start_intervention_day() = dynamic_cast<NovelNonACTSwitchingStrategy *>(result)->
+  config->start_intervention_day() = dynamic_cast<NovelNonACTSwitchingStrategy *>(result)->
     non_artemisinin_switching_day();
 
   return result;
 }
 
-IStrategy* StrategyBuilder::buildTACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id) {
-  IStrategy* result = new TACTSwitchingTStrategy();
+IStrategy* StrategyBuilder::buildTACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  auto* result = new TACTSwitchingTStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
 
-  add_distributions(ns["start_distribution"], ((ACTIncreaseStrategy *)result)->start_distribution());
-  add_distributions(ns["start_distribution"], ((ACTIncreaseStrategy *)result)->distribution());
-  add_distributions(ns["end_distribution"], ((ACTIncreaseStrategy *)result)->end_distribution());
+  add_distributions(ns["start_distribution"], result->start_distribution());
+  add_distributions(ns["start_distribution"], result->distribution());
+  add_distributions(ns["end_distribution"], result->end_distribution());
 
-  add_therapies(ns, result);
+  add_therapies(ns, result, config);
 
-  ((TACTSwitchingTStrategy *)result)->set_TACT_switching_day(ns["TACT_switching_day"].as<int>());
-  ((TACTSwitchingTStrategy *)result)->set_TACT_id(ns["TACT_id"].as<int>());
+  result->set_TACT_switching_day(ns["TACT_switching_day"].as<int>());
+  result->set_TACT_id(ns["TACT_id"].as<int>());
 
 
   return result;
 }
 
-IStrategy* StrategyBuilder::buildNestedSwitchingStrategy(const YAML::Node& ns, const int& strategy_id) {
-  IStrategy* result = new NestedSwitchingStrategy();
+IStrategy* StrategyBuilder::buildNestedSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  auto* result = new NestedSwitchingStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
-  add_distributions(ns["start_distribution"], ((NestedSwitchingStrategy *)result)->start_distribution());
-  add_distributions(ns["start_distribution"], ((NestedSwitchingStrategy *)result)->distribution());
-  add_distributions(ns["end_distribution"], ((NestedSwitchingStrategy *)result)->end_distribution());
+  add_distributions(ns["start_distribution"], result->start_distribution());
+  add_distributions(ns["start_distribution"], result->distribution());
+  add_distributions(ns["end_distribution"], result->end_distribution());
 
   for (int i = 0; i < ns["strategy_ids"].size(); i++) {
-    ((NestedSwitchingStrategy *)result)->add_strategy(
-      Model::CONFIG->strategy_db()[ns["strategy_ids"][i].as<int>()]);
+    result->add_strategy(
+      config->strategy_db()[ns["strategy_ids"][i].as<int>()]);
   }
 
-  ((NestedSwitchingStrategy *)result)->set_strategy_switching_day(ns["strategy_switching_day"].as<int>());
-  ((NestedSwitchingStrategy *)result)->set_switch_to_strategy_id(ns["switch_to_strategy_id"].as<int>());
+  result->set_strategy_switching_day(ns["strategy_switching_day"].as<int>());
+  result->set_switch_to_strategy_id(ns["switch_to_strategy_id"].as<int>());
 
 
   return result;
 }
 
-IStrategy* StrategyBuilder::buildMFTRebalancingStrategy(const YAML::Node& ns, const int& strategy_id) {
-  IStrategy* result = new MFTRebalancingStrategy();
+IStrategy* StrategyBuilder::buildMFTRebalancingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  auto* result = new MFTRebalancingStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
-  add_distributions(ns["distribution"], ((MFTRebalancingStrategy *)result)->distribution());
-  add_distributions(ns["distribution"], ((MFTRebalancingStrategy *)result)->next_distribution());
+  add_distributions(ns["distribution"], result->distribution());
+  add_distributions(ns["distribution"], result->next_distribution());
 
-  add_therapies(ns, result);
+  add_therapies(ns, result, config);
 
-  ((MFTRebalancingStrategy *)result)->set_update_duration_after_rebalancing(
+  result->set_update_duration_after_rebalancing(
     ns["update_duration_after_rebalancing"].as<int>());
-  ((MFTRebalancingStrategy *)result)->set_delay_until_actual_trigger(ns["delay_until_actual_trigger"].as<int>());
-  ((MFTRebalancingStrategy *)result)->set_latest_adjust_distribution_time(Model::CONFIG->start_treatment_day());
+  result->set_delay_until_actual_trigger(ns["delay_until_actual_trigger"].as<int>());
+  result->set_latest_adjust_distribution_time(config->start_treatment_day());
 
   return result;
 }
 
 IStrategy*
-StrategyBuilder::buildMFTDifferentDistributionByLocationStrategy(const YAML::Node& ns, const int& strategy_id) {
+StrategyBuilder::buildMFTDifferentDistributionByLocationStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
   auto* result = new MFTDifferentDistributionByLocationStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
   result->distribution_by_location().clear();
   result->distribution_by_location().resize(
-    static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()));
+    static_cast<unsigned long long int>(config->number_of_locations()));
 
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    int input_loc = ns["distribution"].size() < Model::CONFIG->number_of_locations() ? 0 : loc;
+  for (auto loc = 0; loc < config->number_of_locations(); loc++) {
+    auto input_loc = ns["distribution"].size() < config->number_of_locations() ? 0 : loc;
     add_distributions(ns["distribution"][input_loc], result->distribution_by_location()[loc]);
   }
 
-  add_therapies(ns, reinterpret_cast<IStrategy *&>(result));
+  add_therapies(ns, result, config);
 
   return result;
 }
 
 IStrategy* StrategyBuilder::buildNestedSwitchingDifferentDistributionByLocationStrategy(const YAML::Node& ns,
-                                                                                        const int& strategy_id) {
+                                                                                        const int& strategy_id, Config* config) {
   auto* result = new NestedSwitchingDifferentDistributionByLocationStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
   result->distribution().clear();
-  result->distribution().resize(static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()));
+  result->distribution().resize(static_cast<unsigned long long int>(config->number_of_locations()));
 
   result->start_distribution().clear();
-  result->start_distribution().resize(static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()));
+  result->start_distribution().resize(static_cast<unsigned long long int>(config->number_of_locations()));
 
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    int input_loc = ns["start_distribution"].size() < Model::CONFIG->number_of_locations() ? 0 : loc;
+  for (auto loc = 0; loc < config->number_of_locations(); loc++) {
+    int input_loc = ns["start_distribution"].size() < config->number_of_locations() ? 0 : loc;
     add_distributions(ns["start_distribution"][input_loc], result->distribution()[loc]);
   }
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    int input_loc = ns["start_distribution"].size() < Model::CONFIG->number_of_locations() ? 0 : loc;
+  for (auto loc = 0; loc < config->number_of_locations(); loc++) {
+    auto input_loc = ns["start_distribution"].size() < config->number_of_locations() ? 0 : loc;
     add_distributions(ns["start_distribution"][input_loc], result->start_distribution()[loc]);
   }
 
-  for (int i = 0; i < ns["strategy_ids"].size(); i++) {
-    result->add_strategy(Model::CONFIG->strategy_db()[ns["strategy_ids"][i].as<int>()]);
+  for (auto i = 0; i < ns["strategy_ids"].size(); i++) {
+    result->add_strategy(config->strategy_db()[ns["strategy_ids"][i].as<int>()]);
   }
 
   result->set_peak_at(ns["peak_at"].as<int>());

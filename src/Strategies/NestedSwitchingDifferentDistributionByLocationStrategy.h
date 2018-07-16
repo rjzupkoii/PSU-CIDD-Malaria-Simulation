@@ -9,6 +9,8 @@
 #include "Core/TypeDef.h"
 
 
+class Config;
+
 class NestedSwitchingDifferentDistributionByLocationStrategy  : public IStrategy {
     DISALLOW_COPY_AND_ASSIGN(NestedSwitchingDifferentDistributionByLocationStrategy)
     VIRTUAL_PROPERTY_REF(std::vector<IStrategy*>, strategy_list)
@@ -40,7 +42,7 @@ public:
 
     void adjustDistribution(int time, int totaltime);
 
-    void initialize_update_time();
+    void initialize_update_time(Config* config);
 
 private:
 

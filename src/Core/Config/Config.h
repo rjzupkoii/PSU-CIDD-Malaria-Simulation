@@ -154,7 +154,7 @@ public:
 
   void read_importation_parasite_periodically_info(const YAML::Node& config);
 
-  IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id) const;
+  IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id) ;
 
   Therapy* read_therapy(const YAML::Node& n, const int& therapy_id) const;
 
