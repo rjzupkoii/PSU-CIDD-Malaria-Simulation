@@ -651,7 +651,7 @@ therapy_db:
     dosing_days: 3
 
 # drug-deployment strategy - simply uncomment below to turn on a particular strategy
-StrategyInfo:
+strategy_db:
     0:
         name: SP-AQ-CQ-AL-MFTStrategy
         type: MFT

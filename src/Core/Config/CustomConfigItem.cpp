@@ -10,6 +10,10 @@
 #include <date/date.h>
 #include "Therapies/Therapy.h"
 #include "Therapies/TherapyBuilder.h"
+#include "Strategies/IStrategy.h"
+#include "Strategies/StrategyBuilder.h"
+#include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
+#include "Strategies/NestedSwitchingStrategy.h"
 
 void total_time::set_value(const YAML::Node& node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
@@ -173,7 +177,7 @@ void genotype_db::set_value(const YAML::Node& node) {
     //        std::cout << *int_genotype << std::endl;
     value_->add(int_genotype);
   }
-  
+
   value_->initialize_matting_matrix();
 }
 
@@ -243,22 +247,22 @@ void drug_db::set_value(const YAML::Node& node) {
 }
 
 void EC50_power_n_table::set_value(const YAML::Node& node) {
-   //get EC50 table and compute EC50^n
-   value_.clear();
-   value_.assign(config_->genotype_db()->size(), std::vector<double>());
-  
-   for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-     for (auto i = 0; i < config_->drug_db()->size(); i++) {
-       value_[g_id].push_back(config_->drug_db()->get(i)->infer_ec50(config_->genotype_db()->get(g_id)));
-     }
-   }
-   //    std::cout << "ok " << std::endl;
-  
-   for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-     for (auto i = 0; i < config_->drug_db()->size(); i++) {
-       value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->get(i)->n());
-     }
-   }
+  //get EC50 table and compute EC50^n
+  value_.clear();
+  value_.assign(config_->genotype_db()->size(), std::vector<double>());
+
+  for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
+    for (auto i = 0; i < config_->drug_db()->size(); i++) {
+      value_[g_id].push_back(config_->drug_db()->get(i)->infer_ec50(config_->genotype_db()->get(g_id)));
+    }
+  }
+  //    std::cout << "ok " << std::endl;
+
+  for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
+    for (auto i = 0; i < config_->drug_db()->size(); i++) {
+      value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->get(i)->n());
+    }
+  }
 }
 
 void circulation_info::set_value(const YAML::Node& in_node) {
@@ -383,22 +387,56 @@ void relative_bitting_info::set_value(const YAML::Node& in_node) {
 }
 
 therapy_db::~therapy_db() {
-	for (auto& i : value_) {
-		delete i;
-	}
-	value_.clear();
+  for (auto& i : value_) {
+    delete i;
+  }
+  value_.clear();
 }
 
-Therapy* read_therapy(const YAML::Node& n, const int& therapy_id)  {
-	const auto t_id = NumberHelpers::number_to_string<int>(therapy_id);
-	auto* t = TherapyBuilder::build(n[t_id], therapy_id);
-	return t;
+Therapy* read_therapy(const YAML::Node& n, const int& therapy_id) {
+  const auto t_id = NumberHelpers::number_to_string<int>(therapy_id);
+  auto* t = TherapyBuilder::build(n[t_id], therapy_id);
+  return t;
 }
 
 void therapy_db::set_value(const YAML::Node& node) {
-	//    read_all_therapy
-	for (auto i = 0; i < node["therapy_db"].size(); i++) {
-		auto* t = read_therapy(node["therapy_db"], i);
-		value_.push_back(t);
-	}
+  //    read_all_therapy
+  for (auto i = 0; i < node[name_].size(); i++) {
+    auto* t = read_therapy(node[name_], i);
+    value_.push_back(t);
+  }
+}
+
+strategy_db::~strategy_db() {
+  for (auto& i : value_) {
+    delete i;
+  }
+  value_.clear();
+}
+
+IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id, Config* config) {
+  const auto s_id = NumberHelpers::number_to_string<int>(strategy_id);
+  auto* result = StrategyBuilder::build(n[s_id], strategy_id, config);
+  //    std::cout << result->to_string() << std::endl;
+  return result;
+}
+
+void strategy_db::set_value(const YAML::Node& node) {
+  for (auto i = 0; i < node[name_].size(); i++) {
+    auto* s = read_strategy(node[name_], i, config_);
+    value_.push_back(s);
+  }
+}
+
+void strategy::set_value(const YAML::Node& node) {
+  value_ = config_->strategy_db()[node["main_strategy_id"].as<int>()];
+
+  // TODO::rework here
+  if (value_->get_type() == IStrategy::NestedSwitching) {
+    dynamic_cast<NestedSwitchingStrategy *>(value_)->initialize_update_time(config_);
+  }
+
+  if (value_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
+    dynamic_cast<NestedSwitchingDifferentDistributionByLocationStrategy *>(value_)->initialize_update_time(config_);
+  }
 }

@@ -4,6 +4,7 @@
 #include "Spatial/BarabasiSM.h"
 #include "Therapies/Therapy.h"
 #include "Therapies/SCTherapy.h"
+#include "Strategies/IStrategy.h"
 
 TEST_CASE("ConfigTest", "[Core]") {
 
@@ -141,10 +142,20 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.therapy_db()[0]->drug_ids().size() == 1);
     REQUIRE(c.therapy_db()[0]->drug_ids() == IntVector{0});
     REQUIRE(((SCTherapy*)c.therapy_db()[0])->dosing_day()== 3);
-    
+
     REQUIRE(c.therapy_db()[11]->drug_ids().size() == 3);
     REQUIRE(c.therapy_db()[11]->drug_ids() == IntVector{0,1,2});
-    REQUIRE(((SCTherapy*)c.therapy_db()[0])->dosing_day() == 3);
+    REQUIRE(((SCTherapy*)c.therapy_db()[11])->dosing_day() == 3);
+
+    REQUIRE(c.strategy_db().size() == 19);
+    REQUIRE(c.strategy_db()[0]->name== "SP-AQ-CQ-AL-MFTStrategy");
+    REQUIRE(c.strategy_db()[0]->get_type()== IStrategy::MFT);
+    REQUIRE(c.strategy_db()[18]->name== "BaseLineStrategy");
+    REQUIRE(c.strategy_db()[18]->get_type()== IStrategy::NestedSwitchingDifferentDistributionByLocation);
+
+    REQUIRE(c.strategy()->name == "Switch_AL_to_AL-AQ");
+
+
     // REQUIRE(2== 2);
   }
 }

@@ -239,4 +239,44 @@ public:
 	void set_value(const YAML::Node& node) override;
 };
 
+class strategy_db : public IConfigItem {
+	DISALLOW_COPY_AND_ASSIGN(strategy_db)
+		DISALLOW_MOVE(strategy_db)
+protected:
+	StrategyPtrVector value_;
+public:
+	//constructor
+	explicit strategy_db(std::string name, StrategyPtrVector default_value, Config* config = nullptr) : IConfigItem(config, name),
+		value_{std::move(default_value)} { }
+
+	// destructor
+	virtual ~strategy_db();
+
+	virtual StrategyPtrVector& operator()() {
+		return value_;
+	}
+
+	void set_value(const YAML::Node& node) override;
+};
+
+class strategy : public IConfigItem {
+	DISALLOW_COPY_AND_ASSIGN(strategy)
+		DISALLOW_MOVE(strategy)
+protected:
+	IStrategy* value_;
+public:
+	//constructor
+	explicit strategy(std::string name, IStrategy* default_value, Config* config = nullptr) : IConfigItem(config, name),
+		value_{default_value} { }
+
+	// destructor
+	virtual ~strategy() = default;
+
+	virtual IStrategy*& operator()() {
+		return value_;
+	}
+
+	void set_value(const YAML::Node& node) override;
+};
+
 #endif // CUSTOMCONFIGITEM_H
