@@ -99,7 +99,7 @@ bool ClonalParasitePopulation::resist_to(DrugType *dt) {
 }
 
 bool ClonalParasitePopulation::resist_to(const int &drug_id) {
-  return genotype_->resist_to(Model::CONFIG->drug_db()->drug_db()[drug_id]);
+  return genotype_->resist_to(Model::CONFIG->drug_db()->get(drug_id));
 }
 
 void ClonalParasitePopulation::update() {

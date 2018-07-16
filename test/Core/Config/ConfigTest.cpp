@@ -122,9 +122,9 @@ TEST_CASE("ConfigTest", "[Core]") {
     //
     REQUIRE(c.number_of_parasite_types() == 128);
     //
-    REQUIRE(c.drug_db()->drug_db().size() == 7);
-    REQUIRE(c.drug_db()->drug_db()[0]->n() == 25);
-    REQUIRE(c.drug_db()->drug_db()[6]->n() == 19);
+    REQUIRE(c.drug_db()->size() == 7);
+    REQUIRE(c.drug_db()->get(0)->n() == 25);
+    REQUIRE(c.drug_db()->get(6)->n() == 19);
 
     //
     REQUIRE(c.EC50_power_n_table().size()== 128);

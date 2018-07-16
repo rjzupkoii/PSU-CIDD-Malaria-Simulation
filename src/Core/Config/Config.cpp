@@ -306,7 +306,7 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
 
   if (parameter_name == "k") {
     modified_mutation_factor_ = atof(parameter_value.c_str());
-    for (auto& it : drug_db()->drug_db()) {
+    for (auto& it : *drug_db()) {
       it.second->set_k(modified_mutation_factor_);
     }
   }
@@ -337,7 +337,7 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
 
   if (parameter_name == "mutation_probability") {
     modified_mutation_probability_ = atof(parameter_value.c_str());
-    for (auto& it : drug_db()->drug_db()) {
+    for (auto& it : *drug_db()) {
       it.second->set_p_mutation(modified_mutation_probability_);
 
     }
@@ -346,7 +346,7 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
 
   if (parameter_name == "mutation_factor") {
     double mutation_factor = atof(parameter_value.c_str());
-    for (auto& it : drug_db()->drug_db()) {
+    for (auto& it : *drug_db()) {
       it.second->set_p_mutation(it.second->p_mutation() * mutation_factor);
     }
   }

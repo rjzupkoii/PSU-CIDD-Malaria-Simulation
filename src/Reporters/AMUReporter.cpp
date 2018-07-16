@@ -202,7 +202,7 @@ void AMUReporter::output_parameters() {
   std::cout << Model::CONFIG->relative_bitting_info().max_relative_biting_value << "\t";
   std::cout << Model::CONFIG->relative_bitting_info().mean << "\t";
   std::cout << Model::CONFIG->relative_bitting_info().sd << "\t";
-  std::cout << Model::CONFIG->drug_db()->drug_db().begin()->second->k() << "\t";
+  std::cout << Model::CONFIG->drug_db()->begin()->second->k() << "\t";
   std::cout << Model::CONFIG->strategy()->get_type() << "\t";
 
 }

@@ -47,7 +47,7 @@ void ResistanceTracker::initialize() {
     parasite_population_count_by_location_.assign(Model::CONFIG->number_of_locations(),
                                                   LongVector(Model::CONFIG->number_of_parasite_types(), 0));
 
-    DrugTypePtrMap &drug_db = Model::CONFIG->drug_db()->drug_db();
+    
     IntVector drugs_used;
 
 

@@ -147,7 +147,7 @@ void BurninFarmReporter::output_parameters() {
   std::cout << Model::CONFIG->genotype_info().loci_vector[0].alleles[1].daily_cost_of_resistance << "\t";
   std::cout << Model::CONFIG->genotype_info().loci_vector[1].alleles[4].daily_cost_of_resistance
             << "\t"; // print for mdr 2 copies daily cost of resistance
-  std::cout << Model::CONFIG->drug_db()->drug_db().begin()->second->p_mutation() << "\t";
+  std::cout << Model::CONFIG->drug_db()->begin()->second->p_mutation() << "\t";
 
   //output strategy information
   std::cout << Model::CONFIG->strategy()->id << "\t";

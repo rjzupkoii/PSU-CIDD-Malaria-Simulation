@@ -360,7 +360,7 @@ void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinica
 
     for (auto drug_id : sc_therapy->drug_ids()) {
       //        std::cout << drug_id << std::endl;
-      add_drug_to_blood(Model::CONFIG->drug_db()->drug_db()[drug_id], dosing_days);
+      add_drug_to_blood(Model::CONFIG->drug_db()->get(drug_id), dosing_days);
     }
   }
   else {

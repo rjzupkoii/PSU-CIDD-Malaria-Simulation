@@ -8,21 +8,21 @@
 
 #include "DrugDatabase.h"
 
-DrugDatabase::DrugDatabase() {
-}
+DrugDatabase::DrugDatabase() = default;
 
 DrugDatabase::~DrugDatabase() {
 
-    for(auto &i :  drug_db_) {
-        delete i.second;
-    }
-    drug_db_.clear();
+  for (auto& i : *this) {
+    delete i.second;
+  }
+  this->clear();
 }
 
 void DrugDatabase::add(DrugType* dt) {
-    drug_db_[dt->id()] = dt;
+  (*this)[dt->id()] = dt;
 }
 
+//TODO: remove it
 DrugType* DrugDatabase::get(const int& id) {
-    return drug_db_.at(id);
+  return (*this).at(id);
 }

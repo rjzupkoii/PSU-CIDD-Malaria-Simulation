@@ -246,14 +246,14 @@ void EC50_power_n_table::set_value(const YAML::Node& node) {
    value_.assign(config_->genotype_db()->size(), std::vector<double>());
   
    for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-     for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
-       value_[g_id].push_back(config_->drug_db()->drug_db()[i]->infer_ec50(config_->genotype_db()->get(g_id)));
+     for (auto i = 0; i < config_->drug_db()->size(); i++) {
+       value_[g_id].push_back(config_->drug_db()->get(i)->infer_ec50(config_->genotype_db()->get(g_id)));
      }
    }
    //    std::cout << "ok " << std::endl;
   
    for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-     for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
+     for (auto i = 0; i < config_->drug_db()->size(); i++) {
        value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->get(i)->n());
      }
    }
