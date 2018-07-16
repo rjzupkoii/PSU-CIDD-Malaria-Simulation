@@ -183,8 +183,8 @@ void Population::perform_infection_event() {
       DoubleVector vLevelDensity;
       auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
-      for (int i = 0; i < Model::CONFIG->relative_bitting_information().number_of_biting_levels; i++) {
-        double temp = Model::CONFIG->relative_bitting_information().v_biting_level_value[i] *
+      for (int i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
+        double temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] *
           pi->vPerson()[loc][i].size();
         vLevelDensity.push_back(temp);
       }
@@ -335,7 +335,7 @@ void Population::initialize() {
           //set_relative_biting_rate
           p->set_bitting_level(Model::CONFIG->bitting_level_generator().draw_random_level(Model::RANDOM));
           p->set_base_bitting_level_value(
-            Model::CONFIG->relative_bitting_information().v_biting_level_value[p->bitting_level()]);
+            Model::CONFIG->relative_bitting_info().v_biting_level_value[p->bitting_level()]);
           //                    p->update_bitting_level();
 
 
@@ -382,8 +382,8 @@ void Population::introduce_parasite(const int& location, IntGenotype* parasite_t
     DoubleVector vLevelDensity;
     auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
-    for (auto i = 0; i < Model::CONFIG->relative_bitting_information().number_of_biting_levels; i++) {
-      double temp = Model::CONFIG->relative_bitting_information().v_biting_level_value[i] *
+    for (auto i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
+      double temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] *
         pi->vPerson()[location][i].size();
       vLevelDensity.push_back(temp);
     }
@@ -488,7 +488,7 @@ void Population::give_1_birth(const int& location) {
   //set_relative_biting_rate
   p->set_bitting_level(Model::CONFIG->bitting_level_generator().draw_random_level(Model::RANDOM));
   p->set_base_bitting_level_value(
-    Model::CONFIG->relative_bitting_information().v_biting_level_value[p->bitting_level()]);
+    Model::CONFIG->relative_bitting_info().v_biting_level_value[p->bitting_level()]);
   //    p->update_bitting_level();
 
   p->set_moving_level(Model::CONFIG->moving_level_generator().draw_random_level(Model::RANDOM));
@@ -580,7 +580,7 @@ void Population::perform_circulation_event() {
 
 
   for (int from_location = 0; from_location < Model::CONFIG->number_of_locations(); from_location++) {
-    auto poisson_means = size(from_location) * Model::CONFIG->circulation_information().circulation_percent;
+    auto poisson_means = size(from_location) * Model::CONFIG->circulation_info().circulation_percent;
     if (poisson_means == 0)continue;
     const auto number_of_circulating_from_this_location = Model::RANDOM->random_poisson(poisson_means);
     if (number_of_circulating_from_this_location == 0) continue;
@@ -624,8 +624,8 @@ void Population::perform_circulation_for_1_location(const int& from_location, co
   DoubleVector vLevelDensity;
   auto pi = get_person_index<PersonIndexByLocationMovingLevel>();
 
-  for (int i = 0; i < Model::CONFIG->circulation_information().number_of_moving_levels; i++) {
-    double temp = Model::CONFIG->circulation_information().v_moving_level_value[i] *
+  for (int i = 0; i < Model::CONFIG->circulation_info().number_of_moving_levels; i++) {
+    double temp = Model::CONFIG->circulation_info().v_moving_level_value[i] *
       pi->vPerson()[from_location][i].size();
     vLevelDensity.push_back(temp);
   }
@@ -682,11 +682,11 @@ void Population::initialize_person_indices() {
   person_index_list_->push_back(p_index_by_l_s_a);
 
   auto p_index_location_bitting_level = new PersonIndexByLocationBittingLevel(
-    number_of_location, Model::CONFIG->relative_bitting_information().number_of_biting_levels);
+    number_of_location, Model::CONFIG->relative_bitting_info().number_of_biting_levels);
   person_index_list_->push_back(p_index_location_bitting_level);
 
   auto p_index_location_moving_level = new PersonIndexByLocationMovingLevel(
-    number_of_location, Model::CONFIG->circulation_information().number_of_moving_levels);
+    number_of_location, Model::CONFIG->circulation_info().number_of_moving_levels);
   person_index_list_->push_back(p_index_location_moving_level);
 
 }

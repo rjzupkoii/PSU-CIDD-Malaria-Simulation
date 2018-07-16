@@ -46,38 +46,6 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(age_structure, std::vector<int>, std::vector<int>{ (1,2,3,4,5) })
   CONFIG_ITEM(initial_age_structure, std::vector<int>, std::vector<int>{ (1,2,3,4,5) })
-  CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
-
-  // TODO: test
-  CONFIG_ITEM(location_db, std::vector<Spatial::Location>, std::vector<Spatial::Location>{Spatial::Location(0,0,0,10000)})
-
-  CUSTOM_CONFIG_ITEM(number_of_locations, 1)
-
-  CUSTOM_CONFIG_ITEM(spatial_distance_matrix, DoubleVector2())
-
-  CUSTOM_CONFIG_ITEM(seasonal_info, SeasonalInfo())
-
-  CUSTOM_CONFIG_ITEM(spatial_model, nullptr)
-
-  CONFIG_ITEM(birth_rate, double, 0)
-
-  CONFIG_ITEM(death_rate_by_age_class, DoubleVector, DoubleVector())
-
-  CONFIG_ITEM(mortality_when_treatment_fail_by_age_class, DoubleVector, DoubleVector())
-
-  CONFIG_ITEM(parasite_density_level, ParasiteDensityLevel, ParasiteDensityLevel())
-
-  CUSTOM_CONFIG_ITEM(immune_system_information, ImmuneSystemInformation())
-
-  CONFIG_ITEM(genotype_info, GenotypeInfo, GenotypeInfo())
-
-  CUSTOM_CONFIG_ITEM(genotype_db, nullptr)
-
-  CUSTOM_CONFIG_ITEM(number_of_parasite_types, 0)
-
-  CUSTOM_CONFIG_ITEM(drug_db, nullptr)
-
-  CUSTOM_CONFIG_ITEM(EC50_power_n_table,DoubleVector2())
 
   CONFIG_ITEM(tf_testing_day, int, 28)
 
@@ -94,7 +62,6 @@ POINTER_PROPERTY(Model, model)
   CONFIG_ITEM(p_relapse, double, 0.01)
   CONFIG_ITEM(relapse_duration, int, 30)
 
-
   CONFIG_ITEM(allow_new_coinfection_to_cause_symtoms, bool, true)
   CONFIG_ITEM(update_frequency, int, 7)
   CONFIG_ITEM(report_frequency, int, 30)
@@ -108,10 +75,46 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(fraction_mosquitoes_interrupted_feeding, double, 0.0)
   CONFIG_ITEM(inflation_factor, double, 1.01)
+  // TODO: test
+  CONFIG_ITEM(location_db, std::vector<Spatial::Location>, std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
 
-VIRTUAL_PROPERTY_REF(RelativeBittingInformation, relative_bitting_information)
-VIRTUAL_PROPERTY_REF(RelativeInfectivity, relative_infectivity)
-VIRTUAL_PROPERTY_REF(RelativeMovingInformation, circulation_information)
+  CONFIG_ITEM(birth_rate, double, 0)
+
+  CONFIG_ITEM(death_rate_by_age_class, DoubleVector, DoubleVector())
+
+  CONFIG_ITEM(mortality_when_treatment_fail_by_age_class, DoubleVector, DoubleVector())
+
+  CONFIG_ITEM(parasite_density_level, ParasiteDensityLevel, ParasiteDensityLevel())
+
+  CONFIG_ITEM(genotype_info, GenotypeInfo, GenotypeInfo())
+  
+  CONFIG_ITEM(relative_infectivity, RelativeInfectivity, RelativeInfectivity())
+
+
+  CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
+
+  CUSTOM_CONFIG_ITEM(number_of_locations, 1)
+
+  CUSTOM_CONFIG_ITEM(spatial_distance_matrix, DoubleVector2())
+
+  CUSTOM_CONFIG_ITEM(seasonal_info, SeasonalInfo())
+
+  CUSTOM_CONFIG_ITEM(spatial_model, nullptr)
+
+  CUSTOM_CONFIG_ITEM(immune_system_information, ImmuneSystemInformation())
+
+  CUSTOM_CONFIG_ITEM(genotype_db, nullptr)
+
+  CUSTOM_CONFIG_ITEM(number_of_parasite_types, 0)
+
+  CUSTOM_CONFIG_ITEM(drug_db, nullptr)
+
+  CUSTOM_CONFIG_ITEM(EC50_power_n_table,DoubleVector2())
+
+  CUSTOM_CONFIG_ITEM(circulation_info, RelativeMovingInformation())
+
+  CUSTOM_CONFIG_ITEM(relative_bitting_info, RelativeBittingInformation())
+
 
 POINTER_PROPERTY(IStrategy, strategy)
 VIRTUAL_PROPERTY_REF(TherapyPtrVector, therapy_db)
@@ -145,19 +148,11 @@ public:
 
   void read_strategy_therapy_and_drug_information(const YAML::Node& config);
 
-  void read_relative_biting_rate_info(const YAML::Node& config);
-
-  void calculate_relative_biting_density();
-
-  void read_spatial_info(const YAML::Node& config);
-
   void read_initial_parasite_info(const YAML::Node& config);
 
   void read_importation_parasite_info(const YAML::Node& config);
 
   void read_importation_parasite_periodically_info(const YAML::Node& config);
-
-  void read_relative_infectivity_info(const YAML::Node& config);
 
   IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id) const;
 

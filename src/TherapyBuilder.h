@@ -20,7 +20,7 @@ class Therapy;
 class TherapyBuilder {
 public:
     TherapyBuilder();
-    TherapyBuilder(const TherapyBuilder& orig);
+    TherapyBuilder(const TherapyBuilder& orig) = default;
     virtual ~TherapyBuilder();
 
 

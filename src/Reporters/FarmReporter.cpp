@@ -140,9 +140,9 @@ void FarmReporter::output_parameters() {
   std::cout << Model::CONFIG->genotype_info().loci_vector[0].alleles[1].daily_cost_of_resistance << "\t";
   std::cout << Model::CONFIG->immune_system_information().factor_effect_age_mature_immunity << "\t";
   std::cout << Model::CONFIG->immune_system_information().immune_effect_on_progression_to_clinical << "\t";
-  std::cout << Model::CONFIG->relative_bitting_information().max_relative_biting_value << "\t";
-  std::cout << Model::CONFIG->relative_bitting_information().mean << "\t";
-  std::cout << Model::CONFIG->relative_bitting_information().sd << "\t";
+  std::cout << Model::CONFIG->relative_bitting_info().max_relative_biting_value << "\t";
+  std::cout << Model::CONFIG->relative_bitting_info().mean << "\t";
+  std::cout << Model::CONFIG->relative_bitting_info().sd << "\t";
   std::cout << Model::CONFIG->drug_db()->drug_db().begin()->second->k() << "\t";
   std::cout << Model::CONFIG->drug_db()->drug_db().begin()->second->p_mutation() << "\t";
   std::cout << Model::CONFIG->strategy()->get_type() << "\t";

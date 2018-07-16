@@ -182,7 +182,7 @@ struct InitialParasiteInfo {
 
   InitialParasiteInfo() : location(-1), parasite_type_id(-1), prevalence(-1.0) { };
 
-  InitialParasiteInfo(int loc, int p_type, double pre) : location(loc), parasite_type_id(p_type), prevalence(pre) { };
+  InitialParasiteInfo(const int loc, const int p_type, const double pre) : location(loc), parasite_type_id(p_type), prevalence(pre) { };
 
   //    InitialParasiteInfo(const InitialParasiteInfo& orig){
   //        location = orig.location;
@@ -198,9 +198,10 @@ struct ImportationParasiteInfo {
   int parasite_type_id;
   int number;
 
-  ImportationParasiteInfo() : location(-1), parasite_type_id(-1), time(0), number(0) { };
+  ImportationParasiteInfo() : location(-1), time(0), parasite_type_id(-1), number(0) { };
 
-  ImportationParasiteInfo(int loc, int p_type, int dur, int num) : location(loc), parasite_type_id(p_type), number(num), time(dur) { };
+  ImportationParasiteInfo(const int loc, const int p_type, const int dur, const int num) : location(loc), time(dur),
+                                                                                           parasite_type_id(p_type), number(num) { };
 
   //    InitialParasiteInfo(const InitialParasiteInfo& orig){
   //        location = orig.location;
@@ -217,11 +218,16 @@ struct ImportationParasitePeriodicallyInfo {
   int start_day;
   // int end_day;
 
-  ImportationParasitePeriodicallyInfo() : location(-1), parasite_type_id(-1), duration(0), number(0) { };
+  ImportationParasitePeriodicallyInfo() : location(-1), duration(0), parasite_type_id(-1), number(0), start_day(0) { };
 
-  ImportationParasitePeriodicallyInfo(int loc, int p_type, int dur, int num, int start_day) : location(loc), parasite_type_id(p_type),
-                                                                                              number(num), duration(dur),
-                                                                                              start_day(start_day) { };
+  ImportationParasitePeriodicallyInfo(const int loc, const int p_type, const int dur, const int num, const int start_day) : location(loc),
+                                                                                                                            duration(dur),
+                                                                                                                            parasite_type_id(
+                                                                                                                              p_type),
+                                                                                                                            number(num),
+                                                                                                                            start_day(
+                                                                                                                              start_day) { }
+  ;
 
   //    InitialParasiteInfo(const InitialParasiteInfo& orig){
   //        location = orig.location;
@@ -234,6 +240,10 @@ struct RelativeInfectivity {
   double sigma;
   double ro_star;
 
+  friend std::ostream& operator<<(std::ostream& os, const RelativeInfectivity& e) {
+    os << "[" << e.sigma << "," << e.ro_star << "]";
+    return os;
+  }
 };
 
 struct Allele {
@@ -264,11 +274,12 @@ struct Locus {
 
 struct GenotypeInfo {
   std::vector<Locus> loci_vector;
+
   friend std::ostream& operator<<(std::ostream& os, const GenotypeInfo& genotype_info) {
-	  for (const auto& loci: genotype_info.loci_vector) {
-		  os << loci;
-	  }
-	  return os;
+    for (const auto& loci : genotype_info.loci_vector) {
+      os << loci;
+    }
+    return os;
   }
 };
 

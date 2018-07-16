@@ -6,7 +6,6 @@
  */
 
 
-#include <gsl/gsl_cdf.h>
 #include <cmath>
 #include <fstream>
 #include <fmt/format.h>
@@ -31,9 +30,7 @@ using namespace Spatial;
 
 
 Config::Config(Model* model) :
-  model_(model), relative_bitting_information_(),
-  relative_infectivity_(), strategy_(nullptr),
-  circulation_information_(),
+  model_(model), strategy_(nullptr),
   modified_mutation_factor_(-1), modified_drug_half_life_(-1),
   modified_daily_cost_of_resistance_(-1), modified_mutation_probability_(-1) {}
 
@@ -77,20 +74,16 @@ void Config::read_from_file(const std::string& config_file_name) {
 
   // std::cout << typeid(*spatial_model()).name() << std::endl;
   // std::cout << "hello" << std::endl;  
-  read_spatial_info(config);
 
+  moving_level_generator_.set_level_density(&circulation_info().v_moving_level_density);
+  //TODO: rework here
+  bitting_level_generator_.set_level_density(&relative_bitting_info().v_biting_level_density);
 
   read_strategy_therapy_and_drug_information(config);
-
-  read_relative_biting_rate_info(config);
-  
-
   read_initial_parasite_info(config);
   read_importation_parasite_info(config);
   read_importation_parasite_periodically_info(config);
-
-  read_relative_infectivity_info(config);
-
+  
 }
 
 
@@ -132,180 +125,40 @@ Therapy* Config::read_therapy(const YAML::Node& n, const int& therapy_id) const 
 }
 
 
-void Config::read_relative_biting_rate_info(const YAML::Node& config) {
-  const YAML::Node& n = config["relative_bitting_info"];
-
-  relative_bitting_information_.max_relative_biting_value = n["max_relative_biting_value"].as<double>();
-
-  relative_bitting_information_.number_of_biting_levels = n["number_of_biting_levels"].as<int>();
-
-  relative_bitting_information_.scale = n["biting_level_distribution"]["Exponential"]["scale"].as<double>();
-
-  relative_bitting_information_.mean = n["biting_level_distribution"]["Gamma"]["mean"].as<double>();
-  relative_bitting_information_.sd = n["biting_level_distribution"]["Gamma"]["sd"].as<double>();
-
-  //calculate density and level value here
-  calculate_relative_biting_density();
-}
-
-void Config::calculate_relative_biting_density() {
-  const auto var = relative_bitting_information_.sd * relative_bitting_information_.sd;
-  const auto b = var / (relative_bitting_information_.mean - 1); //theta
-  const auto a = (relative_bitting_information_.mean - 1) / b; //k
-
-  relative_bitting_information_.v_biting_level_density.clear();
-  relative_bitting_information_.v_biting_level_value.clear();
-
-  const auto max = relative_bitting_information_.max_relative_biting_value - 1; //maxRelativeBiting -1
-  const auto number_of_level = relative_bitting_information_.number_of_biting_levels;
-
-  const auto step = max / static_cast<double>(number_of_level - 1);
-
-  auto j = 0;
-  auto old_p = 0.0;
-  auto sum = 0.0;
-
-  for (double i = 0; i <= max + 0.0001; i += step) {
-    const auto p = gsl_cdf_gamma_P(i + step, a, b);
-    double value = 0;
-    value = (j == 0) ? p : p - old_p;
-    relative_bitting_information_.v_biting_level_density.push_back(value);
-    old_p = p;
-    relative_bitting_information_.v_biting_level_value.push_back(i + 1);
-    sum += value;
-    j++;
-
-  }
-
-
-  //normalized
-  double t = 0;
-  for (auto& i : relative_bitting_information_.v_biting_level_density) {
-    i = i + (1 - sum) / relative_bitting_information_.v_biting_level_density.size();
-    t += i;
-  }
-
-
-  assert(relative_bitting_information_.number_of_biting_levels ==
-    relative_bitting_information_.v_biting_level_density.size());
-  assert(relative_bitting_information_.number_of_biting_levels ==
-    relative_bitting_information_.v_biting_level_value.size());
-  assert(fabs(t - 1) < 0.0001);
-
-  //TODO: rework here
-  bitting_level_generator_.set_level_density(&relative_bitting_information_.v_biting_level_density);
-
-
-  //    for (int i = 0; i < relative_bitting_information_.v_biting_level_density.size(); i++) {
-  //        std::cout << i << "\t" << relative_bitting_information_.v_biting_level_value[i] << "\t"
-  //                << relative_bitting_information_.v_biting_level_density[i] << std::endl;
-  //    }
-
-
-}
-
-void Config::read_spatial_info(const YAML::Node& config) {
-  const YAML::Node& n = config["circulation_information"];
-
-  circulation_information_.max_relative_moving_value = n["max_relative_moving_value"].as<double>();
-
-  circulation_information_.number_of_moving_levels = n["number_of_moving_levels"].as<int>();
-
-  circulation_information_.scale = n["moving_level_distribution"]["Exponential"]["scale"].as<double>();
-
-  circulation_information_.mean = n["moving_level_distribution"]["Gamma"]["mean"].as<double>();
-  circulation_information_.sd = n["moving_level_distribution"]["Gamma"]["sd"].as<double>();
-
-  //calculate density and level value here
-
-  const auto var = circulation_information_.sd * circulation_information_.sd;
-
-  const auto b = var / (circulation_information_.mean - 1); //theta
-  const auto a = (circulation_information_.mean - 1) / b; //k
-
-  circulation_information_.v_moving_level_density.clear();
-  circulation_information_.v_moving_level_value.clear();
-
-  const auto max = circulation_information_.max_relative_moving_value - 1; //maxRelativeBiting -1
-  const auto number_of_level = circulation_information_.number_of_moving_levels;
-
-  const auto step = max / static_cast<double>(number_of_level - 1);
-
-  auto j = 0;
-  double old_p = 0;
-  double sum = 0;
-
-  for (double i = 0; i <= max + 0.0001; i += step) {
-    const auto p = gsl_cdf_gamma_P(i + step, a, b);
-    double value = 0;
-    value = (j == 0) ? p : p - old_p;
-    circulation_information_.v_moving_level_density.push_back(value);
-    old_p = p;
-    circulation_information_.v_moving_level_value.push_back(i + 1);
-    sum += value;
-    j++;
-
-  }
-
-  //normalized
-  double t = 0;
-  for (auto& i : circulation_information_.v_moving_level_density) {
-    i = i + (1 - sum) / circulation_information_.v_moving_level_density.size();
-    t += i;
-  }
-
-  assert(circulation_information_.number_of_moving_levels == circulation_information_.v_moving_level_density.size());
-  assert(circulation_information_.number_of_moving_levels == circulation_information_.v_moving_level_value.size());
-  assert(fabs(t - 1) < 0.0001);
-
-  circulation_information_.circulation_percent = n["circulation_percent"].as<double>();
-
-  const auto length_of_stay_mean = n["length_of_stay"]["mean"].as<double>();
-  const auto length_of_stay_sd = n["length_of_stay"]["sd"].as<double>();
-
-  const auto stay_variance = length_of_stay_sd * length_of_stay_sd;
-  const auto k = stay_variance / length_of_stay_mean; //k
-  const auto theta = length_of_stay_mean / k; //theta
-
-  circulation_information_.length_of_stay_theta = theta;
-  circulation_information_.length_of_stay_k = k;
-  moving_level_generator_.set_level_density(&circulation_information_.v_moving_level_density);
-
-}
-
 void Config::read_initial_parasite_info(const YAML::Node& config) {
-  const YAML::Node& n = config["initial_parasite_info"];
+  const auto& info_node = config["initial_parasite_info"];
 
-  for (int i = 0; i < n.size(); i++) {
-    auto location = n[i]["location_id"].as<int>();
+  for (size_t index = 0; index < info_node.size(); index++) {
+    auto location = info_node[index]["location_id"].as<int>();
     if (location < number_of_locations() && location != -1) {
-      for (int j = 0; j < n[i]["parasite_info"].size(); j++) {
+      for (int j = 0; j < info_node[index]["parasite_info"].size(); j++) {
         //            InitialParasiteInfo ipi;
         //            ipi.location = location;
-        auto parasite_type_id = n[i]["parasite_info"][j]["parasite_type_id"].as<int>();
-        auto prevalence = n[i]["parasite_info"][j]["prevalence"].as<double>();
+        auto parasite_type_id = info_node[index]["parasite_info"][j]["parasite_type_id"].as<int>();
+        auto prevalence = info_node[index]["parasite_info"][j]["prevalence"].as<double>();
         initial_parasite_info_.emplace_back(location, parasite_type_id, prevalence);
       }
     }
     else if (location == -1) {
       //apply for all location
-      for (int loc = 0; loc < number_of_locations(); ++loc) {
-        for (int j = 0; j < n[i]["parasite_info"].size(); j++) {
+      for (auto loc = 0; loc < number_of_locations(); ++loc) {
+        for (auto j = 0; j < info_node[index]["parasite_info"].size(); j++) {
           //            InitialParasiteInfo ipi;
           //            ipi.location = location;
-          auto parasite_type_id = n[i]["parasite_info"][j]["parasite_type_id"].as<int>();
-          auto prevalence = n[i]["parasite_info"][j]["prevalence"].as<double>();
+          auto parasite_type_id = info_node[index]["parasite_info"][j]["parasite_type_id"].as<int>();
+          auto prevalence = info_node[index]["parasite_info"][j]["prevalence"].as<double>();
           initial_parasite_info_.emplace_back(loc, parasite_type_id, prevalence);
         }
       }
     }
   }
+
 }
 
 void Config::read_importation_parasite_info(const YAML::Node& config) {
   const YAML::Node& n = config["introduce_parasite"];
 
-  for (int i = 0; i < n.size(); i++) {
+  for (auto i = 0; i < n.size(); i++) {
     auto location = n[i]["location"].as<int>();
     if (location < number_of_locations()) {
       for (int j = 0; j < n[i]["parasite_info"].size(); j++) {
@@ -341,20 +194,6 @@ void Config::read_importation_parasite_periodically_info(const YAML::Node& confi
 
 }
 
-void Config::read_relative_infectivity_info(const YAML::Node& config) {
-  const YAML::Node& n = config["relative_infectivity"];
-
-  relative_infectivity_.sigma = n["sigma"].as<double>();
-  auto ro = n["ro"].as<double>();
-  auto blood_meal_volume = n["blood_meal_volume"].as<double>();
-
-  double d_star = 1 / blood_meal_volume;
-
-  relative_infectivity_.ro_star = (log(ro) - log(d_star)) / relative_infectivity_.sigma;
-
-  relative_infectivity_.sigma = log(10) / relative_infectivity_.sigma;
-  //    std::cout << relative_infectivity_.sigma << "\t" << relative_infectivity_.ro_star<< std::endl;
-}
 
 void Config::override_parameters(const std::string& override_file, const int& pos) {
 
@@ -455,8 +294,10 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
   }
 
   if (parameter_name == "relative_bitting_sd") {
-    relative_bitting_information_.sd = atof(parameter_value.c_str());
-    calculate_relative_biting_density();
+    relative_bitting_info().sd = atof(parameter_value.c_str());
+
+    // TODO: rework here
+    // calculate_relative_biting_density();
   }
 
   if (parameter_name == "k") {

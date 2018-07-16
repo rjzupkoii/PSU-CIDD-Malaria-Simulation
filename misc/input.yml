@@ -171,7 +171,7 @@ immune_system_information:
 
 # this functionality works, but it was not used in any analyses for the 2015 LGH paper
 #this applies for all locations
-circulation_information:
+circulation_info:
   max_relative_moving_value: 35
   number_of_moving_levels: 100
   moving_level_distribution:

@@ -179,8 +179,8 @@ void Person::set_bitting_level(const int& value) {
     new_value = 0;
   }
 
-  if (new_value > (Model::CONFIG->relative_bitting_information().number_of_biting_levels - 1)) {
-    new_value = Model::CONFIG->relative_bitting_information().number_of_biting_levels - 1;
+  if (new_value > (Model::CONFIG->relative_bitting_info().number_of_biting_levels - 1)) {
+    new_value = Model::CONFIG->relative_bitting_info().number_of_biting_levels - 1;
   }
   if (bitting_level_ != new_value) {
     all_clonal_parasite_populations_->remove_all_infection_force();
@@ -248,7 +248,7 @@ void Person::notify_change_in_force_of_infection(const double& sign, const int& 
 
 double Person::get_biting_level_value() {
 
-  return Model::CONFIG->relative_bitting_information().v_biting_level_value[bitting_level_];
+  return Model::CONFIG->relative_bitting_info().v_biting_level_value[bitting_level_];
 }
 
 double Person::relative_infectivity(const double& log10_parasite_density) {
@@ -543,8 +543,8 @@ void Person::update_bitting_level() {
   if (Model::CONFIG->using_age_dependent_bitting_level()) {
     const auto new_bitting_level_value = base_bitting_level_value_ * get_age_dependent_biting_factor();
     const int diff_in_level = floor(new_bitting_level_value - get_biting_level_value()) /
-    ((Model::CONFIG->relative_bitting_information().max_relative_biting_value - 1) /
-      static_cast<double>(Model::CONFIG->relative_bitting_information().number_of_biting_levels - 1));
+    ((Model::CONFIG->relative_bitting_info().max_relative_biting_value - 1) /
+      static_cast<double>(Model::CONFIG->relative_bitting_info().number_of_biting_levels - 1));
     if (diff_in_level != 0) {
       //            std::cout << bitting_level_ << "\t" << diff_in_level << std::endl;
       set_bitting_level(bitting_level_ + diff_in_level);

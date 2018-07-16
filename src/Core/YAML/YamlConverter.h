@@ -155,6 +155,28 @@ namespace YAML {
       }
       return true;
     }
-  }; 
+  };
+
+  template <>
+  struct convert<RelativeInfectivity> {
+    static Node encode(const RelativeInfectivity& rhs) {
+      Node node;
+      node.push_back("RelativeInfectivity");
+      return node;
+    }
+
+    static bool decode(const Node& node, RelativeInfectivity& relative_infectivity) {
+      relative_infectivity.sigma = node["sigma"].as<double>();
+      const auto ro = node["ro"].as<double>();
+      const auto blood_meal_volume = node["blood_meal_volume"].as<double>();
+
+      const auto d_star = 1 / blood_meal_volume;
+
+      relative_infectivity.ro_star = (log(ro) - log(d_star)) / relative_infectivity.sigma;
+
+      relative_infectivity.sigma = log(10) / relative_infectivity.sigma;
+      return true;
+    }
+  };
 }
 #endif // YAMLCONVERTER_H

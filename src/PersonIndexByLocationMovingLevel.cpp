@@ -77,7 +77,7 @@ void PersonIndexByLocationMovingLevel::change_property(Person* p, const int& loc
 
 void PersonIndexByLocationMovingLevel::update() {
 	for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-		for (int ml=0; ml < Model::CONFIG->circulation_information().number_of_moving_levels; ml++) {
+		for (int ml=0; ml < Model::CONFIG->circulation_info().number_of_moving_levels; ml++) {
 			std::vector<Person*>(vPerson_[location][ml]).swap(vPerson_[location][ml]);
 		}
 	}

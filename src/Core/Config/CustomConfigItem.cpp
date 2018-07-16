@@ -4,9 +4,9 @@
 #include "Config.h"
 #include <date/date.h>
 #include <cmath>
-#include <utility>
 #include "Spatial/SpatialModelBuilder.h"
 #include "Helpers/ObjectHelpers.h"
+#include <gsl/gsl_cdf.h>
 
 void total_time::set_value(const YAML::Node& node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
@@ -176,51 +176,51 @@ void drug_db::set_value(const YAML::Node& node) {
   ObjectHelpers::delete_pointer<DrugDatabase>(value_);
   value_ = new DrugDatabase();
 
-  for (auto i = 0; i < node[name_].size(); i++) {
+  for (auto drug_id = 0; drug_id < node[name_].size(); drug_id++) {
     auto* dt = new DrugType();
-    dt->set_id(i);
+    dt->set_id(drug_id);
 
-    const auto i_s = NumberHelpers::number_to_string<int>(i);
-    const auto& n = node[name_][i_s];
+    const auto i_s = NumberHelpers::number_to_string<int>(drug_id);
+    const auto& dt_node = node[name_][i_s];
 
-    dt->set_drug_half_life(n["half_life"].as<double>());
-    dt->set_maximum_parasite_killing_rate(n["maximum_parasite_killing_rate"].as<double>());
-    dt->set_n(n["n"].as<double>());
-    //    dt->set_EC50(n["EC50"].as<double>());
+    dt->set_drug_half_life(dt_node["half_life"].as<double>());
+    dt->set_maximum_parasite_killing_rate(dt_node["maximum_parasite_killing_rate"].as<double>());
+    dt->set_n(dt_node["n"].as<double>());
+    //    dt->set_EC50(node["EC50"].as<double>());
 
     //    std::cout <<dt->drug_half_life() << "-" << dt->maximum_parasite_killing_rate() << "-" << dt->n() << "-" << dt->EC50() << std::endl;
-    for (auto i = 0; i < n["age_specific_drug_concentration_sd"].size(); i++) {
+    for (auto i = 0; i < dt_node["age_specific_drug_concentration_sd"].size(); i++) {
       dt->age_group_specific_drug_concentration_sd().push_back(
-        n["age_specific_drug_concentration_sd"][i].as<double>());
+		  dt_node["age_specific_drug_concentration_sd"][i].as<double>());
     }
     //    assert(dt->age_group_specific_drug_concentration_sd().size() == 15);
 
-    dt->set_p_mutation(n["mutation_probability"].as<double>());
+    dt->set_p_mutation(dt_node["mutation_probability"].as<double>());
 
     dt->affecting_loci().clear();
-    for (auto i = 0; i < n["affecting_loci"].size(); i++) {
-      dt->affecting_loci().push_back(n["affecting_loci"][i].as<int>());
+    for (auto i = 0; i < dt_node["affecting_loci"].size(); i++) {
+      dt->affecting_loci().push_back(dt_node["affecting_loci"][i].as<int>());
     }
 
     dt->selecting_alleles().clear();
-    dt->selecting_alleles().assign(n["affecting_loci"].size(), IntVector());
-    for (auto i = 0; i < n["affecting_loci"].size(); i++) {
-      for (auto j = 0; j < n["selecting_alleles"][i].size(); j++) {
-        dt->selecting_alleles()[i].push_back(n["selecting_alleles"][i][j].as<int>());
+    dt->selecting_alleles().assign(dt_node["affecting_loci"].size(), IntVector());
+    for (auto i = 0; i < dt_node["affecting_loci"].size(); i++) {
+      for (auto j = 0; j < dt_node["selecting_alleles"][i].size(); j++) {
+        dt->selecting_alleles()[i].push_back(dt_node["selecting_alleles"][i][j].as<int>());
 
       }
     }
 
-    dt->set_ec50_map(n["EC50"].as<std::map<std::string, double>>());
+    dt->set_ec50_map(dt_node["EC50"].as<std::map<std::string, double>>());
 
-    //    auto ec50Node = n["EC50"];
+    //    auto ec50Node = node["EC50"];
     //    for (YAML::const_iterator it = ec50Node.begin(); it != ec50Node.end(); it++) {
     //        std::string key = it->first.as<std::string>();
     //        double value = it->second.as<double>();
     //        std::cout << key << ":::::" << value << std::endl;
     //    }
 
-    dt->set_k(n["k"].as<double>());
+    dt->set_k(dt_node["k"].as<double>());
 
     // auto* dt = read_drugtype(config, i);
     //        std::cout << i << std::endl;
@@ -230,20 +230,143 @@ void drug_db::set_value(const YAML::Node& node) {
 }
 
 void EC50_power_n_table::set_value(const YAML::Node& node) {
-	//get EC50 table and compute EC50^n
-	value_.clear();
-	value_.assign(config_->genotype_db()->db().size(), std::vector<double>());
+  //get EC50 table and compute EC50^n
+  value_.clear();
+  value_.assign(config_->genotype_db()->db().size(), std::vector<double>());
 
-	for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
-		for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
-			value_[g_id].push_back(config_->drug_db()->drug_db()[i]->infer_ec50(config_->genotype_db()->db()[g_id]));
-		}
-	}
-	//    std::cout << "ok " << std::endl;
+  for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
+    for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
+      value_[g_id].push_back(config_->drug_db()->drug_db()[i]->infer_ec50(config_->genotype_db()->db()[g_id]));
+    }
+  }
+  //    std::cout << "ok " << std::endl;
 
-	for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
-		for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
-			value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->get(i)->n());
-		}
-	}
+  for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
+    for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
+      value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->get(i)->n());
+    }
+  }
+}
+
+void circulation_info::set_value(const YAML::Node& in_node) {
+	auto node = in_node[name_];
+  value_.max_relative_moving_value = node["max_relative_moving_value"].as<double>();
+  
+  value_.number_of_moving_levels = node["number_of_moving_levels"].as<int>();
+
+  value_.scale = node["moving_level_distribution"]["Exponential"]["scale"].as<double>();
+
+  value_.mean = node["moving_level_distribution"]["Gamma"]["mean"].as<double>();
+  value_.sd = node["moving_level_distribution"]["Gamma"]["sd"].as<double>();
+
+  //calculate density and level value here
+ 
+  const auto var = value_.sd * value_.sd;
+
+  const auto b = var / (value_.mean - 1); //theta
+  const auto a = (value_.mean - 1) / b; //k
+
+  value_.v_moving_level_density.clear();
+  value_.v_moving_level_value.clear();
+
+  const auto max = value_.max_relative_moving_value - 1; //maxRelativeBiting -1
+  const auto number_of_level = value_.number_of_moving_levels;
+
+  const auto step = max / static_cast<double>(number_of_level - 1);
+
+  auto j = 0;
+  double old_p = 0;
+  double sum = 0;
+
+  for (double i = 0; i <= max + 0.0001; i += step) {
+    const auto p = gsl_cdf_gamma_P(i + step, a, b);
+    double value = 0;
+    value = (j == 0) ? p : p - old_p;
+    value_.v_moving_level_density.push_back(value);
+    old_p = p;
+    value_.v_moving_level_value.push_back(i + 1);
+    sum += value;
+    j++;
+
+  }
+
+  //normalized
+  double t = 0;
+  for (auto& i : value_.v_moving_level_density) {
+    i = i + (1 - sum) / value_.v_moving_level_density.size();
+    t += i;
+  }
+
+  assert(value_.number_of_moving_levels == value_.v_moving_level_density.size());
+  assert(value_.number_of_moving_levels == value_.v_moving_level_value.size());
+  assert(fabs(t - 1) < 0.0001);
+
+  value_.circulation_percent = node["circulation_percent"].as<double>();
+
+  const auto length_of_stay_mean = node["length_of_stay"]["mean"].as<double>();
+  const auto length_of_stay_sd = node["length_of_stay"]["sd"].as<double>();
+
+  const auto stay_variance = length_of_stay_sd * length_of_stay_sd;
+  const auto k = stay_variance / length_of_stay_mean; //k
+  const auto theta = length_of_stay_mean / k; //theta
+
+  value_.length_of_stay_theta = theta;
+  value_.length_of_stay_k = k;
+}
+
+void relative_bitting_info::set_value(const YAML::Node& in_node) {
+	auto node = in_node[name_];
+  value_.max_relative_biting_value = node["max_relative_biting_value"].as<double>();
+
+  value_.number_of_biting_levels = node["number_of_biting_levels"].as<int>();
+
+  value_.scale = node["biting_level_distribution"]["Exponential"]["scale"].as<double>();
+
+  value_.mean = node["biting_level_distribution"]["Gamma"]["mean"].as<double>();
+  value_.sd = node["biting_level_distribution"]["Gamma"]["sd"].as<double>();
+
+
+  const auto var = value_.sd * value_.sd;
+  const auto b = var / (value_.mean - 1); //theta
+  const auto a = (value_.mean - 1) / b; //k
+
+  value_.v_biting_level_density.clear();
+  value_.v_biting_level_value.clear();
+
+  const auto max = value_.max_relative_biting_value - 1; //maxRelativeBiting -1
+  const auto number_of_level = value_.number_of_biting_levels;
+
+  const auto step = max / static_cast<double>(number_of_level - 1);
+
+  auto j = 0;
+  auto old_p = 0.0;
+  auto sum = 0.0;
+
+  for (double i = 0; i <= max + 0.0001; i += step) {
+    const auto p = gsl_cdf_gamma_P(i + step, a, b);
+    double value = 0;
+    value = (j == 0) ? p : p - old_p;
+    value_.v_biting_level_density.push_back(value);
+    old_p = p;
+    value_.v_biting_level_value.push_back(i + 1);
+    sum += value;
+    j++;
+
+  }
+
+
+  //normalized
+  double t = 0;
+  for (auto& i : value_.v_biting_level_density) {
+    i = i + (1 - sum) / value_.v_biting_level_density.size();
+    t += i;
+  }
+
+
+  assert(value_.number_of_biting_levels ==
+    value_.v_biting_level_density.size());
+  assert(value_.number_of_biting_levels ==
+    value_.v_biting_level_value.size());
+  assert(fabs(t - 1) < 0.0001);
+
 }

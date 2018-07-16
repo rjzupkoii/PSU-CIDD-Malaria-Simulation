@@ -179,5 +179,45 @@ public:
   void set_value(const YAML::Node& node) override;
 };
 
+class circulation_info : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(circulation_info)
+DISALLOW_MOVE(circulation_info)
+protected:
+	RelativeMovingInformation value_;
+public:
+  //constructor
+  explicit circulation_info(std::string name, RelativeMovingInformation default_value, Config* config = nullptr) : IConfigItem(config, name),
+                                                                                              value_{std::move(default_value)} { }
+
+  // destructor
+  virtual ~circulation_info() = default;
+
+  virtual RelativeMovingInformation& operator()() {
+    return value_;
+  }
+
+  void set_value(const YAML::Node& node) override;
+};
+
+class relative_bitting_info : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(relative_bitting_info)
+DISALLOW_MOVE(relative_bitting_info)
+protected:
+	RelativeBittingInformation value_;
+public:
+  //constructor
+  explicit relative_bitting_info(std::string name, RelativeBittingInformation default_value, Config* config = nullptr) : IConfigItem(config, name),
+                                                                                              value_{std::move(default_value)} { }
+
+  // destructor
+  virtual ~relative_bitting_info() = default;
+
+  virtual RelativeBittingInformation& operator()() {
+    return value_;
+  }
+
+  void set_value(const YAML::Node& node) override;
+};
+
 
 #endif // CUSTOMCONFIGITEM_H
