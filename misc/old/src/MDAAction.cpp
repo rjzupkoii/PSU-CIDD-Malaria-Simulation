@@ -15,7 +15,7 @@
 #include "Core/Random.h"
 #include "Core/Config/Config.h"
 #include "Strategies/IStrategy.h"
-#include "ReceiveMDADrugEvent.h"
+#include "Events/ReceiveMDADrugEvent.h"
 
 MDAAction::MDAAction() {
 }

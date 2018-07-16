@@ -5,7 +5,7 @@
  * Created on August 22, 2013, 10:22 AM
  */
 
-#include "ReturnToNormalPopulationEvent.h"
+#include "Events/ReturnToNormalPopulationEvent.h"
 #include "Person.h"
 #include "Scheduler.h"
 

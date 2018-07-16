@@ -19,7 +19,7 @@
 #include "Population.h"
 #include "PersonIndexAll.h"
 #include "ClonalParasitePopulation.h"
-#include "ProgressToClinicalEvent.h"
+#include "Events/ProgressToClinicalEvent.h"
 #include "ImmuneSystem.h"
 #include "IndividualsFileReporter.h"
 #include <string>

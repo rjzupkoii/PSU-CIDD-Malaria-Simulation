@@ -7,7 +7,7 @@
 
 #include "DrugsInBlood.h"
 #include "Drug.h"
-#include "Event.h"
+#include "Events/Event.h"
 #include "Therapies/DrugType.h"
 #include "Person.h"
 #include "Helpers/ObjectHelpers.h"

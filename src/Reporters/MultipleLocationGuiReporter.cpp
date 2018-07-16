@@ -8,17 +8,11 @@
 #include "MultipleLocationGuiReporter.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
-#include "Strategies/IStrategy.h"
-#include "MDC/ModelDataCollector.h"
-#include "HelperFunction.h"
-#include "Core/Random.h"
 #include "Person.h"
 
-MultipleLocationGuiReporter::MultipleLocationGuiReporter() {
-}
+MultipleLocationGuiReporter::MultipleLocationGuiReporter() = default;
 
-MultipleLocationGuiReporter::~MultipleLocationGuiReporter() {
-}
+MultipleLocationGuiReporter::~MultipleLocationGuiReporter() = default;
 
 void MultipleLocationGuiReporter::initialize() {
   GuiReporter::initialize();

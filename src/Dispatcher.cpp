@@ -7,7 +7,7 @@
 
 #include "Dispatcher.h"
 #include "IndexHandler.h"
-#include "Event.h"
+#include "Events/Event.h"
 #include "Helpers/ObjectHelpers.h"
 
 Dispatcher::Dispatcher() : events_(nullptr) {}

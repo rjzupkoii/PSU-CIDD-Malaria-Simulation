@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "Scheduler.h"
-#include "Event.h"
+#include "Events/Event.h"
 #include "Dispatcher.h"
 #include "Model.h"
 #include "Core/Config/Config.h"

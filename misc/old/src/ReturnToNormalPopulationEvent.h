@@ -9,7 +9,7 @@
 #define	RETURNTONORMALPOPULATIONEVENT_H
 #include "Core/PropertyMacro.h"
 #include "ObjectPool.h"
-#include "Event.h"
+#include "Events/Event.h"
 
 class Person;
 class Scheduler;

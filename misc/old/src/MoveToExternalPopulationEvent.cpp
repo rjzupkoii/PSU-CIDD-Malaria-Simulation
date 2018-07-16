@@ -6,13 +6,13 @@
  */
 
 #include <cmath>
-#include "MoveToExternalPopulationEvent.h"
+#include "Events/MoveToExternalPopulationEvent.h"
 #include "Person.h"
 #include "Model.h"
 #include "Core/Random.h"
 #include "Scheduler.h"
 #include "Core/Config/Config.h"
-#include "ReturnToNormalPopulationEvent.h"
+#include "Events/ReturnToNormalPopulationEvent.h"
 
 OBJECTPOOL_IMPL(MoveToExternalPopulationEvent)
 

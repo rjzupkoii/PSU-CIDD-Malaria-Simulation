@@ -25,7 +25,7 @@
 #include "Strategies/IStrategy.h"
 #include "Strategies/SFTStrategy.h"
 #include "ImmuneSystem.h"
-#include "ProgressToClinicalEvent.h"
+#include "Events/ProgressToClinicalEvent.h"
 #include "ModelDataCollector.h"
 
 using namespace std;
