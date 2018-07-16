@@ -211,24 +211,12 @@ struct ImportationParasiteInfo {
 };
 
 struct ImportationParasitePeriodicallyInfo {
-  int location;
-  int duration;
-  int parasite_type_id;
-  int number;
-  int start_day;
-  // int end_day;
-
-  ImportationParasitePeriodicallyInfo() : location(-1), duration(0), parasite_type_id(-1), number(0), start_day(0) { };
-
-  ImportationParasitePeriodicallyInfo(const int loc, const int p_type, const int dur, const int num, const int start_day) : location(loc),
-                                                                                                                            duration(dur),
-                                                                                                                            parasite_type_id(
-                                                                                                                              p_type),
-                                                                                                                            number(num),
-                                                                                                                            start_day(
-                                                                                                                              start_day) { }
-  ;
-
+	int location{-1};
+  int duration{0};
+  int parasite_type_id{-1};
+  int number{0};
+  int start_day{0};
+  
   //    InitialParasiteInfo(const InitialParasiteInfo& orig){
   //        location = orig.location;
   //        parasite_type_id = orig.parasite_type_id;

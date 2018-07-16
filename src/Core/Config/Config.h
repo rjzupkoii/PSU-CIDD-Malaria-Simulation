@@ -13,7 +13,7 @@
 #include "CustomConfigItem.h"
 #include "ConfigItem.h"
 #include "Spatial/Location.h"
-#include "MultinomialDistributionGenerator.h"
+#include "Core/MultinomialDistributionGenerator.h"
 #include <string>
 #include <vector>
 #include <date/date.h>
@@ -75,7 +75,7 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(fraction_mosquitoes_interrupted_feeding, double, 0.0)
   CONFIG_ITEM(inflation_factor, double, 1.01)
-  // TODO: test
+  
   CONFIG_ITEM(location_db, std::vector<Spatial::Location>, std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
 
   CONFIG_ITEM(birth_rate, double, 0)
@@ -86,9 +86,9 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(parasite_density_level, ParasiteDensityLevel, ParasiteDensityLevel())
 
-  CONFIG_ITEM(genotype_info, GenotypeInfo, GenotypeInfo())
-  
   CONFIG_ITEM(relative_infectivity, RelativeInfectivity, RelativeInfectivity())
+  
+  CONFIG_ITEM(genotype_info, GenotypeInfo, GenotypeInfo())
 
 
   CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
@@ -116,9 +116,9 @@ POINTER_PROPERTY(Model, model)
   CUSTOM_CONFIG_ITEM(relative_bitting_info, RelativeBittingInformation())
 
 
-POINTER_PROPERTY(IStrategy, strategy)
 VIRTUAL_PROPERTY_REF(TherapyPtrVector, therapy_db)
 VIRTUAL_PROPERTY_REF(StrategyPtrVector, strategy_db)
+POINTER_PROPERTY(IStrategy, strategy)
 
 VIRTUAL_PROPERTY_REF(std::vector<InitialParasiteInfo>, initial_parasite_info)
 

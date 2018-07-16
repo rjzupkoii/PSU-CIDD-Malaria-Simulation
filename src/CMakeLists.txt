@@ -1,8 +1,8 @@
-file(GLOB SRC_FILES *.cpp *.h Spatial/*.cpp Spatial/*.h Reporters/*.cpp Reporters/*.h Strategies/*.cpp Strategies/*.h
-    MDC/*.cpp MDC/*.h Helpers/*.cpp Helpers/*.h
-	Core/*.h Core/*.cpp
-	Core/Config/*.h Core/Config/*.cpp
-	Core/YAML/*.h /YAML/*.cpp)
+include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
+
+file(GLOB SRC_FILES *.cpp  Spatial/*.cpp  Reporters/*.cpp Strategies/*.cpp 
+MDC/*.cpp  Helpers/*.cpp 	Core/*.cpp	 Core/Config/*.cpp 	Therapies/*.cpp
+Parasites/*.cpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 

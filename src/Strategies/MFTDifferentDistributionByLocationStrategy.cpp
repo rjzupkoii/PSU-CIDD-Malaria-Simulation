@@ -4,7 +4,7 @@
 
 #include <sstream>
 #include "MFTDifferentDistributionByLocationStrategy.h"
-#include "Therapy.h"
+#include "Therapies/Therapy.h"
 #include "Model.h"
 #include "Core/Random.h"
 #include "Person.h"

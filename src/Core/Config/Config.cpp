@@ -13,9 +13,9 @@
 #include "Strategies/IStrategy.h"
 #include "Model.h"
 #include "Core/Random.h"
-#include "SCTherapy.h"
+#include "Therapies/SCTherapy.h"
 #include "Strategies/StrategyBuilder.h"
-#include "TherapyBuilder.h"
+#include "Therapies/TherapyBuilder.h"
 #include "Strategies/NovelNonACTSwitchingStrategy.h"
 #include "Strategies/NestedSwitchingStrategy.h"
 #include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
@@ -78,12 +78,12 @@ void Config::read_from_file(const std::string& config_file_name) {
   moving_level_generator_.set_level_density(&circulation_info().v_moving_level_density);
   //TODO: rework here
   bitting_level_generator_.set_level_density(&relative_bitting_info().v_biting_level_density);
+  //
+  // read_strategy_therapy_and_drug_information(config);
+  // read_initial_parasite_info(config);
+  // read_importation_parasite_info(config);
+  // read_importation_parasite_periodically_info(config);
 
-  read_strategy_therapy_and_drug_information(config);
-  read_initial_parasite_info(config);
-  read_importation_parasite_info(config);
-  read_importation_parasite_periodically_info(config);
-  
 }
 
 
@@ -187,7 +187,9 @@ void Config::read_importation_parasite_periodically_info(const YAML::Node& confi
         auto dur = n[i]["parasite_info"][j]["duration"].as<int>();
         auto num = n[i]["parasite_info"][j]["number_of_cases"].as<int>();
         auto start_day = n[i]["parasite_info"][j]["start_day"].as<int>();
-        importation_parasite_periodically_info_.emplace_back(location, parasite_type_id, dur, num, start_day);
+        importation_parasite_periodically_info_.emplace_back(ImportationParasitePeriodicallyInfo{
+          location, parasite_type_id, dur, num, start_day
+        });
       }
     }
   }

@@ -8,9 +8,8 @@
 #include "DrugsInBlood.h"
 #include "Drug.h"
 #include "Event.h"
-#include "DrugType.h"
+#include "Therapies/DrugType.h"
 #include "Person.h"
-#include "SingleHostClonalParasitePopulations.h"
 #include "Helpers/ObjectHelpers.h"
 
 #ifndef DRUG_CUT_OFF_VALUE

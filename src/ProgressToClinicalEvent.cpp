@@ -13,7 +13,7 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Strategies/IStrategy.h"
-#include "SCTherapy.h"
+#include "Therapies/SCTherapy.h"
 #include "ClonalParasitePopulation.h"
 #include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"

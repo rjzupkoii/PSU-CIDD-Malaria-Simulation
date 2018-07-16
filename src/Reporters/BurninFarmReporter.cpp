@@ -17,8 +17,6 @@
 #include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
 #include "Core/Config/Config.h"
-#include "Therapy.h"
-#include "SCTherapy.h"
 #include "Population.h"
 #include "Strategies/MFTStrategy.h"
 #include "Constants.h"

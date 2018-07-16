@@ -19,7 +19,7 @@
 #include "MFTRebalancingStrategy.h"
 #include "CyclingStrategy.h"
 #include "AdaptiveCyclingStrategy.h"
-#include "Therapy.h"
+#include "Therapies/Therapy.h"
 
 
 // TODO: check if it match with calendar day

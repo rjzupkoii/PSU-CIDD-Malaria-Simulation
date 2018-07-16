@@ -9,7 +9,7 @@
 #include "Core/Random.h"
 #include "Person.h"
 #include "Scheduler.h"
-#include "Therapy.h"
+#include "Therapies/Therapy.h"
 #include "MFTRebalancingStrategy.h"
 #include "CyclingStrategy.h"
 #include "AdaptiveCyclingStrategy.h"

@@ -11,7 +11,7 @@
 #include "Core/PropertyMacro.h"
 #include "ParasiteDensityUpdateFunction.h"
 #include "IndexHandler.h"
-#include "DrugType.h"
+#include "Therapies/DrugType.h"
 #include "ObjectPool.h"
 
 class Therapy;

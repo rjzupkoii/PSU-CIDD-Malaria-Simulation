@@ -2,11 +2,12 @@
 
 #include "CustomConfigItem.h"
 #include "Config.h"
-#include <date/date.h>
-#include <cmath>
 #include "Spatial/SpatialModelBuilder.h"
 #include "Helpers/ObjectHelpers.h"
+#include "Helpers/NumberHelpers.h"
 #include <gsl/gsl_cdf.h>
+#include <cmath>
+#include <date/date.h>
 
 void total_time::set_value(const YAML::Node& node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
@@ -78,16 +79,16 @@ void spatial_model::set_value(const YAML::Node& node) {
   value_ = Spatial::SpatialModelBuilder::Build(sm_name, node[name_][sm_name]);
 }
 
-void immune_system_information::set_value(const YAML::Node& in_node) {
-  auto node = in_node[name_];
-  value_.acquire_rate = node["b1"].as<double>();
-  value_.decay_rate = node["b2"].as<double>();
+void immune_system_information::set_value(const YAML::Node& node) {
+  auto is_node = node[name_];
+  value_.acquire_rate = is_node["b1"].as<double>();
+  value_.decay_rate = is_node["b2"].as<double>();
 
-  value_.duration_for_fully_immune = node["duration_for_fully_immune"].as<double>();
-  value_.duration_for_naive = node["duration_for_naive"].as<double>();
+  value_.duration_for_fully_immune = is_node["duration_for_fully_immune"].as<double>();
+  value_.duration_for_naive = is_node["duration_for_naive"].as<double>();
 
-  const auto mean_initial_condition = node["mean_initial_condition"].as<double>();
-  const auto sd_initial_condition = node["sd_initial_condition"].as<double>();
+  const auto mean_initial_condition = is_node["mean_initial_condition"].as<double>();
+  const auto sd_initial_condition = is_node["sd_initial_condition"].as<double>();
 
   if (NumberHelpers::is_equal(sd_initial_condition, 0.0)) {
     value_.alpha_immune = mean_initial_condition;
@@ -101,20 +102,20 @@ void immune_system_information::set_value(const YAML::Node& in_node) {
       value_.alpha_immune;
   }
 
-  value_.immune_inflation_rate = node["immune_inflation_rate"].as<double>();
+  value_.immune_inflation_rate = is_node["immune_inflation_rate"].as<double>();
 
-  value_.min_clinical_probability = node["min_clinical_probability"].as<double>();
-  value_.max_clinical_probability = node["max_clinical_probability"].as<double>();
+  value_.min_clinical_probability = is_node["min_clinical_probability"].as<double>();
+  value_.max_clinical_probability = is_node["max_clinical_probability"].as<double>();
 
-  value_.immune_effect_on_progression_to_clinical = node[
+  value_.immune_effect_on_progression_to_clinical = is_node[
     "immune_effect_on_progression_to_clinical"].as<double>();
 
   //    std::cout << value_.c_min << std::endl;
   //    std::cout << value_.c_max << std::endl;
 
 
-  value_.age_mature_immunity = node["age_mature_immunity"].as<double>();
-  value_.factor_effect_age_mature_immunity = node["factor_effect_age_mature_immunity"].as<double>();
+  value_.age_mature_immunity = is_node["age_mature_immunity"].as<double>();
+  value_.factor_effect_age_mature_immunity = is_node["factor_effect_age_mature_immunity"].as<double>();
 
   // implement inlation rate
   double acR = value_.acquire_rate;
@@ -148,19 +149,29 @@ genotype_db::~genotype_db() {
 }
 
 void genotype_db::set_value(const YAML::Node& node) {
+
   value_ = new IntGenotypeDatabase();
 
+  value_->weight().clear();
+  value_->weight().assign(config_->genotype_info().loci_vector.size(), 1);
+
+  auto temp = 1;
+  for (int i = value_->weight().size() - 2; i > -1; i--) {
+    temp *= config_->genotype_info().loci_vector[i + 1].alleles.size();
+    value_->weight()[i] = temp;
+  }
   auto number_of_genotypes = 1;
-  for (auto& i : config_->genotype_info().loci_vector) {
-    number_of_genotypes *= i.alleles.size();
+  // std::cout << config_->genotype_info().loci_vector.size() << std::endl;
+  for (auto& locus : config_->genotype_info().loci_vector) {
+    number_of_genotypes *= locus.alleles.size();
   }
 
   for (auto i = 0; i < number_of_genotypes; i++) {
-    auto* int_genotype = new IntGenotype(i);
+    auto* int_genotype = new IntGenotype(i, config_->genotype_info(), value_->weight());
     //        std::cout << *int_genotype << std::endl;
     value_->add(int_genotype);
   }
-
+  
   value_->initialize_matting_matrix();
 }
 
@@ -191,7 +202,7 @@ void drug_db::set_value(const YAML::Node& node) {
     //    std::cout <<dt->drug_half_life() << "-" << dt->maximum_parasite_killing_rate() << "-" << dt->n() << "-" << dt->EC50() << std::endl;
     for (auto i = 0; i < dt_node["age_specific_drug_concentration_sd"].size(); i++) {
       dt->age_group_specific_drug_concentration_sd().push_back(
-		  dt_node["age_specific_drug_concentration_sd"][i].as<double>());
+        dt_node["age_specific_drug_concentration_sd"][i].as<double>());
     }
     //    assert(dt->age_group_specific_drug_concentration_sd().size() == 15);
 
@@ -230,28 +241,28 @@ void drug_db::set_value(const YAML::Node& node) {
 }
 
 void EC50_power_n_table::set_value(const YAML::Node& node) {
-  //get EC50 table and compute EC50^n
-  value_.clear();
-  value_.assign(config_->genotype_db()->db().size(), std::vector<double>());
-
-  for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
-    for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
-      value_[g_id].push_back(config_->drug_db()->drug_db()[i]->infer_ec50(config_->genotype_db()->db()[g_id]));
-    }
-  }
-  //    std::cout << "ok " << std::endl;
-
-  for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
-    for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
-      value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->get(i)->n());
-    }
-  }
+   //get EC50 table and compute EC50^n
+   value_.clear();
+   value_.assign(config_->genotype_db()->db().size(), std::vector<double>());
+  
+   for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
+     for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
+       value_[g_id].push_back(config_->drug_db()->drug_db()[i]->infer_ec50(config_->genotype_db()->db()[g_id]));
+     }
+   }
+   //    std::cout << "ok " << std::endl;
+  
+   for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
+     for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
+       value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->get(i)->n());
+     }
+   }
 }
 
 void circulation_info::set_value(const YAML::Node& in_node) {
-	auto node = in_node[name_];
+  auto node = in_node[name_];
   value_.max_relative_moving_value = node["max_relative_moving_value"].as<double>();
-  
+
   value_.number_of_moving_levels = node["number_of_moving_levels"].as<int>();
 
   value_.scale = node["moving_level_distribution"]["Exponential"]["scale"].as<double>();
@@ -260,7 +271,7 @@ void circulation_info::set_value(const YAML::Node& in_node) {
   value_.sd = node["moving_level_distribution"]["Gamma"]["sd"].as<double>();
 
   //calculate density and level value here
- 
+
   const auto var = value_.sd * value_.sd;
 
   const auto b = var / (value_.mean - 1); //theta
@@ -315,7 +326,7 @@ void circulation_info::set_value(const YAML::Node& in_node) {
 }
 
 void relative_bitting_info::set_value(const YAML::Node& in_node) {
-	auto node = in_node[name_];
+  auto node = in_node[name_];
   value_.max_relative_biting_value = node["max_relative_biting_value"].as<double>();
 
   value_.number_of_biting_levels = node["number_of_biting_levels"].as<int>();
@@ -363,10 +374,8 @@ void relative_bitting_info::set_value(const YAML::Node& in_node) {
   }
 
 
-  assert(value_.number_of_biting_levels ==
-    value_.v_biting_level_density.size());
-  assert(value_.number_of_biting_levels ==
-    value_.v_biting_level_value.size());
+  assert(value_.number_of_biting_levels ==value_.v_biting_level_density.size());
+  assert(value_.number_of_biting_levels ==value_.v_biting_level_value.size());
   assert(fabs(t - 1) < 0.0001);
 
 }

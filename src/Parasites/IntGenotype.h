@@ -22,12 +22,12 @@ PROPERTY_REF(double, daily_fitness_multiple_infection)
 PROPERTY_REF(int, number_of_resistance_position)
 POINTER_PROPERTY(DrugDatabase, drug_db)
 public:
-  explicit IntGenotype(const int& id = 0);
+  explicit IntGenotype(const int& id, const GenotypeInfo& genotype_info, const IntVector& weight);
 
   virtual ~IntGenotype();
 
-  double get_EC50_power_n(DrugType* dt);
-  double get_EC50(const int& drug_id);
+  double get_EC50_power_n(DrugType* dt) const;
+  double get_EC50(const int& drug_id) const;
 
   bool resist_to(DrugType* dt);
 

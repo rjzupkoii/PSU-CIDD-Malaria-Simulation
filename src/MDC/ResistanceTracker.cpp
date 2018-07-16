@@ -9,8 +9,8 @@
 #include "ResistanceTracker.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
-#include "IntGenotype.h"
-#include "IntGenotypeDatabase.h"
+#include "Parasites/IntGenotype.h"
+#include "Parasites/IntGenotypeDatabase.h"
 
 
 ResistanceTracker::ResistanceTracker() : total_{0} {

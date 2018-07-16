@@ -15,7 +15,7 @@
 #include "Core/Random.h"
 #include "Model.h"
 #include <cassert>
-#include "Therapy.h"
+#include "Therapies/Therapy.h"
 #include "Core/Config/Config.h"
 #include <sstream>
 

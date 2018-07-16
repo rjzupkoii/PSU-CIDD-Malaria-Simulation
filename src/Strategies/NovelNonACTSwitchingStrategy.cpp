@@ -65,7 +65,7 @@ void NovelNonACTSwitchingStrategy::update_end_of_time_step() {
 
 
       //switch therapy 2 to therapy 3
-      int number_of_therapies = therapy_list().size();
+      const int number_of_therapies = therapy_list().size();
 
       //switch the first therapy in the list
       therapy_list()[0] = Model::CONFIG->therapy_db()[non_art_therapy_id_];
@@ -73,7 +73,7 @@ void NovelNonACTSwitchingStrategy::update_end_of_time_step() {
       distribution()[0] = fraction_non_art_replacement_;
 
       for (int i = 1; i < number_of_therapies; i++) {
-        distribution()[i] = (1 - fraction_non_art_replacement_) / (double) (number_of_therapies - 1);
+        distribution()[i] = (1 - fraction_non_art_replacement_) / static_cast<double>(number_of_therapies - 1);
       }
 
 //            std::cout << to_string() << std::endl;

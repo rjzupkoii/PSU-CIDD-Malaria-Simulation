@@ -9,7 +9,7 @@
 #define	MACTHERAPY_H
 #include "Core/PropertyMacro.h"
 #include <vector>
-#include "Therapy.h"
+#include "Therapies/Therapy.h"
 
 class MACTherapy: public Therapy {
     DISALLOW_COPY_AND_ASSIGN(MACTherapy)

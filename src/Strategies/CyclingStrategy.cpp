@@ -11,7 +11,7 @@
 #include "MDC/ModelDataCollector.h"
 #include <sstream>
 #include "IStrategy.h"
-#include "Therapy.h"
+#include "Therapies/Therapy.h"
 
 CyclingStrategy::CyclingStrategy() : index_(0), cycling_time_(0) {
 }

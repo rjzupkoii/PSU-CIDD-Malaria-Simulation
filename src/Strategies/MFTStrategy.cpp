@@ -8,10 +8,9 @@
 #include "MFTStrategy.h"
 #include "Core/Random.h"
 #include "Model.h"
-#include <cassert>
 #include <sstream>
 #include "IStrategy.h"
-#include "Therapy.h"
+#include "Therapies/Therapy.h"
 
 MFTStrategy::MFTStrategy() : distribution_() {
     //    if (config != nullptr) {

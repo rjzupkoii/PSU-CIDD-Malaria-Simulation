@@ -8,7 +8,7 @@
 #include "ReceiveTherapyEvent.h"
 #include "Person.h"
 #include "Scheduler.h"
-#include "Therapy.h"
+#include "Therapies/Therapy.h"
 #include "ClonalParasitePopulation.h"
 
 ReceiveTherapyEvent::ReceiveTherapyEvent() {

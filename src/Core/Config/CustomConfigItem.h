@@ -4,8 +4,8 @@
 #include <string>
 #include <utility>
 #include "ConfigItem.h"
-#include "DrugDatabase.h"
-#include "IntGenotypeDatabase.h"
+#include "Therapies/DrugDatabase.h"
+#include "Parasites/IntGenotypeDatabase.h"
 
 
 namespace YAML {

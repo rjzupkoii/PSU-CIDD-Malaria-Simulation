@@ -7,7 +7,7 @@
 
 #include "DrugType.h"
 #include <cmath>
-#include "IntGenotype.h"
+#include "Parasites/IntGenotype.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"

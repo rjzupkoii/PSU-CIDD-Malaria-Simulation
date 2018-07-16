@@ -16,9 +16,7 @@ namespace Spatial {
 //        std::cout << beta_ << std::endl;
   }
 
-  WesolowskiSM::~WesolowskiSM() {
-
-  }
+  WesolowskiSM::~WesolowskiSM() = default;
 
   DoubleVector
   WesolowskiSM::get_v_relative_outmovement_to_destination(const int &from_location, const int &number_of_locations,

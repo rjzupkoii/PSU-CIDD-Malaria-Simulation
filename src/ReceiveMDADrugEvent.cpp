@@ -8,7 +8,7 @@
 #include "ReceiveMDADrugEvent.h"
 #include "Person.h"
 #include "Scheduler.h"
-#include "Therapy.h"
+#include "Therapies/Therapy.h"
 
 ReceiveMDADrugEvent::ReceiveMDADrugEvent() {
 }

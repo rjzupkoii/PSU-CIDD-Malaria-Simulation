@@ -4,8 +4,6 @@
 #include <yaml-cpp/yaml.h>
 #include "Spatial/Location.h"
 #include "Core/TypeDef.h"
-#include "Helpers/NumberHelpers.h"
-#include "DrugType.h"
 
 namespace YAML {
   template <>
@@ -123,18 +121,18 @@ namespace YAML {
   struct convert<GenotypeInfo> {
     static Node encode(const GenotypeInfo& rhs) {
       Node node;
-      node.push_back("ParasiteDensityLevel");
+      node.push_back("GenotypeInfo");
       return node;
     }
 
-    static bool decode(const Node& node, GenotypeInfo& genotype_info_) {
-      genotype_info_.loci_vector.clear();
+    static bool decode(const Node& node, GenotypeInfo& genotype_info) {
+      genotype_info.loci_vector.clear();      
       for (auto i = 0; i < node["loci"].size(); i++) {
         Locus l;
         l.position = node["loci"][i]["position"].as<int>();
 
 
-        for (int j = 0; j < node["loci"][i]["alleles"].size(); j++) {
+        for (auto j = 0; j < node["loci"][i]["alleles"].size(); j++) {
           Allele al;
           al.value = node["loci"][i]["alleles"][j]["value"].as<int>();
           al.name = node["loci"][i]["alleles"][j]["allele_name"].as<std::string>();
@@ -142,7 +140,7 @@ namespace YAML {
           al.mutation_level = node["loci"][i]["alleles"][j]["mutation_level"].as<int>();
           al.daily_cost_of_resistance = node["loci"][i]["alleles"][j]["daily_cost_of_resistance"].as<
             double>();
-          for (int c = 0; c < node["loci"][i]["alleles"][j]["can_mutate_to"].size(); c++) {
+          for (auto c = 0; c < node["loci"][i]["alleles"][j]["can_mutate_to"].size(); c++) {
             //                al.mutation_value_up.push_back(node["loci"][i]["alleles"][j]["mutation_up"][c].as<int>());
             al.mutation_values.push_back(
               node["loci"][i]["alleles"][j]["can_mutate_to"][c].as<int>());
@@ -151,7 +149,7 @@ namespace YAML {
           l.alleles.push_back(al);
         }
 
-        genotype_info_.loci_vector.push_back(l);
+        genotype_info.loci_vector.push_back(l);
       }
       return true;
     }

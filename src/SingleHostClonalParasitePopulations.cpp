@@ -6,11 +6,10 @@
  */
 
 #include "ClonalParasitePopulation.h"
-#include "IntGenotype.h"
+#include "Parasites/IntGenotype.h"
 #include "SingleHostClonalParasitePopulations.h"
 #include "Person.h"
-#include "DrugType.h"
-#include "Population.h"
+#include "Therapies/DrugType.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "DrugsInBlood.h"
@@ -52,15 +51,15 @@ SingleHostClonalParasitePopulations::~SingleHostClonalParasitePopulations() {
 }
 
 void SingleHostClonalParasitePopulations::clear() {
-  if (parasites_->size() == 0) return;
+  if (parasites_->empty()) return;
   remove_all_infection_force();
 
-  for (int i = 0; i < parasites_->size(); i++) {
+  for (auto& parasite : *parasites_) {
     if (Model::DATA_COLLECTOR != nullptr) {
-      Model::DATA_COLLECTOR->resistance_tracker().decrease(parasites_->at(i)->genotype()->genotype_id(),
+      Model::DATA_COLLECTOR->resistance_tracker().decrease(parasite->genotype()->genotype_id(),
                                                            person_->location());
     }
-    delete parasites_->at(i);
+    delete parasite;
   }
   parasites_->clear();
 

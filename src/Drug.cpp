@@ -6,10 +6,9 @@
  */
 
 #include "Drug.h"
-#include "DrugType.h"
+#include "Therapies/DrugType.h"
 #include "Person.h"
 #include "Core/Random.h"
-#include "Population.h"
 #include "Model.h"
 #include "Scheduler.h"
 #include "Core/Config/Config.h"
