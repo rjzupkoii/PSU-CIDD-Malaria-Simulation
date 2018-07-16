@@ -43,13 +43,9 @@ Config::~Config() {
   }
 
   strategy_db_.clear();
-
   strategy_ = nullptr;
 
-  for (auto& i : therapy_db_) {
-    delete i;
-  }
-  therapy_db_.clear();
+
 }
 
 
@@ -89,11 +85,7 @@ void Config::read_from_file(const std::string& config_file_name) {
 
 void Config::read_strategy_therapy_and_drug_information(const YAML::Node& config) {
 
-  //    read_all_therapy
-  for (auto i = 0; i < config["TherapyInfo"].size(); i++) {
-    auto* t = read_therapy(config["TherapyInfo"], i);
-    therapy_db_.push_back(t);
-  }
+
 
   for (auto i = 0; i < config["StrategyInfo"].size(); i++) {
     auto* s = read_strategy(config["StrategyInfo"], i);
@@ -326,7 +318,7 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
 
   if (parameter_name == "dosing_days") {
     int dosing_days = atoi(parameter_value.c_str());
-    for (auto& it : therapy_db_) {
+    for (auto& it : therapy_db()) {
 
       auto* scTherapy = dynamic_cast<SCTherapy *>(it);
       if (scTherapy != nullptr) {

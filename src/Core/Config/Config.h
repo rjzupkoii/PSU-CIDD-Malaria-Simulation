@@ -75,7 +75,7 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(fraction_mosquitoes_interrupted_feeding, double, 0.0)
   CONFIG_ITEM(inflation_factor, double, 1.01)
-  
+
   CONFIG_ITEM(location_db, std::vector<Spatial::Location>, std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
 
   CONFIG_ITEM(birth_rate, double, 0)
@@ -87,7 +87,7 @@ POINTER_PROPERTY(Model, model)
   CONFIG_ITEM(parasite_density_level, ParasiteDensityLevel, ParasiteDensityLevel())
 
   CONFIG_ITEM(relative_infectivity, RelativeInfectivity, RelativeInfectivity())
-  
+
   CONFIG_ITEM(genotype_info, GenotypeInfo, GenotypeInfo())
 
 
@@ -115,8 +115,10 @@ POINTER_PROPERTY(Model, model)
 
   CUSTOM_CONFIG_ITEM(relative_bitting_info, RelativeBittingInformation())
 
+  CUSTOM_CONFIG_ITEM(therapy_db, TherapyPtrVector())
 
-VIRTUAL_PROPERTY_REF(TherapyPtrVector, therapy_db)
+// VIRTUAL_PROPERTY_REF(TherapyPtrVector, therapy_db)
+
 VIRTUAL_PROPERTY_REF(StrategyPtrVector, strategy_db)
 POINTER_PROPERTY(IStrategy, strategy)
 
@@ -154,7 +156,7 @@ public:
 
   void read_importation_parasite_periodically_info(const YAML::Node& config);
 
-  IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id) ;
+  IStrategy* read_strategy(const YAML::Node& n, const int& strategy_id);
 
   Therapy* read_therapy(const YAML::Node& n, const int& therapy_id) const;
 

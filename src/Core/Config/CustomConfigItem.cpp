@@ -8,6 +8,8 @@
 #include <gsl/gsl_cdf.h>
 #include <cmath>
 #include <date/date.h>
+#include "Therapies/Therapy.h"
+#include "Therapies/TherapyBuilder.h"
 
 void total_time::set_value(const YAML::Node& node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
@@ -378,4 +380,25 @@ void relative_bitting_info::set_value(const YAML::Node& in_node) {
   assert(value_.number_of_biting_levels ==value_.v_biting_level_value.size());
   assert(fabs(t - 1) < 0.0001);
 
+}
+
+therapy_db::~therapy_db() {
+	for (auto& i : value_) {
+		delete i;
+	}
+	value_.clear();
+}
+
+Therapy* read_therapy(const YAML::Node& n, const int& therapy_id)  {
+	const auto t_id = NumberHelpers::number_to_string<int>(therapy_id);
+	auto* t = TherapyBuilder::build(n[t_id], therapy_id);
+	return t;
+}
+
+void therapy_db::set_value(const YAML::Node& node) {
+	//    read_all_therapy
+	for (auto i = 0; i < node["therapy_db"].size(); i++) {
+		auto* t = read_therapy(node["therapy_db"], i);
+		value_.push_back(t);
+	}
 }

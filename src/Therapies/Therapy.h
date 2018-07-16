@@ -17,7 +17,6 @@ class Therapy {
     DISALLOW_COPY_AND_ASSIGN(Therapy)
 
     VIRTUAL_PROPERTY_REF(int, id)
-    VIRTUAL_PROPERTY_REF(int, number_of_dosing_days)
     VIRTUAL_PROPERTY_REF(int, testing_day)
     VIRTUAL_PROPERTY_REF(std::vector<int>, drug_ids);
 

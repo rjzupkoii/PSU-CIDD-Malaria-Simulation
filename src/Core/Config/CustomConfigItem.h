@@ -219,5 +219,24 @@ public:
   void set_value(const YAML::Node& node) override;
 };
 
+class therapy_db : public IConfigItem {
+	DISALLOW_COPY_AND_ASSIGN(therapy_db)
+		DISALLOW_MOVE(therapy_db)
+protected:
+	TherapyPtrVector value_;
+public:
+	//constructor
+	explicit therapy_db(std::string name, TherapyPtrVector default_value, Config* config = nullptr) : IConfigItem(config, name),
+		value_{std::move(default_value)} { }
+
+	// destructor
+	virtual ~therapy_db();
+
+	virtual TherapyPtrVector& operator()() {
+		return value_;
+	}
+
+	void set_value(const YAML::Node& node) override;
+};
 
 #endif // CUSTOMCONFIGITEM_H

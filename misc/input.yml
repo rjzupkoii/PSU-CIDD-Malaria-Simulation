@@ -596,7 +596,7 @@ artemisinin_drug_id: 0
 # testing day tells you the follow-up point at which it is determined if treatment failed or not
 tf_testing_day: 28
 
-TherapyInfo:
+therapy_db:
   #mono as
   0:    
     drug_id: [0]

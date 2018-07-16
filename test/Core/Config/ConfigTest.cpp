@@ -2,6 +2,8 @@
 #include "Core/Config/Config.h"
 #include "Spatial/WesolowskiSM.h"
 #include "Spatial/BarabasiSM.h"
+#include "Therapies/Therapy.h"
+#include "Therapies/SCTherapy.h"
 
 TEST_CASE("ConfigTest", "[Core]") {
 
@@ -134,6 +136,15 @@ TEST_CASE("ConfigTest", "[Core]") {
     //
     REQUIRE(c.relative_bitting_info().max_relative_biting_value == 35);
 
+
+    REQUIRE(c.therapy_db().size() == 13);
+    REQUIRE(c.therapy_db()[0]->drug_ids().size() == 1);
+    REQUIRE(c.therapy_db()[0]->drug_ids() == IntVector{0});
+    REQUIRE(((SCTherapy*)c.therapy_db()[0])->dosing_day()== 3);
+    
+    REQUIRE(c.therapy_db()[11]->drug_ids().size() == 3);
+    REQUIRE(c.therapy_db()[11]->drug_ids() == IntVector{0,1,2});
+    REQUIRE(((SCTherapy*)c.therapy_db()[0])->dosing_day() == 3);
     // REQUIRE(2== 2);
   }
 }
