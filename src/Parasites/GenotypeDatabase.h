@@ -9,28 +9,28 @@
 #define	INTPARASITEDATABASE_H
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
-#include "IntGenotype.h"
+#include "Genotype.h"
 #include <map>
 
-class IntGenotype;
+class Genotype;
 
-typedef std::map<int, IntGenotype*> IntGenotypePtrMap;
+typedef std::map<int, Genotype*> GenotypePtrMap;
 typedef std::vector<std::vector<std::vector<double>>> MatingMatrix;
 
-class IntGenotypeDatabase {
-DISALLOW_COPY_AND_ASSIGN(IntGenotypeDatabase)
-DISALLOW_MOVE(IntGenotypeDatabase)
-VIRTUAL_PROPERTY_REF(IntGenotypePtrMap, db);
+class GenotypeDatabase : public GenotypePtrMap {
+DISALLOW_COPY_AND_ASSIGN(GenotypeDatabase)
+DISALLOW_MOVE(GenotypeDatabase)
+// VIRTUAL_PROPERTY_REF(GenotypePtrMap, db);
 VIRTUAL_PROPERTY_REF(MatingMatrix, mating_matrix);
 VIRTUAL_PROPERTY_REF(IntVector, weight);
 
 
 public:
-  IntGenotypeDatabase();
-  virtual ~IntGenotypeDatabase();
+  GenotypeDatabase();
+  virtual ~GenotypeDatabase();
 
-  void add(IntGenotype* genotype);
-  IntGenotype* get(const int& id);
+  void add(Genotype* genotype);
+  Genotype* get(const int& id);
 
   int get_id(const IntVector& gene);
 

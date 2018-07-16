@@ -7,7 +7,7 @@
 
 #include "DrugType.h"
 #include <cmath>
-#include "Parasites/IntGenotype.h"
+#include "Parasites/Genotype.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
@@ -77,7 +77,7 @@ int DrugType::select_mutation_locus() {
   return affecting_loci_[pos];
 }
 
-double DrugType::infer_ec50(IntGenotype* genotype) {
+double DrugType::infer_ec50(Genotype* genotype) {
   //compare genotype.short_name with Ccnfig to get EC50 
   for (auto& item : ec50_map_) {
     auto key = item.first;

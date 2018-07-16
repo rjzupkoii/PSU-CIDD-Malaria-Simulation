@@ -86,7 +86,7 @@ PROPERTY_REF(double, base_bitting_level_value)
 PROPERTY_HEADER(int, moving_level)
 
 POINTER_PROPERTY(DrugsInBlood, drugs_in_blood)
-POINTER_PROPERTY(IntGenotype, liver_parasite_type)
+POINTER_PROPERTY(Genotype, liver_parasite_type)
 
 POINTER_PROPERTY(IntVector, today_infections)
 POINTER_PROPERTY(IntVector, today_target_locations)
@@ -113,7 +113,7 @@ public:
   virtual void increase_age_by_1_year();
 
   //    BloodParasite* add_new_parasite_to_blood(Genotype* parasite_type);
-  ClonalParasitePopulation* add_new_parasite_to_blood(IntGenotype* parasite_type) const;
+  ClonalParasitePopulation* add_new_parasite_to_blood(Genotype* parasite_type) const;
 
   virtual void notify_change_in_force_of_infection(const double& sign, const int& parasite_type_id,
                                                    const double& blood_parasite_log_relative_density,
@@ -150,7 +150,7 @@ public:
   void schedule_end_clinical_by_no_treatment_event(ClonalParasitePopulation* blood_parasite);
   void schedule_relapse_event(ClonalParasitePopulation* clinical_caused_parasite, const int& time_until_relapse);
 
-  void schedule_move_parasite_to_blood(IntGenotype* genotype, const int& time);
+  void schedule_move_parasite_to_blood(Genotype* genotype, const int& time);
   void schedule_mature_gametocyte_event(ClonalParasitePopulation* clinical_caused_parasite);
   void schedule_update_every_K_days_event(const int& time);
 

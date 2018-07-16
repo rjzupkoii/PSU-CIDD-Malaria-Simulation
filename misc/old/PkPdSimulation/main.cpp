@@ -13,8 +13,8 @@
 #include "Reporter.h"
 #include "HelperFunction.h"
 #include "PkPdReporter.h"
-#include "IntGenotype.h"
-#include "IntGenotypeDatabase.h"
+#include "Genotype.h"
+#include "GenotypeDatabase.h"
 #include "Core/Config/Config.h"
 #include "Population.h"
 #include "PersonIndexAll.h"
@@ -55,8 +55,8 @@ int main(int argc, const char * argv[]) {
     m->add_reporter(new IndividualsFileReporter(individuals_output_file));
 
     //infect all individual and schedule progress to clinical at day 0
-    //    IntGenotype* genotype = Model::CONFIG->genotype_db()->get(12);
-    IntGenotype* genotype = Model::CONFIG->genotype_db()->get(genotype_id);
+    //    Genotype* genotype = Model::CONFIG->genotype_db()->get(12);
+    Genotype* genotype = Model::CONFIG->genotype_db()->get(genotype_id);
   
 
     BOOST_FOREACH(Person* person, Model::POPULATION->all_persons()->vPerson()) {

@@ -17,7 +17,7 @@
 OBJECTPOOL_IMPL(ClonalParasitePopulation)
 const double ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY = -1000;
 
-ClonalParasitePopulation::ClonalParasitePopulation(IntGenotype *genotype) : last_update_log10_parasite_density_(
+ClonalParasitePopulation::ClonalParasitePopulation(Genotype *genotype) : last_update_log10_parasite_density_(
         LOG_ZERO_PARASITE_DENSITY), gametocyte_level_(0.0), first_date_in_blood_(-1), genotype_(genotype),
                                                                             update_function_(nullptr) {
 }
@@ -39,7 +39,7 @@ double ClonalParasitePopulation::get_current_parasite_density(const int &current
   return update_function_->get_current_parasite_density(this, duration);
 }
 
-void ClonalParasitePopulation::mutate_to(IntGenotype *genotype) {
+void ClonalParasitePopulation::mutate_to(Genotype *genotype) {
   //TODO:: do other statistic things
   set_genotype(genotype);
 }
@@ -77,12 +77,12 @@ void ClonalParasitePopulation::set_gametocyte_level(const double &value) {
   }
 }
 
-IntGenotype *ClonalParasitePopulation::genotype() const {
+Genotype *ClonalParasitePopulation::genotype() const {
 
   return genotype_;
 }
 
-void ClonalParasitePopulation::set_genotype(IntGenotype *value) {
+void ClonalParasitePopulation::set_genotype(Genotype *value) {
   if (genotype_ != value) {
     parasite_population_->remove_all_infection_force();
     genotype_ = value;

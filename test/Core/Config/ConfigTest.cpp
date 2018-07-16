@@ -115,7 +115,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.immune_system_information().decay_rate== 0.0025);
 
     REQUIRE(c.genotype_db() != nullptr);
-    REQUIRE(c.genotype_db()->db().size() ==128);
+    REQUIRE(c.genotype_db()->size() ==128);
     REQUIRE(c.genotype_db()->get(0)->gene_expression()==IntVector{ 0, 0, 0, 0, 0 });
     REQUIRE(c.genotype_db()->get(127)->gene_expression() == IntVector{ 1,7,1,1,1});
 
@@ -132,7 +132,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     //
     REQUIRE(c.circulation_info().max_relative_moving_value == 35);
     //
-	REQUIRE(c.relative_bitting_info().max_relative_biting_value == 35);
+    REQUIRE(c.relative_bitting_info().max_relative_biting_value == 35);
 
     // REQUIRE(2== 2);
   }

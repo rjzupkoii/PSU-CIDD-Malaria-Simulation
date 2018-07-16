@@ -5,7 +5,7 @@
 #include <utility>
 #include "ConfigItem.h"
 #include "Therapies/DrugDatabase.h"
-#include "Parasites/IntGenotypeDatabase.h"
+#include "Parasites/GenotypeDatabase.h"
 
 
 namespace YAML {
@@ -115,16 +115,16 @@ class genotype_db : public IConfigItem {
 DISALLOW_COPY_AND_ASSIGN(genotype_db)
 DISALLOW_MOVE(genotype_db)
 protected:
-  IntGenotypeDatabase* value_;
+  GenotypeDatabase* value_;
 public:
   //constructor
-  explicit genotype_db(std::string name, IntGenotypeDatabase* default_value, Config* config = nullptr) : IConfigItem(config, name),
+  explicit genotype_db(std::string name, GenotypeDatabase* default_value, Config* config = nullptr) : IConfigItem(config, name),
                                                                                                          value_{default_value} { }
 
   // destructor
   virtual ~genotype_db();
 
-  virtual IntGenotypeDatabase* operator()() {
+  virtual GenotypeDatabase* operator()() {
     return value_;
   }
 

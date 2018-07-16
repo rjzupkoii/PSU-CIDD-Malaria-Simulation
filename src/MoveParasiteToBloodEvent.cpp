@@ -24,7 +24,7 @@ MoveParasiteToBloodEvent::MoveParasiteToBloodEvent() {
 MoveParasiteToBloodEvent::~MoveParasiteToBloodEvent() {
 }
 
-void MoveParasiteToBloodEvent::schedule_event(Scheduler* scheduler, Person* p, IntGenotype* infection_type, const int& time) {
+void MoveParasiteToBloodEvent::schedule_event(Scheduler* scheduler, Person* p, Genotype* infection_type, const int& time) {
     if (scheduler != nullptr) {
         MoveParasiteToBloodEvent* e = new MoveParasiteToBloodEvent();
         e->set_dispatcher(p);
@@ -39,7 +39,7 @@ void MoveParasiteToBloodEvent::schedule_event(Scheduler* scheduler, Person* p, I
 
 void MoveParasiteToBloodEvent::execute() {
     Person* person = (Person*) dispatcher();
-    IntGenotype* parasite_type = person->liver_parasite_type();
+    Genotype* parasite_type = person->liver_parasite_type();
     person->set_liver_parasite_type(nullptr);
 
     //add to blood

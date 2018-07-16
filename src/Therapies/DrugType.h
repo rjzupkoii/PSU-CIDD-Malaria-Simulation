@@ -12,7 +12,7 @@
 
 typedef std::map<std::string, double> ec50map_type;
 
-class IntGenotype;
+class Genotype;
 
 class DrugType {
 public:
@@ -49,7 +49,7 @@ public:
 
   int select_mutation_locus();
 
-  double infer_ec50(IntGenotype* genotype);
+  double infer_ec50(Genotype* genotype);
 
 private:
   double n_;

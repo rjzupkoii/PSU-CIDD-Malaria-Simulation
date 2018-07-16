@@ -6,7 +6,7 @@
  */
 
 #include "ClonalParasitePopulation.h"
-#include "Parasites/IntGenotype.h"
+#include "Parasites/Genotype.h"
 #include "SingleHostClonalParasitePopulations.h"
 #include "Person.h"
 #include "Therapies/DrugType.h"
@@ -342,7 +342,7 @@ void SingleHostClonalParasitePopulations::clear_cured_parasites() {
 
 void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in_blood) {
   for (auto& bloodParasite : *parasites_) {
-    IntGenotype* new_genotype = bloodParasite->genotype();
+    Genotype* new_genotype = bloodParasite->genotype();
 
     double percent_parasite_remove = 0;
     DrugPtrMap::iterator it;
@@ -366,7 +366,7 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
         }
         int new_allele_value = bloodParasite->genotype()->select_mutation_allele(mutation_locus);
         //                std::cout << mutation_locus << "-" << bloodParasite->genotype()->gene_expression()[mutation_locus] << "-" << new_allele_value << std::endl;
-        IntGenotype* mutation_genotype = new_genotype->combine_mutation_to(mutation_locus, new_allele_value);
+        Genotype* mutation_genotype = new_genotype->combine_mutation_to(mutation_locus, new_allele_value);
 
         //                if (drug->drug_type()->id() == 3) {
         //                    std::cout << drug->getMutationProbability() << std::endl;

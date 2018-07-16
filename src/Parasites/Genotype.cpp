@@ -1,18 +1,18 @@
 /* 
- * File:   IntGenotype.cpp
+ * File:   Genotype.cpp
  * Author: Merlin
  * 
  * Created on March 17, 2014, 2:33 PM
  */
 
-#include "IntGenotype.h"
+#include "Genotype.h"
 #include "Therapies/DrugDatabase.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "Therapies/SCTherapy.h"
 
-IntGenotype::IntGenotype(const int &id, const GenotypeInfo& genotype_info, const IntVector& weight) : genotype_id_(id) {
+Genotype::Genotype(const int &id, const GenotypeInfo& genotype_info, const IntVector& weight) : genotype_id_(id) {
 
   gene_expression_.clear();
   //
@@ -38,9 +38,9 @@ IntGenotype::IntGenotype(const int &id, const GenotypeInfo& genotype_info, const
 
 }
 
-IntGenotype::~IntGenotype() = default;
+Genotype::~Genotype() = default;
 
-bool IntGenotype::resist_to(DrugType *dt) {
+bool Genotype::resist_to(DrugType *dt) {
   for (auto i = 0; i < dt->affecting_loci().size(); i++) {
     for (auto j = 0; j < dt->selecting_alleles()[i].size(); j++) {
       if (gene_expression_[dt->affecting_loci()[i]] == dt->selecting_alleles()[i][j]) {
@@ -51,7 +51,7 @@ bool IntGenotype::resist_to(DrugType *dt) {
   return false;
 }
 
-bool IntGenotype::resist_to(Therapy *therapy) {
+bool Genotype::resist_to(Therapy *therapy) {
   auto* sc_therapy = dynamic_cast<SCTherapy *> (therapy);
   if (sc_therapy != nullptr) {
     for (auto drug_id : sc_therapy->drug_ids()) {
@@ -63,7 +63,7 @@ bool IntGenotype::resist_to(Therapy *therapy) {
   return false;
 }
 
-IntGenotype *IntGenotype::combine_mutation_to(const int &locus, const int &value) {
+Genotype *Genotype::combine_mutation_to(const int &locus, const int &value) {
   if (gene_expression_[locus] == value) {
     return this;
   }
@@ -79,17 +79,17 @@ IntGenotype *IntGenotype::combine_mutation_to(const int &locus, const int &value
   return Model::CONFIG->genotype_db()->get(id);
 }
 
-double IntGenotype::get_EC50_power_n(DrugType *dt) const {
+double Genotype::get_EC50_power_n(DrugType *dt) const {
 
   return get_EC50(dt->id());
 }
 
-double IntGenotype::get_EC50(const int &drug_id) const {
+double Genotype::get_EC50(const int &drug_id) const {
 
   return Model::CONFIG->EC50_power_n_table()[genotype_id_][drug_id];
 }
 
-int IntGenotype::select_mutation_allele(const int &mutation_locus) {
+int Genotype::select_mutation_allele(const int &mutation_locus) {
   const auto current_allele_value = gene_expression()[mutation_locus];
 
   //pos is from 0 to size -1
@@ -99,7 +99,7 @@ int IntGenotype::select_mutation_allele(const int &mutation_locus) {
   return Model::CONFIG->genotype_info().loci_vector[mutation_locus].alleles[current_allele_value].mutation_values[pos];
 }
 
-std::ostream &operator<<(std::ostream &os, const IntGenotype &e) {
+std::ostream &operator<<(std::ostream &os, const Genotype &e) {
   os << e.genotype_id_ << "\t";
   for (auto i = 0; i < e.gene_expression_.size(); i++) {
     const auto v = e.gene_expression_[i];

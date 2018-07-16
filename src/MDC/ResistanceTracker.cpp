@@ -9,8 +9,8 @@
 #include "ResistanceTracker.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
-#include "Parasites/IntGenotype.h"
-#include "Parasites/IntGenotypeDatabase.h"
+#include "Parasites/Genotype.h"
+#include "Parasites/GenotypeDatabase.h"
 
 
 ResistanceTracker::ResistanceTracker() : total_{0} {
@@ -22,7 +22,7 @@ ResistanceTracker::~ResistanceTracker() {
 void ResistanceTracker::make_resistance_profile(std::vector<int> &vResistanceID, const int &size) {
     vResistanceID.clear();
 
-    for (IntGenotypePtrMap::value_type &i : Model::CONFIG->genotype_db()->db()) {
+    for (auto& i : *(Model::CONFIG->genotype_db())) {
         if (i.second->number_of_resistance_position() == size) {
             vResistanceID.push_back(i.first);
         }
@@ -34,7 +34,7 @@ void ResistanceTracker::make_resistance_profile(std::vector<int> &vResistanceID,
 void ResistanceTracker::make_arterminsinin_resistance_profile(std::vector<int> &vResistanceID) {
     vResistanceID.clear();
 
-    for (IntGenotypePtrMap::value_type &i:  Model::CONFIG->genotype_db()->db()) {
+    for (auto& i:  *Model::CONFIG->genotype_db()) {
         if (i.second->gene_expression()[0] != 0) {
             //            std::cout << i.first << std::endl;
             vResistanceID.push_back(i.first);
@@ -52,7 +52,7 @@ void ResistanceTracker::initialize() {
 
 
     all_resistance_id_ = Model::CONFIG->genotype_db()->get(
-            Model::CONFIG->genotype_db()->db().size() - 1)->genotype_id();
+            Model::CONFIG->genotype_db()->size() - 1)->genotype_id();
     //    
     make_resistance_profile(single_resistance_ids_, 1);
     make_resistance_profile(double_resistance_ids_, 2);

@@ -30,7 +30,7 @@
 
 using namespace std;
 
-double getEfficacyForTherapy(IntGenotype* g, int therapy_id, double inferEC50[], Model* m);
+double getEfficacyForTherapy(Genotype* g, int therapy_id, double inferEC50[], Model* m);
 
 typedef std::tuple<int, int, int, double, double, double> EF50Key;
 typedef std::map<EF50Key, double> efficacy_map;
@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-double getEfficacyForTherapy(IntGenotype* g, int therapy_id, double inferEC50[], Model* m) {
+double getEfficacyForTherapy(Genotype* g, int therapy_id, double inferEC50[], Model* m) {
 
 
     SCTherapy* scTherapy = dynamic_cast<SCTherapy*> (Model::CONFIG->therapy_db()[therapy_id]);
@@ -139,7 +139,7 @@ double getEfficacyForTherapy(IntGenotype* g, int therapy_id, double inferEC50[],
     m->add_reporter(new PkPdReporter());
     m->add_reporter(new IndividualsFileReporter("out.txt"));
 
-    IntGenotype* genotype = Model::CONFIG->genotype_db()->get(g->genotype_id());
+    Genotype* genotype = Model::CONFIG->genotype_db()->get(g->genotype_id());
 
     for (auto person : Model::POPULATION->all_persons()->vPerson()) {
         double density = Model::CONFIG->parasite_density_level().log_parasite_density_from_liver;

@@ -8,16 +8,13 @@
 #ifndef IMMUNESYSTEM_H
 #define	IMMUNESYSTEM_H
 #include "Core/PropertyMacro.h"
-#include <vector>
 #include "Core/TypeDef.h"
 #include "ObjectPool.h"
 
 class Model;
 class Person;
 class ImmuneComponent;
-class Genotype;
 class Config;
-
 
 //typedef std::vector<ImmuneComponent*> ImmuneComponentPtrVector;
 

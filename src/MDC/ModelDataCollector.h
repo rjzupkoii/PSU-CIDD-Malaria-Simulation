@@ -14,7 +14,7 @@
 
 class Model;
 
-class IntGenotype;
+class Genotype;
 
 class Person;
 
@@ -241,7 +241,7 @@ public:
 
   void record_1_non_treated_case(const int &location, const int &age);
 
-  void record_1_mutation(const int &location, IntGenotype *from, IntGenotype *to);
+  void record_1_mutation(const int &location, Genotype *from, Genotype *to);
 
   void record_1_migration(Person *pPerson, const int &from, const int &to);
 

@@ -358,7 +358,7 @@ void Population::introduce_initial_cases() {
     for (const auto p_info : Model::CONFIG->initial_parasite_info()) {
       int num_of_infections = size(p_info.location) * p_info.prevalence;
       //            std::cout << num_of_infections << std::endl;
-      auto* genotype = Model::CONFIG->genotype_db()->db()[p_info.parasite_type_id];
+      auto* genotype = Model::CONFIG->genotype_db()->get(p_info.parasite_type_id);
       //std::cout << p_info.location << "-" << p_info.parasite_type_id << "-" << num_of_infections << std::endl;
       introduce_parasite(p_info.location, genotype, num_of_infections);
 
@@ -375,7 +375,7 @@ void Population::introduce_initial_cases() {
   }
 }
 
-void Population::introduce_parasite(const int& location, IntGenotype* parasite_type, const int& num_of_infections) {
+void Population::introduce_parasite(const int& location, Genotype* parasite_type, const int& num_of_infections) {
 
   if (model_ != nullptr) {
 
@@ -408,7 +408,7 @@ void Population::introduce_parasite(const int& location, IntGenotype* parasite_t
   }
 }
 
-void Population::initial_infection(Person* p, IntGenotype* parasite_type) const {
+void Population::initial_infection(Person* p, Genotype* parasite_type) const {
 
   p->immune_system()->set_increase(true);
   p->set_host_state(Person::ASYMPTOMATIC);

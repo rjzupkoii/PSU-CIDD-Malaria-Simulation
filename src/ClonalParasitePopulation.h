@@ -15,7 +15,7 @@
 #include "ObjectPool.h"
 
 class Therapy;
-class IntGenotype;
+class Genotype;
 class SingleHostClonalParasitePopulations;
 
 class ClonalParasitePopulation : public IndexHandler {
@@ -29,7 +29,7 @@ class ClonalParasitePopulation : public IndexHandler {
 
     POINTER_PROPERTY(SingleHostClonalParasitePopulations, parasite_population)
     //    PROPERTY(int, parasite_type_id);
-    POINTER_PROPERTY_HEADER(IntGenotype, genotype)
+    POINTER_PROPERTY_HEADER(Genotype, genotype)
 
     POINTER_PROPERTY(ParasiteDensityUpdateFunction, update_function)
 
@@ -37,7 +37,7 @@ public:
     static const double LOG_ZERO_PARASITE_DENSITY;
 
 public:
-    ClonalParasitePopulation(IntGenotype* genotype = nullptr);
+    ClonalParasitePopulation(Genotype* genotype = nullptr);
     //    BloodParasite(const BloodParasite& orig);
     virtual ~ClonalParasitePopulation();
 
@@ -45,7 +45,7 @@ public:
 
     double get_log10_relative_density() const;
 
-    void mutate_to(IntGenotype* genotype);
+    void mutate_to(Genotype* genotype);
 
     bool resist_to(Therapy* therapy);
     bool resist_to(DrugType* dt);

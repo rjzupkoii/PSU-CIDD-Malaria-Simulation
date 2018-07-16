@@ -218,7 +218,7 @@ void Person::set_immune_system(ImmuneSystem* value) {
 }
 
 
-ClonalParasitePopulation* Person::add_new_parasite_to_blood(IntGenotype* parasite_type) const {
+ClonalParasitePopulation* Person::add_new_parasite_to_blood(Genotype* parasite_type) const {
   auto* blood_parasite = new ClonalParasitePopulation(parasite_type);
 
   all_clonal_parasite_populations_->add(blood_parasite);
@@ -595,7 +595,7 @@ void Person::infected_by(const int& parasite_type_id) {
       set_host_state(EXPOSED);
     }
 
-    IntGenotype* genotype = Model::CONFIG->genotype_db()->db()[parasite_type_id];
+    Genotype* genotype = Model::CONFIG->genotype_db()->get(parasite_type_id);
     liver_parasite_type_ = genotype;
 
     //move parasite to blood in next 7 days
@@ -604,7 +604,7 @@ void Person::infected_by(const int& parasite_type_id) {
 
 }
 
-void Person::schedule_move_parasite_to_blood(IntGenotype* genotype, const int& time) {
+void Person::schedule_move_parasite_to_blood(Genotype* genotype, const int& time) {
 
   MoveParasiteToBloodEvent::schedule_event(Model::SCHEDULER, this, genotype, Model::SCHEDULER->current_time() + time);
 }

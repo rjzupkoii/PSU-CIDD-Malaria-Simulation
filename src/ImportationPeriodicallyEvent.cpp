@@ -62,7 +62,7 @@ void ImportationPeriodicallyEvent::execute() {
 
             //check and draw random Genotype 
             // fix allele 580Y and x of the last loci, other alleles will be drawed randomly
-            IntGenotype* importedGenotype = nullptr;
+            Genotype* importedGenotype = nullptr;
             if (genotype_id_ == -1) {
                 //  1 <=random_id  <= 32  or < 33
                 int random_id = Model::RANDOM->random_uniform_int(1, 33);

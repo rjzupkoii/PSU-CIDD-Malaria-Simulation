@@ -145,12 +145,12 @@ void immune_system_information::set_value(const YAML::Node& node) {
 }
 
 genotype_db::~genotype_db() {
-  ObjectHelpers::delete_pointer<IntGenotypeDatabase>(value_);
+  ObjectHelpers::delete_pointer<GenotypeDatabase>(value_);
 }
 
 void genotype_db::set_value(const YAML::Node& node) {
 
-  value_ = new IntGenotypeDatabase();
+  value_ = new GenotypeDatabase();
 
   value_->weight().clear();
   value_->weight().assign(config_->genotype_info().loci_vector.size(), 1);
@@ -167,7 +167,7 @@ void genotype_db::set_value(const YAML::Node& node) {
   }
 
   for (auto i = 0; i < number_of_genotypes; i++) {
-    auto* int_genotype = new IntGenotype(i, config_->genotype_info(), value_->weight());
+    auto* int_genotype = new Genotype(i, config_->genotype_info(), value_->weight());
     //        std::cout << *int_genotype << std::endl;
     value_->add(int_genotype);
   }
@@ -176,7 +176,7 @@ void genotype_db::set_value(const YAML::Node& node) {
 }
 
 void number_of_parasite_types::set_value(const YAML::Node& node) {
-  value_ = static_cast<int>(config_->genotype_db()->db().size());
+  value_ = static_cast<int>(config_->genotype_db()->size());
 }
 
 drug_db::~drug_db() {
@@ -243,16 +243,16 @@ void drug_db::set_value(const YAML::Node& node) {
 void EC50_power_n_table::set_value(const YAML::Node& node) {
    //get EC50 table and compute EC50^n
    value_.clear();
-   value_.assign(config_->genotype_db()->db().size(), std::vector<double>());
+   value_.assign(config_->genotype_db()->size(), std::vector<double>());
   
-   for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
+   for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
      for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
-       value_[g_id].push_back(config_->drug_db()->drug_db()[i]->infer_ec50(config_->genotype_db()->db()[g_id]));
+       value_[g_id].push_back(config_->drug_db()->drug_db()[i]->infer_ec50(config_->genotype_db()->get(g_id)));
      }
    }
    //    std::cout << "ok " << std::endl;
   
-   for (auto g_id = 0; g_id < config_->genotype_db()->db().size(); g_id++) {
+   for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
      for (auto i = 0; i < config_->drug_db()->drug_db().size(); i++) {
        value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->get(i)->n());
      }

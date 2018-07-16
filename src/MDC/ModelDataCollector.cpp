@@ -644,7 +644,7 @@ void ModelDataCollector::record_1_treatment(const int& location, const int& age,
   }
 }
 
-void ModelDataCollector::record_1_mutation(const int& location, IntGenotype* from, IntGenotype* to) {
+void ModelDataCollector::record_1_mutation(const int& location, Genotype* from, Genotype* to) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     cumulative_mutants_by_location_[location] += 1;
   }
