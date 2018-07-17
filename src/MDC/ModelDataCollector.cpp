@@ -216,7 +216,7 @@ void ModelDataCollector::perform_population_statistic() {
   //    total_immune_by_location_age_class_.assign(Model::CONFIG->number_of_locations(), DoubleVector(Model::CONFIG->number_of_age_classes(), 0.0));
 
 
-  for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     popsize_by_location_[location] = 0;
     popsize_residence_by_location_[location] = 0;
     blood_slide_prevalence_by_location_[location] = 0.0;
@@ -225,11 +225,11 @@ void ModelDataCollector::perform_population_statistic() {
     total_parasite_population_by_location_[location] = 0;
     number_of_positive_by_location_[location] = 0;
 
-    for (int i = 0; i < Person::NUMBER_OF_STATE; i++) {
+    for (auto i = 0; i < Person::NUMBER_OF_STATE; i++) {
       popsize_by_location_hoststate_[location][i] = 0;
     }
 
-    for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+    for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
       total_immune_by_location_age_class_[location][ac] = 0.0;
       total_parasite_population_by_location_age_group_[location][ac] = 0;
       number_of_positive_by_location_age_group_[location][ac] = 0;
@@ -243,12 +243,12 @@ void ModelDataCollector::perform_population_statistic() {
       blood_slide_prevalence_by_location_age_group_by_5_[location][ac] = 0.0;
       blood_slide_number_by_location_age_group_by_5_[location][ac] = 0.0;
     }
-    for (int age = 0; age < 80; age++) {
+    for (auto age = 0; age < 80; age++) {
       popsize_by_location_age_[location][age] = 0;
     }
 
 
-    for (int i = 0; i < number_of_reported_MOI; i++) {
+    for (auto i = 0; i < number_of_reported_MOI; i++) {
       multiple_of_infection_by_location_[location][i] = 0;
     }
   }
@@ -328,7 +328,7 @@ void ModelDataCollector::perform_population_statistic() {
 
     popsize_by_location_[loc] = pop_sum_location;
 
-    auto sum_popsize_by_location = std::accumulate(popsize_by_location_.begin(), popsize_by_location_.end(), 0);
+    const auto sum_popsize_by_location = std::accumulate(popsize_by_location_.begin(), popsize_by_location_.end(), 0);
     mean_moi_ = sum_moi / static_cast<double>(sum_popsize_by_location);
 
     //        double number_of_assymptomatic_and_clinical = blood_slide_prevalence_by_location_[loc] + popsize_by_location_hoststate_[loc][Person::CLINICAL];
@@ -341,7 +341,7 @@ void ModelDataCollector::perform_population_statistic() {
                                                                    loc][Person::
                                                                    CLINICAL]) /
                                                                  blood_slide_prevalence_by_location_[loc];
-    const double number_of_blood_slide_positive = blood_slide_prevalence_by_location_[loc];
+    const auto number_of_blood_slide_positive = blood_slide_prevalence_by_location_[loc];
     blood_slide_prevalence_by_location_[loc] = blood_slide_prevalence_by_location_[loc] / static_cast<double>(
       pop_sum_location);
 
@@ -395,10 +395,9 @@ void ModelDataCollector::perform_yearly_update() {
       person_days_by_location_year_[loc] = Model::POPULATION->size(loc) * Constants::DAYS_IN_YEAR();
     }
   }
-  else if ((Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) &&
-    (Model::SCHEDULER->is_last_day_of_year())) {
+  else if (Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) {
     for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      double eir = (total_number_of_bites_by_location_year_[loc] / static_cast<double>(person_days_by_location_year_[loc
+      auto eir = (total_number_of_bites_by_location_year_[loc] / static_cast<double>(person_days_by_location_year_[loc
         ])) *
         Constants::DAYS_IN_YEAR();
       //only record year have positive EIR
@@ -564,6 +563,8 @@ void ModelDataCollector::begin_time_step() {
   }
 }
 
+
+//TODO: review
 void ModelDataCollector::end_of_time_step() {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     double avg_tf = 0;
@@ -809,9 +810,8 @@ double ModelDataCollector::get_blood_slide_prevalence(const int& location, const
   return (popsize == 0) ? 0 : blood_slide_numbers / popsize;
 }
 
-void ModelDataCollector::perform_monthly_update() {
-  if ((Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) &&
-    Model::SCHEDULER->is_last_day_of_month()) {
+void ModelDataCollector::monthly_update() {
+  if (Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) {
     for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
       monthly_number_of_treatment_by_location_[loc] = 0;
       monthly_number_of_clinical_episode_by_location_[loc] = 0;

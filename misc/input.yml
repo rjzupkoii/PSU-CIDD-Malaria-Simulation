@@ -17,8 +17,6 @@ starting_date: 1990/1/1
 # ending time point of the simulation (in yyyy/m/d format) 
 ending_date: 1990/2/1
 
-# total number of days the simulation will be calculated from starting_date and ending_date
-
 # length of burn-in period
 start_treatment_day: 0
 
@@ -76,6 +74,7 @@ location_db:
 ]
 # probability that a symptomatic and infected individual seeks and receives antimalarial treatment
 #if the number of values less than number of locations, the first value will be applied for all locations
+# this is the initial value, the modification values can be change by setting in events node
   p_treatment_for_less_than_5_by_location: [0.600000]
   p_treatment_for_more_than_5_by_location: [0.500000]
 
@@ -921,3 +920,13 @@ using_variable_probability_infectious_bites_cause_infection: false
 fraction_mosquitoes_interrupted_feeding: 0.0
 
 inflation_factor: 1.01
+
+events_info:
+  - change_treatment_coverage:
+    day: 1990/2/1
+    p_treatment_for_less_than_5_by_location: [0.600000]
+    p_treatment_for_more_than_5_by_location: [0.500000]
+  - change_treatment_coverage:
+    day: 1990/3/1
+    p_treatment_for_less_than_5_by_location: [0.600000]
+    p_treatment_for_more_than_5_by_location: [0.500000]

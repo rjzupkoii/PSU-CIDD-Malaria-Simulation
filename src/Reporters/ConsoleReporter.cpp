@@ -144,7 +144,7 @@ void ConsoleReporter::after_run() {
 void ConsoleReporter::begin_time_step() {
 }
 
-void ConsoleReporter::after_time_step() {
+void ConsoleReporter::monthly_report() {
 
   if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
 //        Model::DATA_COLLECTOR->perform_population_statistic();

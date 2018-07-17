@@ -24,7 +24,8 @@ file(GLOB SRC_FILES
 	${PROJECT_SOURCE_DIR}/src/Therapies/*.cpp
 	${PROJECT_SOURCE_DIR}/src/Strategies/*.cpp
 	${PROJECT_SOURCE_DIR}/src/Parasites/*.cpp
-	${PROJECT_SOURCE_DIR}/src/Events/*.cpp)
+	${PROJECT_SOURCE_DIR}/src/Events/*.cpp
+  ${PROJECT_SOURCE_DIR}/src/Malaria/*.cpp)
 
 set(SRC_FILES ${SRC_FILES} 
 	${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h 

@@ -14,6 +14,7 @@
 #include "Strategies/StrategyBuilder.h"
 #include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
 #include "Strategies/NestedSwitchingStrategy.h"
+#include "Malaria/SteadyTCM.h"
 
 void total_time::set_value(const YAML::Node& node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
@@ -503,9 +504,21 @@ void importation_parasite_periodically_info::set_value(const YAML::Node& node) {
 }
 
 void bitting_level_generator::set_value(const YAML::Node& node) {
-	value_.level_density = config_->relative_bitting_info().v_biting_level_density;	
+  value_.level_density = config_->relative_bitting_info().v_biting_level_density;
 }
 
 void moving_level_generator::set_value(const YAML::Node& node) {
-	value_.level_density = config_->circulation_info().v_moving_level_density;
+  value_.level_density = config_->circulation_info().v_moving_level_density;
+}
+
+treatment_coverage_model::~treatment_coverage_model() {
+  ObjectHelpers::delete_pointer<ITreatmentCoverageModel>(value_);
+}
+
+void treatment_coverage_model::set_value(const YAML::Node& node) {
+  value_ = new SteadyTCM();
+  for (auto& location : config_->location_db()) {    
+    value_->p_treatment_less_than_5.push_back(location.p_treatment_less_than_5);
+    value_->p_treatment_more_than_5.push_back(location.p_treatment_more_than_5);
+  }
 }

@@ -116,7 +116,7 @@ void FarmReporter::after_run() {
 void FarmReporter::begin_time_step() {
 }
 
-void FarmReporter::after_time_step() {
+void FarmReporter::monthly_report() {
 
 }
 

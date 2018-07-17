@@ -122,7 +122,7 @@ void BurninFarmReporter::after_run() {
 void BurninFarmReporter::begin_time_step() {
 }
 
-void BurninFarmReporter::after_time_step() {
+void BurninFarmReporter::monthly_report() {
 
 }
 

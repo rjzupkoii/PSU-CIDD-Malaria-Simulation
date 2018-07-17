@@ -50,28 +50,23 @@ public:
   void run();
 
   void begin_time_step() const;
+  void monthly_update() const;
+  void yearly_update() const;
 
   void end_time_step() const;
 
   bool can_stop() const;
 
-  void update_end_of_time_step() const;
-
-  void update_force_of_infection() const;
-
-  void report_end_of_time_step() const;
+  void daily_update() const;
 
   int current_day_in_year() const;
 
-  bool is_last_day_of_month() const;
+  bool is_today_last_day_of_month() const;
 
-  bool is_today_monthly_reporting_day() const;
+  bool is_today_first_day_of_month() const;
 
-  bool is_last_day_of_year() const;
+  bool is_today_last_day_of_year() const;
 
-private:
-
-  void update_treatment_coverage() const;
 };
 
 #endif  /* SCHEDULER_H */

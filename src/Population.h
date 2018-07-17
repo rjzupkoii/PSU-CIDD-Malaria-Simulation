@@ -38,7 +38,6 @@ class PersonIndexByLocationBittingLevel;
  */
 class Population : public Dispatcher {
 DISALLOW_COPY_AND_ASSIGN(Population)
-
 POINTER_PROPERTY(Model, model);
 
 POINTER_PROPERTY(PersonIndexPtrList, person_index_list);
@@ -106,7 +105,9 @@ public:
   virtual void notify_change_in_force_of_infection(const int& location, const int& parasite_type_id,
                                                    const double& relative_force_of_infection);
 
-  virtual void update();
+  // void update() override;
+
+  void update_force_of_infection(const int& current_time);
 
   void perform_birth_event();
 

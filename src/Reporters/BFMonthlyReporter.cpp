@@ -14,9 +14,9 @@
 #include "Population.h"
 #include "easylogging++.h"
 
-BFMonthlyReporter::BFMonthlyReporter() {}
+BFMonthlyReporter::BFMonthlyReporter() = default;
 
-BFMonthlyReporter::~BFMonthlyReporter() {}
+BFMonthlyReporter::~BFMonthlyReporter() = default;
 
 void BFMonthlyReporter::initialize() {}
 
@@ -25,9 +25,9 @@ void BFMonthlyReporter::before_run() {}
 
 void BFMonthlyReporter::begin_time_step() {}
 
-void BFMonthlyReporter::after_time_step() {
+void BFMonthlyReporter::monthly_report() {
 
-  if (Model::SCHEDULER->is_today_monthly_reporting_day()) {
+  if (Model::SCHEDULER->is_today_first_day_of_month()) {
     //    ss << Model::SCHEDULER->calendar_date << std::endl;
     //    if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
 
@@ -75,12 +75,12 @@ void BFMonthlyReporter::after_run() {
   ss << Model::CONFIG->strategy()->id << "\t";
 
   //output NTF
-  auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
+  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
     static_cast<double>(Constants::DAYS_IN_YEAR());
 
   auto sum_ntf = 0.0;
   ul pop_size = 0;
-  for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
     pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
   }

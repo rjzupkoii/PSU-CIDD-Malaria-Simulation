@@ -118,50 +118,47 @@ void Scheduler::begin_time_step() const {
   }
 }
 
+
 void Scheduler::end_time_step() const {
+  daily_update();
+
+  monthly_update();
+
+  yearly_update();
+}
+
+void Scheduler::daily_update() const {
   Model::POPULATION->perform_birth_event();
   ///for safety remove all dead by calling perform_death_event
   Model::POPULATION->perform_death_event();
   Model::POPULATION->perform_circulation_event();
-  
-  update_end_of_time_step();
 
-  report_end_of_time_step();
-
-  Model::DATA_COLLECTOR->perform_yearly_update();
-  Model::DATA_COLLECTOR->perform_monthly_update();
-}
-
-void Scheduler::update_end_of_time_step() const {
-  //update / calculate daily UTL
+  //update / calculate daily UTL  
   Model::DATA_COLLECTOR->end_of_time_step();
 
   //update force of infection
-  update_force_of_infection();
+  Model::POPULATION->update_force_of_infection(current_time_);
 
   //check to switch strategy
   Model::CONFIG->strategy()->update_end_of_time_step();
-
-  //update treatment coverage
-  update_treatment_coverage();
 }
 
-void Scheduler::update_force_of_infection() const {
-  Population* population = model_->population();
-  population->perform_interupted_feeding_recombination();
+void Scheduler::monthly_update() const {
+  //doing monthly stuff
+  if (is_today_last_day_of_month()) {
+    model_->monthly_report();
 
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (auto pType = 0; pType < Model::CONFIG->number_of_parasite_types(); pType++) {
-      population->force_of_infection_for7days_by_location_parasite_type()[current_time_ %
-          Model::CONFIG->number_of_tracking_days()][loc][pType] = population->
-        interupted_feeding_force_of_infection_by_location_parasite_type()[loc][pType];
-    }
+    Model::DATA_COLLECTOR->monthly_update();
+    //update treatment coverage
+    Model::CONFIG->treatment_coverage_model()->monthly_update();
   }
 }
 
-
-void Scheduler::report_end_of_time_step() const {
-  model_->report_end_of_time_step();
+void Scheduler::yearly_update() const {
+  //doing yearly stuff
+  if (is_today_last_day_of_year()) {
+    Model::DATA_COLLECTOR->perform_yearly_update();
+  }
 }
 
 bool Scheduler::can_stop() const {
@@ -172,30 +169,18 @@ int Scheduler::current_day_in_year() const {
   return TimeHelpers::day_of_year(calendar_date);
 }
 
-
-void Scheduler::update_treatment_coverage() const {
-  // TODO: consider doing this the same day as start intervention day every year
-  if (current_time_ > Model::CONFIG->start_intervention_day() && is_last_day_of_year()) {
-    // TODO: turn on or off this feature in input file
-    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      Model::CONFIG->location_db()[loc].p_treatment_less_than_5 *= Model::CONFIG->inflation_factor();
-      Model::CONFIG->location_db()[loc].p_treatment_more_than_5 *= Model::CONFIG->inflation_factor();
-    }
-  }
-}
-
-bool Scheduler::is_last_day_of_year() const {
+bool Scheduler::is_today_last_day_of_year() const {
   year_month_day ymd{calendar_date};
   return (ymd.month() - January).count() == 12 && (ymd.day() - 0_d).count() == 31;
 }
 
-bool Scheduler::is_today_monthly_reporting_day() const {
+bool Scheduler::is_today_first_day_of_month() const {
   // return true;
   year_month_day ymd{calendar_date};
   return (ymd.day() - 0_d).count() == 1;
 }
 
-bool Scheduler::is_last_day_of_month() const {
+bool Scheduler::is_today_last_day_of_month() const {
   const auto next_date = calendar_date + days{1};
   year_month_day ymd{next_date};
   return (ymd.day() - 0_d).count() == 1;

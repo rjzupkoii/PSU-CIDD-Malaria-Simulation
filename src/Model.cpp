@@ -270,11 +270,11 @@ void Model::perform_infection_event() const {
   population_->perform_infection_event();
 }
 
-void Model::report_end_of_time_step() {
+void Model::monthly_report() {
   DATA_COLLECTOR->perform_population_statistic();
 
   for (Reporter* reporter : reporters_) {
-    reporter->after_time_step();
+    reporter->monthly_report();
   }
 
 }

@@ -106,7 +106,7 @@ void GuiReporter::HandleGuiCommand(const std::string &command) {
   }
 }
 
-void GuiReporter::after_time_step() {
+void GuiReporter::monthly_report() {
   if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
     //        Model::DATA_COLLECTOR->perform_population_statistic();
 

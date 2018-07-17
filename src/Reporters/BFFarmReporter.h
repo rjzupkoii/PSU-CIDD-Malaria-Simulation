@@ -22,7 +22,7 @@ public:
 
     void begin_time_step() override;
 
-    void after_time_step() override;
+    void monthly_report() override;
 
     void outout_parameters();
 };

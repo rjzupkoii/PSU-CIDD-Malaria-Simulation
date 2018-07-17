@@ -216,7 +216,7 @@ public:
 
   void perform_yearly_update();
 
-  void perform_monthly_update();
+  void monthly_update();
 
 
   virtual void collect_number_of_bites(const int &location, const int &number_of_bites);

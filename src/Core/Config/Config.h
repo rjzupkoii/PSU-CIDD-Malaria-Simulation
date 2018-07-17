@@ -130,6 +130,8 @@ POINTER_PROPERTY(Model, model)
   CUSTOM_CONFIG_ITEM(bitting_level_generator, MultinomialDistributionGenerator())
   CUSTOM_CONFIG_ITEM(moving_level_generator, MultinomialDistributionGenerator())
 
+  CUSTOM_CONFIG_ITEM(treatment_coverage_model, nullptr)
+
 
 VIRTUAL_PROPERTY_REF(double, modified_mutation_factor)
 

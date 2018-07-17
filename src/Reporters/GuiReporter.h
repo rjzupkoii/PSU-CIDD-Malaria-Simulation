@@ -49,7 +49,7 @@ public:
     virtual void before_run();
     virtual void after_run();
     virtual void begin_time_step();
-    virtual void after_time_step();
+    virtual void monthly_report();
 
     void CreateNewChart(const std::string &chartType, const std::string &chartName, const std::string &chartTitle, const std::string &xAxisTitle, const std::string &xAxisType, const int &xRangeFrom, const int &xRangeTo, const std::string &y1AxisTitle, const std::string &y1AxisType, const double &y1RangeFrom, const double &y1RangeTo, const std::string &y2AxisTitle = "", const std::string &y2AxisType = "", const double &y2RangeFrom = 0, const double &y2RangeTo = 0);
     void CreateWindowsTab(const std::string &command, const std::string &tabType, const std::string &tabName, const std::string &tabTitle);

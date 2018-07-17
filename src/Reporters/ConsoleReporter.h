@@ -21,7 +21,7 @@ public:
     virtual void before_run();
     virtual void after_run();
     virtual void begin_time_step();
-    virtual void after_time_step();
+    virtual void monthly_report();
 
 private:
 

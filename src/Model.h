@@ -73,7 +73,7 @@ public:
   void perform_infection_event() const;
 
   void report_begin_of_time_step();
-  void report_end_of_time_step();
+  void monthly_report();
   void add_reporter(Reporter* reporter);
 };
 

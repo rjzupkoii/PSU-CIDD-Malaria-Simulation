@@ -42,7 +42,7 @@ void BurninMonthlyReporter::begin_time_step() {
 
 }
 
-void BurninMonthlyReporter::after_time_step() {
+void BurninMonthlyReporter::monthly_report() {
     if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
         std::cout << Model::SCHEDULER->current_time() << "\t";
 

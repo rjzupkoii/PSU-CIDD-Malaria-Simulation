@@ -446,13 +446,24 @@ void Population::notify_change_in_force_of_infection(const int& location, const 
   current_force_of_infection_by_location_parasite_type_[location][parasite_type_id] += relative_force_of_infection;
 }
 
-void Population::update() {
+void Population::update_force_of_infection(const int& current_time) {
+  perform_interupted_feeding_recombination();
 
-  for (PersonIndex* person_index : *person_index_list_) {
-    person_index->update();
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (auto p_type = 0; p_type < Model::CONFIG->number_of_parasite_types(); p_type++) {
+      force_of_infection_for7days_by_location_parasite_type()[current_time %
+        Model::CONFIG->number_of_tracking_days()][loc][p_type] = interupted_feeding_force_of_infection_by_location_parasite_type()[loc][p_type];
+    }
   }
-
 }
+//
+// void Population::update() {
+//
+//   for (PersonIndex* person_index : *person_index_list_) {
+//     person_index->update();
+//   }
+//
+// }
 
 void Population::perform_birth_event() {
   //    std::cout << "Birth Event" << std::endl;

@@ -31,7 +31,7 @@ void MonthlyReporterConsole::begin_time_step() {
 
 }
 
-void MonthlyReporterConsole::after_time_step() {
+void MonthlyReporterConsole::monthly_report() {
     if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
         std::cout << Model::SCHEDULER->current_time() << "\t";
         std::cout << Model::DATA_COLLECTOR->AMU_per_parasite_pop() << "\t";

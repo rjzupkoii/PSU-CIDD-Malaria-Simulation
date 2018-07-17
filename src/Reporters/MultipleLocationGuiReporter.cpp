@@ -72,7 +72,7 @@ void MultipleLocationGuiReporter::after_run() {
 void MultipleLocationGuiReporter::begin_time_step() {
 }
 
-void MultipleLocationGuiReporter::after_time_step() {
+void MultipleLocationGuiReporter::monthly_report() {
 
   if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
     for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {

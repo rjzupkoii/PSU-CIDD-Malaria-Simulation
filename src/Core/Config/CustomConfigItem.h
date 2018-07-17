@@ -7,6 +7,7 @@
 #include "Therapies/DrugDatabase.h"
 #include "Parasites/GenotypeDatabase.h"
 #include "Core/MultinomialDistributionGenerator.h"
+#include "Malaria/ITreatmentCoverageModel.h"
 
 
 namespace YAML {
@@ -343,8 +344,8 @@ protected:
 public:
   //constructor
   explicit importation_parasite_periodically_info(const std::string& name, std::vector<ImportationParasitePeriodicallyInfo> default_value,
-                                     Config* config = nullptr) : IConfigItem(config, name),
-                                                                 value_{std::move(default_value)} { }
+                                                  Config* config = nullptr) : IConfigItem(config, name),
+                                                                              value_{std::move(default_value)} { }
 
   // destructor
   virtual ~importation_parasite_periodically_info() = default;
@@ -360,12 +361,12 @@ class bitting_level_generator : public IConfigItem {
 DISALLOW_COPY_AND_ASSIGN(bitting_level_generator)
 DISALLOW_MOVE(bitting_level_generator)
 protected:
-	MultinomialDistributionGenerator value_;
+  MultinomialDistributionGenerator value_;
 public:
   //constructor
   explicit bitting_level_generator(const std::string& name, MultinomialDistributionGenerator default_value,
-                                     Config* config = nullptr) : IConfigItem(config, name),
-                                                                 value_{std::move(default_value)} { }
+                                   Config* config = nullptr) : IConfigItem(config, name),
+                                                               value_{std::move(default_value)} { }
 
   // destructor
   virtual ~bitting_level_generator() = default;
@@ -376,21 +377,43 @@ public:
 
   void set_value(const YAML::Node& node) override;
 };
+
 class moving_level_generator : public IConfigItem {
 DISALLOW_COPY_AND_ASSIGN(moving_level_generator)
 DISALLOW_MOVE(moving_level_generator)
 protected:
-	MultinomialDistributionGenerator value_;
+  MultinomialDistributionGenerator value_;
 public:
   //constructor
   explicit moving_level_generator(const std::string& name, MultinomialDistributionGenerator default_value,
-                                     Config* config = nullptr) : IConfigItem(config, name),
-                                                                 value_{std::move(default_value)} { }
+                                  Config* config = nullptr) : IConfigItem(config, name),
+                                                              value_{std::move(default_value)} { }
 
   // destructor
   virtual ~moving_level_generator() = default;
 
   virtual MultinomialDistributionGenerator& operator()() {
+    return value_;
+  }
+
+  void set_value(const YAML::Node& node) override;
+};
+
+class treatment_coverage_model : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(treatment_coverage_model)
+DISALLOW_MOVE(treatment_coverage_model)
+protected:
+  ITreatmentCoverageModel* value_;
+public:
+  //constructor
+  explicit treatment_coverage_model(const std::string& name, ITreatmentCoverageModel* default_value,
+                                    Config* config = nullptr) : IConfigItem(config, name),
+                                                                value_{default_value} { }
+
+  // destructor
+  virtual ~treatment_coverage_model();
+
+  virtual ITreatmentCoverageModel*& operator()() {
     return value_;
   }
 

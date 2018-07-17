@@ -1,5 +1,5 @@
 TODO:
-  - Bring in Test for Config
+	
   - Remove resist_to function ???
   - build Core library
   - Using event to change treatment coverage / strategy and set up those event from input file

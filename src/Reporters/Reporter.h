@@ -42,7 +42,7 @@ public:
     virtual void before_run() = 0;
     virtual void after_run() = 0;
     virtual void begin_time_step() = 0;
-    virtual void after_time_step() = 0;
+    virtual void monthly_report() = 0;
 
     static Reporter* MakeReport(ReportType report_type);
 

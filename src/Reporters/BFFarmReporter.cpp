@@ -31,7 +31,7 @@ void BFFarmReporter::begin_time_step() {
 
 }
 
-void BFFarmReporter::after_time_step() {
+void BFFarmReporter::monthly_report() {
 
 }
 
