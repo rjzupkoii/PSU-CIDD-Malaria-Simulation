@@ -54,10 +54,6 @@ void Config::read_from_file(const std::string& config_file_name) {
     LOG(INFO) << "Reading config item: " << config_item->name();
     config_item->set_value(config);
   }
-
-  moving_level_generator_.set_level_density(&circulation_info().v_moving_level_density);
-  bitting_level_generator_.set_level_density(&relative_bitting_info().v_biting_level_density);
-
 }
 
 

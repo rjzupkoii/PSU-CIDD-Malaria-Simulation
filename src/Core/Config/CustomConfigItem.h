@@ -6,6 +6,7 @@
 #include "ConfigItem.h"
 #include "Therapies/DrugDatabase.h"
 #include "Parasites/GenotypeDatabase.h"
+#include "Core/MultinomialDistributionGenerator.h"
 
 
 namespace YAML {
@@ -349,6 +350,47 @@ public:
   virtual ~importation_parasite_periodically_info() = default;
 
   virtual std::vector<ImportationParasitePeriodicallyInfo>& operator()() {
+    return value_;
+  }
+
+  void set_value(const YAML::Node& node) override;
+};
+
+class bitting_level_generator : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(bitting_level_generator)
+DISALLOW_MOVE(bitting_level_generator)
+protected:
+	MultinomialDistributionGenerator value_;
+public:
+  //constructor
+  explicit bitting_level_generator(const std::string& name, MultinomialDistributionGenerator default_value,
+                                     Config* config = nullptr) : IConfigItem(config, name),
+                                                                 value_{std::move(default_value)} { }
+
+  // destructor
+  virtual ~bitting_level_generator() = default;
+
+  virtual MultinomialDistributionGenerator& operator()() {
+    return value_;
+  }
+
+  void set_value(const YAML::Node& node) override;
+};
+class moving_level_generator : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(moving_level_generator)
+DISALLOW_MOVE(moving_level_generator)
+protected:
+	MultinomialDistributionGenerator value_;
+public:
+  //constructor
+  explicit moving_level_generator(const std::string& name, MultinomialDistributionGenerator default_value,
+                                     Config* config = nullptr) : IConfigItem(config, name),
+                                                                 value_{std::move(default_value)} { }
+
+  // destructor
+  virtual ~moving_level_generator() = default;
+
+  virtual MultinomialDistributionGenerator& operator()() {
     return value_;
   }
 

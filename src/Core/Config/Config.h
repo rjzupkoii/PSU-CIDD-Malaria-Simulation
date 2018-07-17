@@ -127,8 +127,9 @@ POINTER_PROPERTY(Model, model)
 
   CUSTOM_CONFIG_ITEM(importation_parasite_periodically_info, std::vector<ImportationParasitePeriodicallyInfo>())
 
-READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, bitting_level_generator)
-READ_ONLY_PROPERTY_REF(MultinomialDistributionGenerator, moving_level_generator)
+  CUSTOM_CONFIG_ITEM(bitting_level_generator, MultinomialDistributionGenerator())
+  CUSTOM_CONFIG_ITEM(moving_level_generator, MultinomialDistributionGenerator())
+
 
 VIRTUAL_PROPERTY_REF(double, modified_mutation_factor)
 
@@ -146,7 +147,7 @@ public:
 
   void read_from_file(const std::string& config_file_name = "config.yml");
 
-  void read_importation_parasite_periodically_info(const YAML::Node& config);
+  //TODO: override the config node yaml inside read_from_file function
 
   void override_parameters(const std::string& override_file, const int& pos);
 

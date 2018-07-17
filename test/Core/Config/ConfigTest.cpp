@@ -187,7 +187,8 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.importation_parasite_periodically_info()[0].start_day == 5110);
     REQUIRE(c.importation_parasite_periodically_info()[0].number == 1);
 
-
+    REQUIRE(c.bitting_level_generator().level_density.size()==100);
+    REQUIRE(c.moving_level_generator().level_density.size()==100);
     // REQUIRE(2== 2);
   }
 }

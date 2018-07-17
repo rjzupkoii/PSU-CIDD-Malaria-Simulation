@@ -501,3 +501,11 @@ void importation_parasite_periodically_info::set_value(const YAML::Node& node) {
     }
   }
 }
+
+void bitting_level_generator::set_value(const YAML::Node& node) {
+	value_.level_density = config_->relative_bitting_info().v_biting_level_density;	
+}
+
+void moving_level_generator::set_value(const YAML::Node& node) {
+	value_.level_density = config_->circulation_info().v_moving_level_density;
+}
