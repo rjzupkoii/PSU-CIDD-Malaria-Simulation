@@ -16,28 +16,29 @@ class Config;
 
 class total_time : public ConfigItem<int> {
 public:
-  total_time(std::string name, const int& default_value, Config* config) : ConfigItem<int>(name, default_value, config) {}
+  total_time(const std::string& name, const int& default_value, Config* config) : ConfigItem<int>(name, default_value, config) {}
 
   void set_value(const YAML::Node& node) override;
 };
 
 class number_of_age_classes : public ConfigItem<int> {
 public:
-  number_of_age_classes(std::string name, const int& default_value, Config* config) : ConfigItem<int>(name, default_value, config) {}
+  number_of_age_classes(const std::string& name, const int& default_value, Config* config) : ConfigItem<int>(name, default_value, config) {}
 
   void set_value(const YAML::Node& node) override;
 };
 
 class number_of_locations : public ConfigItem<int> {
 public:
-  number_of_locations(std::string name, const int& default_value, Config* config) : ConfigItem<int>(name, default_value, config) {}
+  number_of_locations(const std::string& name, const int& default_value, Config* config) : ConfigItem<int>(name, default_value, config) {}
   void set_value(const YAML::Node& node) override;
 };
 
 class spatial_distance_matrix : public ConfigItem<std::vector<std::vector<double>>> {
 public:
-  spatial_distance_matrix(std::string name, const std::vector<std::vector<double>>& default_value, Config* config) : ConfigItem<std::vector<
-    std::vector<double>>>(
+  spatial_distance_matrix(const std::string& name, const std::vector<std::vector<double>>& default_value, Config* config) : ConfigItem<std::
+    vector<
+      std::vector<double>>>(
     name, default_value, config) {}
 
   void set_value(const YAML::Node& node) override;
@@ -51,8 +52,10 @@ protected:
   SeasonalInfo value_{};
 public:
   //constructor
-  explicit seasonal_info(std::string name, SeasonalInfo default_value, Config* config = nullptr) : IConfigItem(config, name),
-                                                                                                   value_{std::move(default_value)} { }
+  explicit seasonal_info(const std::string& name, SeasonalInfo default_value, Config* config = nullptr) : IConfigItem(config, name),
+                                                                                                          value_{
+                                                                                                            std::move(default_value)
+                                                                                                          } { }
 
   // destructor
   virtual ~seasonal_info() = default;
@@ -76,8 +79,9 @@ protected:
   Spatial::SpatialModel* value_{nullptr};
 public:
   //constructor
-  explicit spatial_model(std::string name, Spatial::SpatialModel* default_value, Config* config = nullptr) : IConfigItem(config, name),
-                                                                                                             value_{default_value} { }
+  explicit spatial_model(const std::string& name, Spatial::SpatialModel* default_value, Config* config = nullptr) :
+    IConfigItem(config, name),
+    value_{default_value} { }
 
   // destructor
   virtual ~spatial_model();
@@ -97,7 +101,7 @@ protected:
   ImmuneSystemInformation value_;
 public:
   //constructor
-  explicit immune_system_information(std::string name, ImmuneSystemInformation default_value, Config* config = nullptr) :
+  explicit immune_system_information(const std::string& name, ImmuneSystemInformation default_value, Config* config = nullptr) :
     IConfigItem(config, name),
     value_{std::move(default_value)} { }
 
@@ -118,8 +122,8 @@ protected:
   GenotypeDatabase* value_;
 public:
   //constructor
-  explicit genotype_db(std::string name, GenotypeDatabase* default_value, Config* config = nullptr) : IConfigItem(config, name),
-                                                                                                         value_{default_value} { }
+  explicit genotype_db(const std::string& name, GenotypeDatabase* default_value, Config* config = nullptr) : IConfigItem(config, name),
+                                                                                                             value_{default_value} { }
 
   // destructor
   virtual ~genotype_db();
@@ -134,7 +138,8 @@ public:
 
 class number_of_parasite_types : public ConfigItem<int> {
 public:
-  number_of_parasite_types(std::string name, const int& default_value, Config* config) : ConfigItem<int>(name, default_value, config) {}
+  number_of_parasite_types(const std::string& name, const int& default_value,
+                           Config* config) : ConfigItem<int>(name, default_value, config) {}
 
   void set_value(const YAML::Node& node) override;
 };
@@ -146,8 +151,8 @@ protected:
   DrugDatabase* value_;
 public:
   //constructor
-  explicit drug_db(std::string name, DrugDatabase* default_value, Config* config = nullptr) : IConfigItem(config, name),
-                                                                                              value_{default_value} { }
+  explicit drug_db(const std::string& name, DrugDatabase* default_value, Config* config = nullptr) : IConfigItem(config, name),
+                                                                                                     value_{default_value} { }
 
   // destructor
   virtual ~drug_db();
@@ -166,8 +171,10 @@ protected:
   DoubleVector2 value_;
 public:
   //constructor
-  explicit EC50_power_n_table(std::string name, DoubleVector2 default_value, Config* config = nullptr) : IConfigItem(config, name),
-                                                                                              value_{std::move(default_value)} { }
+  explicit EC50_power_n_table(const std::string& name, DoubleVector2 default_value, Config* config = nullptr) : IConfigItem(config, name),
+                                                                                                                value_{
+                                                                                                                  std::move(default_value)
+                                                                                                                } { }
 
   // destructor
   virtual ~EC50_power_n_table() = default;
@@ -183,11 +190,12 @@ class circulation_info : public IConfigItem {
 DISALLOW_COPY_AND_ASSIGN(circulation_info)
 DISALLOW_MOVE(circulation_info)
 protected:
-	RelativeMovingInformation value_;
+  RelativeMovingInformation value_;
 public:
   //constructor
-  explicit circulation_info(std::string name, RelativeMovingInformation default_value, Config* config = nullptr) : IConfigItem(config, name),
-                                                                                              value_{std::move(default_value)} { }
+  explicit circulation_info(const std::string& name, RelativeMovingInformation default_value, Config* config = nullptr) :
+    IConfigItem(config, name),
+    value_{std::move(default_value)} { }
 
   // destructor
   virtual ~circulation_info() = default;
@@ -203,11 +211,12 @@ class relative_bitting_info : public IConfigItem {
 DISALLOW_COPY_AND_ASSIGN(relative_bitting_info)
 DISALLOW_MOVE(relative_bitting_info)
 protected:
-	RelativeBittingInformation value_;
+  RelativeBittingInformation value_;
 public:
   //constructor
-  explicit relative_bitting_info(std::string name, RelativeBittingInformation default_value, Config* config = nullptr) : IConfigItem(config, name),
-                                                                                              value_{std::move(default_value)} { }
+  explicit relative_bitting_info(const std::string& name, RelativeBittingInformation default_value, Config* config = nullptr) :
+    IConfigItem(config, name),
+    value_{std::move(default_value)} { }
 
   // destructor
   virtual ~relative_bitting_info() = default;
@@ -220,63 +229,130 @@ public:
 };
 
 class therapy_db : public IConfigItem {
-	DISALLOW_COPY_AND_ASSIGN(therapy_db)
-		DISALLOW_MOVE(therapy_db)
+DISALLOW_COPY_AND_ASSIGN(therapy_db)
+DISALLOW_MOVE(therapy_db)
 protected:
-	TherapyPtrVector value_;
+  TherapyPtrVector value_;
 public:
-	//constructor
-	explicit therapy_db(std::string name, TherapyPtrVector default_value, Config* config = nullptr) : IConfigItem(config, name),
-		value_{std::move(default_value)} { }
+  //constructor
+  explicit therapy_db(const std::string& name, TherapyPtrVector default_value, Config* config = nullptr) : IConfigItem(config, name),
+                                                                                                           value_{
+                                                                                                             std::move(default_value)
+                                                                                                           } { }
 
-	// destructor
-	virtual ~therapy_db();
+  // destructor
+  virtual ~therapy_db();
 
-	virtual TherapyPtrVector& operator()() {
-		return value_;
-	}
+  virtual TherapyPtrVector& operator()() {
+    return value_;
+  }
 
-	void set_value(const YAML::Node& node) override;
+  void set_value(const YAML::Node& node) override;
 };
 
 class strategy_db : public IConfigItem {
-	DISALLOW_COPY_AND_ASSIGN(strategy_db)
-		DISALLOW_MOVE(strategy_db)
+DISALLOW_COPY_AND_ASSIGN(strategy_db)
+DISALLOW_MOVE(strategy_db)
 protected:
-	StrategyPtrVector value_;
+  StrategyPtrVector value_;
 public:
-	//constructor
-	explicit strategy_db(std::string name, StrategyPtrVector default_value, Config* config = nullptr) : IConfigItem(config, name),
-		value_{std::move(default_value)} { }
+  //constructor
+  explicit strategy_db(const std::string& name, StrategyPtrVector default_value, Config* config = nullptr) : IConfigItem(config, name),
+                                                                                                             value_{
+                                                                                                               std::move(default_value)
+                                                                                                             } { }
 
-	// destructor
-	virtual ~strategy_db();
+  // destructor
+  virtual ~strategy_db();
 
-	virtual StrategyPtrVector& operator()() {
-		return value_;
-	}
+  virtual StrategyPtrVector& operator()() {
+    return value_;
+  }
 
-	void set_value(const YAML::Node& node) override;
+  void set_value(const YAML::Node& node) override;
 };
 
 class strategy : public IConfigItem {
-	DISALLOW_COPY_AND_ASSIGN(strategy)
-		DISALLOW_MOVE(strategy)
+DISALLOW_COPY_AND_ASSIGN(strategy)
+DISALLOW_MOVE(strategy)
 protected:
-	IStrategy* value_;
+  IStrategy* value_;
 public:
-	//constructor
-	explicit strategy(std::string name, IStrategy* default_value, Config* config = nullptr) : IConfigItem(config, name),
-		value_{default_value} { }
+  //constructor
+  explicit strategy(const std::string& name, IStrategy* default_value, Config* config = nullptr) : IConfigItem(config, name),
+                                                                                                   value_{default_value} { }
 
-	// destructor
-	virtual ~strategy() = default;
+  // destructor
+  virtual ~strategy() = default;
 
-	virtual IStrategy*& operator()() {
-		return value_;
-	}
+  virtual IStrategy*& operator()() {
+    return value_;
+  }
 
-	void set_value(const YAML::Node& node) override;
+  void set_value(const YAML::Node& node) override;
+};
+
+class initial_parasite_info : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(initial_parasite_info)
+DISALLOW_MOVE(initial_parasite_info)
+protected:
+  std::vector<InitialParasiteInfo> value_;
+public:
+  //constructor
+  explicit initial_parasite_info(const std::string& name, std::vector<InitialParasiteInfo> default_value, Config* config = nullptr) :
+    IConfigItem(config, name),
+    value_{std::move(default_value)} { }
+
+  // destructor
+  virtual ~initial_parasite_info() = default;
+
+  virtual std::vector<InitialParasiteInfo>& operator()() {
+    return value_;
+  }
+
+  void set_value(const YAML::Node& node) override;
+};
+
+class importation_parasite_info : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(importation_parasite_info)
+DISALLOW_MOVE(importation_parasite_info)
+protected:
+  std::vector<ImportationParasiteInfo> value_;
+public:
+  //constructor
+  explicit importation_parasite_info(const std::string& name, std::vector<ImportationParasiteInfo> default_value,
+                                     Config* config = nullptr) : IConfigItem(config, name),
+                                                                 value_{std::move(default_value)} { }
+
+  // destructor
+  virtual ~importation_parasite_info() = default;
+
+  virtual std::vector<ImportationParasiteInfo>& operator()() {
+    return value_;
+  }
+
+  void set_value(const YAML::Node& node) override;
+};
+
+class importation_parasite_periodically_info : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(importation_parasite_periodically_info)
+DISALLOW_MOVE(importation_parasite_periodically_info)
+protected:
+  std::vector<ImportationParasitePeriodicallyInfo> value_;
+public:
+  //constructor
+  explicit importation_parasite_periodically_info(const std::string& name, std::vector<ImportationParasitePeriodicallyInfo> default_value,
+                                     Config* config = nullptr) : IConfigItem(config, name),
+                                                                 value_{std::move(default_value)} { }
+
+  // destructor
+  virtual ~importation_parasite_periodically_info() = default;
+
+  virtual std::vector<ImportationParasitePeriodicallyInfo>& operator()() {
+    return value_;
+  }
+
+  void set_value(const YAML::Node& node) override;
 };
 
 #endif // CUSTOMCONFIGITEM_H

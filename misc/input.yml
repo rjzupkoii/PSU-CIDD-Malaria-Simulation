@@ -335,7 +335,12 @@ initial_parasite_info:
         prevalence: 0.05
       - parasite_type_id: 72
         prevalence: 0.05
-        
+  - location_id: 10
+    parasite_info:
+      - parasite_type_id: 15
+        prevalence: 0.05
+      - parasite_type_id: 20
+        prevalence: 0.1  
 #      - parasite_type_id: 2
 #        prevalence: 0.1
 #      - parasite_type_id: 4
@@ -344,20 +349,22 @@ initial_parasite_info:
 # functional but not used in 2015 LGH paper
 # allows for the introduction of a specific parasite type at a specific time
 introduce_parasite:
-#  - location: 0
-#    parasite_info:
-#      - time: 4000
-#        genotype_id: 1
-#        number_of_cases: 5
-#      - time: 4000
-#        genotype_id: 2
-#        number_of_cases: 5
-#      - time: 4000
-#        genotype_id: 4
-#        number_of_cases: 5
-#      - time: 4000
-#        genotype_id: 8
-#        number_of_cases: 5 
+  - location: 0
+    parasite_info:
+      - time: 4000
+        genotype_id: 1
+        number_of_cases: 5
+      - time: 4000
+        genotype_id: 2
+        number_of_cases: 5
+  - location: 1
+    parasite_info:
+      - time: 4000
+        genotype_id: 4
+        number_of_cases: 5
+      - time: 4000
+        genotype_id: 8
+        number_of_cases: 5 
 #        
 
 

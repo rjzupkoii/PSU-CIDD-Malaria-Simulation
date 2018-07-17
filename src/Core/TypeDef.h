@@ -184,12 +184,6 @@ struct InitialParasiteInfo {
 
   InitialParasiteInfo(const int loc, const int p_type, const double pre) : location(loc), parasite_type_id(p_type), prevalence(pre) { };
 
-  //    InitialParasiteInfo(const InitialParasiteInfo& orig){
-  //        location = orig.location;
-  //        parasite_type_id = orig.parasite_type_id;
-  //        prevalence = orig.prevalence;
-  //    }
-
 };
 
 struct ImportationParasiteInfo {
@@ -203,11 +197,6 @@ struct ImportationParasiteInfo {
   ImportationParasiteInfo(const int loc, const int p_type, const int dur, const int num) : location(loc), time(dur),
                                                                                            parasite_type_id(p_type), number(num) { };
 
-  //    InitialParasiteInfo(const InitialParasiteInfo& orig){
-  //        location = orig.location;
-  //        parasite_type_id = orig.parasite_type_id;
-  //        prevalence = orig.prevalence;
-  //    } 
 };
 
 struct ImportationParasitePeriodicallyInfo {
@@ -216,12 +205,6 @@ struct ImportationParasitePeriodicallyInfo {
   int parasite_type_id{-1};
   int number{0};
   int start_day{0};
-  
-  //    InitialParasiteInfo(const InitialParasiteInfo& orig){
-  //        location = orig.location;
-  //        parasite_type_id = orig.parasite_type_id;
-  //        prevalence = orig.prevalence;
-  //    } 
 };
 
 struct RelativeInfectivity {

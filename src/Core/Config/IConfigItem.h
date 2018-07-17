@@ -5,19 +5,21 @@
 namespace YAML {
   class Node;
 }
+
 class Config;
 
 class IConfigItem {
 protected:
-	Config* config_{nullptr};
-	std::string name_;
+  Config* config_{nullptr};
+  std::string name_;
 public:
-  explicit IConfigItem(Config* config, std::string name);
+  explicit IConfigItem(Config* config, const std::string& name);
   virtual ~IConfigItem() = default;
 
   virtual const std::string& name() {
-	  return name_;
+    return name_;
   }
+
   virtual void set_value(const YAML::Node& node) = 0;
 };
 

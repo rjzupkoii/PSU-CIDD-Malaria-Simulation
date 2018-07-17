@@ -15,11 +15,8 @@
 #include "Core/Random.h"
 #include "Therapies/SCTherapy.h"
 #include "Strategies/StrategyBuilder.h"
-#include "Therapies/TherapyBuilder.h"
 #include "Strategies/NovelNonACTSwitchingStrategy.h"
 #include "Strategies/NestedSwitchingStrategy.h"
-#include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
-#include "Helpers/NumberHelpers.h"
 #include "easylogging++.h"
 #include "Helpers/OSHelpers.h"
 #include "Helpers/TimeHelpers.h"
@@ -35,9 +32,7 @@ Config::Config(Model* model) :
   modified_daily_cost_of_resistance_(-1), modified_mutation_probability_(-1) {}
 
 
-Config::~Config() {
-  //   ObjectHelpers::DeletePointer<Strategy>(strategy_);
-}
+Config::~Config() = default;
 
 
 void Config::read_from_file(const std::string& config_file_name) {
@@ -60,86 +55,8 @@ void Config::read_from_file(const std::string& config_file_name) {
     config_item->set_value(config);
   }
 
-  // std::cout << typeid(*spatial_model()).name() << std::endl;
-  // std::cout << "hello" << std::endl;  
-
   moving_level_generator_.set_level_density(&circulation_info().v_moving_level_density);
   bitting_level_generator_.set_level_density(&relative_bitting_info().v_biting_level_density);
- 
-  read_initial_parasite_info(config);
-  read_importation_parasite_info(config);
-  read_importation_parasite_periodically_info(config);
-
-}
-
-void Config::read_initial_parasite_info(const YAML::Node& config) {
-  const auto& info_node = config["initial_parasite_info"];
-
-  for (size_t index = 0; index < info_node.size(); index++) {
-    auto location = info_node[index]["location_id"].as<int>();
-    if (location < number_of_locations() && location != -1) {
-      for (int j = 0; j < info_node[index]["parasite_info"].size(); j++) {
-        //            InitialParasiteInfo ipi;
-        //            ipi.location = location;
-        auto parasite_type_id = info_node[index]["parasite_info"][j]["parasite_type_id"].as<int>();
-        auto prevalence = info_node[index]["parasite_info"][j]["prevalence"].as<double>();
-        initial_parasite_info_.emplace_back(location, parasite_type_id, prevalence);
-      }
-    }
-    else if (location == -1) {
-      //apply for all location
-      for (auto loc = 0; loc < number_of_locations(); ++loc) {
-        for (auto j = 0; j < info_node[index]["parasite_info"].size(); j++) {
-          //            InitialParasiteInfo ipi;
-          //            ipi.location = location;
-          auto parasite_type_id = info_node[index]["parasite_info"][j]["parasite_type_id"].as<int>();
-          auto prevalence = info_node[index]["parasite_info"][j]["prevalence"].as<double>();
-          initial_parasite_info_.emplace_back(loc, parasite_type_id, prevalence);
-        }
-      }
-    }
-  }
-
-}
-
-void Config::read_importation_parasite_info(const YAML::Node& config) {
-  const YAML::Node& n = config["introduce_parasite"];
-
-  for (auto i = 0; i < n.size(); i++) {
-    auto location = n[i]["location"].as<int>();
-    if (location < number_of_locations()) {
-      for (int j = 0; j < n[i]["parasite_info"].size(); j++) {
-        //            InitialParasiteInfo ipi;
-        //            ipi.location = location;
-        auto parasite_type_id = n[i]["parasite_info"][j]["genotype_id"].as<int>();
-        auto time = n[i]["parasite_info"][j]["time"].as<int>();
-        auto num = n[i]["parasite_info"][j]["number_of_cases"].as<int>();
-        importation_parasite_info_.emplace_back(location, parasite_type_id, time, num);
-      }
-    }
-  }
-
-
-}
-
-void Config::read_importation_parasite_periodically_info(const YAML::Node& config) {
-  const YAML::Node& n = config["introduce_parasite_periodically"];
-  for (int i = 0; i < n.size(); i++) {
-    auto location = n[i]["location"].as<int>();
-    if (location < number_of_locations()) {
-      for (int j = 0; j < n[i]["parasite_info"].size(); j++) {
-        //            InitialParasiteInfo ipi;
-        //            ipi.location = location;
-        auto parasite_type_id = n[i]["parasite_info"][j]["genotype_id"].as<int>();
-        auto dur = n[i]["parasite_info"][j]["duration"].as<int>();
-        auto num = n[i]["parasite_info"][j]["number_of_cases"].as<int>();
-        auto start_day = n[i]["parasite_info"][j]["start_day"].as<int>();
-        importation_parasite_periodically_info_.emplace_back(ImportationParasitePeriodicallyInfo{
-          location, parasite_type_id, dur, num, start_day
-        });
-      }
-    }
-  }
 
 }
 
@@ -174,6 +91,7 @@ void Config::override_parameters(const std::string& override_file, const int& po
   //    CalculateDependentVariables();
 }
 
+//TODO: rework this
 void Config::override_1_parameter(const std::string& parameter_name, const std::string& parameter_value) {
   if (parameter_name == "population_size") {
     Model::CONFIG->location_db()[0].population_size = atoi(parameter_value.c_str());
@@ -298,13 +216,13 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
 
   if (parameter_name == "initial_genotype") {
     int genotypeId = atoi(parameter_value.c_str());
-    initial_parasite_info_[0].parasite_type_id = genotypeId;
-    importation_parasite_periodically_info_[0].parasite_type_id = genotypeId;
+    initial_parasite_info()[0].parasite_type_id = genotypeId;
+    importation_parasite_periodically_info()[0].parasite_type_id = genotypeId;
   }
 
   if (parameter_name == "importation_period") {
     int importation_period = atoi(parameter_value.c_str());
-    for (auto& i : importation_parasite_periodically_info_) {
+    for (auto& i : importation_parasite_periodically_info()) {
       if (i.parasite_type_id == -1) {
         i.duration = importation_period;
       }

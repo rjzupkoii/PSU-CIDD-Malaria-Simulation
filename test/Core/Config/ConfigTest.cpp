@@ -155,6 +155,38 @@ TEST_CASE("ConfigTest", "[Core]") {
 
     REQUIRE(c.strategy()->name == "Switch_AL_to_AL-AQ");
 
+    REQUIRE(c.initial_parasite_info().size()==20);
+    for (auto i = 0; i < 18; i += 2) {
+      REQUIRE(c.initial_parasite_info()[i].parasite_type_id== 64);
+      REQUIRE(c.initial_parasite_info()[i].prevalence== 0.05);
+    }
+    for (auto i = 1; i < 18; i += 2) {
+      REQUIRE(c.initial_parasite_info()[i].parasite_type_id== 72);
+      REQUIRE(c.initial_parasite_info()[i].prevalence == 0.05);
+    }
+    REQUIRE(c.initial_parasite_info()[18].parasite_type_id == 15);
+    REQUIRE(c.initial_parasite_info()[18].prevalence == 0.05);
+    REQUIRE(c.initial_parasite_info()[18].location == 10);
+    REQUIRE(c.initial_parasite_info()[19].parasite_type_id == 20);
+    REQUIRE(c.initial_parasite_info()[19].prevalence == 0.1);
+    REQUIRE(c.initial_parasite_info()[19].location == 10);
+
+    REQUIRE(c.importation_parasite_info().size() == 4);
+    REQUIRE(c.importation_parasite_info()[0].parasite_type_id == 1);
+    REQUIRE(c.importation_parasite_info()[0].location == 0);
+    REQUIRE(c.importation_parasite_info()[0].number == 5);
+
+    REQUIRE(c.importation_parasite_info()[3].parasite_type_id == 8);
+    REQUIRE(c.importation_parasite_info()[3].location == 1);
+    REQUIRE(c.importation_parasite_info()[3].number == 5);
+
+    REQUIRE(c.importation_parasite_periodically_info().size() == 1);
+    REQUIRE(c.importation_parasite_periodically_info()[0].location == 0);
+    REQUIRE(c.importation_parasite_periodically_info()[0].parasite_type_id == -1);
+    REQUIRE(c.importation_parasite_periodically_info()[0].duration == 10);
+    REQUIRE(c.importation_parasite_periodically_info()[0].start_day == 5110);
+    REQUIRE(c.importation_parasite_periodically_info()[0].number == 1);
+
 
     // REQUIRE(2== 2);
   }
