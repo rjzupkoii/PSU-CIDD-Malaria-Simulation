@@ -80,15 +80,15 @@ location_db:
 
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
-  beta_by_location: [0.05]
+  beta_by_location: [0.065]
 
 #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [1000, 10020, 10030, 10040, 10050, 10060, 10070, 10080, 10090 ]
+  population_size_by_location: [100000, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090 ]
   #spatial_model could be Gravity, Barabasi, or Wesolowski
 
 # seasonality parameters for all location
 seasonal_info:
-  enable: true
+  enable: false
   a: [1]
   phi: [250]
   min_value: [0.1]
@@ -792,7 +792,7 @@ strategy_db:
         strategy_switching_day: 5110
         switch_to_strategy_id: 0
 
-main_strategy_id: 14
+main_strategy_id: 6
 
     
 

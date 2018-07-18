@@ -24,7 +24,7 @@ class Reporter;
 class Model {
 DISALLOW_COPY_AND_ASSIGN(Model)
 DISALLOW_MOVE(Model)
-
+  
 POINTER_PROPERTY(Config, config)
 POINTER_PROPERTY(Scheduler, scheduler)
 POINTER_PROPERTY(Population, population)
@@ -68,6 +68,7 @@ public:
   void after_run();
 
   void begin_time_step();
+  void perform_population_events_daily();
 
   void daily_update(const int& current_time);
   void monthly_update();
@@ -75,8 +76,6 @@ public:
 
   void release();
 
-
-  void perform_infection_event() const;
 
   void report_begin_of_time_step();
   void monthly_report();

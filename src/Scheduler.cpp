@@ -11,9 +11,6 @@
 #include "Dispatcher.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
-#include "Population.h"
-#include "MDC/ModelDataCollector.h"
-#include "Strategies/IStrategy.h"
 #include "Helpers/TimeHelpers.h"
 #include "Helpers/ObjectHelpers.h"
 #include "easylogging++.h"
@@ -34,8 +31,8 @@ void Scheduler::initialize(const date::year_month_day& starting_date, const int&
 }
 
 void Scheduler::clear_all_events() {
-  for (EventPtrVector& events_list : timed_events_list_) {
-    for (Event* event : events_list) {
+  for (auto& events_list : timed_events_list_) {
+    for (auto* event : events_list) {
       if (event->dispatcher() != nullptr) {
         event->dispatcher()->remove(event);
       }
@@ -79,6 +76,13 @@ void Scheduler::cancel(Event* event) {
   event->set_executable(false);
 }
 
+template <typename T>
+void clear_vector_memory(std::vector<T*>& vector) {
+  vector.clear();
+  std::vector<T*> temp;
+
+  vector.swap(temp);
+}
 
 void Scheduler::run() {
   LOG(INFO) << "Simulation is running";
@@ -87,19 +91,18 @@ void Scheduler::run() {
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
     begin_time_step();
+    // population related events       
+    model_->perform_population_events_daily();
 
+    // individual related events
     for (auto& event : timed_events_list_[current_time_]) {
       event->perform_execute();
       ObjectHelpers::delete_pointer<Event>(event);
     }
-
-    timed_events_list_[current_time_].clear();
-    //actual release memory
-    std::vector<Event *> temp;
-    timed_events_list_[current_time_].swap(temp);
-
-
+    clear_vector_memory<Event>(timed_events_list_[current_time_]);
+    
     LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
+       
 
     end_time_step();
 
@@ -118,7 +121,7 @@ void Scheduler::end_time_step() const {
   if (model_ != nullptr) {
 
     model_->daily_update(current_time_);
-
+    //TODO:: change to first day???
     if (is_today_last_day_of_month()) {
       model_->monthly_update();
     }

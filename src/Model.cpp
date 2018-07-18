@@ -105,7 +105,7 @@ void Model::initialize() {
 
   LOG(INFO) << "Initialing reports";
   //initialize reporters  
-  for (Reporter* reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->initialize();
   }
 
@@ -245,23 +245,20 @@ void Model::after_run() {
 void Model::begin_time_step() {
   //reset daily variables
   data_collector_->begin_time_step();
-
-  // TODO: turn on and off time for art mutation in the input file
-  //        turn on artemnisinin mutation at intervention day
-  //    if (current_time_ == Model::CONFIG->start_intervention_day()) {
-  //      Model::CONFIG->drug_db()->drug_db()[0]->set_p_mutation(0.005);
-  //    }
-
   report_begin_of_time_step();
-  perform_infection_event();
+}
+
+void Model::perform_population_events_daily() {
+  // TODO: turn on and off time for art mutation in the input file
+  population_->perform_infection_event();
+  population_->perform_birth_event();
+  //for safety remove all dead by calling perform_death_event
+  population_->perform_death_event();
+  population_->perform_circulation_event();
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void Model::daily_update(const int& current_time) {
-  population_->perform_birth_event();
-  ///for safety remove all dead by calling perform_death_event
-  population_->perform_death_event();
-  population_->perform_circulation_event();
 
   //update / calculate daily UTL  
   data_collector_->end_of_time_step();
@@ -283,7 +280,7 @@ void Model::monthly_update() {
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void Model::yearly_update() {
-   data_collector_->perform_yearly_update();
+  data_collector_->perform_yearly_update();
 }
 
 void Model::release() {
@@ -312,10 +309,6 @@ void Model::release() {
   RANDOM = nullptr;
   DATA_COLLECTOR = nullptr;
   POPULATION = nullptr;
-}
-
-void Model::perform_infection_event() const {
-  population_->perform_infection_event();
 }
 
 void Model::monthly_report() {

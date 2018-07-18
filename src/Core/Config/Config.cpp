@@ -36,17 +36,14 @@ Config::~Config() = default;
 
 
 void Config::read_from_file(const std::string& config_file_name) {
-
   YAML::Node config;
   try {
     config = YAML::LoadFile(config_file_name);
   }
   catch (YAML::BadFile& ex) {
-    //FATAL??
     LOG(FATAL) << config_file_name << " not found or err...";
   }
   catch (YAML::Exception& ex) {
-    //FATAL
     LOG(FATAL) << "error: " << ex.msg << " at line " << ex.mark.line + 1 << ":" << ex.mark.column + 1;
   }
 
@@ -75,7 +72,7 @@ void Config::override_parameters(const std::string& override_file, const int& po
   //goto the pos line in the file
   for (int i = 0; (i < pos) && getline(ifs, buf); i++) { }
   //buff contain the parameters
-  std::vector<std::string> override_parameters = StringHelpers::split(buf, '\t');
+  auto override_parameters = StringHelpers::split(buf, '\t');
 
   //override parameter
   for (int i = 0; i < override_parameters.size(); i++) {

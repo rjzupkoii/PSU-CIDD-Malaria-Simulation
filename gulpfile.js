@@ -2,25 +2,33 @@ var gulp = require("gulp");
 var exec = require("child_process").exec;
 var spawn = require("child_process").spawnSync;
 
-gulp.task("wt", function () {
+gulp.task("wt",
+  function() {
     gulp.watch("bin/masim_test.exe", ["test"]);
-});
+  });
 
-gulp.task("wd", function () {
+gulp.task("wd",
+  function() {
     gulp.watch("bin/MaSim.exe", ["dev"]);
-});
+  });
 
-gulp.task("test", function () {
-    spawn("masim_test.exe", {
-        cwd:"./bin/",
+gulp.task("test",
+  function() {
+    spawn("masim_test.exe",
+      {
+        cwd: "./bin/",
         stdio: "inherit" // <== IMPORTANT: use this option to inherit the parent's environment
-    });
-});
-gulp.task("dev", function () {
-  spawn("bin/MaSim.exe",["-i","misc\\input.yml"], {
+      });
+  });
+gulp.task("dev",
+  function() {
+    spawn("MaSim.exe",
+      ["-i", "input_dev.yml"],
+      {
+        cwd: "./bin/",
         stdio: "inherit" // <== IMPORTANT: use this option to inherit the parent's environment
-    });
-});
+      });
+  });
 
 
 //

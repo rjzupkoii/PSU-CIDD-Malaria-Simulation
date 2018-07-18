@@ -51,8 +51,7 @@ void ImportationPeriodicallyEvent::execute() {
 
   //    std::cout << number_of_cases_ << std::endl;
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
-  
-  LOG_IF(number_of_importation_cases>0, INFO) << "Day: " <<  Model::SCHEDULER->current_time() << " - Importing " << number_of_importation_cases << " at location " << location_
+  VLOG_IF(number_of_importation_cases>0, 2) << "Day: " <<  Model::SCHEDULER->current_time() << " - Importing " << number_of_importation_cases << " at location " << location_
     << " with genotype " << genotype_id_;
   for (auto i = 0; i < number_of_importation_cases; i++) {
 

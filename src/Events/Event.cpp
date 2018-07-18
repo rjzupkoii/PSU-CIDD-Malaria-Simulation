@@ -6,9 +6,7 @@
  */
 
 #include "Event.h"
-#include "Scheduler.h"
 #include  "Dispatcher.h"
-#include <typeinfo>
 
 Event::Event() :
   scheduler_(nullptr), dispatcher_(nullptr), executable_(true), time_(-1) {}
