@@ -46,7 +46,7 @@ PROPERTY_REF(int, override_parameter_line_number) // base 1
 PROPERTY_REF(int, gui_type)
 PROPERTY_REF(bool, is_farm_output)
 
-public: 
+public:
   static Model* MODEL;
   static Config* CONFIG;
   static Random* RANDOM;
@@ -66,6 +66,12 @@ public:
   void before_run();
   void run();
   void after_run();
+
+  void begin_time_step();
+
+  void daily_update(const int& current_time);
+  void monthly_update();
+  void yearly_update();
 
   void release();
 

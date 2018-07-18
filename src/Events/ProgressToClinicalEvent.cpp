@@ -69,17 +69,16 @@ void ProgressToClinicalEvent::execute() {
   //Statistic collect cumulative clinical episodes
   Model::DATA_COLLECTOR->collect_1_clinical_episode(person->location(), person->age(), person->age_class());
 
-    const auto p = Model::RANDOM->random_flat(0.0, 1.0);
-  const double p_treatment_by_age =
-    person->age() <= 5
-      ? Model::CONFIG->location_db()[person->location()].p_treatment_less_than_5
-      : Model::CONFIG->location_db()[person->location()].p_treatment_more_than_5;
+  const auto p = Model::RANDOM->random_flat(0.0, 1.0);
+  const double p_treatment_by_age = Model::CONFIG->treatment_coverage_model()->get_probability_to_be_treated(
+    person->location(), person->age());
 
   const auto p_treatment = (Model::MODEL->scheduler()->current_time() >= Model::CONFIG->start_treatment_day())
-                         ? p_treatment_by_age
-                         : -1;
+                             ? p_treatment_by_age
+                             : -1;
+  // std::cout << p_treatment << std::endl;
   if (p <= p_treatment) {
-    Therapy* therapy = Model::CONFIG->strategy()->get_therapy(person);
+    auto* therapy = Model::CONFIG->strategy()->get_therapy(person);
     person->receive_therapy(therapy, clinical_caused_parasite_);
     //Statistic increase today treatments
     Model::DATA_COLLECTOR->record_1_treatment(person->location(), person->age(), therapy->id());

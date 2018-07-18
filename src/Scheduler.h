@@ -50,14 +50,10 @@ public:
   void run();
 
   void begin_time_step() const;
-  void monthly_update() const;
-  void yearly_update() const;
 
   void end_time_step() const;
 
   bool can_stop() const;
-
-  void daily_update() const;
 
   int current_day_in_year() const;
 

@@ -61,11 +61,12 @@ void Scheduler::set_total_time(const int& value) {
 
 void Scheduler::schedule(Event* event) {
   // Schedule event in the future
-  //1. Compare current time with event time
-  //2. Event time cannot exceed total time or less than current time
+  // Event time cannot exceed total time or less than current time
   if (event->time() > total_time_ || event->time() < current_time_) {
-    std::cout << "Error to schedule event " << event->name() << " at " << event->time() << " with current_time: "
-      << current_time_ << std::endl;
+    LOG_IF(event->time() < current_time_, FATAL) << "Error when schedule event " << event->name() << " at " << event->time()
+    << ". Current_time: " << current_time_ << " - total time: " << total_time_;
+    LOG(WARNING) << "Cannot schedule event " << event->name() << " at " << event->time() << ". Current_time: "
+      << current_time_ << " - total time: " << total_time_;
     ObjectHelpers::delete_pointer<Event>(event);
   }
   else {
@@ -86,7 +87,6 @@ void Scheduler::run() {
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
     begin_time_step();
-    LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
 
     for (auto& event : timed_events_list_[current_time_]) {
       event->perform_execute();
@@ -95,7 +95,11 @@ void Scheduler::run() {
 
     timed_events_list_[current_time_].clear();
     //actual release memory
-    std::vector<Event *>(timed_events_list_[current_time_]).swap(timed_events_list_[current_time_]);
+    std::vector<Event *> temp;
+    timed_events_list_[current_time_].swap(temp);
+
+
+    LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
 
     end_time_step();
 
@@ -105,59 +109,23 @@ void Scheduler::run() {
 
 void Scheduler::begin_time_step() const {
   if (model_ != nullptr) {
-    Model::DATA_COLLECTOR->begin_time_step();
-
-    // TODO: turn on and off time for art mutation in the input file
-    //        turn on artemnisinin mutation at intervention day
-    //    if (current_time_ == Model::CONFIG->start_intervention_day()) {
-    //      Model::CONFIG->drug_db()->drug_db()[0]->set_p_mutation(0.005);
-    //    }
-
-    model_->report_begin_of_time_step();
-    model_->perform_infection_event();
+    model_->begin_time_step();
   }
 }
 
 
 void Scheduler::end_time_step() const {
-  daily_update();
+  if (model_ != nullptr) {
 
-  monthly_update();
+    model_->daily_update(current_time_);
 
-  yearly_update();
-}
+    if (is_today_last_day_of_month()) {
+      model_->monthly_update();
+    }
 
-void Scheduler::daily_update() const {
-  Model::POPULATION->perform_birth_event();
-  ///for safety remove all dead by calling perform_death_event
-  Model::POPULATION->perform_death_event();
-  Model::POPULATION->perform_circulation_event();
-
-  //update / calculate daily UTL  
-  Model::DATA_COLLECTOR->end_of_time_step();
-
-  //update force of infection
-  Model::POPULATION->update_force_of_infection(current_time_);
-
-  //check to switch strategy
-  Model::CONFIG->strategy()->update_end_of_time_step();
-}
-
-void Scheduler::monthly_update() const {
-  //doing monthly stuff
-  if (is_today_last_day_of_month()) {
-    model_->monthly_report();
-
-    Model::DATA_COLLECTOR->monthly_update();
-    //update treatment coverage
-    Model::CONFIG->treatment_coverage_model()->monthly_update();
-  }
-}
-
-void Scheduler::yearly_update() const {
-  //doing yearly stuff
-  if (is_today_last_day_of_year()) {
-    Model::DATA_COLLECTOR->perform_yearly_update();
+    if (is_today_last_day_of_year()) {
+      model_->yearly_update();
+    }
   }
 }
 

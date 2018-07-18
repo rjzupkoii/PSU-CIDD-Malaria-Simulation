@@ -33,6 +33,7 @@
 #include "Events/ImportationEvent.h"
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
+#include "Strategies/IStrategy.h"
 
 Model* Model::MODEL = nullptr;
 Config* Model::CONFIG = nullptr;
@@ -223,7 +224,7 @@ void Model::run() {
 
 void Model::before_run() {
   LOG(INFO) << "Perform before run events";
-  for (Reporter* reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->before_run();
   }
 }
@@ -231,11 +232,55 @@ void Model::before_run() {
 void Model::after_run() {
   LOG(INFO) << "Perform after run events";
 
-  DATA_COLLECTOR->update_after_run();
+  data_collector_->update_after_run();
 
   for (auto* reporter : reporters_) {
     reporter->after_run();
   }
+}
+
+void Model::begin_time_step() {
+  //reset daily variables
+  data_collector_->begin_time_step();
+
+  // TODO: turn on and off time for art mutation in the input file
+  //        turn on artemnisinin mutation at intervention day
+  //    if (current_time_ == Model::CONFIG->start_intervention_day()) {
+  //      Model::CONFIG->drug_db()->drug_db()[0]->set_p_mutation(0.005);
+  //    }
+
+  report_begin_of_time_step();
+  perform_infection_event();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void Model::daily_update(const int& current_time) {
+  population_->perform_birth_event();
+  ///for safety remove all dead by calling perform_death_event
+  population_->perform_death_event();
+  population_->perform_circulation_event();
+
+  //update / calculate daily UTL  
+  data_collector_->end_of_time_step();
+
+  //update force of infection
+  population_->update_force_of_infection(current_time);
+
+  //check to switch strategy
+  config_->strategy()->update_end_of_time_step();
+}
+
+void Model::monthly_update() {
+  monthly_report();
+
+  data_collector()->monthly_update();
+  //update treatment coverage
+  config_->treatment_coverage_model()->monthly_update();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void Model::yearly_update() {
+   data_collector_->perform_yearly_update();
 }
 
 void Model::release() {
@@ -271,16 +316,16 @@ void Model::perform_infection_event() const {
 }
 
 void Model::monthly_report() {
-  DATA_COLLECTOR->perform_population_statistic();
+  data_collector_->perform_population_statistic();
 
-  for (Reporter* reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->monthly_report();
   }
 
 }
 
 void Model::report_begin_of_time_step() {
-  for (Reporter* reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->begin_time_step();
   }
 }

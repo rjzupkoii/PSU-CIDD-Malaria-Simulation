@@ -183,42 +183,42 @@ void Population::perform_infection_event() {
       DoubleVector vLevelDensity;
       auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
-      for (int i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
-        double temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] *
+      for (auto i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
+        auto temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] *
           pi->vPerson()[loc][i].size();
         vLevelDensity.push_back(temp);
       }
 
-      std::vector<unsigned int> vIntNumberOfBites(vLevelDensity.size());
+      std::vector<unsigned int> v_int_number_of_bites(vLevelDensity.size());
       model_->random()->random_multinomial(vLevelDensity.size(), number_of_bites, &vLevelDensity[0],
-                                           &vIntNumberOfBites[0]);
+                                           &v_int_number_of_bites[0]);
 
 
-      for (int bitting_level = 0; bitting_level < vIntNumberOfBites.size(); bitting_level++) {
+      for (auto bitting_level = 0; bitting_level < v_int_number_of_bites.size(); bitting_level++) {
         const int size = pi->vPerson()[loc][bitting_level].size();
         if (size == 0) continue;
-        for (auto j = 0; j < vIntNumberOfBites[bitting_level]; j++) {
+        for (auto j = 0; j < v_int_number_of_bites[bitting_level]; j++) {
           //select 1 random person from level i
-          int index = model_->random()->random_uniform(size);
-          Person* p = pi->vPerson()[loc][bitting_level][index];
+          const int index = model_->random()->random_uniform(size);
+          auto* person = pi->vPerson()[loc][bitting_level][index];
 
           assert(p->host_state() != Person::DEAD);
-          p->increase_number_of_times_bitten();
+          person->increase_number_of_times_bitten();
 
-          const double p_infectious = Model::RANDOM->random_flat(0.0, 1.0);
+          const auto p_infectious = Model::RANDOM->random_flat(0.0, 1.0);
           //only infect with real infectious bite
           if (Model::CONFIG->using_variable_probability_infectious_bites_cause_infection()) {
-            if (p_infectious <= p->p_infection_from_an_infectious_bite()) {
-              if (p->host_state() != Person::EXPOSED && p->liver_parasite_type() == nullptr) {
-                p->today_infections()->push_back(parasite_type_id);
-                today_infections.push_back(p);
+            if (p_infectious <= person->p_infection_from_an_infectious_bite()) {
+              if (person->host_state() != Person::EXPOSED && person->liver_parasite_type() == nullptr) {
+                person->today_infections()->push_back(parasite_type_id);
+                today_infections.push_back(person);
               }
             }
           }
           else if (p_infectious <= Model::CONFIG->p_infection_from_an_infectious_bite()) {
-            if (p->host_state() != Person::EXPOSED && p->liver_parasite_type() == nullptr) {
-              p->today_infections()->push_back(parasite_type_id);
-              today_infections.push_back(p);
+            if (person->host_state() != Person::EXPOSED && person->liver_parasite_type() == nullptr) {
+              person->today_infections()->push_back(parasite_type_id);
+              today_infections.push_back(person);
             }
           }
 
@@ -230,7 +230,7 @@ void Population::perform_infection_event() {
   //solve Multiple infections
   if (today_infections.empty()) return;
 
-  for (Person* p : today_infections) {
+  for (auto* p : today_infections) {
     p->randomly_choose_parasite();
   }
 
@@ -255,11 +255,10 @@ void Population::initialize() {
     interupted_feeding_force_of_infection_by_location_parasite_type_ = DoubleVector2(
       number_of_location, DoubleVector(number_of_parasite_type, 0));
 
-    force_of_infection_for7days_by_location_parasite_type_ =
-      std::vector<DoubleVector2>(
-        Model::CONFIG->number_of_tracking_days(),
-        DoubleVector2
-        (number_of_location, DoubleVector(number_of_parasite_type, 0)));
+    force_of_infection_for7days_by_location_parasite_type_ = std::vector<DoubleVector2>(
+      Model::CONFIG->number_of_tracking_days(),
+      DoubleVector2
+      (number_of_location, DoubleVector(number_of_parasite_type, 0)));
 
     //initalize other person index
     initialize_person_indices();
@@ -355,18 +354,18 @@ void Population::initialize() {
 void Population::introduce_initial_cases() {
   if (model_ != nullptr) {
 
+    // std::cout << Model::CONFIG->initial_parasite_info().size() << std::endl;
     for (const auto p_info : Model::CONFIG->initial_parasite_info()) {
       int num_of_infections = size(p_info.location) * p_info.prevalence;
-      //            std::cout << num_of_infections << std::endl;
+      // std::cout << num_of_infections << std::endl;
       auto* genotype = Model::CONFIG->genotype_db()->get(p_info.parasite_type_id);
-      //std::cout << p_info.location << "-" << p_info.parasite_type_id << "-" << num_of_infections << std::endl;
+      // std::cout << p_info.location << "-" << p_info.parasite_type_id << "-" << num_of_infections << std::endl;
       introduce_parasite(p_info.location, genotype, num_of_infections);
-
     }
     //update force of infection for 7 days
-    for (int d = 0; d < Model::CONFIG->number_of_tracking_days(); d++) {
-      for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-        for (int ptype = 0; ptype < Model::CONFIG->number_of_parasite_types(); ptype++) {
+    for (auto d = 0; d < Model::CONFIG->number_of_tracking_days(); d++) {
+      for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+        for (auto ptype = 0; ptype < Model::CONFIG->number_of_parasite_types(); ptype++) {
           force_of_infection_for7days_by_location_parasite_type_[d][loc][ptype] =
             current_force_of_infection_by_location_parasite_type_[loc][ptype];
         }
@@ -452,10 +451,12 @@ void Population::update_force_of_infection(const int& current_time) {
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     for (auto p_type = 0; p_type < Model::CONFIG->number_of_parasite_types(); p_type++) {
       force_of_infection_for7days_by_location_parasite_type()[current_time %
-        Model::CONFIG->number_of_tracking_days()][loc][p_type] = interupted_feeding_force_of_infection_by_location_parasite_type()[loc][p_type];
+        Model::CONFIG->number_of_tracking_days()][loc][p_type] = interupted_feeding_force_of_infection_by_location_parasite_type()[loc][
+        p_type];
     }
   }
 }
+
 //
 // void Population::update() {
 //

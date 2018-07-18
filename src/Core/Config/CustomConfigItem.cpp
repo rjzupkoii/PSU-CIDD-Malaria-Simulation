@@ -449,7 +449,7 @@ void initial_parasite_info::set_value(const YAML::Node& node) {
   for (size_t index = 0; index < info_node.size(); index++) {
     const auto location = info_node[index]["location_id"].as<int>();
     const auto location_from = location == -1 ? 0 : location;
-    const auto location_to = location == -1 ? config_->number_of_locations() : location + 1;
+    const auto location_to = location == -1 ? config_->number_of_locations() : min(location + 1,config_->number_of_locations());
 
     //apply for all location
     for (auto loc = location_from; loc < location_to; ++loc) {
