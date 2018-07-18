@@ -29,7 +29,7 @@ void ReturnToResidenceEvent::schedule_event(Scheduler* scheduler, Person* p, con
 
         
         p->add(e);
-        scheduler->schedule(e);
+        scheduler->schedule_individual_event(e);
     }
 }
 

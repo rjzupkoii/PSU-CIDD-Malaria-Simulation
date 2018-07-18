@@ -110,17 +110,17 @@ void Model::initialize() {
   }
 
 
-  LOG(INFO) << "Initialing scheduler";
+  LOG(INFO) << "Initialzing scheduler";
 
   LOG(INFO) << "Starting day is " << CONFIG->starting_date();
   //initialize scheduler
-  scheduler_->initialize(CONFIG->starting_date(), config_->total_time() + 2000);
+  scheduler_->initialize(CONFIG->starting_date(), config_->total_time());
 
-  LOG(INFO) << "Initialing data collector";
+  LOG(INFO) << "Initializing data collector";
   //initialize data_collector
   data_collector_->initialize();
 
-  LOG(INFO) << "Initialing population";
+  LOG(INFO) << "Initializing population";
   //initialize Population
   population_->initialize();
 
@@ -136,7 +136,7 @@ void Model::initialize() {
   LOG(INFO) << "Schedule for periodically importation event";
   //schedule for some special or periodic events
   for (auto& i : CONFIG->importation_parasite_periodically_info()) {
-    ImportationPeriodicallyEvent::schedule_event(SCHEDULER,
+    ImportationPeriodicallyEvent::schedule_event(scheduler_,
                                                  i.location,
                                                  i.duration,
                                                  i.parasite_type_id,
@@ -146,7 +146,7 @@ void Model::initialize() {
 
   LOG(INFO) << "Schedule for importation event at one time point";
   for (auto& i : CONFIG->importation_parasite_info()) {
-    ImportationEvent::schedule_event(SCHEDULER, i.location,
+    ImportationEvent::schedule_event(scheduler_, i.location,
                                      i.time,
                                      i.parasite_type_id,
                                      i.number);

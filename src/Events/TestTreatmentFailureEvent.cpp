@@ -39,7 +39,7 @@ void TestTreatmentFailureEvent::schedule_event(Scheduler* scheduler, Person* p, 
         e->set_therapyId(t_id);
 
         p->add(e);
-        scheduler->schedule(e);
+        scheduler->schedule_individual_event(e);
     }
 }
 

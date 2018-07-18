@@ -37,7 +37,7 @@ void BirthdayEvent::schedule_event(Scheduler* scheduler, Person* p, const int& t
     birthday_event->set_time(time);
 
     p->add(birthday_event);    
-    scheduler->schedule(birthday_event);
+    scheduler->schedule_individual_event(birthday_event);
     //        std::cout << scheduler->current_time() << " - hello" << std::endl;
   }
 }

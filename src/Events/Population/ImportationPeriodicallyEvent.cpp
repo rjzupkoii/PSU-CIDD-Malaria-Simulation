@@ -35,7 +35,7 @@ void ImportationPeriodicallyEvent::schedule_event(Scheduler* scheduler, const in
     e->set_dispatcher(nullptr);
     e->set_executable(true);
     e->set_time(start_day);
-    scheduler->schedule(e);
+    scheduler->schedule_population_event(e);
   }
 
 }

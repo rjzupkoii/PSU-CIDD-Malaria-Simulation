@@ -25,7 +25,7 @@ void UpdateEveryKDaysEvent::schedule_event(Scheduler* scheduler, Person* p, cons
     e->set_time(time);
 
     p->add(e);
-    scheduler->schedule(e);
+    scheduler->schedule_individual_event(e);
   }
 }
 

@@ -38,7 +38,7 @@ void ImportationEvent::schedule_event(Scheduler* scheduler, const int& location,
     e->set_time(execute_at);
 
     //        p->add(e);
-    scheduler->schedule(e);
+    scheduler->schedule_population_event(e);
 
   }
 }

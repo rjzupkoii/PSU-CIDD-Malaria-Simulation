@@ -29,7 +29,7 @@ void MatureGametocyteEvent::schedule_event(Scheduler* scheduler, Person* p, Clon
     e->set_time(time);
 
     p->add(e);
-    scheduler->schedule(e);
+    scheduler->schedule_individual_event(e);
   }
 }
 

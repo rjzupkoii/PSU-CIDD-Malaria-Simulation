@@ -26,7 +26,7 @@ void ReceiveTherapyEvent::schedule_event(Scheduler* scheduler, Person* p, Therap
         e->set_time(time);
         e->set_clinical_caused_parasite(clinical_caused_parasite);
         p->add(e);
-        scheduler->schedule(e);
+        scheduler->schedule_individual_event(e);
     }
 }
 

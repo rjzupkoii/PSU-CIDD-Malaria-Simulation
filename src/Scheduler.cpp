@@ -17,57 +17,71 @@
 
 using namespace date;
 
-Scheduler::Scheduler(Model* model) : current_time_(-1), total_time_(-1), model_(model), is_force_stop_(false) {}
+Scheduler::Scheduler(Model* model) : current_time_(-1), total_available_time_(-1), model_(model), is_force_stop_(false) {}
 
 Scheduler::~Scheduler() {
   clear_all_events();
 }
 
+void Scheduler::clear_all_events() {
+  clear_all_events(individual_events_list_);
+  clear_all_events(population_events_list_);
+}
+
 void Scheduler::initialize(const date::year_month_day& starting_date, const int& total_time) {
-  set_total_time(total_time);
+  //TODO: not urgent, why +1
+  set_total_available_time(total_time + 1);
   set_current_time(0);
 
   calendar_date = sys_days(starting_date);
 }
 
-void Scheduler::clear_all_events() {
-  for (auto& events_list : timed_events_list_) {
-    for (auto* event : events_list) {
+void Scheduler::clear_all_events(EventPtrVector2& events_list) const {
+  for (auto& timestep_events : events_list) {
+    for (auto* event : timestep_events) {
       if (event->dispatcher() != nullptr) {
         event->dispatcher()->remove(event);
       }
       ObjectHelpers::delete_pointer<Event>(event);
     }
-    events_list.clear();
+    timestep_events.clear();
   }
-  timed_events_list_.clear();
+  events_list.clear();
 }
 
-int Scheduler::total_time() const {
-  return total_time_;
+int Scheduler::total_available_time() const {
+  return total_available_time_;
 }
 
-void Scheduler::set_total_time(const int& value) {
-  if (total_time_ > 0) {
+void Scheduler::set_total_available_time(const int& value) {
+  if (total_available_time_ > 0) {
     clear_all_events();
   }
-
-  total_time_ = value;
-  timed_events_list_.assign(total_time_, EventPtrVector());
+  total_available_time_ = value;
+  individual_events_list_.assign(total_available_time_, EventPtrVector());
+  population_events_list_.assign(total_available_time_, EventPtrVector());
 }
 
-void Scheduler::schedule(Event* event) {
+void Scheduler::schedule_individual_event(Event* event) {
+  schedule_event(individual_events_list_[event->time()], event);
+}
+
+void Scheduler::schedule_population_event(Event* event) {
+  schedule_event(population_events_list_[event->time()], event);
+}
+
+void Scheduler::schedule_event(EventPtrVector& time_events, Event* event) {
   // Schedule event in the future
   // Event time cannot exceed total time or less than current time
-  if (event->time() > total_time_ || event->time() < current_time_) {
+  if (event->time() > Model::CONFIG->total_time() || event->time() < current_time_) {
     LOG_IF(event->time() < current_time_, FATAL) << "Error when schedule event " << event->name() << " at " << event->time()
-    << ". Current_time: " << current_time_ << " - total time: " << total_time_;
-    LOG(WARNING) << "Cannot schedule event " << event->name() << " at " << event->time() << ". Current_time: "
-      << current_time_ << " - total time: " << total_time_;
+    << ". Current_time: " << current_time_ << " - total time: " << total_available_time_;
+    VLOG(2) << "Cannot schedule event " << event->name() << " at " << event->time() << ". Current_time: "
+      << current_time_ << " - total time: " << total_available_time_;
     ObjectHelpers::delete_pointer<Event>(event);
   }
   else {
-    timed_events_list_[event->time()].push_back(event);
+    time_events.push_back(event);
     event->set_scheduler(this);
   }
 }
@@ -76,33 +90,34 @@ void Scheduler::cancel(Event* event) {
   event->set_executable(false);
 }
 
-template <typename T>
-void clear_vector_memory(std::vector<T*>& vector) {
-  vector.clear();
-  std::vector<T*> temp;
-
-  vector.swap(temp);
-}
 
 void Scheduler::run() {
   LOG(INFO) << "Simulation is running";
   current_time_ = 0;
-
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
     begin_time_step();
     // population related events       
     model_->perform_population_events_daily();
 
-    // individual related events
-    for (auto& event : timed_events_list_[current_time_]) {
+    // population related events
+    for (auto& event : population_events_list_[current_time_]) {
       event->perform_execute();
       ObjectHelpers::delete_pointer<Event>(event);
     }
-    clear_vector_memory<Event>(timed_events_list_[current_time_]);
-    
+    ObjectHelpers::clear_vector_memory<Event>(population_events_list_[current_time_]);
+
+
+    // individual related events
+    for (auto& event : individual_events_list_[current_time_]) {
+      event->perform_execute();
+      ObjectHelpers::delete_pointer<Event>(event);
+    }
+
+    ObjectHelpers::clear_vector_memory<Event>(individual_events_list_[current_time_]);
+
     LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
-       
+
 
     end_time_step();
 

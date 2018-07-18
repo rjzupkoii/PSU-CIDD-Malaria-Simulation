@@ -32,7 +32,7 @@ void UpdateWhenDrugIsPresentEvent::schedule_event(Scheduler* scheduler, Person* 
     e->set_time(time);
 
     p->add(e);
-    scheduler->schedule(e);
+    scheduler->schedule_individual_event(e);
   }
 }
 

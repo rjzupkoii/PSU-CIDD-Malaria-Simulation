@@ -29,7 +29,7 @@ void EndClinicalEvent::schedule_event(Scheduler* scheduler, Person* p, ClonalPar
         e->set_time(time);
 
         p->add(e);
-        scheduler->schedule(e);
+        scheduler->schedule_individual_event(e);
     }
 }
 

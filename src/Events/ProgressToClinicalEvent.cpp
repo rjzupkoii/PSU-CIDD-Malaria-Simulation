@@ -146,7 +146,7 @@ void ProgressToClinicalEvent::schedule_event(Scheduler* scheduler, Person* p,
     e->set_time(time);
 
     p->add(e);
-    scheduler->schedule(e);
+    scheduler->schedule_individual_event(e);
   }
 }
 

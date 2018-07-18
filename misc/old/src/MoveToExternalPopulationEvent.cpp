@@ -32,7 +32,7 @@ void MoveToExternalPopulationEvent::schedule_event(Scheduler *scheduler, Person 
 
 
     p->add(e);
-    scheduler->schedule(e);
+    scheduler->schedule_individual_event(e);
   }
 }
 

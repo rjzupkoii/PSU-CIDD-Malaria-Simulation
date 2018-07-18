@@ -22,25 +22,27 @@ DISALLOW_MOVE(Scheduler)
 
 PROPERTY_REF(int, current_time)
 
-PROPERTY_HEADER(int, total_time)
+PROPERTY_HEADER(int, total_available_time)
 
 POINTER_PROPERTY(Model, model)
 
-PROPERTY_REF(EventPtrVector2, timed_events_list)
 PROPERTY_REF(bool, is_force_stop)
 
 public:
   date::sys_days calendar_date;
 
-public:
   explicit Scheduler(Model* model = nullptr);
 
   virtual ~Scheduler();
 
-
   void clear_all_events();
+  void clear_all_events(EventPtrVector2& events_list) const;
 
-  virtual void schedule(Event* event);
+  virtual void schedule_individual_event(Event* event);
+
+  virtual void schedule_population_event(Event* event);
+  virtual void schedule_event(EventPtrVector& time_events, Event* event);
+  
 
   virtual void cancel(Event* event);
 
@@ -62,7 +64,9 @@ public:
   bool is_today_first_day_of_month() const;
 
   bool is_today_last_day_of_year() const;
-
+private:
+  EventPtrVector2 individual_events_list_;
+  EventPtrVector2 population_events_list_;
 };
 
 #endif  /* SCHEDULER_H */
