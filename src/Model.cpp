@@ -273,6 +273,7 @@ void Model::daily_update(const int& current_time) {
 void Model::monthly_update() {
   monthly_report();
 
+  //reset monthly variables
   data_collector()->monthly_update();
   //update treatment coverage
   config_->treatment_coverage_model()->monthly_update();

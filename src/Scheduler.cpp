@@ -91,32 +91,31 @@ void Scheduler::cancel(Event* event) {
 }
 
 
+void Scheduler::execute_events_list(EventPtrVector& events_list) const {
+  for (auto& event : events_list) {
+    event->perform_execute();
+    ObjectHelpers::delete_pointer<Event>(event);
+  }
+  ObjectHelpers::clear_vector_memory<Event>(events_list);
+}
+
 void Scheduler::run() {
+
   LOG(INFO) << "Simulation is running";
   current_time_ = 0;
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
+    LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
+
     begin_time_step();
     // population related events       
     model_->perform_population_events_daily();
 
     // population related events
-    for (auto& event : population_events_list_[current_time_]) {
-      event->perform_execute();
-      ObjectHelpers::delete_pointer<Event>(event);
-    }
-    ObjectHelpers::clear_vector_memory<Event>(population_events_list_[current_time_]);
-
+    execute_events_list(population_events_list_[current_time_]);
 
     // individual related events
-    for (auto& event : individual_events_list_[current_time_]) {
-      event->perform_execute();
-      ObjectHelpers::delete_pointer<Event>(event);
-    }
-
-    ObjectHelpers::clear_vector_memory<Event>(individual_events_list_[current_time_]);
-
-    LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
+    execute_events_list(individual_events_list_[current_time_]);
 
 
     end_time_step();
@@ -128,22 +127,20 @@ void Scheduler::run() {
 void Scheduler::begin_time_step() const {
   if (model_ != nullptr) {
     model_->begin_time_step();
-  }
-}
-
-
-void Scheduler::end_time_step() const {
-  if (model_ != nullptr) {
-
-    model_->daily_update(current_time_);
-    //TODO:: change to first day???
-    if (is_today_last_day_of_month()) {
+    if (is_today_first_day_of_month()) {
       model_->monthly_update();
     }
 
-    if (is_today_last_day_of_year()) {
+    if (is_today_first_day_of_year()) {
+      // std::cout << date::year_month_day{calendar_date} << std::endl;
       model_->yearly_update();
     }
+  }
+}
+
+void Scheduler::end_time_step() const {
+  if (model_ != nullptr) {
+    model_->daily_update(current_time_);
   }
 }
 
@@ -157,17 +154,22 @@ int Scheduler::current_day_in_year() const {
 
 bool Scheduler::is_today_last_day_of_year() const {
   year_month_day ymd{calendar_date};
-  return (ymd.month() - January).count() == 12 && (ymd.day() - 0_d).count() == 31;
+  return ymd.month() == month{12} && ymd.day() == day{31};
 }
 
 bool Scheduler::is_today_first_day_of_month() const {
   // return true;
   year_month_day ymd{calendar_date};
-  return (ymd.day() - 0_d).count() == 1;
+  return ymd.day() == day{1};
+}
+
+bool Scheduler::is_today_first_day_of_year() const {
+  year_month_day ymd{calendar_date};
+  return ymd.month() == month{1} && ymd.day() == day{1};
 }
 
 bool Scheduler::is_today_last_day_of_month() const {
   const auto next_date = calendar_date + days{1};
   year_month_day ymd{next_date};
-  return (ymd.day() - 0_d).count() == 1;
+  return ymd.day() == day{1};
 }

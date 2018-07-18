@@ -45,6 +45,7 @@ public:
   
 
   virtual void cancel(Event* event);
+  void execute_events_list(EventPtrVector& events_list) const;
 
   void initialize(
     const date::year_month_day& starting_date, const int& total_time);
@@ -62,6 +63,8 @@ public:
   bool is_today_last_day_of_month() const;
 
   bool is_today_first_day_of_month() const;
+
+  bool is_today_first_day_of_year() const;
 
   bool is_today_last_day_of_year() const;
 private:
