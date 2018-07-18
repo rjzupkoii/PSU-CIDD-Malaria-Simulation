@@ -29,8 +29,8 @@
 #include "Events/ReturnToResidenceEvent.h"
 #include "ClonalParasitePopulation.h"
 #include "Events/SwitchImmuneComponentEvent.h"
-#include "Events/ImportationPeriodicallyEvent.h"
-#include "Events/ImportationEvent.h"
+#include "Events/Population/ImportationPeriodicallyEvent.h"
+#include "Events/Population/ImportationEvent.h"
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
 #include "Strategies/IStrategy.h"
@@ -248,7 +248,7 @@ void Model::begin_time_step() {
   report_begin_of_time_step();
 }
 
-void Model::perform_population_events_daily() {
+void Model::perform_population_events_daily() const {
   // TODO: turn on and off time for art mutation in the input file
   population_->perform_infection_event();
   population_->perform_birth_event();

@@ -25,6 +25,7 @@ file(GLOB SRC_FILES
 	${PROJECT_SOURCE_DIR}/src/Strategies/*.cpp
 	${PROJECT_SOURCE_DIR}/src/Parasites/*.cpp
 	${PROJECT_SOURCE_DIR}/src/Events/*.cpp
+	${PROJECT_SOURCE_DIR}/src/Events/Population/*.cpp
   ${PROJECT_SOURCE_DIR}/src/Malaria/*.cpp)
 
 set(SRC_FILES ${SRC_FILES} 

@@ -68,7 +68,7 @@ public:
   void after_run();
 
   void begin_time_step();
-  void perform_population_events_daily();
+  void perform_population_events_daily() const;
 
   void daily_update(const int& current_time);
   void monthly_update();
