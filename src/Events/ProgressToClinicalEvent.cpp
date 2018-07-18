@@ -20,9 +20,9 @@
 
 OBJECTPOOL_IMPL(ProgressToClinicalEvent)
 
-ProgressToClinicalEvent::ProgressToClinicalEvent() {}
+ProgressToClinicalEvent::ProgressToClinicalEvent() = default;
 
-ProgressToClinicalEvent::~ProgressToClinicalEvent() {}
+ProgressToClinicalEvent::~ProgressToClinicalEvent() = default;
 
 void ProgressToClinicalEvent::execute() {
   auto* person = (Person *)dispatcher();

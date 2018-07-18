@@ -131,6 +131,7 @@ void Model::initialize() {
   //initialize external population
   //    external_population_->initialize();
 
+  //TODO: implement other schudler for the following population events???
 
   LOG(INFO) << "Schedule for periodically importation event";
   //schedule for some special or periodic events
@@ -150,6 +151,8 @@ void Model::initialize() {
                                      i.parasite_type_id,
                                      i.number);
   }
+
+  //TODO: Schedule other Population Events here
 }
 
 void Model::initialize_object_pool(const int& size) {

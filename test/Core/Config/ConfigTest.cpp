@@ -14,9 +14,9 @@ TEST_CASE("ConfigTest", "[Core]") {
 
 
     REQUIRE(c.starting_date() == date::year_month_day{ date::year{ 1990 } / 1 / 1 });
-    REQUIRE(c.ending_date() == date::year_month_day{ date::year{ 1990 } / 2 / 1 });
+    REQUIRE(c.ending_date() == date::year_month_day{ date::year{ 1991 } / 1 / 1 });
 
-    REQUIRE(c.total_time() == 31);
+    REQUIRE(c.total_time() == 365);
 
     REQUIRE(c.start_treatment_day() == 0);
     REQUIRE(c.start_collect_data_day() == 0);
@@ -185,7 +185,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.importation_parasite_periodically_info()[0].location == 0);
     REQUIRE(c.importation_parasite_periodically_info()[0].parasite_type_id == -1);
     REQUIRE(c.importation_parasite_periodically_info()[0].duration == 10);
-    REQUIRE(c.importation_parasite_periodically_info()[0].start_day == 5110);
+    REQUIRE(c.importation_parasite_periodically_info()[0].start_day == 20);
     REQUIRE(c.importation_parasite_periodically_info()[0].number == 1);
 
     REQUIRE(c.bitting_level_generator().level_density.size()==100);

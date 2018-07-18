@@ -487,7 +487,10 @@ void importation_parasite_periodically_info::set_value(const YAML::Node& node) {
   const auto& n = node["introduce_parasite_periodically"];
   for (auto i = 0; i < n.size(); i++) {
     const auto location = n[i]["location"].as<int>();
-    if (location < config_->number_of_locations()) {
+    const auto location_from = location == -1 ? 0 : location;
+    const auto location_to = location == -1 ? config_->number_of_locations() : min(location + 1,config_->number_of_locations());
+
+     for (auto loc = location_from; loc < location_to; ++loc) {
       for (auto j = 0; j < n[i]["parasite_info"].size(); j++) {
         //            InitialParasiteInfo ipi;
         //            ipi.location = location;
@@ -496,7 +499,7 @@ void importation_parasite_periodically_info::set_value(const YAML::Node& node) {
         const auto num = n[i]["parasite_info"][j]["number_of_cases"].as<int>();
         const auto start_day = n[i]["parasite_info"][j]["start_day"].as<int>();
         value_.emplace_back(ImportationParasitePeriodicallyInfo{
-          location, dur, parasite_type_id, num, start_day
+          loc, dur, parasite_type_id, num, start_day
         });
       }
     }
@@ -517,7 +520,7 @@ treatment_coverage_model::~treatment_coverage_model() {
 
 void treatment_coverage_model::set_value(const YAML::Node& node) {
   value_ = new SteadyTCM();
-  for (auto& location : config_->location_db()) {    
+  for (auto& location : config_->location_db()) {
     value_->p_treatment_less_than_5.push_back(location.p_treatment_less_than_5);
     value_->p_treatment_more_than_5.push_back(location.p_treatment_more_than_5);
   }
