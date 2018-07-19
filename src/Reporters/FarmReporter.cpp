@@ -145,10 +145,10 @@ void FarmReporter::output_parameters() {
   std::cout << Model::CONFIG->relative_bitting_info().sd << "\t";
   std::cout << Model::CONFIG->drug_db()->begin()->second->k() << "\t";
   std::cout << Model::CONFIG->drug_db()->begin()->second->p_mutation() << "\t";
-  std::cout << Model::CONFIG->strategy()->get_type() << "\t";
+  std::cout << Model::TREATMENT_STRATEGY->get_type() << "\t";
   std::cout << Model::CONFIG->tf_window_size() << "\t";
 
-  SCTherapy *scTherapy = dynamic_cast<SCTherapy *> (Model::CONFIG->strategy()->get_therapy(nullptr));
+  SCTherapy *scTherapy = dynamic_cast<SCTherapy *> (Model::TREATMENT_STRATEGY->get_therapy(nullptr));
   if (scTherapy != nullptr) {
     std::cout << scTherapy->dosing_day() << "\t";
   } else {

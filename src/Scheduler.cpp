@@ -93,6 +93,7 @@ void Scheduler::cancel(Event* event) {
 
 void Scheduler::execute_events_list(EventPtrVector& events_list) const {
   for (auto& event : events_list) {
+    // std::cout << event->name() << std::endl;
     event->perform_execute();
     ObjectHelpers::delete_pointer<Event>(event);
   }
@@ -106,20 +107,15 @@ void Scheduler::run() {
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
     LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
-
     begin_time_step();
-    // population related events       
-    model_->perform_population_events_daily();
-
     // population related events
     execute_events_list(population_events_list_[current_time_]);
-
+    // population related events       
+    model_->perform_population_events_daily();
     // individual related events
     execute_events_list(individual_events_list_[current_time_]);
 
-
     end_time_step();
-
     calendar_date += days{1};
   }
 }

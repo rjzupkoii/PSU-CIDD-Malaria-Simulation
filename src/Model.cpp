@@ -34,6 +34,8 @@
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
 #include "Strategies/IStrategy.h"
+#include "Strategies/NestedSwitchingStrategy.h"
+#include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
 
 Model* Model::MODEL = nullptr;
 Config* Model::CONFIG = nullptr;
@@ -41,6 +43,7 @@ Random* Model::RANDOM = nullptr;
 Scheduler* Model::SCHEDULER = nullptr;
 ModelDataCollector* Model::DATA_COLLECTOR = nullptr;
 Population* Model::POPULATION = nullptr;
+IStrategy* Model::TREATMENT_STRATEGY = nullptr;
 // std::shared_ptr<spdlog::logger> LOGGER;
 
 
@@ -51,6 +54,7 @@ Model::Model(const int& object_pool_size) {
   scheduler_ = new Scheduler(this);
   population_ = new Population(this);
   data_collector_ = new ModelDataCollector(this);
+  treatment_strategy_ = nullptr;
 
   MODEL = this;
   CONFIG = config_;
@@ -58,6 +62,7 @@ Model::Model(const int& object_pool_size) {
   RANDOM = random_;
   DATA_COLLECTOR = data_collector_;
   POPULATION = population_;
+  TREATMENT_STRATEGY = treatment_strategy_;
   // LOGGER = spdlog::stdout_logger_mt("console");
 
   progress_to_clinical_update_function_ = new ClinicalUpdateFunction(this);
@@ -82,6 +87,18 @@ Model::~Model() {
   release_object_pool();
 }
 
+void Model::set_treatment_strategy(const int& strategy_id) {
+  treatment_strategy_ = strategy_id == -1 ? nullptr : config_->strategy_db()[strategy_id];
+  TREATMENT_STRATEGY = treatment_strategy_;
+  // TODO::rework here
+  if (treatment_strategy_->get_type() == IStrategy::NestedSwitching) {
+    dynamic_cast<NestedSwitchingStrategy *>(treatment_strategy_)->initialize_update_time(config_);
+  }
+  if (treatment_strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
+    dynamic_cast<NestedSwitchingDifferentDistributionByLocationStrategy *>(treatment_strategy_)->initialize_update_time(config_);
+  }
+}
+
 void Model::initialize() {
   LOG(INFO) << "Model initilizing...";
 
@@ -92,6 +109,10 @@ void Model::initialize() {
   LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
   //Read input file
   config_->read_from_file(config_filename_);
+
+  //set treatment strategy
+  set_treatment_strategy(config_->initial_strategy_id());
+
 
   // modify parameters
   //modify parameters && update config
@@ -267,7 +288,7 @@ void Model::daily_update(const int& current_time) {
   population_->update_force_of_infection(current_time);
 
   //check to switch strategy
-  config_->strategy()->update_end_of_time_step();
+  treatment_strategy_->update_end_of_time_step();
 }
 
 void Model::monthly_update() {
@@ -296,6 +317,8 @@ void Model::release() {
   ObjectHelpers::delete_pointer<Scheduler>(scheduler_);
   ObjectHelpers::delete_pointer<ModelDataCollector>(data_collector_);
 
+  treatment_strategy_ = nullptr;
+
   ObjectHelpers::delete_pointer<Config>(config_);
   ObjectHelpers::delete_pointer<Random>(random_);
 
@@ -310,6 +333,7 @@ void Model::release() {
   RANDOM = nullptr;
   DATA_COLLECTOR = nullptr;
   POPULATION = nullptr;
+  TREATMENT_STRATEGY = nullptr;
 }
 
 void Model::monthly_report() {

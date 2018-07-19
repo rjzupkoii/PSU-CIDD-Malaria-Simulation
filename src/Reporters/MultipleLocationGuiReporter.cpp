@@ -37,7 +37,7 @@ void MultipleLocationGuiReporter::before_run() {
 //
 //    CreateWindowsTab("NewTab", "List", simulationInfoTab, "Simulation Info");
 //    CreateWindowsTab("NewTab", "Tree", simulationEventInfoTab, "Event Info");
-//    if (Model::CONFIG->strategy()->get_type() == IStrategy::Cycling || Model::CONFIG->strategy()->get_type() == IStrategy::AdaptiveCycling) {
+//    if (Model::TREATMENT_STRATEGY->get_type() == IStrategy::Cycling || Model::TREATMENT_STRATEGY->get_type() == IStrategy::AdaptiveCycling) {
 //        CreateWindowsTableTab("NewTab", "Table", simulationUTLTab, "UTL Duration", "True");
 //    }
 //

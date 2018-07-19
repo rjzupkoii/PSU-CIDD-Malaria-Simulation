@@ -153,7 +153,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.strategy_db()[18]->name== "BaseLineStrategy");
     REQUIRE(c.strategy_db()[18]->get_type()== IStrategy::NestedSwitchingDifferentDistributionByLocation);
 
-    REQUIRE(c.strategy()->name == "Switch_AL_to_AL-AQ");
+    REQUIRE(c.initial_strategy_id()== 14);
 
     REQUIRE(c.initial_parasite_info().size()==18);
     for (auto i = 0; i < 18; i += 2) {

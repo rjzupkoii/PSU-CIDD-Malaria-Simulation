@@ -90,6 +90,8 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(genotype_info, GenotypeInfo, GenotypeInfo())
 
+  CONFIG_ITEM(initial_strategy_id, int , -1)
+
 
   CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
 
@@ -118,8 +120,6 @@ POINTER_PROPERTY(Model, model)
   CUSTOM_CONFIG_ITEM(therapy_db, TherapyPtrVector())
 
   CUSTOM_CONFIG_ITEM(strategy_db, StrategyPtrVector())
-
-  CUSTOM_CONFIG_ITEM(strategy, nullptr)
 
   CUSTOM_CONFIG_ITEM(initial_parasite_info, std::vector<InitialParasiteInfo>())
 

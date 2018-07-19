@@ -121,8 +121,8 @@ double getEfficacyForTherapy(Genotype* g, int therapy_id, double inferEC50[], Mo
 
 
     SCTherapy* scTherapy = dynamic_cast<SCTherapy*> (Model::CONFIG->therapy_db()[therapy_id]);
-    ((SFTStrategy*) Model::CONFIG->strategy())->get_therapy_list().clear();
-    ((SFTStrategy*) Model::CONFIG->strategy())->add_therapy(scTherapy);
+    ((SFTStrategy*) Model::TREATMENT_STRATEGY)->get_therapy_list().clear();
+    ((SFTStrategy*) Model::TREATMENT_STRATEGY)->add_therapy(scTherapy);
 
     for (int i = 0; i < scTherapy->drug_ids().size(); i++) {
         //re-config EC50 table for genotype id and drug_id

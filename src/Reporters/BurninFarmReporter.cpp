@@ -150,7 +150,7 @@ void BurninFarmReporter::output_parameters() {
   std::cout << Model::CONFIG->drug_db()->begin()->second->p_mutation() << "\t";
 
   //output strategy information
-  std::cout << Model::CONFIG->strategy()->id << "\t";
+  std::cout << Model::TREATMENT_STRATEGY->id << "\t";
 
 }
 

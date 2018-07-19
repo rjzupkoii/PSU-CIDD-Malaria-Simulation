@@ -78,7 +78,8 @@ void ProgressToClinicalEvent::execute() {
                              : -1;
   // std::cout << p_treatment << std::endl;
   if (p <= p_treatment) {
-    auto* therapy = Model::CONFIG->strategy()->get_therapy(person);
+    auto* therapy = Model::TREATMENT_STRATEGY->get_therapy(person);
+
     person->receive_therapy(therapy, clinical_caused_parasite_);
     //Statistic increase today treatments
     Model::DATA_COLLECTOR->record_1_treatment(person->location(), person->age(), therapy->id());

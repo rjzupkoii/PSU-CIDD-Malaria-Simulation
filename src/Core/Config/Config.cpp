@@ -173,11 +173,11 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
 
   if (parameter_name == "strategy") {
     //override with the id from the override.txt
-    int strategy_id = atoi(parameter_value.c_str());
-    strategy() = strategy_db()[strategy_id];
-    if (strategy()->get_type() == IStrategy::NestedSwitching) {
-      static_cast<NestedSwitchingStrategy *>(strategy())->initialize_update_time(this);
-    }
+    // int strategy_id = atoi(parameter_value.c_str());
+    // strategy() = strategy_db()[strategy_id];
+    // if (strategy()->get_type() == IStrategy::NestedSwitching) {
+    //   static_cast<NestedSwitchingStrategy *>(strategy())->initialize_update_time(this);
+    // }
   }
 
   if (parameter_name == "dosing_days") {
@@ -224,7 +224,7 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
 
   if (parameter_name == "fraction_non_art_replacement") {
     const auto fnar = atof(parameter_value.c_str());
-    auto* s = dynamic_cast<NovelNonACTSwitchingStrategy *>(Model::CONFIG->strategy());
+    auto* s = dynamic_cast<NovelNonACTSwitchingStrategy *>(Model::TREATMENT_STRATEGY);
     if (s != nullptr) {
       s->set_fraction_non_art_replacement(fnar);
     }

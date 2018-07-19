@@ -30,6 +30,7 @@ POINTER_PROPERTY(Scheduler, scheduler)
 POINTER_PROPERTY(Population, population)
 POINTER_PROPERTY(Random, random)
 POINTER_PROPERTY(ModelDataCollector, data_collector)
+POINTER_PROPERTY(IStrategy, treatment_strategy)
 
 POINTER_PROPERTY(ClinicalUpdateFunction, progress_to_clinical_update_function)
 POINTER_PROPERTY(ImmunityClearanceUpdateFunction, immunity_clearance_update_function)
@@ -53,10 +54,13 @@ public:
   static Scheduler* SCHEDULER;
   static ModelDataCollector* DATA_COLLECTOR;
   static Population* POPULATION;
+
+  static IStrategy* TREATMENT_STRATEGY;
   // static std::shared_ptr<spdlog::logger> LOGGER;
 
   explicit Model(const int& object_pool_size = 100000);
   virtual ~Model();
+  void set_treatment_strategy(const int& strategy_id);
 
   void initialize();
 

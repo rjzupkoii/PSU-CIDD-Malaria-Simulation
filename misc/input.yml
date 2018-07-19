@@ -792,7 +792,7 @@ strategy_db:
         strategy_switching_day: 5110
         switch_to_strategy_id: 0
 
-main_strategy_id: 14
+initial_strategy_id: 14
 
     
 

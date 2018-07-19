@@ -68,8 +68,8 @@ void BFMonthlyReporter::after_run() {
   ss.str("");
   ss << Model::RANDOM->seed() << "\t" << Model::CONFIG->number_of_locations() << "\t";
 
-  //output strategy information
-  ss << Model::CONFIG->strategy()->id << "\t";
+  //output last strategy information
+  ss << Model::TREATMENT_STRATEGY->id << "\t";
 
   //output NTF
   const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
