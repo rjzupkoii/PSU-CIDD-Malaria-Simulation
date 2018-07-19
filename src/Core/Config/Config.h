@@ -152,7 +152,6 @@ public:
 
   void override_1_parameter(const std::string& parameter_name, const std::string& parameter_value);
 
-  double get_seasonal_factor(const date::sys_days& today, const int& location) const;
 };
 
 #endif /* CONFIG_H */

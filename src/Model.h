@@ -83,11 +83,12 @@ public:
   void yearly_update();
 
   void release();
-
-
+  
   void report_begin_of_time_step();
   void monthly_report();
   void add_reporter(Reporter* reporter);
+
+  double get_seasonal_factor(const date::sys_days& today, const int& location) const;
 
 private:
   IStrategy* treatment_strategy_{nullptr};

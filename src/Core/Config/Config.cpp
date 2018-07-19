@@ -67,12 +67,12 @@ void Config::override_parameters(const std::string& override_file, const int& po
 
 
   //goto the pos line in the file
-  for (int i = 0; (i < pos) && getline(ifs, buf); i++) { }
+  for (auto i = 0; (i < pos) && getline(ifs, buf); i++) { }
   //buff contain the parameters
   auto override_parameters = StringHelpers::split(buf, '\t');
 
   //override parameter
-  for (int i = 0; i < override_parameters.size(); i++) {
+  for (auto i = 0; i < override_parameters.size(); i++) {
     if (override_parameters[i] != "nil") {
       override_1_parameter(override_header[i], override_parameters[i]);
     }
@@ -231,21 +231,3 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
 
 }
 
-
-double Config::get_seasonal_factor(const date::sys_days& today, const int& location) const {
-  if (!Model::CONFIG->seasonal_info().enable) {
-    return 1;
-  }
-  const auto day_of_year = TimeHelpers::day_of_year(today);
-  const auto is_rainy_period = Model::CONFIG->seasonal_info().phi[location] < Constants::DAYS_IN_YEAR() / 2.0
-                                 ? day_of_year >= Model::CONFIG->seasonal_info().phi[location]
-                                 && day_of_year <= Model::CONFIG->seasonal_info().phi[location] + Constants::DAYS_IN_YEAR() / 2.0
-                                 : day_of_year >= Model::CONFIG->seasonal_info().phi[location]
-                                 || day_of_year <= Model::CONFIG->seasonal_info().phi[location] - Constants::DAYS_IN_YEAR() / 2.0;
-
-  return (is_rainy_period)
-           ? (Model::CONFIG->seasonal_info().A[location] - Model::CONFIG->seasonal_info().min_value[location]) *
-           sin(Model::CONFIG->seasonal_info().B[location] * day_of_year + Model::CONFIG->seasonal_info().C[location]) +
-           Model::CONFIG->seasonal_info().min_value[location]
-           : Model::CONFIG->seasonal_info().min_value[location];
-}

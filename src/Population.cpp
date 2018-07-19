@@ -162,7 +162,7 @@ void Population::perform_infection_event() {
       if (force_of_infection <= DBL_EPSILON)
         continue;
 
-      const auto new_beta = Model::CONFIG->location_db()[loc].beta * Model::CONFIG->get_seasonal_factor(
+      const auto new_beta = Model::CONFIG->location_db()[loc].beta * Model::MODEL->get_seasonal_factor(
         Model::SCHEDULER->calendar_date, loc);
 
       auto poisson_means = new_beta * force_of_infection;

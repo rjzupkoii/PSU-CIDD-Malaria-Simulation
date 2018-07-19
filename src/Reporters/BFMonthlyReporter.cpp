@@ -32,7 +32,7 @@ void BFMonthlyReporter::monthly_report() {
   ss << Model::SCHEDULER->current_time() << "\t";
   ss << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << "\t";
   ss << date::format("%Y\t%m\t%d", Model::SCHEDULER->calendar_date) << "\t";
-  ss << Model::CONFIG->get_seasonal_factor(Model::SCHEDULER->calendar_date, 0) << "\t";
+  ss << Model::MODEL->get_seasonal_factor(Model::SCHEDULER->calendar_date, 0) << "\t";
   print_PfPR_0_5_by_location();
 
   //        ss << "-1111\t";
