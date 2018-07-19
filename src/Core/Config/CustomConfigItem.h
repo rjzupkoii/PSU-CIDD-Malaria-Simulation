@@ -274,26 +274,6 @@ public:
   void set_value(const YAML::Node& node) override;
 };
 
-class strategy : public IConfigItem {
-DISALLOW_COPY_AND_ASSIGN(strategy)
-DISALLOW_MOVE(strategy)
-protected:
-  IStrategy* value_;
-public:
-  //constructor
-  explicit strategy(const std::string& name, IStrategy* default_value, Config* config = nullptr) : IConfigItem(config, name),
-                                                                                                   value_{default_value} { }
-
-  // destructor
-  virtual ~strategy() = default;
-
-  virtual IStrategy*& operator()() {
-    return value_;
-  }
-
-  void set_value(const YAML::Node& node) override;
-};
-
 class initial_parasite_info : public IConfigItem {
 DISALLOW_COPY_AND_ASSIGN(initial_parasite_info)
 DISALLOW_MOVE(initial_parasite_info)
@@ -393,27 +373,6 @@ public:
   virtual ~moving_level_generator() = default;
 
   virtual MultinomialDistributionGenerator& operator()() {
-    return value_;
-  }
-
-  void set_value(const YAML::Node& node) override;
-};
-
-class treatment_coverage_model : public IConfigItem {
-DISALLOW_COPY_AND_ASSIGN(treatment_coverage_model)
-DISALLOW_MOVE(treatment_coverage_model)
-protected:
-  ITreatmentCoverageModel* value_;
-public:
-  //constructor
-  explicit treatment_coverage_model(const std::string& name, ITreatmentCoverageModel* default_value,
-                                    Config* config = nullptr) : IConfigItem(config, name),
-                                                                value_{default_value} { }
-
-  // destructor
-  virtual ~treatment_coverage_model();
-
-  virtual ITreatmentCoverageModel*& operator()() {
     return value_;
   }
 

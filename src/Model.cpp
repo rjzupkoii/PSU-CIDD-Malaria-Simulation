@@ -36,6 +36,7 @@
 #include "Strategies/IStrategy.h"
 #include "Strategies/NestedSwitchingStrategy.h"
 #include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
+#include "Malaria/SteadyTCM.h"
 
 Model* Model::MODEL = nullptr;
 Config* Model::CONFIG = nullptr;
@@ -44,6 +45,7 @@ Scheduler* Model::SCHEDULER = nullptr;
 ModelDataCollector* Model::DATA_COLLECTOR = nullptr;
 Population* Model::POPULATION = nullptr;
 IStrategy* Model::TREATMENT_STRATEGY = nullptr;
+ITreatmentCoverageModel* Model::TREATMENT_COVERAGE = nullptr;
 // std::shared_ptr<spdlog::logger> LOGGER;
 
 
@@ -54,7 +56,6 @@ Model::Model(const int& object_pool_size) {
   scheduler_ = new Scheduler(this);
   population_ = new Population(this);
   data_collector_ = new ModelDataCollector(this);
-  treatment_strategy_ = nullptr;
 
   MODEL = this;
   CONFIG = config_;
@@ -62,7 +63,7 @@ Model::Model(const int& object_pool_size) {
   RANDOM = random_;
   DATA_COLLECTOR = data_collector_;
   POPULATION = population_;
-  TREATMENT_STRATEGY = treatment_strategy_;
+
   // LOGGER = spdlog::stdout_logger_mt("console");
 
   progress_to_clinical_update_function_ = new ClinicalUpdateFunction(this);
@@ -99,6 +100,23 @@ void Model::set_treatment_strategy(const int& strategy_id) {
   }
 }
 
+void Model::set_treatment_coverage(ITreatmentCoverageModel* tcm) {
+  if (treatment_coverage_ != tcm) {
+    ObjectHelpers::delete_pointer<ITreatmentCoverageModel>(treatment_coverage_);
+  }
+  treatment_coverage_ = tcm;
+  TREATMENT_COVERAGE = tcm;
+}
+
+void Model::build_initial_treatment_coverage() {
+  auto* tcm = new SteadyTCM();
+  for (auto& location : config_->location_db()) {
+    tcm->p_treatment_less_than_5.push_back(location.p_treatment_less_than_5);
+    tcm->p_treatment_more_than_5.push_back(location.p_treatment_more_than_5);
+  }
+  set_treatment_coverage(tcm);
+}
+
 void Model::initialize() {
   LOG(INFO) << "Model initilizing...";
 
@@ -110,9 +128,12 @@ void Model::initialize() {
   //Read input file
   config_->read_from_file(config_filename_);
 
+  LOG(INFO) << "Initialing initial strategy";
   //set treatment strategy
   set_treatment_strategy(config_->initial_strategy_id());
 
+  LOG(INFO) << "Initialing initial treatment coverage model";
+  build_initial_treatment_coverage();
 
   // modify parameters
   //modify parameters && update config
@@ -297,7 +318,7 @@ void Model::monthly_update() {
   //reset monthly variables
   data_collector()->monthly_update();
   //update treatment coverage
-  config_->treatment_coverage_model()->monthly_update();
+  treatment_coverage_->monthly_update();
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -318,6 +339,7 @@ void Model::release() {
   ObjectHelpers::delete_pointer<ModelDataCollector>(data_collector_);
 
   treatment_strategy_ = nullptr;
+  ObjectHelpers::delete_pointer<ITreatmentCoverageModel>(treatment_coverage_);
 
   ObjectHelpers::delete_pointer<Config>(config_);
   ObjectHelpers::delete_pointer<Random>(random_);
@@ -334,6 +356,7 @@ void Model::release() {
   DATA_COLLECTOR = nullptr;
   POPULATION = nullptr;
   TREATMENT_STRATEGY = nullptr;
+  TREATMENT_COVERAGE = nullptr;
 }
 
 void Model::monthly_report() {

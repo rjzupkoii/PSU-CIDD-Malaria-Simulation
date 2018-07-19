@@ -70,12 +70,10 @@ void ProgressToClinicalEvent::execute() {
   Model::DATA_COLLECTOR->collect_1_clinical_episode(person->location(), person->age(), person->age_class());
 
   const auto p = Model::RANDOM->random_flat(0.0, 1.0);
-  const double p_treatment_by_age = Model::CONFIG->treatment_coverage_model()->get_probability_to_be_treated(
+
+  const auto p_treatment = Model::TREATMENT_COVERAGE->get_probability_to_be_treated(
     person->location(), person->age());
 
-  const auto p_treatment = (Model::MODEL->scheduler()->current_time() >= Model::CONFIG->start_treatment_day())
-                             ? p_treatment_by_age
-                             : -1;
   // std::cout << p_treatment << std::endl;
   if (p <= p_treatment) {
     auto* therapy = Model::TREATMENT_STRATEGY->get_therapy(person);

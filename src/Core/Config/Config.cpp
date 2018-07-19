@@ -10,13 +10,10 @@
 #include <fstream>
 #include <fmt/format.h>
 #include "Config.h"
-#include "Strategies/IStrategy.h"
 #include "Model.h"
 #include "Core/Random.h"
 #include "Therapies/SCTherapy.h"
 #include "Strategies/StrategyBuilder.h"
-#include "Strategies/NovelNonACTSwitchingStrategy.h"
-#include "Strategies/NestedSwitchingStrategy.h"
 #include "easylogging++.h"
 #include "Helpers/OSHelpers.h"
 #include "Helpers/TimeHelpers.h"
@@ -223,11 +220,11 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
   }
 
   if (parameter_name == "fraction_non_art_replacement") {
-    const auto fnar = atof(parameter_value.c_str());
-    auto* s = dynamic_cast<NovelNonACTSwitchingStrategy *>(Model::TREATMENT_STRATEGY);
-    if (s != nullptr) {
-      s->set_fraction_non_art_replacement(fnar);
-    }
+    // const auto fnar = atof(parameter_value.c_str());
+    // auto* s = dynamic_cast<NovelNonACTSwitchingStrategy *>(Model::TREATMENT_STRATEGY);
+    // if (s != nullptr) {
+    //   s->set_fraction_non_art_replacement(fnar);
+    // }
   }
 
   // TACT id and switching day will be modify by create new strategy in the .yml input file

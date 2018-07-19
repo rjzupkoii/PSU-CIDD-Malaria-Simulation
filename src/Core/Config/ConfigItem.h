@@ -61,7 +61,7 @@ void ConfigItem<T>::set_value(const YAML::Node& node) {
       value_ = node[name_].as<T>();
     }
     else {
-      LOG(WARNING) << name_ << " used default value of " << value_ << std::endl;
+      LOG(WARNING) << name_ << " used default value of " << value_;
     }
   }
 }

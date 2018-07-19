@@ -13,6 +13,8 @@
 #include "Scheduler.h"
 #include "ClinicalUpdateFunction.h"
 #include "ImmunityClearanceUpdateFunction.h"
+#include "Malaria/ITreatmentCoverageModel.h"
+#include "Malaria/SteadyTCM.h"
 
 class Scheduler;
 class Population;
@@ -24,13 +26,12 @@ class Reporter;
 class Model {
 DISALLOW_COPY_AND_ASSIGN(Model)
 DISALLOW_MOVE(Model)
-  
+
 POINTER_PROPERTY(Config, config)
 POINTER_PROPERTY(Scheduler, scheduler)
 POINTER_PROPERTY(Population, population)
 POINTER_PROPERTY(Random, random)
 POINTER_PROPERTY(ModelDataCollector, data_collector)
-POINTER_PROPERTY(IStrategy, treatment_strategy)
 
 POINTER_PROPERTY(ClinicalUpdateFunction, progress_to_clinical_update_function)
 POINTER_PROPERTY(ImmunityClearanceUpdateFunction, immunity_clearance_update_function)
@@ -56,12 +57,15 @@ public:
   static Population* POPULATION;
 
   static IStrategy* TREATMENT_STRATEGY;
+  static ITreatmentCoverageModel* TREATMENT_COVERAGE;
   // static std::shared_ptr<spdlog::logger> LOGGER;
 
   explicit Model(const int& object_pool_size = 100000);
   virtual ~Model();
   void set_treatment_strategy(const int& strategy_id);
 
+  void set_treatment_coverage(ITreatmentCoverageModel* tcm);
+  void build_initial_treatment_coverage();
   void initialize();
 
   static void initialize_object_pool(const int& size = 100000);
@@ -84,6 +88,11 @@ public:
   void report_begin_of_time_step();
   void monthly_report();
   void add_reporter(Reporter* reporter);
+
+private:
+  IStrategy* treatment_strategy_{nullptr};
+  ITreatmentCoverageModel* treatment_coverage_{nullptr};
+
 };
 
 #endif	/* MODEL_H */

@@ -83,7 +83,7 @@ location_db:
   beta_by_location: [0.065]
 
 #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [100, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090 ]
+  population_size_by_location: [1000, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090 ]
   #spatial_model could be Gravity, Barabasi, or Wesolowski
 
 # seasonality parameters for all location

@@ -90,8 +90,7 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(genotype_info, GenotypeInfo, GenotypeInfo())
 
-  CONFIG_ITEM(initial_strategy_id, int , -1)
-
+  CONFIG_ITEM(initial_strategy_id, int , -1)    
 
   CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
 
@@ -129,8 +128,6 @@ POINTER_PROPERTY(Model, model)
 
   CUSTOM_CONFIG_ITEM(bitting_level_generator, MultinomialDistributionGenerator())
   CUSTOM_CONFIG_ITEM(moving_level_generator, MultinomialDistributionGenerator())
-
-  CUSTOM_CONFIG_ITEM(treatment_coverage_model, nullptr)
 
 
 VIRTUAL_PROPERTY_REF(double, modified_mutation_factor)

@@ -429,18 +429,6 @@ void strategy_db::set_value(const YAML::Node& node) {
   }
 }
 
-void strategy::set_value(const YAML::Node& node) {
-  value_ = config_->strategy_db()[node["main_strategy_id"].as<int>()];
-
-  // TODO::rework here
-  if (value_->get_type() == IStrategy::NestedSwitching) {
-    dynamic_cast<NestedSwitchingStrategy *>(value_)->initialize_update_time(config_);
-  }
-
-  if (value_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
-    dynamic_cast<NestedSwitchingDifferentDistributionByLocationStrategy *>(value_)->initialize_update_time(config_);
-  }
-}
 
 void initial_parasite_info::set_value(const YAML::Node& node) {
 
@@ -514,14 +502,3 @@ void moving_level_generator::set_value(const YAML::Node& node) {
   value_.level_density = config_->circulation_info().v_moving_level_density;
 }
 
-treatment_coverage_model::~treatment_coverage_model() {
-  ObjectHelpers::delete_pointer<ITreatmentCoverageModel>(value_);
-}
-
-void treatment_coverage_model::set_value(const YAML::Node& node) {
-  value_ = new SteadyTCM();
-  for (auto& location : config_->location_db()) {
-    value_->p_treatment_less_than_5.push_back(location.p_treatment_less_than_5);
-    value_->p_treatment_more_than_5.push_back(location.p_treatment_more_than_5);
-  }
-}

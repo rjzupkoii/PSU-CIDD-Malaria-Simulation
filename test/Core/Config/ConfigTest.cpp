@@ -189,15 +189,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.importation_parasite_periodically_info()[0].number == 1);
 
     REQUIRE(c.bitting_level_generator().level_density.size()==100);
-    REQUIRE(c.moving_level_generator().level_density.size()==100);
-
-    REQUIRE(c.treatment_coverage_model() != nullptr);
-    REQUIRE(c.treatment_coverage_model()->p_treatment_less_than_5.size() == 9);
-    REQUIRE(c.treatment_coverage_model()->p_treatment_less_than_5[0] == 0.6f); 
-    
-    REQUIRE(c.treatment_coverage_model()->p_treatment_more_than_5.size() == 9);
-    REQUIRE(c.treatment_coverage_model()->p_treatment_more_than_5[0] == 0.5f);
-
+    REQUIRE(c.moving_level_generator().level_density.size()==100);    
 
 
     // REQUIRE(2== 2);
