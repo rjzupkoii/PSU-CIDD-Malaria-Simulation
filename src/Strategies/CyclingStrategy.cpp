@@ -56,13 +56,8 @@ IStrategy::StrategyType CyclingStrategy::get_type() const {
 }
 
 void CyclingStrategy::update_end_of_time_step() {
-
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_treatment_day()) {
-
     if (Model::SCHEDULER->current_time() == next_switching_day_) {
       switch_therapy();
       //            std::cout << to_string() << std::endl;
     }
-  }
-
 }

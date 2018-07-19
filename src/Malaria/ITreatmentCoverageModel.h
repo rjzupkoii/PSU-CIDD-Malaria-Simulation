@@ -6,7 +6,9 @@
 class ITreatmentCoverageModel {
   DISALLOW_COPY_AND_ASSIGN(ITreatmentCoverageModel)
   DISALLOW_MOVE(ITreatmentCoverageModel)
-public:  
+public:
+  double monthly_rate;
+
   std::vector<double> p_treatment_less_than_5;
   std::vector<double> p_treatment_more_than_5;
 

@@ -37,7 +37,6 @@ POINTER_PROPERTY(Model, model)
 
   CUSTOM_CONFIG_ITEM(total_time, 100)
 
-  CONFIG_ITEM(start_treatment_day, int, 0)
   CONFIG_ITEM(start_collect_data_day, int, 0)
   CONFIG_ITEM(start_intervention_day, int, 0)
 

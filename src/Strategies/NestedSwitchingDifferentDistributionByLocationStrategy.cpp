@@ -86,16 +86,16 @@ void NestedSwitchingDifferentDistributionByLocationStrategy::update_end_of_time_
 }
 
 void NestedSwitchingDifferentDistributionByLocationStrategy::adjustDistribution(int time, int peak_at) {
-
+  //TODO: rework here to remove start_intervention_day
   if (time > Model::CONFIG->start_intervention_day() &&
     (time - Model::CONFIG->start_intervention_day()) % Constants::DAYS_IN_YEAR() == 0) {
     if (peak_at == -1) {
       // inflation every year
-      for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-        double dACT = distribution_[loc][0] * Model::CONFIG->inflation_factor();
+      for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+        const auto dACT = distribution_[loc][0] * Model::CONFIG->inflation_factor();
         distribution_[loc][0] = dACT;
-        double otherD = (1 - dACT) / (distribution_[loc].size() - 1);
-        for (int i = 1; i < distribution_[loc].size(); i++) {
+        const auto otherD = (1 - dACT) / (distribution_[loc].size() - 1);
+        for (auto i = 1; i < distribution_[loc].size(); i++) {
           distribution_[loc][i] = otherD;
         }
       }
@@ -103,12 +103,12 @@ void NestedSwitchingDifferentDistributionByLocationStrategy::adjustDistribution(
     else {
       // increasing linearly
       if (distribution_[0][0] < 1) {
-        for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-          double dACT = ((1 - start_distribution_[loc][0]) * time) / peak_at_ + start_distribution_[loc][0];
+        for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+          auto dACT = ((1 - start_distribution_[loc][0]) * time) / peak_at_ + start_distribution_[loc][0];
           dACT = dACT >= 1 ? 1 : dACT;
           distribution_[loc][0] = dACT;
-          double otherD = (1 - dACT) / (distribution_[loc].size() - 1);
-          for (int i = 1; i < distribution_[loc].size(); i++) {
+          const auto otherD = (1 - dACT) / (distribution_[loc].size() - 1);
+          for (auto i = 1; i < distribution_[loc].size(); i++) {
             distribution_[loc][i] = otherD;
           }
         }

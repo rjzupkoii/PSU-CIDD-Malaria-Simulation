@@ -20,8 +20,7 @@ void SCTherapy::add_drug(int drug_id) {
   }
 }
 
-int SCTherapy::get_arteminsinin_id() {
-
+int SCTherapy::get_arteminsinin_id() const {
   return artemisinin_id_;
 }
 

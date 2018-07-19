@@ -17,9 +17,6 @@ starting_date: 1990/1/1
 # ending time point of the simulation (in yyyy/m/d format) 
 ending_date: 1991/1/1
 
-# length of burn-in period
-start_treatment_day: 0
-
 # the day at which the simulation's reporting functionality begins collecting data for 
 # the purposes of displaying it
 start_collect_data_day: 0

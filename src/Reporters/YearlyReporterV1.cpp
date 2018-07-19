@@ -32,6 +32,7 @@ void YearlyReporterV1::before_run() {
 void YearlyReporterV1::begin_time_step() {
 }
 
+//TODO: consider add new method for yearly_reports
 void YearlyReporterV1::monthly_report() {
   if ((Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) &&
       (((Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) % Constants::DAYS_IN_YEAR()) ==

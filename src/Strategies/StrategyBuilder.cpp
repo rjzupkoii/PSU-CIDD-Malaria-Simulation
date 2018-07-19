@@ -87,8 +87,7 @@ IStrategy* StrategyBuilder::buildCyclingStrategy(const YAML::Node& ns, const int
   result->name = ns["name"].as<std::string>();
 
   result->set_cycling_time(ns["cycling_time"].as<int>());
-  result->set_next_switching_day(
-    config->start_treatment_day() + ns["cycling_time"].as<int>());
+  result->set_next_switching_day(ns["cycling_time"].as<int>());
 
   add_therapies(ns, result, config);
 
@@ -150,8 +149,9 @@ IStrategy* StrategyBuilder::buildNovelNonACTSwitchingStrategy(const YAML::Node& 
   result->set_fraction_non_art_replacement(
     ns["fraction_non_art_replacement"].as<double>());
 
-  config->start_intervention_day() = dynamic_cast<NovelNonACTSwitchingStrategy *>(result)->
-    non_artemisinin_switching_day();
+  //TODO: rework here to remvoe start_intervention_day
+  // config->start_intervention_day() = dynamic_cast<NovelNonACTSwitchingStrategy *>(result)->
+  //   non_artemisinin_switching_day();
 
   return result;
 }
@@ -209,7 +209,7 @@ IStrategy* StrategyBuilder::buildMFTRebalancingStrategy(const YAML::Node& ns, co
   result->set_update_duration_after_rebalancing(
     ns["update_duration_after_rebalancing"].as<int>());
   result->set_delay_until_actual_trigger(ns["delay_until_actual_trigger"].as<int>());
-  result->set_latest_adjust_distribution_time(config->start_treatment_day());
+  result->set_latest_adjust_distribution_time(0);
 
   return result;
 }

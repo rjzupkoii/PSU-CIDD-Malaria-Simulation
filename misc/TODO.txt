@@ -1,5 +1,5 @@
 TODO:
-	
+	- Test if Strategies still functioning?
   - Remove resist_to function ???
   - build Core library
   - Using event to change treatment coverage / strategy and set up those event from input file

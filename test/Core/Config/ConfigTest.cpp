@@ -17,8 +17,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.ending_date() == date::year_month_day{ date::year{ 1991 } / 1 / 1 });
 
     REQUIRE(c.total_time() == 365);
-
-    REQUIRE(c.start_treatment_day() == 0);
+    
     REQUIRE(c.start_collect_data_day() == 0);
     REQUIRE(c.start_intervention_day()==0);
 

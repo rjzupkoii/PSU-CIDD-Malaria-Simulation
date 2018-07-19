@@ -9,7 +9,6 @@
 #include "Parasites/Genotype.h"
 #include "SingleHostClonalParasitePopulations.h"
 #include "Person.h"
-#include "Therapies/DrugType.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "DrugsInBlood.h"
@@ -28,8 +27,7 @@ SingleHostClonalParasitePopulations::SingleHostClonalParasitePopulations(Person*
                                                                                              nullptr),
                                                                                            log10_total_relative_density_(
                                                                                              ClonalParasitePopulation::
-                                                                                             LOG_ZERO_PARASITE_DENSITY) {
-}
+                                                                                             LOG_ZERO_PARASITE_DENSITY) {}
 
 void SingleHostClonalParasitePopulations::init() {
   parasites_ = new std::vector<ClonalParasitePopulation *>();
@@ -351,22 +349,15 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
       double P = Model::RANDOM->random_flat(0.0, 1.0);
 
       if (P < drug->get_mutation_probability()) {
-        //only select affecting_locus
-        //                int mutation_locus = drug->drug_type()->select_mutation_locus();
-
-
+        
         // select all locus
+        //TODO: rework here to only allow x to mutate after intervention day
         int mutation_locus = Model::RANDOM->random_uniform_int(0, new_genotype->gene_expression().size());
 
-        //only allow x to mutate after intervention day
-        while (Model::SCHEDULER->current_time() <= Model::CONFIG->start_intervention_day()
-          && mutation_locus == new_genotype->gene_expression().size() - 1) {
-          // redraw
-          mutation_locus = drug->drug_type()->select_mutation_locus();
-        }
-        int new_allele_value = bloodParasite->genotype()->select_mutation_allele(mutation_locus);
+
+        auto new_allele_value = bloodParasite->genotype()->select_mutation_allele(mutation_locus);
         //                std::cout << mutation_locus << "-" << bloodParasite->genotype()->gene_expression()[mutation_locus] << "-" << new_allele_value << std::endl;
-        Genotype* mutation_genotype = new_genotype->combine_mutation_to(mutation_locus, new_allele_value);
+        auto* mutation_genotype = new_genotype->combine_mutation_to(mutation_locus, new_allele_value);
 
         //                if (drug->drug_type()->id() == 3) {
         //                    std::cout << drug->getMutationProbability() << std::endl;

@@ -670,8 +670,9 @@ void ModelDataCollector::record_1_TF(const int& location, const bool& by_drug) {
     }
   }
 
+  //TODO: start_intervention_day should have another proper name
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_intervention_day()) {
-    double current_discounted_tf = exp(
+    const auto current_discounted_tf = exp(
       log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) /
         Constants::DAYS_IN_YEAR()));
 
@@ -722,50 +723,52 @@ void ModelDataCollector::record_1_RITF(const int& location) {
 
 void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy,
                                         ClonalParasitePopulation* clinical_caused_parasite) {
-  auto sc_therapy = dynamic_cast<SCTherapy *>(therapy);
-  if (sc_therapy != nullptr) {
-    const auto art_id = sc_therapy->get_arteminsinin_id();
-    if (art_id != -1 && sc_therapy->drug_ids().size() > 1) {
-      const int number_of_drugs_in_therapy = sc_therapy->drug_ids().size();
-      const double discounted_fraction = exp(
-        log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_treatment_day()) /
-          Constants::DAYS_IN_YEAR()));
-      //            assert(false);
-      //combine therapy
-      for (auto i = 0; i < number_of_drugs_in_therapy; i++) {
-        int drug_id = sc_therapy->drug_ids()[i];
-        if (drug_id != art_id) {
-          //only check for the remaining chemical drug != artemisinin
-          const auto parasite_population_size = person->all_clonal_parasite_populations()->size();
+  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_intervention_day()) {
+    auto sc_therapy = dynamic_cast<SCTherapy *>(therapy);
+    if (sc_therapy != nullptr) {
+      const auto art_id = sc_therapy->get_arteminsinin_id();
+      if (art_id != -1 && sc_therapy->drug_ids().size() > 1) {
+        const int number_of_drugs_in_therapy = sc_therapy->drug_ids().size();
+        const auto discounted_fraction = exp(
+          log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
+            Constants::DAYS_IN_YEAR()));
+        //            assert(false);
+        //combine therapy
+        for (auto i = 0; i < number_of_drugs_in_therapy; i++) {
+          int drug_id = sc_therapy->drug_ids()[i];
+          if (drug_id != art_id) {
+            //only check for the remaining chemical drug != artemisinin
+            const auto parasite_population_size = person->all_clonal_parasite_populations()->size();
 
-          auto found_amu = false;
-          auto found_afu = false;
-          for (auto j = 0; j < parasite_population_size; j++) {
-            ClonalParasitePopulation* bp = person->all_clonal_parasite_populations()->parasites()->at(j);
-            if (bp->resist_to(drug_id) && !bp->resist_to(art_id)) {
-              found_amu = true;
-              AMU_per_parasite_pop_ += sc_therapy->dosing_day() / static_cast<double>(parasite_population_size);
-              discounted_AMU_per_parasite_pop_ +=
-                discounted_fraction * sc_therapy->dosing_day() / static_cast<double>(parasite_population_size);
-              if (bp == clinical_caused_parasite) {
-                AMU_for_clinical_caused_parasite_ += sc_therapy->dosing_day();
-                discounted_AMU_for_clinical_caused_parasite_ +=
-                  discounted_fraction * sc_therapy->dosing_day();
+            auto found_amu = false;
+            auto found_afu = false;
+            for (auto j = 0; j < parasite_population_size; j++) {
+              ClonalParasitePopulation* bp = person->all_clonal_parasite_populations()->parasites()->at(j);
+              if (bp->resist_to(drug_id) && !bp->resist_to(art_id)) {
+                found_amu = true;
+                AMU_per_parasite_pop_ += sc_therapy->dosing_day() / static_cast<double>(parasite_population_size);
+                discounted_AMU_per_parasite_pop_ +=
+                  discounted_fraction * sc_therapy->dosing_day() / static_cast<double>(parasite_population_size);
+                if (bp == clinical_caused_parasite) {
+                  AMU_for_clinical_caused_parasite_ += sc_therapy->dosing_day();
+                  discounted_AMU_for_clinical_caused_parasite_ +=
+                    discounted_fraction * sc_therapy->dosing_day();
+                }
+              }
+
+              if (bp->resist_to(drug_id) && bp->resist_to(art_id)) {
+                found_afu = true;
               }
             }
-
-            if (bp->resist_to(drug_id) && bp->resist_to(art_id)) {
-              found_afu = true;
+            if (found_amu) {
+              AMU_per_person_ += sc_therapy->dosing_day();
+              discounted_AMU_per_person_ += discounted_fraction * sc_therapy->dosing_day();
             }
-          }
-          if (found_amu) {
-            AMU_per_person_ += sc_therapy->dosing_day();
-            discounted_AMU_per_person_ += discounted_fraction * sc_therapy->dosing_day();
-          }
 
-          if (found_afu) {
-            AFU_ += sc_therapy->dosing_day();
-            discounted_AFU_ += discounted_fraction * sc_therapy->dosing_day();
+            if (found_afu) {
+              AFU_ += sc_therapy->dosing_day();
+              discounted_AFU_ += discounted_fraction * sc_therapy->dosing_day();
+            }
           }
         }
       }
