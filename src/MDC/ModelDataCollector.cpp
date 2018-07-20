@@ -92,9 +92,9 @@ void ModelDataCollector::initialize() {
     cumulative_discounted_NTF_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
     cumulative_NTF_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
 
-    today_TF_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0.0);
-    today_number_of_treatments_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0.0);
-    today_RITF_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0.0);
+    today_TF_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    today_number_of_treatments_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    today_RITF_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
 
     total_number_of_treatments_60_by_location_ = IntVector2(Model::CONFIG->number_of_locations(),
                                                             IntVector(Model::CONFIG->tf_window_size(), 0));
@@ -106,7 +106,7 @@ void ModelDataCollector::initialize() {
     current_RITF_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
     current_TF_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
 
-    cumulative_mutants_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0.0);
+    cumulative_mutants_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
 
     current_utl_duration_ = 0;
     UTL_duration_ = IntVector();
@@ -131,7 +131,7 @@ void ModelDataCollector::initialize() {
                                                     IntVector(number_of_reported_MOI, 0));
 
     current_EIR_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
-    last_update_total_number_of_bites_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0.0);
+    last_update_total_number_of_bites_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
 
     resistance_tracker_.initialize();
 
@@ -257,11 +257,11 @@ void ModelDataCollector::perform_population_statistic() {
   long long sum_moi = 0;
 
 
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    int pop_sum_location = 0;
-    for (int hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
-      for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-        int size = pi->vPerson()[loc][hs][ac].size();
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    auto pop_sum_location = 0;
+    for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
+      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+        std::size_t size = pi->vPerson()[loc][hs][ac].size();
         popsize_by_location_hoststate_[loc][hs] += size;
         pop_sum_location += size;
         popsize_by_location_age_class_[loc][ac] += size;
@@ -443,7 +443,7 @@ void ModelDataCollector::calculate_eir() {
     }
     else {
       double sum_eir = std::accumulate(EIR_by_location_year_[loc].begin(), EIR_by_location_year_[loc].end(), 0.0);
-      int number_of_0 = std::count(EIR_by_location_year_[loc].begin(), EIR_by_location_year_[loc].end(), 0);
+      auto number_of_0 = std::count(EIR_by_location_year_[loc].begin(), EIR_by_location_year_[loc].end(), 0);
 
       EIR_by_location_[loc] = ((EIR_by_location_year_[loc].size() - number_of_0) == 0.0)
                                 ? 0.0
@@ -526,7 +526,7 @@ void ModelDataCollector::calculate_percentage_bites_on_top_20() {
               average_number_biten_by_location_person_[location].end(), std::greater<>());
     double total = 0;
     double t20 = 0;
-    const int size20 = average_number_biten_by_location_person_[location].size() / 100.0 * 20;
+    const auto size20 = static_cast<int>(std::round(average_number_biten_by_location_person_[location].size() / 100.0 * 20));
     // TODO: research about size_t and int comparison
     for (auto i = 0; static_cast<size_t>(i) < average_number_biten_by_location_person_[location].size(); i++) {
       total += average_number_biten_by_location_person_[location][i];
@@ -728,7 +728,7 @@ void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy,
     if (sc_therapy != nullptr) {
       const auto art_id = sc_therapy->get_arteminsinin_id();
       if (art_id != -1 && sc_therapy->drug_ids().size() > 1) {
-        const int number_of_drugs_in_therapy = sc_therapy->drug_ids().size();
+        const auto number_of_drugs_in_therapy = sc_therapy->drug_ids().size();
         const auto discounted_fraction = exp(
           log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
             Constants::DAYS_IN_YEAR()));

@@ -25,7 +25,7 @@ void TMEScheduler::initialize() {
 }
 
 std::istream& operator>>(std::istream& str, CSVRow& data) {
-    data.readNextRow(str);
+    data.read_next_row(str);
     return str;
 }
 

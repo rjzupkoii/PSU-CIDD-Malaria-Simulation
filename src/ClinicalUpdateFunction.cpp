@@ -12,9 +12,7 @@
 ClinicalUpdateFunction::ClinicalUpdateFunction(Model* model) : model_(model) {
 }
 
-
-ClinicalUpdateFunction::~ClinicalUpdateFunction() {
-}
+ClinicalUpdateFunction::~ClinicalUpdateFunction() = default;
 
 double ClinicalUpdateFunction::get_current_parasite_density(ClonalParasitePopulation* parasite, int duration) {
     

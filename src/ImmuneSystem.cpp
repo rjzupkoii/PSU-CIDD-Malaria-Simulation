@@ -63,13 +63,12 @@ double ImmuneSystem::get_current_value() const {
 double ImmuneSystem::get_parasite_size_after_t_days(const int& duration, const double& originalSize,
                                                     const double& fitness) const {
 
-  double lastImmuneLevel = get_lastest_immune_value();
-  double temp = Model::CONFIG->immune_system_information().c_max * (1 - lastImmuneLevel) + Model::CONFIG
+  const auto last_immune_level = get_lastest_immune_value();
+  const auto temp = Model::CONFIG->immune_system_information().c_max * (1 - last_immune_level) + Model::CONFIG
                                                                                            ->immune_system_information()
-                                                                                           .c_min * lastImmuneLevel;
+                                                                                           .c_min * last_immune_level;
 
-
-  double value = originalSize + duration * (log10(temp) + log10(fitness));
+  const auto value = originalSize + duration * (log10(temp) + log10(fitness));
   return value;
 
 }
@@ -77,20 +76,20 @@ double ImmuneSystem::get_parasite_size_after_t_days(const int& duration, const d
 const double mid_point = 0.4;
 
 double ImmuneSystem::get_clinical_progression_probability() const {
-  double immune = get_current_value();
+  const auto immune = get_current_value();
 
-  ImmuneSystemInformation isf = Model::CONFIG->immune_system_information();
+  const auto isf = Model::CONFIG->immune_system_information();
 
   //    double PClinical = (isf.min_clinical_probability - isf.max_clinical_probability) * pow(immune, isf.immune_effect_on_progression_to_clinical) + isf.max_clinical_probability;
 
   //    const double p_m = 0.99;
 
 
-  double PClinical = isf.max_clinical_probability / (1 + pow((immune / mid_point),
+  const auto p_clinical = isf.max_clinical_probability / (1 + pow((immune / mid_point),
                                                              isf.immune_effect_on_progression_to_clinical));
 
   //    std::cout << immune << "\t" << PClinical<< std::endl;
-  return PClinical;
+  return p_clinical;
 }
 
 void ImmuneSystem::update() {

@@ -11,7 +11,6 @@
 #include <string>
 #include <sstream>
 #include <istream>
-#include <iostream>
 
 class CSVRow {
 public:
@@ -20,29 +19,29 @@ public:
     virtual ~CSVRow();
 public:
     std::string const& operator[](std::size_t index) const {
-        return m_data[index];
+        return data_[index];
     }
 
     std::size_t size() const {
-        return m_data.size();
+        return data_.size();
     }
 
-    void readNextRow(std::istream& str) {
+    void read_next_row(std::istream& str) {
         std::string line;
         std::getline(str, line);
 
-        std::stringstream lineStream(line);
+        std::stringstream line_stream(line);
         std::string cell;
 
-        m_data.clear();
+        data_.clear();
 //        int i =0;
-        while (std::getline(lineStream, cell, ',')) {
+        while (std::getline(line_stream, cell, ',')) {
 //            std::cout<<i++<<std::endl;
-            m_data.push_back(cell);
+            data_.push_back(cell);
         }
     }
 private:
-    std::vector<std::string> m_data;
+    std::vector<std::string> data_;
 };
 
 

@@ -9,12 +9,10 @@
 
 
 
-CSVRow::CSVRow() {
-}
+CSVRow::CSVRow() = default;
 
 CSVRow::CSVRow(const CSVRow& orig) {
 }
 
-CSVRow::~CSVRow() {
-}
+CSVRow::~CSVRow() = default;
 

@@ -18,15 +18,15 @@ OBJECTPOOL_IMPL(ClonalParasitePopulation)
 const double ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY = -1000;
 
 ClonalParasitePopulation::ClonalParasitePopulation(Genotype *genotype) : last_update_log10_parasite_density_(
-        LOG_ZERO_PARASITE_DENSITY), gametocyte_level_(0.0), first_date_in_blood_(-1), genotype_(genotype),
-                                                                            update_function_(nullptr) {
-}
+                                                                           LOG_ZERO_PARASITE_DENSITY), gametocyte_level_(0.0),
+                                                                         first_date_in_blood_(-1), parasite_population_(nullptr),
+                                                                         genotype_(genotype),
+                                                                         update_function_(nullptr) {}
 
-ClonalParasitePopulation::~ClonalParasitePopulation() {
-}
+ClonalParasitePopulation::~ClonalParasitePopulation() = default;
 
 double ClonalParasitePopulation::get_current_parasite_density(const int &current_time) {
-  int duration = current_time - parasite_population()->latest_update_time();
+  const auto duration = current_time - parasite_population()->latest_update_time();
   if (duration == 0) {
     return last_update_log10_parasite_density_;
   }
@@ -90,15 +90,15 @@ void ClonalParasitePopulation::set_genotype(Genotype *value) {
   }
 }
 
-bool ClonalParasitePopulation::resist_to(Therapy *therapy) {
+bool ClonalParasitePopulation::resist_to(Therapy *therapy) const {
   return genotype_->resist_to(therapy);
 }
 
-bool ClonalParasitePopulation::resist_to(DrugType *dt) {
+bool ClonalParasitePopulation::resist_to(DrugType *dt) const {
   return genotype_->resist_to(dt);
 }
 
-bool ClonalParasitePopulation::resist_to(const int &drug_id) {
+bool ClonalParasitePopulation::resist_to(const int &drug_id) const {
   return genotype_->resist_to(Model::CONFIG->drug_db()->get(drug_id));
 }
 

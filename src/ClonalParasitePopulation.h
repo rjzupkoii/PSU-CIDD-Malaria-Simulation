@@ -47,16 +47,14 @@ public:
 
     void mutate_to(Genotype* genotype);
 
-    bool resist_to(Therapy* therapy);
-    bool resist_to(DrugType* dt);
-    bool resist_to(const int& drug_id);
+    bool resist_to(Therapy* therapy) const;
+    bool resist_to(DrugType* dt) const;
+    bool resist_to(const int& drug_id) const;
 
 
     void update();
 
     void perform_drug_action(const double& percent_parasite_remove);
-
-private:
 
 };
 

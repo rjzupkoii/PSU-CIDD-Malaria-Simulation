@@ -17,38 +17,36 @@ class Event;
 class DrugType;
 
 class DrugsInBlood {
-    OBJECTPOOL(DrugsInBlood)
-    DISALLOW_COPY_AND_ASSIGN(DrugsInBlood)
-    POINTER_PROPERTY(Person, person)
-    POINTER_PROPERTY(DrugPtrMap, drugs)
+OBJECTPOOL(DrugsInBlood)
+DISALLOW_COPY_AND_ASSIGN(DrugsInBlood)
+POINTER_PROPERTY(Person, person)
+POINTER_PROPERTY(DrugPtrMap, drugs)
 
 public:
-    DrugsInBlood(Person* person = nullptr);
-    //    DrugsInBlood(const DrugsInBlood& orig);
-    virtual ~DrugsInBlood();
+  explicit DrugsInBlood(Person* person = nullptr);
+  //    DrugsInBlood(const DrugsInBlood& orig);
+  virtual ~DrugsInBlood();
 
-    void init();
-    
-    Drug* add_drug(Drug* drug);
+  void init();
 
-    bool is_drug_in_blood(DrugType* drugType);
-    bool is_drug_in_blood(int drugTypeID);
+  Drug* add_drug(Drug* drug);
 
-    void remove_drug(Drug* drug);
-    void remove_drug(const int& drugTypeID);
+  bool is_drug_in_blood(DrugType* drugType);
+  bool is_drug_in_blood(int drugTypeID);
 
-    Drug* get_drug(const int& typeID);
+  void remove_drug(Drug* drug);
+  void remove_drug(const int& drugTypeID);
 
-    int size();
+  Drug* get_drug(const int& typeID);
 
-    void clear(); 
-    
-    void update();
+  int size();
 
-    void clear_cut_off_drugs_by_event(Event* event);
-private:
+  void clear();
+
+  void update();
+
+  void clear_cut_off_drugs_by_event(Event* event);
 
 };
 
 #endif	/* DRUGSINBLOOD_H */
-
