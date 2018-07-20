@@ -268,7 +268,7 @@ void Person::cancel_all_other_progress_to_clinical_events_except(Event* event) c
   for (Event* e : *events()) {
     if (e != event && dynamic_cast<ProgressToClinicalEvent *>(e) != nullptr) {
       //            std::cout << "Hello"<< std::endl;
-      e->set_executable(false);
+      e->executable = false;
     }
   }
 }
@@ -278,7 +278,7 @@ void Person::cancel_all_events_except(Event* event) const {
   for (Event* e : *events()) {
     if (e != event) {
       //            e->set_dispatcher(nullptr);
-      e->set_executable(false);
+      e->executable = false;
     }
   }
 }
@@ -661,7 +661,7 @@ void Person::cancel_all_return_to_residence_events() const {
 
   for (Event* e : *events()) {
     if (dynamic_cast<ReturnToResidenceEvent *>(e) != nullptr) {
-      e->set_executable(false);
+      e->executable = false;
     }
   }
 }

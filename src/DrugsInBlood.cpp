@@ -11,6 +11,7 @@
 #include "Therapies/DrugType.h"
 #include "Person.h"
 #include "Helpers/ObjectHelpers.h"
+#include "Core/TypeDef.h"
 
 #ifndef DRUG_CUT_OFF_VALUE
 #define DRUG_CUT_OFF_VALUE 0.1

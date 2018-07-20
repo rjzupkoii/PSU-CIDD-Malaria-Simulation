@@ -25,10 +25,10 @@ MoveToExternalPopulationEvent::~MoveToExternalPopulationEvent() {
 void MoveToExternalPopulationEvent::schedule_event(Scheduler *scheduler, Person *p, const int &time) {
   if (scheduler != nullptr) {
     MoveToExternalPopulationEvent *e = new MoveToExternalPopulationEvent();
-    e->set_dispatcher(p);
+    e->dispatcher = p;
 
-    e->set_executable(true);
-    e->set_time(time);
+    e->executable = true;
+    e->time = time;
 
 
     p->add(e);

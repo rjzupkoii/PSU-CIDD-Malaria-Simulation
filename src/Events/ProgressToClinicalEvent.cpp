@@ -25,7 +25,7 @@ ProgressToClinicalEvent::ProgressToClinicalEvent() = default;
 ProgressToClinicalEvent::~ProgressToClinicalEvent() = default;
 
 void ProgressToClinicalEvent::execute() {
-  auto* person = (Person *)dispatcher();
+  auto* person = static_cast<Person *>(dispatcher);
   if (person->all_clonal_parasite_populations()->size() == 0) {
     //parasites might be cleaned by immune system or other things else
     return;
@@ -139,10 +139,10 @@ void ProgressToClinicalEvent::schedule_event(Scheduler* scheduler, Person* p,
                                              ClonalParasitePopulation* clinical_caused_parasite, const int& time) {
   if (scheduler != nullptr) {
     auto* e = new ProgressToClinicalEvent();
-    e->set_dispatcher(p);
+    e->dispatcher = p;
     e->set_clinical_caused_parasite(clinical_caused_parasite);
-    e->set_executable(true);
-    e->set_time(time);
+    e->executable = true;
+    e->time = time;
 
     p->add(e);
     scheduler->schedule_individual_event(e);

@@ -43,8 +43,8 @@ void Dispatcher::clear_events() {
   //    std::cout << "Clear event"<< std::endl;
 
   for (auto& event : *events_) {
-    event->set_dispatcher(nullptr);
-    event->set_executable(false);
+    event->dispatcher = nullptr;
+    event->executable = false;
   }
 
   events_->clear();

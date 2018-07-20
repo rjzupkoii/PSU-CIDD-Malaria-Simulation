@@ -26,10 +26,10 @@ void UpdateWhenDrugIsPresentEvent::schedule_event(Scheduler* scheduler, Person* 
   if (scheduler != nullptr) {
 
     auto* e = new UpdateWhenDrugIsPresentEvent();
-    e->set_dispatcher(p);
+    e->dispatcher = p;
     e->set_clinical_caused_parasite(clinical_caused_parasite);
-    e->set_executable(true);
-    e->set_time(time);
+    e->executable = true;
+    e->time = time;
 
     p->add(e);
     scheduler->schedule_individual_event(e);
@@ -37,7 +37,7 @@ void UpdateWhenDrugIsPresentEvent::schedule_event(Scheduler* scheduler, Person* 
 }
 
 void UpdateWhenDrugIsPresentEvent::execute() {
-  auto* person = dynamic_cast<Person*>(dispatcher());
+  auto* person = dynamic_cast<Person*>(dispatcher);
   if (person->drugs_in_blood()->size() > 0) {
     if (person->all_clonal_parasite_populations()->contain(clinical_caused_parasite_) && person->host_state() ==
       Person::CLINICAL) {

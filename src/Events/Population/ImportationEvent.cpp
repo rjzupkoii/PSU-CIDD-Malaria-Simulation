@@ -26,7 +26,7 @@ ImportationEvent(const int& location, const int& execute_at, const int& genotype
                                                                                                                    number_of_cases_(
                                                                                                                      number_of_cases) {
   // TODO: remove execute_at field
-  set_time(execute_at);
+  time = execute_at;
 }
 
 ImportationEvent::~ImportationEvent() {}
@@ -35,10 +35,10 @@ void ImportationEvent::schedule_event(Scheduler* scheduler, const int& location,
                                       const int& number_of_cases) {
   if (scheduler != nullptr) {
     ImportationEvent* e = new ImportationEvent(location, execute_at, genotype_id, number_of_cases);
-    //        e->set_dispatcher(p);
-    e->set_dispatcher(nullptr);
-    e->set_executable(true);
-    e->set_time(execute_at);
+    //        e->dispatcher = p;
+    e->dispatcher = nullptr;
+    e->executable = true;
+    e->time = execute_at;
 
     //        p->add(e);
     scheduler->schedule_population_event(e);

@@ -16,17 +16,17 @@
 
 OBJECTPOOL_IMPL(MatureGametocyteEvent)
 
-MatureGametocyteEvent::MatureGametocyteEvent() {}
+MatureGametocyteEvent::MatureGametocyteEvent(): blood_parasite_(nullptr) {}
 
-MatureGametocyteEvent::~MatureGametocyteEvent() {}
+MatureGametocyteEvent::~MatureGametocyteEvent() = default;
 
 void MatureGametocyteEvent::schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* blood_parasite, const int& time) {
   if (scheduler != nullptr) {
     auto* e = new MatureGametocyteEvent();
-    e->set_dispatcher(p);
+    e->dispatcher = p;
     e->set_blood_parasite(blood_parasite);
-    e->set_executable(true);
-    e->set_time(time);
+    e->executable = true;
+    e->time = time;
 
     p->add(e);
     scheduler->schedule_individual_event(e);
@@ -34,7 +34,7 @@ void MatureGametocyteEvent::schedule_event(Scheduler* scheduler, Person* p, Clon
 }
 
 void MatureGametocyteEvent::execute() {
-  auto* person = static_cast<Person*>(dispatcher());
+  auto* person = dynamic_cast<Person*>(dispatcher);
   if (person->all_clonal_parasite_populations()->contain(blood_parasite_)) {
     blood_parasite_->set_gametocyte_level(Model::CONFIG->gametocyte_level_full());    
   }

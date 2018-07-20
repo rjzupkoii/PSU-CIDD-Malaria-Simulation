@@ -20,10 +20,10 @@ ReceiveTherapyEvent::~ReceiveTherapyEvent() {
 void ReceiveTherapyEvent::schedule_event(Scheduler* scheduler, Person* p, Therapy* therapy, const int& time, ClonalParasitePopulation* clinical_caused_parasite) {
     if (scheduler != nullptr) {
         ReceiveTherapyEvent* e = new ReceiveTherapyEvent();
-        e->set_dispatcher(p);
+        e->dispatcher = p;
         e->set_received_therapy(therapy);
-        e->set_executable(true);
-        e->set_time(time);
+        e->executable = true;
+        e->time = time;
         e->set_clinical_caused_parasite(clinical_caused_parasite);
         p->add(e);
         scheduler->schedule_individual_event(e);
@@ -31,7 +31,7 @@ void ReceiveTherapyEvent::schedule_event(Scheduler* scheduler, Person* p, Therap
 }
 
 void ReceiveTherapyEvent::execute() {
-    Person* person = (Person*) dispatcher();
+    Person* person = (Person*) dispatcher;
     //    if (person->is_in_external_population()) {
     //        return;
     //    }

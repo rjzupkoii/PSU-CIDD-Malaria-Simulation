@@ -20,21 +20,21 @@ BirthdayEvent::BirthdayEvent() = default;
 BirthdayEvent::~BirthdayEvent() = default;
 
 void BirthdayEvent::execute() {
-  assert(dispatcher() != nullptr);
-  auto* person = dynamic_cast<Person *>(dispatcher());
+  assert(dispatcher != nullptr);
+  auto* person = dynamic_cast<Person *>(dispatcher);
   person->increase_age_by_1_year();
 
-  const auto days_to_next_year = TimeHelpers::number_of_days_to_next_year(scheduler()->calendar_date);
+  const auto days_to_next_year = TimeHelpers::number_of_days_to_next_year(scheduler->calendar_date);
 
-  schedule_event(scheduler(), person, scheduler()->current_time() + days_to_next_year);
+  schedule_event(scheduler, person, scheduler->current_time() + days_to_next_year);
 }
 
 void BirthdayEvent::schedule_event(Scheduler* scheduler, Person* p, const int& time) {
   if (scheduler != nullptr) {
     auto* birthday_event = new BirthdayEvent();
-    birthday_event->set_dispatcher(p);
-    birthday_event->set_executable(true);
-    birthday_event->set_time(time);
+    birthday_event->dispatcher = p;
+    birthday_event->executable = true;
+    birthday_event->time = time;
 
     p->add(birthday_event);    
     scheduler->schedule_individual_event(birthday_event);

@@ -18,22 +18,22 @@ class Person;
 class Genotype;
 
 class MoveParasiteToBloodEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN(MoveParasiteToBloodEvent);
-    OBJECTPOOL(MoveParasiteToBloodEvent)
-    POINTER_PROPERTY(Genotype, infection_type);
+DISALLOW_COPY_AND_ASSIGN(MoveParasiteToBloodEvent)
+OBJECTPOOL(MoveParasiteToBloodEvent)
+POINTER_PROPERTY(Genotype, infection_type)
 
 public:
-    MoveParasiteToBloodEvent();
-    //    MoveParasiteToBloodEvent(const MoveParasiteToBloodEvent& orig);
-    virtual ~MoveParasiteToBloodEvent();
-    static void schedule_event(Scheduler* scheduler, Person* p, Genotype* infection_type, const int& time);
+  MoveParasiteToBloodEvent();
+  //    MoveParasiteToBloodEvent(const MoveParasiteToBloodEvent& orig);
+  virtual ~MoveParasiteToBloodEvent();
+  static void schedule_event(Scheduler* scheduler, Person* p, Genotype* infection_type, const int& time);
 
-    virtual std::string name() {
-        return "MoveParasiteToBloodEvent";
-    }
+  std::string name() override {
+    return "MoveParasiteToBloodEvent";
+  }
+
 private:
-    virtual void execute();
+  void execute() override;
 };
 
 #endif	/* MOVEPARASITETOBLOODEVENT_H */
-

@@ -39,8 +39,8 @@ void Scheduler::initialize(const date::year_month_day& starting_date, const int&
 void Scheduler::clear_all_events(EventPtrVector2& events_list) const {
   for (auto& timestep_events : events_list) {
     for (auto* event : timestep_events) {
-      if (event->dispatcher() != nullptr) {
-        event->dispatcher()->remove(event);
+      if (event->dispatcher != nullptr) {
+        event->dispatcher->remove(event);
       }
       ObjectHelpers::delete_pointer<Event>(event);
     }
@@ -63,31 +63,31 @@ void Scheduler::set_total_available_time(const int& value) {
 }
 
 void Scheduler::schedule_individual_event(Event* event) {
-  schedule_event(individual_events_list_[event->time()], event);
+  schedule_event(individual_events_list_[event->time], event);
 }
 
 void Scheduler::schedule_population_event(Event* event) {
-  schedule_event(population_events_list_[event->time()], event);
+  schedule_event(population_events_list_[event->time], event);
 }
 
 void Scheduler::schedule_event(EventPtrVector& time_events, Event* event) {
   // Schedule event in the future
   // Event time cannot exceed total time or less than current time
-  if (event->time() > Model::CONFIG->total_time() || event->time() < current_time_) {
-    LOG_IF(event->time() < current_time_, FATAL) << "Error when schedule event " << event->name() << " at " << event->time()
+  if (event->time > Model::CONFIG->total_time() || event->time < current_time_) {
+    LOG_IF(event->time < current_time_, FATAL) << "Error when schedule event " << event->name() << " at " << event->time
     << ". Current_time: " << current_time_ << " - total time: " << total_available_time_;
-    VLOG(2) << "Cannot schedule event " << event->name() << " at " << event->time() << ". Current_time: "
+    VLOG(2) << "Cannot schedule event " << event->name() << " at " << event->time << ". Current_time: "
       << current_time_ << " - total time: " << total_available_time_;
     ObjectHelpers::delete_pointer<Event>(event);
   }
   else {
     time_events.push_back(event);
-    event->set_scheduler(this);
+    event->scheduler = this;
   }
 }
 
 void Scheduler::cancel(Event* event) {
-  event->set_executable(false);
+  event->executable= false;
 }
 
 

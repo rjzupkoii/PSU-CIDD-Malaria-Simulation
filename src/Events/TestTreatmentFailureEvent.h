@@ -16,26 +16,27 @@ class Scheduler;
 class Person;
 
 class TestTreatmentFailureEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN(TestTreatmentFailureEvent);
-    OBJECTPOOL(TestTreatmentFailureEvent)
-    POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite);
-//    PROPERTY_REF(bool, isResistance);
-    PROPERTY_REF(int, therapyId);
+DISALLOW_COPY_AND_ASSIGN(TestTreatmentFailureEvent)
+OBJECTPOOL(TestTreatmentFailureEvent)
+POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
+  //    PROPERTY_REF(bool, isResistance);
+PROPERTY_REF(int, therapyId)
 
 public:
-    TestTreatmentFailureEvent();
-    //    TestTreatmentFailureEvent(const TestTreatmentFailureEvent& orig);
-    virtual ~TestTreatmentFailureEvent();
+  TestTreatmentFailureEvent();
+  //    TestTreatmentFailureEvent(const TestTreatmentFailureEvent& orig);
+  virtual ~TestTreatmentFailureEvent();
 
-    static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time, const int& t_id = 0);
+  static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time,
+                             const int& t_id = 0);
 
-    virtual std::string name() {
-        return "TestTreatmentFailureEvent";
-    }
+  std::string name() override {
+    return "TestTreatmentFailureEvent";
+  }
+
 private:
-    virtual void execute();
+  void execute() override;
 
 };
 
 #endif	/* TESTTREATMENTFAILUREEVENT_H */
-

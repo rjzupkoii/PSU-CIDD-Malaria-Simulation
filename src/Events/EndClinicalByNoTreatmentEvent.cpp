@@ -17,18 +17,18 @@
 
 OBJECTPOOL_IMPL(EndClinicalByNoTreatmentEvent)
 
-EndClinicalByNoTreatmentEvent::EndClinicalByNoTreatmentEvent() {}
+EndClinicalByNoTreatmentEvent::EndClinicalByNoTreatmentEvent(): clinical_caused_parasite_(nullptr) {}
 
-EndClinicalByNoTreatmentEvent::~EndClinicalByNoTreatmentEvent() {}
+EndClinicalByNoTreatmentEvent::~EndClinicalByNoTreatmentEvent() = default;
 
 void EndClinicalByNoTreatmentEvent::schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite,
                                                    const int& time) {
   if (scheduler != nullptr) {
-    EndClinicalByNoTreatmentEvent* e = new EndClinicalByNoTreatmentEvent();
-    e->set_dispatcher(p);
+    auto* e = new EndClinicalByNoTreatmentEvent();
+    e->dispatcher = p;
     e->set_clinical_caused_parasite(clinical_caused_parasite);
-    e->set_executable(true);
-    e->set_time(time);
+    e->executable = true;
+    e->time = time;
 
     p->add(e);
     scheduler->schedule_individual_event(e);
@@ -36,7 +36,7 @@ void EndClinicalByNoTreatmentEvent::schedule_event(Scheduler* scheduler, Person*
 }
 
 void EndClinicalByNoTreatmentEvent::execute() {
-  Person* person = (Person*)dispatcher();
+  auto *person = dynamic_cast<Person*>(dispatcher);
 
   if (person->all_clonal_parasite_populations()->size() == 0) {
     //        assert(false);

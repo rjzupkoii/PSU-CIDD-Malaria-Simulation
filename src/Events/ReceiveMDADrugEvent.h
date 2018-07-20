@@ -14,23 +14,23 @@ class Person;
 class Therapy;
 
 class ReceiveMDADrugEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN(ReceiveMDADrugEvent)
-    POINTER_PROPERTY(Therapy, received_therapy)
+DISALLOW_COPY_AND_ASSIGN(ReceiveMDADrugEvent)
+POINTER_PROPERTY(Therapy, received_therapy)
 
 public:
-    ReceiveMDADrugEvent();
-    //    ReceiveMDADrugEvent(const ReceiveMDADrugEvent& orig);
-    virtual ~ReceiveMDADrugEvent();
+  ReceiveMDADrugEvent();
+  //    ReceiveMDADrugEvent(const ReceiveMDADrugEvent& orig);
+  virtual ~ReceiveMDADrugEvent();
 
-    static void schedule_event(Scheduler* scheduler, Person* p, Therapy* therapy, const int& time);
+  static void schedule_event(Scheduler* scheduler, Person* p, Therapy* therapy, const int& time);
 
-    virtual std::string name() {
-        return "ReceiveMDADrugEvent";
-    }
+  std::string name() override {
+    return "ReceiveMDADrugEvent";
+  }
+
 private:
-    virtual void execute();
+  void execute() override;
 
 };
 
 #endif	/* RECEIVEMDADRUGEVENT_H */
-

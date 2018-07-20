@@ -22,10 +22,10 @@ ReturnToResidenceEvent::~ReturnToResidenceEvent() {
 void ReturnToResidenceEvent::schedule_event(Scheduler* scheduler, Person* p, const int& time) {
     if (scheduler != nullptr) {
         ReturnToResidenceEvent* e = new ReturnToResidenceEvent();
-        e->set_dispatcher(p);
+        e->dispatcher = p;
 
-        e->set_executable(true);
-        e->set_time(time);
+        e->executable = true;
+        e->time = time;
 
         
         p->add(e);
@@ -34,7 +34,7 @@ void ReturnToResidenceEvent::schedule_event(Scheduler* scheduler, Person* p, con
 }
 
 void ReturnToResidenceEvent::execute() {
-    Person* person = (Person*) dispatcher();
+    Person* person = (Person*) dispatcher;
     person->set_location(person->residence_location());
 
 }

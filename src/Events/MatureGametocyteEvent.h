@@ -17,23 +17,23 @@ class Scheduler;
 class Person;
 
 class MatureGametocyteEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN(MatureGametocyteEvent);
-    OBJECTPOOL(MatureGametocyteEvent)
-    POINTER_PROPERTY(ClonalParasitePopulation, blood_parasite);
+DISALLOW_COPY_AND_ASSIGN(MatureGametocyteEvent);
+OBJECTPOOL(MatureGametocyteEvent)
+POINTER_PROPERTY(ClonalParasitePopulation, blood_parasite)
 
 public:
-    MatureGametocyteEvent();
-    //    MatureGametocyteEvent(const MatureGametocyteEvent& orig);
-    virtual ~MatureGametocyteEvent();
+  MatureGametocyteEvent();
+  //    MatureGametocyteEvent(const MatureGametocyteEvent& orig);
+  virtual ~MatureGametocyteEvent();
 
-    static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* blood_parasite, const int& time);
+  static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* blood_parasite, const int& time);
 
-    virtual std::string name() {
-        return "MatureGametocyteEvent";
-    }
+  std::string name() override {
+    return "MatureGametocyteEvent";
+  }
+
 private:
-    virtual void execute();
+  void execute() override;
 };
 
 #endif	/* MATUREGAMETOCYTEEVENT_H */
-

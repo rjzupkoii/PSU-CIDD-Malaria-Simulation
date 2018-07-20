@@ -8,36 +8,34 @@
 #include "Event.h"
 #include  "Dispatcher.h"
 
-Event::Event() :
-  scheduler_(nullptr), dispatcher_(nullptr), executable_(true), time_(-1) {}
+Event::Event() = default;
 
 Event::~Event() {
-  if (dispatcher_ != nullptr) {
-    dispatcher_->remove(this);
+  if (dispatcher != nullptr) {
+    dispatcher->remove(this);
   }
-  dispatcher_ = nullptr;
-  scheduler_ = nullptr;
+  dispatcher = nullptr;
+  scheduler = nullptr;
 }
 
 void Event::perform_execute() {
-  if (executable()) {
+  if (executable) {
     //        std::cout << "Before event"<< std::endl;     
-
     //update to current status of the dispatcher
-    if (dispatcher_ != nullptr) {
+    if (dispatcher != nullptr) {
       //            std::cout << name() << std::endl;
-      dispatcher_->update();
+      dispatcher->update();
     }
 
     //std::cout << "1.run" << name()<< std::endl;
     execute();
     //std::cout << "2.e-run" << std::endl;
-    if (dispatcher_ != nullptr) {
-      dispatcher_->remove(this);
-      set_dispatcher(nullptr);
+    if (dispatcher != nullptr) {
+      dispatcher->remove(this);
+      dispatcher = nullptr;
     }
 
-    set_executable(false);
+    executable = false;
     //        std::cout << "After event"<< std::endl;     
   }
 }

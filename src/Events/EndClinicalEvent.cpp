@@ -14,37 +14,37 @@
 
 OBJECTPOOL_IMPL(EndClinicalEvent)
 
-EndClinicalEvent::EndClinicalEvent() {
-}
+EndClinicalEvent::EndClinicalEvent(): clinical_caused_parasite_(nullptr) {}
 
-EndClinicalEvent::~EndClinicalEvent() {
-}
+EndClinicalEvent::~EndClinicalEvent() = default;
 
-void EndClinicalEvent::schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time) {
-    if (scheduler != nullptr) {
-        EndClinicalEvent* e = new EndClinicalEvent();
-        e->set_dispatcher(p);
-        e->set_clinical_caused_parasite(clinical_caused_parasite);
-        e->set_executable(true);
-        e->set_time(time);
+void EndClinicalEvent::schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite,
+                                      const int& time) {
+  if (scheduler != nullptr) {
+    auto* e = new EndClinicalEvent();
+    e->dispatcher = p;
+    e->set_clinical_caused_parasite(clinical_caused_parasite);
+    e->executable = true;
+    e->time = time;
 
-        p->add(e);
-        scheduler->schedule_individual_event(e);
-    }
+    p->add(e);
+    scheduler->schedule_individual_event(e);
+  }
 }
 
 void EndClinicalEvent::execute() {
-    Person* person = (Person*) dispatcher();
+  auto person = dynamic_cast<Person*>(dispatcher);
 
-    if (person->all_clonal_parasite_populations()->size() == 0) {
-        person->change_state_when_no_parasite_in_blood();
+  if (person->all_clonal_parasite_populations()->size() == 0) {
+    person->change_state_when_no_parasite_in_blood();
 
-    } else {
-        //still have parasite in blood
-        person->immune_system()->set_increase(true);
-        person->set_host_state(Person::ASYMPTOMATIC);
+  }
+  else {
+    //still have parasite in blood
+    person->immune_system()->set_increase(true);
+    person->set_host_state(Person::ASYMPTOMATIC);
 
-        person->determine_relapse_or_not(clinical_caused_parasite_);
+    person->determine_relapse_or_not(clinical_caused_parasite_);
 
-    }
+  }
 }

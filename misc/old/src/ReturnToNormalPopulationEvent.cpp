@@ -20,10 +20,10 @@ ReturnToNormalPopulationEvent::~ReturnToNormalPopulationEvent() {
 void ReturnToNormalPopulationEvent::schedule_event(Scheduler* scheduler, Person* p, const int& time) {
     if (scheduler != nullptr) {
         ReturnToNormalPopulationEvent* e = new ReturnToNormalPopulationEvent();
-        e->set_dispatcher(p);
+        e->dispatcher = p;
 
-        e->set_executable(true);
-        e->set_time(time);
+        e->executable = true;
+        e->time = time;
 
         p->add(e);
         scheduler->schedule_individual_event(e);

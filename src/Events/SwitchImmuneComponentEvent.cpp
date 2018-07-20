@@ -14,30 +14,27 @@
 
 OBJECTPOOL_IMPL(SwitchImmuneComponentEvent)
 
-SwitchImmuneComponentEvent::SwitchImmuneComponentEvent() {
-}
+SwitchImmuneComponentEvent::SwitchImmuneComponentEvent() = default;
 
-SwitchImmuneComponentEvent::~SwitchImmuneComponentEvent() {
-}
+SwitchImmuneComponentEvent::~SwitchImmuneComponentEvent() = default;
 
 void SwitchImmuneComponentEvent::execute() {
 
-    assert(dispatcher() != nullptr);
-    Person* p = (Person*) dispatcher();
-    p->immune_system()->set_immune_component(new NonInfantImmuneComponent());
+  assert(dispatcher != nullptr);
+  auto* p = dynamic_cast<Person*>(dispatcher);
+  p->immune_system()->set_immune_component(new NonInfantImmuneComponent());
 
 
 }
 
 void SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Scheduler* scheduler, Person* p, const int& time) {
-     if (scheduler != nullptr) {
-        SwitchImmuneComponentEvent* e = new SwitchImmuneComponentEvent();
-        e->set_dispatcher(p);
-        
-        e->set_executable(true);
-        e->set_time(time);
+  if (scheduler != nullptr) {
+    auto* e = new SwitchImmuneComponentEvent();
+    e->dispatcher = p;
+    e->executable = true;
+    e->time = time;
 
-        p->add(e);
-        scheduler->schedule_individual_event(e);
-    }
+    p->add(e);
+    scheduler->schedule_individual_event(e);
+  }
 }

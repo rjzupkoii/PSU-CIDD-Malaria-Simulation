@@ -22,10 +22,10 @@ void CirculateToTargetLocationNextDayEvent::schedule_event(Scheduler* scheduler,
                                                            const int& time) {
   if (scheduler != nullptr) {
     auto* e = new CirculateToTargetLocationNextDayEvent();
-    e->set_dispatcher(p);
+    e->dispatcher = p;
     e->set_target_location(target_location);
-    e->set_executable(true);
-    e->set_time(time);
+    e->executable = true;
+    e->time = time;
 
     p->add(e);
     scheduler->schedule_individual_event(e);
@@ -37,7 +37,7 @@ std::string CirculateToTargetLocationNextDayEvent::name() {
 }
 
 void CirculateToTargetLocationNextDayEvent::execute() {
-  auto person = dynamic_cast<Person*>(dispatcher());
+  auto* person = dynamic_cast<Person*>(dispatcher);
   person->set_location(target_location_);
 
   if (target_location_ != person->residence_location()) {
