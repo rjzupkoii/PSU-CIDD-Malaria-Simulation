@@ -23,12 +23,11 @@
 #include <exception>
 #include <stdexcept>
 #include <iostream>
-#include <typeinfo> 
+#include <typeinfo>
 #include <cassert>
 
 #define OBJECTPOOL_IMPL(class_name)\
-    ObjectPool<class_name>* class_name::object_pool = nullptr;\
-
+    ObjectPool<class_name>* class_name::object_pool = nullptr;
 
 #define OBJECTPOOL(class_name)\
   private:\
@@ -42,7 +41,7 @@
 
 
 enum {
-    EXPANSION_SIZE = 100000
+  EXPANSION_SIZE = 100000
 };
 
 template <class T>
@@ -50,94 +49,92 @@ class ObjectPool {
 public:
 
 public:
-    ObjectPool(const size_t& size = EXPANSION_SIZE);
-    ~ObjectPool(void);
+  explicit ObjectPool(const size_t& size = EXPANSION_SIZE);
+  ~ObjectPool(void);
 
 
 public:
-    T* Alloc();
-    void Free(T* someElement);
+  T* alloc();
+  void free(T* some_element);
 
 private:
-    void ExpandFreeList();
-    int expansionSize;
+  void expand_free_list();
+  size_t expansion_size_{EXPANSION_SIZE};
 
 
-
-    /**
-     * This is a vector of array of Objects T
-     */
-    std::vector<T*> allObjects;
-    /**
-     * This a Queue of Pointers T (not array)
-     */
-    std::vector<T*> freeList;
+  /**
+   * This is a vector of array of Objects T
+   */
+  std::vector<T*> allObjects;
+  /**
+   * This a Queue of Pointers T (not array)
+   */
+  std::vector<T*> freeList;
 
 
 };
 
 template <class T>
 ObjectPool<T>::ObjectPool(const size_t& size /*= EXPANSION_SIZE*/) {
-    if (size <= 0) {
-        throw std::invalid_argument("expansion size must be positive");
-    }
-    this->expansionSize = size;
-    freeList.reserve(expansionSize);
-    ExpandFreeList();
+  if (size <= 0) {
+    throw std::invalid_argument("expansion size must be positive");
+  }
+  this->expansion_size_ = size;
+  freeList.reserve(expansion_size_);
+  expand_free_list();
 }
 
 template <class T>
 ObjectPool<T>::~ObjectPool(void) {
-    // std::cout << typeid (T).name() << "\tall: " << allObjects.size() * expansionSize << "\tfree: " << freeList.size() << std::endl;
+  // std::cout << typeid (T).name() << "\tall: " << allObjects.size() * expansionSize << "\tfree: " << freeList.size() << std::endl;
 
-    if (allObjects.size() * expansionSize != freeList.size()) {
-        std::cout << typeid (T).name() << "\tall: " << allObjects.size() * expansionSize << "\tfree: " << freeList.size() << std::endl;
-        assert(false);
-    }
+  if (allObjects.size() * expansion_size_ != freeList.size()) {
+    std::cout << typeid (T).name() << "\tall: " << allObjects.size() * expansion_size_ << "\tfree: " << freeList.size() << std::endl;
+    assert(false);
+  }
 
-    // TODO: Investigate why? Infant and NonInfantImmune delete segmentation dump
+  // TODO: Investigate why? Infant and NonInfantImmune delete segmentation dump
 
-    for (int i = 0; i < (int) allObjects.size(); i++) {
-//        std::cout << typeid (T).name() << ": delete " << i << "-" << allObjects.size() << std::endl;
-        delete[] allObjects[i];
-    }
+  for (int i = 0; i < (int)allObjects.size(); i++) {
+    //        std::cout << typeid (T).name() << ": delete " << i << "-" << allObjects.size() << std::endl;
+    delete[] allObjects[i];
+  }
 
-    //for_each(allObjects.begin(), allObjects.end(), ArrayDeleteObject); 
+  //for_each(allObjects.begin(), allObjects.end(), ArrayDeleteObject); 
 }
 
 template <class T>
-T* ObjectPool<T>::Alloc() {
-    //    std::cout << "Alloc:" << typeid (T).name() << std::endl;
-    if (freeList.empty()) {
-        ExpandFreeList();
-    }
+T* ObjectPool<T>::alloc() {
+  //    std::cout << "Alloc:" << typeid (T).name() << std::endl;
+  if (freeList.empty()) {
+    expand_free_list();
+  }
 
-    T* obj = freeList.back();
-    freeList.pop_back();
+  T* obj = freeList.back();
+  freeList.pop_back();
 
-    return obj;
+  return obj;
 }
 
 template <class T>
-void ObjectPool<T>::Free(T * someElement) {
-    if (someElement == nullptr) {
-        std::cout << typeid (T).name() << " Free failed!!!" << std::endl;
-        assert(false);
-    }
+void ObjectPool<T>::free(T* some_element) {
+  if (some_element == nullptr) {
+    std::cout << typeid (T).name() << " Free failed!!!" << std::endl;
+    assert(false);
+  }
 
-    freeList.push_back(someElement);
+  freeList.push_back(some_element);
 }
 
 template <class T>
-void ObjectPool<T>::ExpandFreeList() {
-    T* newObjects = new T[expansionSize];
-    allObjects.push_back(newObjects);
+void ObjectPool<T>::expand_free_list() {
+  auto* new_objects = new T[expansion_size_];
+  allObjects.push_back(new_objects);
 
-    for (int i = 0; i < expansionSize; i++) {
-        freeList.push_back(&newObjects[i]);
-    }
-    //    std::cout << typeid (T).name() << " - Size: " << allObjects.size() * expansionSize << std::endl;
+  for (std::size_t i = 0; i < expansion_size_; i++) {
+    freeList.push_back(&new_objects[i]);
+  }
+  //    std::cout << typeid (T).name() << " - Size: " << allObjects.size() * expansionSize << std::endl;
 }
 
 #endif /* //OBJECTPOOL_H */
-

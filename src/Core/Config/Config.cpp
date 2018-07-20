@@ -38,7 +38,7 @@ void Config::read_from_file(const std::string& config_file_name) {
     config = YAML::LoadFile(config_file_name);
   }
   catch (YAML::BadFile& ex) {
-    LOG(FATAL) << config_file_name << " not found or err...";
+    LOG(FATAL) << config_file_name << " not found or err... Ex: " << ex.msg ;
   }
   catch (YAML::Exception& ex) {
     LOG(FATAL) << "error: " << ex.msg << " at line " << ex.mark.line + 1 << ":" << ex.mark.column + 1;

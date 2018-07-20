@@ -97,26 +97,23 @@ int DrugsInBlood::size() {
 }
 
 void DrugsInBlood::clear() {
-  if (drugs_->size() == 0) return;
-  DrugPtrMap::iterator it;
+  if (drugs_->empty()) return;
 
-  for (it = drugs_->begin(); it != drugs_->end(); it++) {
-    delete it->second;
+  for (auto& drug : *drugs_) {
+    delete drug.second;
   }
   drugs_->clear();
 }
 
 void DrugsInBlood::update() {
-  DrugPtrMap::iterator it;
-  for (it = drugs_->begin(); it != drugs_->end(); it++) {
-    it->second->update();
+  for (auto& drug : *drugs_) {
+    drug.second->update();
   }
 }
 
 void DrugsInBlood::clear_cut_off_drugs_by_event(Event* event) {
-  if (drugs_->size() > 0) {
-    DrugPtrMap::iterator pos;
-    for (pos = drugs_->begin(); pos != drugs_->end();) {
+  if (!drugs_->empty()) {
+    for (DrugPtrMap::iterator pos = drugs_->begin(); pos != drugs_->end();) {
       //if (pos->second->lastUpdateValue <= 0.1) {
       //Cut off at 10%
       if (pos->second->last_update_value() <= DRUG_CUT_OFF_VALUE) {

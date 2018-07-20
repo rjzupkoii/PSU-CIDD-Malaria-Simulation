@@ -101,7 +101,7 @@ int Population::size(const int& location, const int& age_class) {
   if (pi_lsa == nullptr) {
     return 0;
   }
-  auto temp = 0;
+  std::size_t temp = 0;
   if (age_class == -1) {
 
     for (auto state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
@@ -195,11 +195,11 @@ void Population::perform_infection_event() {
 
 
       for (auto bitting_level = 0; bitting_level < v_int_number_of_bites.size(); bitting_level++) {
-        const int size = pi->vPerson()[loc][bitting_level].size();
+        const std::size_t size = pi->vPerson()[loc][bitting_level].size();
         if (size == 0) continue;
-        for (auto j = 0; j < v_int_number_of_bites[bitting_level]; j++) {
+        for (auto j = 0u; j < v_int_number_of_bites[bitting_level]; j++) {
           //select 1 random person from level i
-          const int index = model_->random()->random_uniform(size);
+          const auto index = model_->random()->random_uniform(size);
           auto* person = pi->vPerson()[loc][bitting_level][index];
 
           assert(p->host_state() != Person::DEAD);
@@ -356,7 +356,7 @@ void Population::introduce_initial_cases() {
 
     // std::cout << Model::CONFIG->initial_parasite_info().size() << std::endl;
     for (const auto p_info : Model::CONFIG->initial_parasite_info()) {
-      int num_of_infections = size(p_info.location) * p_info.prevalence;
+      auto num_of_infections = static_cast<int>(std::round(size(p_info.location) * p_info.prevalence));
       // std::cout << num_of_infections << std::endl;
       auto* genotype = Model::CONFIG->genotype_db()->get(p_info.parasite_type_id);
       // std::cout << p_info.location << "-" << p_info.parasite_type_id << "-" << num_of_infections << std::endl;
@@ -394,7 +394,7 @@ void Population::introduce_parasite(const int& location, Genotype* parasite_type
     for (int bitting_level = 0; bitting_level < vIntNumberOfBites.size(); bitting_level++) {
       const int size = pi->vPerson()[location][bitting_level].size();
       if (size == 0) continue;
-      for (auto j = 0; j < vIntNumberOfBites[bitting_level]; j++) {
+      for (auto j = 0u; j < vIntNumberOfBites[bitting_level]; j++) {
 
         //                std::cout << vIntNumberOfBites[bitting_level] << "-" << j << std::endl;
         //select 1 random person from level i
@@ -652,7 +652,7 @@ void Population::perform_circulation_for_1_location(const int& from_location, co
   for (int moving_level = 0; moving_level < vIntNumberOfCirculation.size(); moving_level++) {
     auto size = static_cast<int>(pi->vPerson()[from_location][moving_level].size());
     if (size == 0) continue;
-    for (int j = 0; j < vIntNumberOfCirculation[moving_level]; j++) {
+    for (auto j = 0u; j < vIntNumberOfCirculation[moving_level]; j++) {
 
 
       //select 1 random person from level i

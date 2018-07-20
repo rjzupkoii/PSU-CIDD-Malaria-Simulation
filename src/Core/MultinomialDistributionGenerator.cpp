@@ -33,7 +33,7 @@ void MultinomialDistributionGenerator::allocate(Random* random) {
   //    std::cout<< std::endl;
   data.clear();
   for (auto i = 0; i < size; i++) {
-    for (auto j = 0; j < n[i]; j++) {
+    for (auto j = 0u; j < n[i]; j++) {
       data.push_back(i);
     }
   }

@@ -346,7 +346,7 @@ int Person::complied_dosing_days(const int& dosing_day) const {
     if (p > Model::CONFIG->p_compliance()) {
       //do not comply
       const auto a = (Model::CONFIG->min_dosing_days() - dosing_day) / (1 - Model::CONFIG->p_compliance());
-      return ceil(a * p + Model::CONFIG->min_dosing_days() - a);
+      return static_cast<int>(std::ceil(a * p + Model::CONFIG->min_dosing_days() - a));
     }
   }
   return dosing_day;
@@ -541,10 +541,12 @@ void Person::update() {
 
 void Person::update_bitting_level() {
   if (Model::CONFIG->using_age_dependent_bitting_level()) {
+
+    //TODO: test here
     const auto new_bitting_level_value = base_bitting_level_value_ * get_age_dependent_biting_factor();
-    const int diff_in_level = floor(new_bitting_level_value - get_biting_level_value()) /
-    ((Model::CONFIG->relative_bitting_info().max_relative_biting_value - 1) /
-      static_cast<double>(Model::CONFIG->relative_bitting_info().number_of_biting_levels - 1));
+    const auto diff_in_level = static_cast<int>(std::floor(new_bitting_level_value - get_biting_level_value()) /
+      ((Model::CONFIG->relative_bitting_info().max_relative_biting_value - 1) /
+        static_cast<double>(Model::CONFIG->relative_bitting_info().number_of_biting_levels - 1)));
     if (diff_in_level != 0) {
       //            std::cout << bitting_level_ << "\t" << diff_in_level << std::endl;
       set_bitting_level(bitting_level_ + diff_in_level);
@@ -581,7 +583,7 @@ void Person::randomly_choose_parasite() {
     infected_by(today_infections_->at(0));
   }
   else {
-    int index_random_parasite = Model::RANDOM->random_uniform(today_infections_->size());
+    const int index_random_parasite = Model::RANDOM->random_uniform(today_infections_->size());
     infected_by(today_infections_->at(index_random_parasite));
   }
 
