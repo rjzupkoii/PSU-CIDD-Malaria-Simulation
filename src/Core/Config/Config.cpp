@@ -13,12 +13,9 @@
 #include "Model.h"
 #include "Core/Random.h"
 #include "Therapies/SCTherapy.h"
-#include "Strategies/StrategyBuilder.h"
 #include "easylogging++.h"
 #include "Helpers/OSHelpers.h"
-#include "Helpers/TimeHelpers.h"
 #include "Helpers/StringHelpers.h"
-#include "Constants.h"
 
 using namespace Spatial;
 

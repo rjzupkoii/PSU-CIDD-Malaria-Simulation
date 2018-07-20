@@ -15,7 +15,6 @@ class IndexHandler {
 public:
     IndexHandler();    
     virtual ~IndexHandler();
-private:
 
 };
 

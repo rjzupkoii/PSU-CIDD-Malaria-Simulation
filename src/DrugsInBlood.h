@@ -31,21 +31,21 @@ public:
 
   Drug* add_drug(Drug* drug);
 
-  bool is_drug_in_blood(DrugType* drugType);
-  bool is_drug_in_blood(int drugTypeID);
+  bool is_drug_in_blood(DrugType* drug_type) const;
+  bool is_drug_in_blood(int drug_type_id) const;
 
-  void remove_drug(Drug* drug);
-  void remove_drug(const int& drugTypeID);
+  void remove_drug(Drug* drug) const;
+  void remove_drug(const int& drug_type_id) const;
 
-  Drug* get_drug(const int& typeID);
+  Drug* get_drug(const int& type_id) const;
 
-  int size();
+  int size() const;
 
-  void clear();
+  void clear() const;
 
-  void update();
+  void update() const;
 
-  void clear_cut_off_drugs_by_event(Event* event);
+  void clear_cut_off_drugs_by_event(Event* event) const;
 
 };
 

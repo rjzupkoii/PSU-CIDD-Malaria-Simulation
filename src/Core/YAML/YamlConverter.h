@@ -127,12 +127,12 @@ namespace YAML {
 
     static bool decode(const Node& node, GenotypeInfo& genotype_info) {
       genotype_info.loci_vector.clear();      
-      for (auto i = 0; i < node["loci"].size(); i++) {
+      for (std::size_t i = 0; i < node["loci"].size(); i++) {
         Locus l;
         l.position = node["loci"][i]["position"].as<int>();
 
 
-        for (auto j = 0; j < node["loci"][i]["alleles"].size(); j++) {
+        for (std::size_t j = 0; j < node["loci"][i]["alleles"].size(); j++) {
           Allele al;
           al.value = node["loci"][i]["alleles"][j]["value"].as<int>();
           al.name = node["loci"][i]["alleles"][j]["allele_name"].as<std::string>();
@@ -140,7 +140,7 @@ namespace YAML {
           al.mutation_level = node["loci"][i]["alleles"][j]["mutation_level"].as<int>();
           al.daily_cost_of_resistance = node["loci"][i]["alleles"][j]["daily_cost_of_resistance"].as<
             double>();
-          for (auto c = 0; c < node["loci"][i]["alleles"][j]["can_mutate_to"].size(); c++) {
+          for (std::size_t c = 0; c < node["loci"][i]["alleles"][j]["can_mutate_to"].size(); c++) {
             //                al.mutation_value_up.push_back(node["loci"][i]["alleles"][j]["mutation_up"][c].as<int>());
             al.mutation_values.push_back(
               node["loci"][i]["alleles"][j]["can_mutate_to"][c].as<int>());

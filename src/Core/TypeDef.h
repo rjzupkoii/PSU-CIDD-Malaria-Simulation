@@ -80,35 +80,31 @@ inline std::ostream& operator<<(std::ostream& os, const SeasonalInfo& seasonal_i
 }
 
 struct ImmuneSystemInformation {
-  double acquire_rate;
+  double acquire_rate{-1};
   std::vector<double> acquire_rate_by_age;
-  double decay_rate;
+  double decay_rate{-1};
 
-  double duration_for_fully_immune;
-  double duration_for_naive;
+  double duration_for_fully_immune{-1};
+  double duration_for_naive{-1};
 
   //    double mean_initial_condition;
   //    double sd_initial_condition;
 
-  double immune_inflation_rate;
+  double immune_inflation_rate{-1};
 
-  double min_clinical_probability;
-  double max_clinical_probability;
+  double min_clinical_probability{-1};
+  double max_clinical_probability{-1};
 
-  double immune_effect_on_progression_to_clinical;
+  double immune_effect_on_progression_to_clinical{-1};
 
-  double c_min;
-  double c_max;
+  double c_min{-1};
+  double c_max{-1};
 
-  double alpha_immune;
-  double beta_immune;
+  double alpha_immune{-1};
+  double beta_immune{-1};
 
-  double age_mature_immunity;
-  double factor_effect_age_mature_immunity;
-
-  ImmuneSystemInformation() : acquire_rate(-1), decay_rate(-1), duration_for_fully_immune(-1), duration_for_naive(-1),
-                              immune_inflation_rate(-1), min_clinical_probability(-1), max_clinical_probability(-1), c_min(-1), c_max(-1),
-                              alpha_immune(-1), beta_immune(-1) { }
+  double age_mature_immunity{-1};
+  double factor_effect_age_mature_immunity{-1};  
 };
 
 struct ParasiteDensityLevel {
@@ -200,7 +196,7 @@ struct ImportationParasiteInfo {
 };
 
 struct ImportationParasitePeriodicallyInfo {
-	int location{-1};
+  int location{-1};
   int duration{0};
   int parasite_type_id{-1};
   int number{0};

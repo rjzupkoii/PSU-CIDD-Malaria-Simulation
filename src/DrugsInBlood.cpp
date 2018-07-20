@@ -62,20 +62,20 @@ Drug* DrugsInBlood::add_drug(Drug* drug) {
 
 }
 
-bool DrugsInBlood::is_drug_in_blood(DrugType* drugType) {
-  return is_drug_in_blood(drugType->id());
+bool DrugsInBlood::is_drug_in_blood(DrugType* drug_type) const {
+  return is_drug_in_blood(drug_type->id());
 }
 
-bool DrugsInBlood::is_drug_in_blood(int drugTypeID) {
+bool DrugsInBlood::is_drug_in_blood(const int drugTypeID) const {
   return drugs_->find(drugTypeID) != drugs_->end();
 }
 
-void DrugsInBlood::remove_drug(Drug* drug) {
+void DrugsInBlood::remove_drug(Drug* drug) const {
   remove_drug(drug->drug_type()->id());
 }
 
-void DrugsInBlood::remove_drug(const int& drugTypeID) {
-  DrugPtrMap::iterator it = drugs_->find(drugTypeID);
+void DrugsInBlood::remove_drug(const int& drug_type_id) const {
+  auto it = drugs_->find(drug_type_id);
 
   if (it == drugs_->end()) {
     return;
@@ -85,18 +85,18 @@ void DrugsInBlood::remove_drug(const int& drugTypeID) {
   drugs_->erase(it);
 }
 
-Drug* DrugsInBlood::get_drug(const int& typeID) {
-  if (!is_drug_in_blood(typeID))
+Drug* DrugsInBlood::get_drug(const int& type_id) const {
+  if (!is_drug_in_blood(type_id))
     return nullptr;
 
-  return drugs_->at(typeID);
+  return drugs_->at(type_id);
 }
 
-int DrugsInBlood::size() {
+int DrugsInBlood::size() const {
   return drugs_->size();
 }
 
-void DrugsInBlood::clear() {
+void DrugsInBlood::clear() const {
   if (drugs_->empty()) return;
 
   for (auto& drug : *drugs_) {
@@ -105,15 +105,15 @@ void DrugsInBlood::clear() {
   drugs_->clear();
 }
 
-void DrugsInBlood::update() {
+void DrugsInBlood::update() const {
   for (auto& drug : *drugs_) {
     drug.second->update();
   }
 }
 
-void DrugsInBlood::clear_cut_off_drugs_by_event(Event* event) {
+void DrugsInBlood::clear_cut_off_drugs_by_event(Event* event) const {
   if (!drugs_->empty()) {
-    for (DrugPtrMap::iterator pos = drugs_->begin(); pos != drugs_->end();) {
+    for (auto pos = drugs_->begin(); pos != drugs_->end();) {
       //if (pos->second->lastUpdateValue <= 0.1) {
       //Cut off at 10%
       if (pos->second->last_update_value() <= DRUG_CUT_OFF_VALUE) {

@@ -7,11 +7,9 @@
 
 #include "MACTherapy.h"
 
-MACTherapy::MACTherapy() : therapy_ids_(), start_at_days_() {
-}
+MACTherapy::MACTherapy() = default;
 
-MACTherapy::~MACTherapy() {
-}
+MACTherapy::~MACTherapy() = default;
 
 void MACTherapy::add_therapy_id(const int& therapy_id) {
     therapy_ids_.push_back(therapy_id);

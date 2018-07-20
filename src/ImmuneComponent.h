@@ -35,9 +35,6 @@ public:
   virtual double get_decay_rate(const int& age = 0) const = 0;
   virtual double get_acquire_rate(const int& age = 0) const = 0;
 
-
-private:
-
 };
 
 #endif	/* IMMUNECOMPONENT_H */

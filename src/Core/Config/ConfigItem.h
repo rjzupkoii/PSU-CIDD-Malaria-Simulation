@@ -6,10 +6,12 @@
 #include "easylogging++.h"
 #include <yaml-cpp/yaml.h>
 #include <fmt/format.h>
+#include <utility>
 #include <vector>
 
 #define CONFIG_ITEM(name,type,default_value)\
   ConfigItem<type> name{#name,default_value, this};
+
 #define CUSTOM_CONFIG_ITEM(name,default_value)\
   name name{#name,default_value, this};
 
@@ -22,7 +24,7 @@ protected:
   T value_{};
 public:
   //constructor
-  explicit ConfigItem(std::string name, const T& default_value, Config* config = nullptr);
+  explicit ConfigItem(const std::string& name, T default_value, Config* config = nullptr);
 
   // destructor
   virtual ~ConfigItem() = default;
@@ -45,8 +47,8 @@ public:
 
 
 template <typename T>
-ConfigItem<T>::ConfigItem(std::string name, const T& default_value, Config* config) : IConfigItem(config, name),
-                                                                                      value_{default_value} {
+ConfigItem<T>::ConfigItem(const std::string &name, T default_value, Config* config) : IConfigItem(config, name),
+                                                                                      value_{std::move(default_value)} {
 }
 
 template <typename T>

@@ -11,6 +11,5 @@ IndexHandler::IndexHandler():index_(-1) {
     
 }
 
-IndexHandler::~IndexHandler() {
-}
+IndexHandler::~IndexHandler() = default;
 

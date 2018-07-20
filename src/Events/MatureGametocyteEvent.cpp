@@ -10,7 +10,6 @@
 #include "ClonalParasitePopulation.h"
 #include "Scheduler.h"
 #include "SingleHostClonalParasitePopulations.h"
-#include "DrugsInBlood.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 
