@@ -5,6 +5,7 @@
 #include "Therapies/Therapy.h"
 #include "Therapies/SCTherapy.h"
 #include "Strategies/IStrategy.h"
+#include "Events/Event.h"
 
 TEST_CASE("ConfigTest", "[Core]") {
 
@@ -17,7 +18,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.ending_date() == date::year_month_day{ date::year{ 1991 } / 1 / 1 });
 
     REQUIRE(c.total_time() == 365);
-    
+
     REQUIRE(c.start_collect_data_day() == 0);
     REQUIRE(c.start_intervention_day()==0);
 
@@ -171,24 +172,16 @@ TEST_CASE("ConfigTest", "[Core]") {
     // REQUIRE(c.initial_parasite_info()[19].prevalence == 0.1);
     // REQUIRE(c.initial_parasite_info()[19].location == 10);
 
-    REQUIRE(c.importation_parasite_info().size() == 4);
-    REQUIRE(c.importation_parasite_info()[0].parasite_type_id == 1);
-    REQUIRE(c.importation_parasite_info()[0].location == 0);
-    REQUIRE(c.importation_parasite_info()[0].number == 5);
+    REQUIRE(c.preconfig_population_events().size() == 5);
+    REQUIRE(c.preconfig_population_events()[0]->time() ==4000);
+    REQUIRE(c.preconfig_population_events()[1]->time() ==4000);
+    REQUIRE(c.preconfig_population_events()[2]->time() ==4000);
+    REQUIRE(c.preconfig_population_events()[3]->time() ==4000);
+    REQUIRE(c.preconfig_population_events()[4]->time() == 20);
 
-    REQUIRE(c.importation_parasite_info()[3].parasite_type_id == 8);
-    REQUIRE(c.importation_parasite_info()[3].location == 1);
-    REQUIRE(c.importation_parasite_info()[3].number == 5);
-
-    REQUIRE(c.importation_parasite_periodically_info().size() == 1);
-    REQUIRE(c.importation_parasite_periodically_info()[0].location == 0);
-    REQUIRE(c.importation_parasite_periodically_info()[0].parasite_type_id == -1);
-    REQUIRE(c.importation_parasite_periodically_info()[0].duration == 10);
-    REQUIRE(c.importation_parasite_periodically_info()[0].start_day == 20);
-    REQUIRE(c.importation_parasite_periodically_info()[0].number == 1);
 
     REQUIRE(c.bitting_level_generator().level_density.size()==100);
-    REQUIRE(c.moving_level_generator().level_density.size()==100);    
+    REQUIRE(c.moving_level_generator().level_density.size()==100);
 
 
     // REQUIRE(2== 2);

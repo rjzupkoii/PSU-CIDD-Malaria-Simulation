@@ -24,7 +24,10 @@ ImportationEvent(const int& location, const int& execute_at, const int& genotype
                                                                                                                    genotype_id_(
                                                                                                                      genotype_id),
                                                                                                                    number_of_cases_(
-                                                                                                                     number_of_cases) {}
+                                                                                                                     number_of_cases) {
+  // TODO: remove execute_at field
+  set_time(execute_at);
+}
 
 ImportationEvent::~ImportationEvent() {}
 

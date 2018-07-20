@@ -1,5 +1,9 @@
 TODO:
+  - Test imporation and periodically events
 	- Test if Strategies still functioning?
+  - New Indexer
+  - bring back object pool
+  - remove affecting allele
   - Remove resist_to function ???
   - build Core library
   - Using event to change treatment coverage / strategy and set up those event from input file

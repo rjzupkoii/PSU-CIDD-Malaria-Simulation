@@ -341,40 +341,6 @@ initial_parasite_info:
 #        prevalence: 0.1
 #      - parasite_type_id: 4
 #        prevalence: 0.1
-
-# functional but not used in 2015 LGH paper
-# allows for the introduction of a specific parasite type at a specific time
-introduce_parasite:
-  - location: 0
-    parasite_info:
-      - time: 4000
-        genotype_id: 1
-        number_of_cases: 5
-      - time: 4000
-        genotype_id: 2
-        number_of_cases: 5
-  - location: 1
-    parasite_info:
-      - time: 4000
-        genotype_id: 4
-        number_of_cases: 5
-      - time: 4000
-        genotype_id: 8
-        number_of_cases: 5 
-#        
-
-
-# periodic importation of drug-sensitive parasites; five new cases imported every seven days
-# technically, the model will import cases everyday with number of cases is draw from a possion
-# of mean ( cases/ duration)
-introduce_parasite_periodically:
-  - location: 0
-    parasite_info:
-      - duration: 10
-        # genotype_id -1: fix allele 580Y and x of the last loci, other alleles will be drawed randomly
-        genotype_id: -1
-        number_of_cases: 1
-        start_day: 20
         
 
         
@@ -920,19 +886,49 @@ fraction_mosquitoes_interrupted_feeding: 0.0
 
 inflation_factor: 1.01
 
-events_info:
-  - change_treatment_coverage:
+events:
+  - name: introduce_parasites
+    info:
+    - location: 0
+      parasite_info:
+        - time: 100
+          genotype_id: 1
+          number_of_cases: 5
+        - time: 200
+          genotype_id: 2
+          number_of_cases: 5
+    - location: 1
+      parasite_info:
+        - time: 200
+          genotype_id: 4
+          number_of_cases: 5
+        - time: 350
+          genotype_id: 8
+          number_of_cases: 5 
+  - name: introduce_parasites_periodically
+    info:
+    - location: 0
+      parasite_info:
+        - duration: 10
+          # genotype_id -1: fix allele 580Y and x of the last loci, other alleles will be drawed randomly
+          genotype_id: -1
+          number_of_cases: 1
+          start_day: 20
+  - name: change_treatment_coverage
+    info:
       type: SteadyTCM
       day: 1990/2/1
       p_treatment_for_less_than_5_by_location: [0.600000]
       p_treatment_for_more_than_5_by_location: [0.500000]
-  - change_treatment_coverage:
+  - name: change_treatment_coverage
+    info:
       type: InflatedTCM
       day: 1990/3/1
       annual_inflation_rate: 0.01
       p_treatment_for_less_than_5_by_location: [0.600000]
       p_treatment_for_more_than_5_by_location: [0.500000]
-  - change_treatment_coverage:
+  - name: change_treatment_coverage
+    info:
       type: IncreasingTCM
       from_day: 1990/6/1
       to_day: 1990/12/1

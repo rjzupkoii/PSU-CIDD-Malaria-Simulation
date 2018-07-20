@@ -205,18 +205,18 @@ void Config::override_1_parameter(const std::string& parameter_name, const std::
   }
 
   if (parameter_name == "initial_genotype") {
-    int genotypeId = atoi(parameter_value.c_str());
-    initial_parasite_info()[0].parasite_type_id = genotypeId;
-    importation_parasite_periodically_info()[0].parasite_type_id = genotypeId;
+    // int genotypeId = atoi(parameter_value.c_str());
+    // initial_parasite_info()[0].parasite_type_id = genotypeId;
+    // importation_parasite_periodically_info()[0].parasite_type_id = genotypeId;
   }
 
   if (parameter_name == "importation_period") {
-    int importation_period = atoi(parameter_value.c_str());
-    for (auto& i : importation_parasite_periodically_info()) {
-      if (i.parasite_type_id == -1) {
-        i.duration = importation_period;
-      }
-    }
+    // int importation_period = atoi(parameter_value.c_str());
+    // for (auto& i : importation_parasite_periodically_info()) {
+    //   if (i.parasite_type_id == -1) {
+    //     i.duration = importation_period;
+    //   }
+    // }
   }
 
   if (parameter_name == "fraction_non_art_replacement") {

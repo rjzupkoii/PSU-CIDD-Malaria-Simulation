@@ -295,48 +295,6 @@ public:
   void set_value(const YAML::Node& node) override;
 };
 
-class importation_parasite_info : public IConfigItem {
-DISALLOW_COPY_AND_ASSIGN(importation_parasite_info)
-DISALLOW_MOVE(importation_parasite_info)
-protected:
-  std::vector<ImportationParasiteInfo> value_;
-public:
-  //constructor
-  explicit importation_parasite_info(const std::string& name, std::vector<ImportationParasiteInfo> default_value,
-                                     Config* config = nullptr) : IConfigItem(config, name),
-                                                                 value_{std::move(default_value)} { }
-
-  // destructor
-  virtual ~importation_parasite_info() = default;
-
-  virtual std::vector<ImportationParasiteInfo>& operator()() {
-    return value_;
-  }
-
-  void set_value(const YAML::Node& node) override;
-};
-
-class importation_parasite_periodically_info : public IConfigItem {
-DISALLOW_COPY_AND_ASSIGN(importation_parasite_periodically_info)
-DISALLOW_MOVE(importation_parasite_periodically_info)
-protected:
-  std::vector<ImportationParasitePeriodicallyInfo> value_;
-public:
-  //constructor
-  explicit importation_parasite_periodically_info(const std::string& name, std::vector<ImportationParasitePeriodicallyInfo> default_value,
-                                                  Config* config = nullptr) : IConfigItem(config, name),
-                                                                              value_{std::move(default_value)} { }
-
-  // destructor
-  virtual ~importation_parasite_periodically_info() = default;
-
-  virtual std::vector<ImportationParasitePeriodicallyInfo>& operator()() {
-    return value_;
-  }
-
-  void set_value(const YAML::Node& node) override;
-};
-
 class bitting_level_generator : public IConfigItem {
 DISALLOW_COPY_AND_ASSIGN(bitting_level_generator)
 DISALLOW_MOVE(bitting_level_generator)
@@ -373,6 +331,28 @@ public:
   virtual ~moving_level_generator() = default;
 
   virtual MultinomialDistributionGenerator& operator()() {
+    return value_;
+  }
+
+  void set_value(const YAML::Node& node) override;
+};
+
+
+class preconfig_population_events : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(preconfig_population_events)
+DISALLOW_MOVE(preconfig_population_events)
+protected:
+  std::vector<Event*> value_;
+public:
+  //constructor
+  explicit preconfig_population_events(const std::string& name, std::vector<Event*> default_value,
+                                  Config* config = nullptr) : IConfigItem(config, name),
+                                                              value_{std::move(default_value)} { }
+
+  // destructor
+  virtual ~preconfig_population_events() = default;
+
+  virtual std::vector<Event*>& operator()() {
     return value_;
   }
 

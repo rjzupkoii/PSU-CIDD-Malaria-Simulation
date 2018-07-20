@@ -31,6 +31,9 @@ PROPERTY_REF(bool, is_force_stop)
 public:
   date::sys_days calendar_date;
 
+  EventPtrVector2 individual_events_list_;
+  EventPtrVector2 population_events_list_;
+
   explicit Scheduler(Model* model = nullptr);
 
   virtual ~Scheduler();
@@ -67,9 +70,7 @@ public:
   bool is_today_first_day_of_year() const;
 
   bool is_today_last_day_of_year() const;
-private:
-  EventPtrVector2 individual_events_list_;
-  EventPtrVector2 population_events_list_;
+  
 };
 
 #endif  /* SCHEDULER_H */

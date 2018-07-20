@@ -175,28 +175,11 @@ void Model::initialize() {
   //initialize external population
   //    external_population_->initialize();
 
-  //TODO: implement other schudler for the following population events???
-
-  LOG(INFO) << "Schedule for periodically importation event";
-  //schedule for some special or periodic events
-  for (auto& i : CONFIG->importation_parasite_periodically_info()) {
-    ImportationPeriodicallyEvent::schedule_event(scheduler_,
-                                                 i.location,
-                                                 i.duration,
-                                                 i.parasite_type_id,
-                                                 i.number,
-                                                 i.start_day);
+   LOG(INFO) << "Schedule for population event";
+  for (auto* event : config_->preconfig_population_events()) {
+    scheduler_->schedule_population_event(event);
+    // LOG(INFO) << scheduler_->population_events_list_[event->time()].size();
   }
-
-  LOG(INFO) << "Schedule for importation event at one time point";
-  for (auto& i : CONFIG->importation_parasite_info()) {
-    ImportationEvent::schedule_event(scheduler_, i.location,
-                                     i.time,
-                                     i.parasite_type_id,
-                                     i.number);
-  }
-
-  //TODO: Schedule other Population Events here
 }
 
 void Model::initialize_object_pool(const int& size) {

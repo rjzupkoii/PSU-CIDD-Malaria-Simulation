@@ -12,9 +12,7 @@
 #include "Therapies/TherapyBuilder.h"
 #include "Strategies/IStrategy.h"
 #include "Strategies/StrategyBuilder.h"
-#include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
-#include "Strategies/NestedSwitchingStrategy.h"
-#include "Malaria/SteadyTCM.h"
+#include "Events/Population/PopulationEventBuilder.h"
 
 void total_time::set_value(const YAML::Node& node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
@@ -453,47 +451,6 @@ void initial_parasite_info::set_value(const YAML::Node& node) {
   }
 }
 
-void importation_parasite_info::set_value(const YAML::Node& node) {
-  const auto& n = node["introduce_parasite"];
-
-  for (auto i = 0; i < n.size(); i++) {
-    auto location = n[i]["location"].as<int>();
-    if (location < config_->number_of_locations()) {
-      for (auto j = 0; j < n[i]["parasite_info"].size(); j++) {
-        //            InitialParasiteInfo ipi;
-        //            ipi.location = location;
-        auto parasite_type_id = n[i]["parasite_info"][j]["genotype_id"].as<int>();
-        auto time = n[i]["parasite_info"][j]["time"].as<int>();
-        auto num = n[i]["parasite_info"][j]["number_of_cases"].as<int>();
-        value_.emplace_back(location, parasite_type_id, time, num);
-      }
-    }
-  }
-}
-
-void importation_parasite_periodically_info::set_value(const YAML::Node& node) {
-  const auto& n = node["introduce_parasite_periodically"];
-  for (auto i = 0; i < n.size(); i++) {
-    const auto location = n[i]["location"].as<int>();
-    const auto location_from = location == -1 ? 0 : location;
-    const auto location_to = location == -1 ? config_->number_of_locations() : min(location + 1,config_->number_of_locations());
-
-     for (auto loc = location_from; loc < location_to; ++loc) {
-      for (auto j = 0; j < n[i]["parasite_info"].size(); j++) {
-        //            InitialParasiteInfo ipi;
-        //            ipi.location = location;
-        const auto parasite_type_id = n[i]["parasite_info"][j]["genotype_id"].as<int>();
-        const auto dur = n[i]["parasite_info"][j]["duration"].as<int>();
-        const auto num = n[i]["parasite_info"][j]["number_of_cases"].as<int>();
-        const auto start_day = n[i]["parasite_info"][j]["start_day"].as<int>();
-        value_.emplace_back(ImportationParasitePeriodicallyInfo{
-          loc, dur, parasite_type_id, num, start_day
-        });
-      }
-    }
-  }
-}
-
 void bitting_level_generator::set_value(const YAML::Node& node) {
   value_.level_density = config_->relative_bitting_info().v_biting_level_density;
 }
@@ -502,3 +459,10 @@ void moving_level_generator::set_value(const YAML::Node& node) {
   value_.level_density = config_->circulation_info().v_moving_level_density;
 }
 
+
+void preconfig_population_events::set_value(const YAML::Node& node) {
+  for (auto i = 0; i < node["events"].size(); ++i) {
+      auto events = PopulationEventBuilder::Build(node["events"][i], config_);
+    value_.insert(value_.end(), events.begin(), events.end());
+  }
+}

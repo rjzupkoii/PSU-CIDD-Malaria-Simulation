@@ -24,7 +24,10 @@ ImportationPeriodicallyEvent::ImportationPeriodicallyEvent(const int& location, 
                                                                                                                genotype_id_(genotype_id),
                                                                                                                number_of_cases_(
                                                                                                                  number_of_cases),
-                                                                                                               start_day_(start_day) {}
+                                                                                                               start_day_(start_day) {
+  //TODO: remove start_day_
+  set_time(start_day);
+}
 
 ImportationPeriodicallyEvent::~ImportationPeriodicallyEvent() = default;
 

@@ -17,7 +17,6 @@
 #include <string>
 #include <vector>
 #include <date/date.h>
-#include <chrono>
 
 class IConfigItem;
 
@@ -89,7 +88,7 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(genotype_info, GenotypeInfo, GenotypeInfo())
 
-  CONFIG_ITEM(initial_strategy_id, int , -1)    
+  CONFIG_ITEM(initial_strategy_id, int , -1)
 
   CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
 
@@ -121,9 +120,7 @@ POINTER_PROPERTY(Model, model)
 
   CUSTOM_CONFIG_ITEM(initial_parasite_info, std::vector<InitialParasiteInfo>())
 
-  CUSTOM_CONFIG_ITEM(importation_parasite_info, std::vector<ImportationParasiteInfo>())
-
-  CUSTOM_CONFIG_ITEM(importation_parasite_periodically_info, std::vector<ImportationParasitePeriodicallyInfo>())
+  CUSTOM_CONFIG_ITEM(preconfig_population_events,std::vector<Event*>());
 
   CUSTOM_CONFIG_ITEM(bitting_level_generator, MultinomialDistributionGenerator())
   CUSTOM_CONFIG_ITEM(moving_level_generator, MultinomialDistributionGenerator())
