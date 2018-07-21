@@ -2,11 +2,11 @@
 #define INFLATEDICM_H
 #include "ITreatmentCoverageModel.h"
 
-class InlatedTCM : public ITreatmentCoverageModel {
+class InflatedTCM : public ITreatmentCoverageModel {
 public:
-  double monthly_inflation_factor;
-  explicit InlatedTCM(const double inflation_factor)
-    :monthly_inflation_factor(inflation_factor) {}
+  double monthly_inflation_rate{0};
+
+  InflatedTCM();
 
   void monthly_update() override;
 };

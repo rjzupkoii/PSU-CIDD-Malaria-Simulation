@@ -4,13 +4,14 @@
 #include "Core/Config/Config.h"
 #include "ImportationEvent.h"
 #include "ImportationPeriodicallyEvent.h"
+#include "ChangeTreatmentCoverageEvent.h"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
-  for (auto i = 0; i < node.size(); i++) {
+  for (std::size_t i = 0; i < node.size(); i++) {
     auto location = node[i]["location"].as<int>();
     if (location < config->number_of_locations()) {
-      for (auto j = 0; j < node[i]["parasite_info"].size(); j++) {
+      for (std::size_t j = 0; j < node[i]["parasite_info"].size(); j++) {
         auto genotype_id = node[i]["parasite_info"][j]["genotype_id"].as<int>();
         auto time = node[i]["parasite_info"][j]["time"].as<int>();
         auto num = node[i]["parasite_info"][j]["number_of_cases"].as<int>();
@@ -26,13 +27,13 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(cons
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
 
-  for (auto i = 0; i < node.size(); i++) {
+  for (std::size_t i = 0; i < node.size(); i++) {
     const auto location = node[i]["location"].as<int>();
     const auto location_from = location == -1 ? 0 : location;
     const auto location_to = location == -1 ? config->number_of_locations() : min(location + 1,config->number_of_locations());
 
     for (auto loc = location_from; loc < location_to; ++loc) {
-      for (auto j = 0; j < node[i]["parasite_info"].size(); j++) {
+      for (std::size_t j = 0; j < node[i]["parasite_info"].size(); j++) {
         //            InitialParasiteInfo ipi;
         //            ipi.location = location;
         const auto genotype_id = node[i]["parasite_info"][j]["genotype_id"].as<int>();
@@ -45,8 +46,19 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasites_periodical
       }
     }
   }
+  return events;
+}
 
 
+
+std::vector<Event*> PopulationEventBuilder::build_change_treatment_coverage_event(const YAML::Node& node, Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {
+    auto* tcm = ITreatmentCoverageModel::build(node[i],config);
+    std::cout << tcm->starting_time << std::endl;
+    auto* e = new ChangeTreatmentCoverageEvent(tcm);
+    events.push_back(e);
+  }  
   return events;
 }
 
@@ -60,7 +72,9 @@ std::vector<Event*> PopulationEventBuilder::Build(const YAML::Node& node, Config
   if (name == "introduce_parasites_periodically") {
     events = build_introduce_parasites_periodically_events(node["info"], config);
   }
-
+  if (name == "change_treatment_coverage") {
+    events = build_change_treatment_coverage_event(node["info"], config);
+  }
 
   return events;
 }

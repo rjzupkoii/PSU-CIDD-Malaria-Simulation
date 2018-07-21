@@ -886,6 +886,8 @@ fraction_mosquitoes_interrupted_feeding: 0.0
 
 inflation_factor: 1.01
 
+#//TODO: change time-> calendar date
+
 events:
   - name: introduce_parasites
     info:
@@ -916,23 +918,19 @@ events:
           start_day: 20
   - name: change_treatment_coverage
     info:
-      type: SteadyTCM
-      day: 1990/2/1
-      p_treatment_for_less_than_5_by_location: [0.600000]
-      p_treatment_for_more_than_5_by_location: [0.500000]
-  - name: change_treatment_coverage
-    info:
-      type: InflatedTCM
-      day: 1990/3/1
-      annual_inflation_rate: 0.01
-      p_treatment_for_less_than_5_by_location: [0.600000]
-      p_treatment_for_more_than_5_by_location: [0.500000]
-  - name: change_treatment_coverage
-    info:
-      type: IncreasingTCM
-      from_day: 1990/6/1
-      to_day: 1990/12/1
-      p_treatment_for_less_than_5_by_location_from: [0.600000]
-      p_treatment_for_more_than_5_by_location_from: [0.500000]
-      p_treatment_for_less_than_5_by_location_to: [0.900000]
-      p_treatment_for_more_than_5_by_location_to: [0.90000]
+      - type: SteadyTCM
+        day: 1990/2/1
+        p_treatment_for_less_than_5_by_location: [0.600000]
+        p_treatment_for_more_than_5_by_location: [0.550000]
+      - type: InflatedTCM
+        day: 1990/3/1
+        annual_inflation_rate: 0.01
+        #p_treatment_for_less_than_5_by_location: [0.700000]
+        #p_treatment_for_more_than_5_by_location: [0.800000]
+      - type: LinearTCM
+        from_day: 1990/6/1
+        to_day: 1990/12/1
+        #p_treatment_for_less_than_5_by_location_from: [0.600000]
+        #p_treatment_for_more_than_5_by_location_from: [0.500000]
+        p_treatment_for_less_than_5_by_location_to: [0.900000]
+        p_treatment_for_more_than_5_by_location_to: [0.90000]

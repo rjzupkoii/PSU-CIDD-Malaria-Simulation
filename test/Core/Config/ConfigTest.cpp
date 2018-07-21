@@ -6,6 +6,7 @@
 #include "Therapies/SCTherapy.h"
 #include "Strategies/IStrategy.h"
 #include "Events/Event.h"
+#include "date/date.h"
 
 TEST_CASE("ConfigTest", "[Core]") {
 
@@ -172,7 +173,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     // REQUIRE(c.initial_parasite_info()[19].prevalence == 0.1);
     // REQUIRE(c.initial_parasite_info()[19].location == 10);
 
-    REQUIRE(c.preconfig_population_events().size() == 5);
+    REQUIRE(c.preconfig_population_events().size() == 8);
     REQUIRE(c.preconfig_population_events()[0]->time ==4000);
     REQUIRE(c.preconfig_population_events()[1]->time ==4000);
     REQUIRE(c.preconfig_population_events()[2]->time ==4000);

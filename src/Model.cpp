@@ -104,6 +104,12 @@ void Model::set_treatment_strategy(const int& strategy_id) {
 
 void Model::set_treatment_coverage(ITreatmentCoverageModel* tcm) {
   if (treatment_coverage_ != tcm) {
+    if (tcm->p_treatment_less_than_5.empty() || tcm->p_treatment_more_than_5.empty()) {
+      //copy current value
+      tcm->p_treatment_less_than_5 = treatment_coverage_->p_treatment_less_than_5;
+      tcm->p_treatment_more_than_5 = treatment_coverage_->p_treatment_more_than_5;
+    }
+
     ObjectHelpers::delete_pointer<ITreatmentCoverageModel>(treatment_coverage_);
   }
   treatment_coverage_ = tcm;
@@ -175,7 +181,7 @@ void Model::initialize() {
   //initialize external population
   //    external_population_->initialize();
 
-   LOG(INFO) << "Schedule for population event";
+  LOG(INFO) << "Schedule for population event";
   for (auto* event : config_->preconfig_population_events()) {
     scheduler_->schedule_population_event(event);
     // LOG(INFO) << scheduler_->population_events_list_[event->time()].size();
