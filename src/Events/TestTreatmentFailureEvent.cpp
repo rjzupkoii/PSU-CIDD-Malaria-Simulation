@@ -34,7 +34,6 @@ void TestTreatmentFailureEvent::schedule_event(Scheduler* scheduler, Person* p, 
     auto* e = new TestTreatmentFailureEvent();
     e->dispatcher = p;
     e->set_clinical_caused_parasite(clinical_caused_parasite);
-    e->executable = true;
     e->time = time;
     e->set_therapyId(t_id);
 

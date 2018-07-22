@@ -83,6 +83,7 @@ void Scheduler::schedule_event(EventPtrVector& time_events, Event* event) {
   else {
     time_events.push_back(event);
     event->scheduler = this;
+    event->executable = true;
   }
 }
 

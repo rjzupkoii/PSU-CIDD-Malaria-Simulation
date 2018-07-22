@@ -24,7 +24,6 @@ void EndClinicalEvent::schedule_event(Scheduler* scheduler, Person* p, ClonalPar
     auto* e = new EndClinicalEvent();
     e->dispatcher = p;
     e->set_clinical_caused_parasite(clinical_caused_parasite);
-    e->executable = true;
     e->time = time;
 
     p->add(e);

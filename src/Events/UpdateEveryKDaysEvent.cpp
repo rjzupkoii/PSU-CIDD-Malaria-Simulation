@@ -21,7 +21,6 @@ void UpdateEveryKDaysEvent::schedule_event(Scheduler* scheduler, Person* p, cons
   if (scheduler != nullptr) {
     auto* e = new UpdateEveryKDaysEvent();
     e->dispatcher = p;
-    e->executable = true;
     e->time = time;
 
     p->add(e);

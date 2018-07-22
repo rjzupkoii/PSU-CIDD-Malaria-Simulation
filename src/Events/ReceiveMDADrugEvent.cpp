@@ -19,7 +19,6 @@ void ReceiveMDADrugEvent::schedule_event(Scheduler* scheduler, Person* p, Therap
     auto* e = new ReceiveMDADrugEvent();
     e->dispatcher = p;
     e->set_received_therapy(therapy);
-    e->executable = true;
     e->time = time;
 
     p->add(e);

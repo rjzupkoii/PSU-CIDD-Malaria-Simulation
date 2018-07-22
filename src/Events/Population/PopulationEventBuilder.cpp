@@ -13,9 +13,11 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(cons
     if (location < config->number_of_locations()) {
       for (std::size_t j = 0; j < node[i]["parasite_info"].size(); j++) {
         auto genotype_id = node[i]["parasite_info"][j]["genotype_id"].as<int>();
-        auto time = node[i]["parasite_info"][j]["time"].as<int>();
         auto num = node[i]["parasite_info"][j]["number_of_cases"].as<int>();
 
+        const auto starting_date = node[i]["parasite_info"][j]["day"].as<date::year_month_day>();
+        auto time = (date::sys_days{ starting_date } -date::sys_days{ config->starting_date() }).count();
+        
         auto* event = new ImportationEvent(location, time, genotype_id, num);
         events.push_back(event);
       }
@@ -39,9 +41,11 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasites_periodical
         const auto genotype_id = node[i]["parasite_info"][j]["genotype_id"].as<int>();
         const auto dur = node[i]["parasite_info"][j]["duration"].as<int>();
         const auto num = node[i]["parasite_info"][j]["number_of_cases"].as<int>();
-        const auto start_day = node[i]["parasite_info"][j]["start_day"].as<int>();
 
-        auto* event = new ImportationPeriodicallyEvent(loc, dur, genotype_id, num, start_day);
+        const auto starting_date = node[i]["parasite_info"][j]["start_day"].as<date::year_month_day>();
+        auto time = (date::sys_days{ starting_date } -date::sys_days{ config->starting_date() }).count();
+        
+        auto* event = new ImportationPeriodicallyEvent(loc, dur, genotype_id, num, time);
         events.push_back(event);
       }
     }
@@ -55,7 +59,7 @@ std::vector<Event*> PopulationEventBuilder::build_change_treatment_coverage_even
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     auto* tcm = ITreatmentCoverageModel::build(node[i],config);
-    std::cout << tcm->starting_time << std::endl;
+    // std::cout << tcm->starting_time << std::endl;
     auto* e = new ChangeTreatmentCoverageEvent(tcm);
     events.push_back(e);
   }  

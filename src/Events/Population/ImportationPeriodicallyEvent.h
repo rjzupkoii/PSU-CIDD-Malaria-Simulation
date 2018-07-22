@@ -13,13 +13,12 @@
 #include "Events/Event.h"
 
 class ImportationPeriodicallyEvent : public Event {
-DISALLOW_COPY_AND_ASSIGN(ImportationPeriodicallyEvent);
+DISALLOW_COPY_AND_ASSIGN(ImportationPeriodicallyEvent)
 OBJECTPOOL(ImportationPeriodicallyEvent)
-VIRTUAL_PROPERTY_REF(int, location);
-VIRTUAL_PROPERTY_REF(int, duration);
-VIRTUAL_PROPERTY_REF(int, genotype_id);
-VIRTUAL_PROPERTY_REF(int, number_of_cases);
-VIRTUAL_PROPERTY_REF(int, start_day);
+VIRTUAL_PROPERTY_REF(int, location)
+VIRTUAL_PROPERTY_REF(int, duration)
+VIRTUAL_PROPERTY_REF(int, genotype_id)
+VIRTUAL_PROPERTY_REF(int, number_of_cases)
 
 public:
   ImportationPeriodicallyEvent(const int& location = -1, const int& duration = -1, const int& genotype_id = -1,

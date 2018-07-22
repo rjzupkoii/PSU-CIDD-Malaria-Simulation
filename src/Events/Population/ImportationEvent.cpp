@@ -9,38 +9,29 @@
 #include "Model.h"
 #include "Population.h"
 #include "ImmuneSystem.h"
-#include "ClonalParasitePopulation.h"
 #include "Core/Config/Config.h"
-#include "PersonIndexAll.h"
 #include "Core/Random.h"
-#include "MDC/ModelDataCollector.h"
 #include "PersonIndexByLocationStateAgeClass.h"
 
 OBJECTPOOL_IMPL(ImportationEvent)
 
 ImportationEvent::
 ImportationEvent(const int& location, const int& execute_at, const int& genotype_id, const int& number_of_cases) : location_(location),
-                                                                                                                   execute_at_(execute_at),
                                                                                                                    genotype_id_(
                                                                                                                      genotype_id),
                                                                                                                    number_of_cases_(
                                                                                                                      number_of_cases) {
-  // TODO: remove execute_at field
   time = execute_at;
 }
 
-ImportationEvent::~ImportationEvent() {}
+ImportationEvent::~ImportationEvent() = default;
 
 void ImportationEvent::schedule_event(Scheduler* scheduler, const int& location, const int& execute_at, const int& genotype_id,
                                       const int& number_of_cases) {
   if (scheduler != nullptr) {
-    ImportationEvent* e = new ImportationEvent(location, execute_at, genotype_id, number_of_cases);
-    //        e->dispatcher = p;
+    auto* e = new ImportationEvent(location, execute_at, genotype_id, number_of_cases);
     e->dispatcher = nullptr;
-    e->executable = true;
     e->time = execute_at;
-
-    //        p->add(e);
     scheduler->schedule_population_event(e);
 
   }
@@ -48,10 +39,9 @@ void ImportationEvent::schedule_event(Scheduler* scheduler, const int& location,
 
 void ImportationEvent::execute() {
   const auto number_of_importation_cases = Model::RANDOM->random_poisson(number_of_cases_);
-  //    std::cout << number_of_cases_ << std::endl;
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
-  for (int i = 0; i < number_of_importation_cases; i++) {
+  for (auto i = 0; i < number_of_importation_cases; i++) {
 
     const int ind_ac = Model::RANDOM->random_uniform(pi->vPerson()[0][0].size());
     if (pi->vPerson()[0][0][ind_ac].empty()) {

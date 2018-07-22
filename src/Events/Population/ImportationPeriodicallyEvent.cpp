@@ -23,8 +23,7 @@ ImportationPeriodicallyEvent::ImportationPeriodicallyEvent(const int& location, 
                                                                                                                duration_(duration),
                                                                                                                genotype_id_(genotype_id),
                                                                                                                number_of_cases_(
-                                                                                                                 number_of_cases),
-                                                                                                               start_day_(start_day) {
+                                                                                                                 number_of_cases) {
   //TODO: remove start_day_
   time = start_day;
 }
@@ -36,7 +35,6 @@ void ImportationPeriodicallyEvent::schedule_event(Scheduler* scheduler, const in
   if (scheduler != nullptr) {
     auto* e = new ImportationPeriodicallyEvent(location, duration, genotype_id, number_of_cases, start_day);
     e->dispatcher = nullptr;
-    e->executable = true;
     e->time = start_day;
     scheduler->schedule_population_event(e);
   }
@@ -44,6 +42,7 @@ void ImportationPeriodicallyEvent::schedule_event(Scheduler* scheduler, const in
 }
 
 void ImportationPeriodicallyEvent::execute() {
+  // std::cout << date::year_month_day{ Model::SCHEDULER->calendar_date } << ":import periodically event" << std::endl;
   //schedule importation for the next day
   schedule_event(Model::SCHEDULER, location_, duration_, genotype_id_, number_of_cases_, Model::SCHEDULER->current_time() + 1);
 
@@ -54,7 +53,8 @@ void ImportationPeriodicallyEvent::execute() {
 
   //    std::cout << number_of_cases_ << std::endl;
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
-  VLOG_IF(number_of_importation_cases>0, 2) << "Day: " <<  Model::SCHEDULER->current_time() << " - Importing " << number_of_importation_cases << " at location " << location_
+  VLOG_IF(number_of_importation_cases>0, 2) << "Day: " << Model::SCHEDULER->current_time() << " - Importing " << number_of_importation_cases
+ << " at location " << location_
     << " with genotype " << genotype_id_;
   for (auto i = 0; i < number_of_importation_cases; i++) {
 

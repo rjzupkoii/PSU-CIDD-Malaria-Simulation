@@ -24,7 +24,6 @@ void MatureGametocyteEvent::schedule_event(Scheduler* scheduler, Person* p, Clon
     auto* e = new MatureGametocyteEvent();
     e->dispatcher = p;
     e->set_blood_parasite(blood_parasite);
-    e->executable = true;
     e->time = time;
 
     p->add(e);

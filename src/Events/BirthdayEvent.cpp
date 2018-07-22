@@ -33,7 +33,6 @@ void BirthdayEvent::schedule_event(Scheduler* scheduler, Person* p, const int& t
   if (scheduler != nullptr) {
     auto* birthday_event = new BirthdayEvent();
     birthday_event->dispatcher = p;
-    birthday_event->executable = true;
     birthday_event->time = time;
 
     p->add(birthday_event);    

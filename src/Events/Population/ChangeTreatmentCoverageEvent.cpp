@@ -7,7 +7,6 @@
 ChangeTreatmentCoverageEvent::ChangeTreatmentCoverageEvent(ITreatmentCoverageModel* tcm) {
   time = tcm->starting_time;
   treatment_coverage_model = tcm;
-  executable = true;
 }
 
 ChangeTreatmentCoverageEvent::~ChangeTreatmentCoverageEvent() {
@@ -20,7 +19,6 @@ void ChangeTreatmentCoverageEvent::execute() {
   if (auto* linear_tcm = dynamic_cast<LinearTCM*>(treatment_coverage_model)) {
     linear_tcm->update_rate_of_change();
   }
-  std::cout << scheduler->current_time() << "-" << treatment_coverage_model->p_treatment_more_than_5[0] << std::endl;
   treatment_coverage_model = nullptr;
   executable = false;
 }

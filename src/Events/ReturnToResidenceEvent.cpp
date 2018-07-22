@@ -13,28 +13,22 @@
 
 OBJECTPOOL_IMPL(ReturnToResidenceEvent)
 
-ReturnToResidenceEvent::ReturnToResidenceEvent() {
-}
+ReturnToResidenceEvent::ReturnToResidenceEvent() = default;
 
-ReturnToResidenceEvent::~ReturnToResidenceEvent() {
-}
+ReturnToResidenceEvent::~ReturnToResidenceEvent() = default;
 
 void ReturnToResidenceEvent::schedule_event(Scheduler* scheduler, Person* p, const int& time) {
     if (scheduler != nullptr) {
-        ReturnToResidenceEvent* e = new ReturnToResidenceEvent();
+        auto* e = new ReturnToResidenceEvent();
         e->dispatcher = p;
-
-        e->executable = true;
-        e->time = time;
-
-        
+        e->time = time;        
         p->add(e);
         scheduler->schedule_individual_event(e);
     }
 }
 
 void ReturnToResidenceEvent::execute() {
-    Person* person = (Person*) dispatcher;
+    auto* person = dynamic_cast<Person*>(dispatcher);
     person->set_location(person->residence_location());
 
 }

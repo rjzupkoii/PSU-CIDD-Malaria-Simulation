@@ -24,14 +24,12 @@ void SwitchImmuneComponentEvent::execute() {
   auto* p = dynamic_cast<Person*>(dispatcher);
   p->immune_system()->set_immune_component(new NonInfantImmuneComponent());
 
-
 }
 
 void SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Scheduler* scheduler, Person* p, const int& time) {
   if (scheduler != nullptr) {
     auto* e = new SwitchImmuneComponentEvent();
     e->dispatcher = p;
-    e->executable = true;
     e->time = time;
 
     p->add(e);

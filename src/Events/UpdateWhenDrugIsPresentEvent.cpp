@@ -28,7 +28,6 @@ void UpdateWhenDrugIsPresentEvent::schedule_event(Scheduler* scheduler, Person* 
     auto* e = new UpdateWhenDrugIsPresentEvent();
     e->dispatcher = p;
     e->set_clinical_caused_parasite(clinical_caused_parasite);
-    e->executable = true;
     e->time = time;
 
     p->add(e);

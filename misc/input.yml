@@ -888,18 +888,18 @@ events:
     info:
     - location: 0
       parasite_info:
-        - time: 4000
+        - day: 1990/3/20
           genotype_id: 1
           number_of_cases: 5
-        - time: 4000
+        - day: 1990/4/15
           genotype_id: 2
           number_of_cases: 5
     - location: 1
       parasite_info:
-        - time: 4000
+        - day: 1990/8/25
           genotype_id: 4
           number_of_cases: 5
-        - time: 4000
+        - day: 1990/10/20
           genotype_id: 8
           number_of_cases: 5 
   - name: introduce_parasites_periodically
@@ -910,22 +910,22 @@ events:
           # genotype_id -1: fix allele 580Y and x of the last loci, other alleles will be drawed randomly
           genotype_id: -1
           number_of_cases: 1
-          start_day: 20
+          start_day: 1990/6/2
   - name: change_treatment_coverage
     info:
       - type: SteadyTCM
         day: 1990/2/1
         p_treatment_for_less_than_5_by_location: [0.600000]
-        p_treatment_for_more_than_5_by_location: [0.500000]
+        p_treatment_for_more_than_5_by_location: [0.550000]
       - type: InflatedTCM
         day: 1990/3/1
         annual_inflation_rate: 0.01
-        #p_treatment_for_less_than_5_by_location: [0.600000]
-        #p_treatment_for_more_than_5_by_location: [0.500000]
+        #p_treatment_for_less_than_5_by_location: [0.700000]
+        #p_treatment_for_more_than_5_by_location: [0.800000]
       - type: LinearTCM
         from_day: 1990/6/1
         to_day: 1990/12/1
-        p_treatment_for_less_than_5_by_location_from: [0.600000]
-        p_treatment_for_more_than_5_by_location_from: [0.500000]
+        #p_treatment_for_less_than_5_by_location_from: [0.600000]
+        #p_treatment_for_more_than_5_by_location_from: [0.500000]
         p_treatment_for_less_than_5_by_location_to: [0.900000]
         p_treatment_for_more_than_5_by_location_to: [0.90000]

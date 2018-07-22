@@ -9,7 +9,6 @@ void LinearTCM::monthly_update() {
       p_treatment_more_than_5[loc] += rate_of_change_over_5[loc];
     }
   }
-  std::cout << p_treatment_more_than_5[0] << std::endl;
 }
 
 void LinearTCM::update_rate_of_change() {

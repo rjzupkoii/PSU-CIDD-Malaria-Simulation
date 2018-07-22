@@ -1,5 +1,5 @@
 TODO:
-  - Test imporation and periodically events
+  - Change Strategy Event
 	- Test if Strategies still functioning?
   - New Indexer
   - bring back object pool

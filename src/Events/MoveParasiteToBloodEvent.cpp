@@ -27,7 +27,6 @@ void MoveParasiteToBloodEvent::schedule_event(Scheduler* scheduler, Person* p, G
     auto* e = new MoveParasiteToBloodEvent();
     e->dispatcher = p;
     e->set_infection_type(infection_type);
-    e->executable = true;
     e->time = time;
 
     p->add(e);

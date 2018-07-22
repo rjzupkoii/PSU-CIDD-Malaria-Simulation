@@ -27,7 +27,6 @@ void MoveToExternalPopulationEvent::schedule_event(Scheduler *scheduler, Person 
     MoveToExternalPopulationEvent *e = new MoveToExternalPopulationEvent();
     e->dispatcher = p;
 
-    e->executable = true;
     e->time = time;
 
 

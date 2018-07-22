@@ -22,8 +22,7 @@ public:
   Dispatcher* dispatcher{nullptr};
   bool executable{false};
   int time{-1};
-
-
+  
   Event();
   //    Event(const Event& orig);
   virtual ~Event();

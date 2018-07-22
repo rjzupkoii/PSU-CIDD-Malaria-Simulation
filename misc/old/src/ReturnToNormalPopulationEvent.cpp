@@ -22,7 +22,6 @@ void ReturnToNormalPopulationEvent::schedule_event(Scheduler* scheduler, Person*
         ReturnToNormalPopulationEvent* e = new ReturnToNormalPopulationEvent();
         e->dispatcher = p;
 
-        e->executable = true;
         e->time = time;
 
         p->add(e);

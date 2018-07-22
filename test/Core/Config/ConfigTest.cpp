@@ -174,11 +174,11 @@ TEST_CASE("ConfigTest", "[Core]") {
     // REQUIRE(c.initial_parasite_info()[19].location == 10);
 
     REQUIRE(c.preconfig_population_events().size() == 8);
-    REQUIRE(c.preconfig_population_events()[0]->time ==4000);
-    REQUIRE(c.preconfig_population_events()[1]->time ==4000);
-    REQUIRE(c.preconfig_population_events()[2]->time ==4000);
-    REQUIRE(c.preconfig_population_events()[3]->time ==4000);
-    REQUIRE(c.preconfig_population_events()[4]->time == 20);
+    REQUIRE(c.preconfig_population_events()[0]->time ==78);
+    REQUIRE(c.preconfig_population_events()[1]->time ==104);
+    REQUIRE(c.preconfig_population_events()[2]->time ==236);
+    REQUIRE(c.preconfig_population_events()[3]->time ==292);
+    REQUIRE(c.preconfig_population_events()[4]->time == 152);
 
 
     REQUIRE(c.bitting_level_generator().level_density.size()==100);
