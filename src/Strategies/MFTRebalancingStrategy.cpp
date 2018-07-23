@@ -18,13 +18,13 @@
 #include "Therapies/Therapy.h"
 #include <string>
 
-MFTRebalancingStrategy::MFTRebalancingStrategy() : next_update_time_(-1), latest_adjust_distribution_time_(-1) {}
-
-MFTRebalancingStrategy::~MFTRebalancingStrategy() {}
-
-IStrategy::StrategyType MFTRebalancingStrategy::get_type() const {
-  return IStrategy::MFTRebalancing;
+MFTRebalancingStrategy::MFTRebalancingStrategy() {
+  name = "MFTRebalancingStrategy";
+  type = MFTRebalancing;
 }
+
+MFTRebalancingStrategy::~MFTRebalancingStrategy() = default;
+
 
 std::string MFTRebalancingStrategy::to_string() const {
   std::stringstream sstm;
@@ -39,41 +39,45 @@ std::string MFTRebalancingStrategy::to_string() const {
   //        sstm << distribution()[i] << ",";
   //    }
   //    sstm << distribution()[therapy_list().size() - 1] << "-" << update_distribution_duration_;
-  sstm << MFTStrategy::to_string() << "-" << update_duration_after_rebalancing_;
+  sstm << MFTStrategy::to_string() << "-" << update_duration_after_rebalancing;
   return sstm.str();
 }
 
 void MFTRebalancingStrategy::update_end_of_time_step() {
 
-  if (Model::SCHEDULER->current_time() == latest_adjust_distribution_time_) {
+  if (Model::SCHEDULER->current_time() == latest_adjust_distribution_time) {
     // actual trigger adjust distribution
-    for (auto i = 0; i < distribution().size(); i++) {
-      distribution()[i] = next_distribution_[i];
+    for (auto i = 0; i < distribution.size(); i++) {
+      distribution[i] = next_distribution[i];
     }
     // TODO: update_duration_after_rebalancing_ should be match with calendar day
-    next_update_time_ = Model::SCHEDULER->current_time() + update_duration_after_rebalancing_;
+    next_update_time = Model::SCHEDULER->current_time() + update_duration_after_rebalancing;
     //            std::cout << to_string() << std::endl;
   }
   else {
-    if (Model::SCHEDULER->current_time() == next_update_time_) {
+    if (Model::SCHEDULER->current_time() == next_update_time) {
       double sum = 0;
-      for (auto i = 0; i < distribution().size(); i++) {
+      for (auto i = 0; i < distribution.size(); i++) {
         //            std::cout << Model::DATA_COLLECTOR->current_TF_by_therapy()[therapy_list()[i]->id()] << "-";
-        if (Model::DATA_COLLECTOR->current_tf_by_therapy()[therapy_list()[i]->id()] < 0.05) {
-          next_distribution_[i] = 1.0 / 0.05;
+        if (Model::DATA_COLLECTOR->current_tf_by_therapy()[therapy_list[i]->id()] < 0.05) {
+          next_distribution[i] = 1.0 / 0.05;
         }
         else {
-          next_distribution_[i] = 1.0 / Model::DATA_COLLECTOR->current_tf_by_therapy()[therapy_list()[i]->id()];
+          next_distribution[i] = 1.0 / Model::DATA_COLLECTOR->current_tf_by_therapy()[therapy_list[i]->id()];
         }
-        sum += next_distribution_[i];
+        sum += next_distribution[i];
       }
 
-      for (auto i = 0; i < distribution().size(); i++) {
-        next_distribution_[i] = next_distribution_[i] / sum;
+      for (auto i = 0; i < distribution.size(); i++) {
+        next_distribution[i] = next_distribution[i] / sum;
       }
-
-      latest_adjust_distribution_time_ = Model::SCHEDULER->current_time() + delay_until_actual_trigger_;
+      latest_adjust_distribution_time = Model::SCHEDULER->current_time() + delay_until_actual_trigger;
     }
   }
 
+}
+
+void MFTRebalancingStrategy::adjust_started_time_point(const int& current_time) {
+  next_update_time = (-1);
+  latest_adjust_distribution_time = current_time;
 }

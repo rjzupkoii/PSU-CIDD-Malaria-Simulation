@@ -17,22 +17,21 @@
 #include "ACTIncreaseStrategy.h"
 
 class TACTSwitchingTStrategy : public ACTIncreaseStrategy {
-    DISALLOW_COPY_AND_ASSIGN(TACTSwitchingTStrategy)
-    VIRTUAL_PROPERTY_REF(int, TACT_switching_day)
-    VIRTUAL_PROPERTY_REF(int, TACT_id)
+DISALLOW_COPY_AND_ASSIGN(TACTSwitchingTStrategy)
+DISALLOW_MOVE(TACTSwitchingTStrategy)
+
 public:
-    TACTSwitchingTStrategy();
-    //    TACTSwitchingTStrategy(const TACTSwitchingTStrategy& orig);
-    virtual ~TACTSwitchingTStrategy();
+  int TACT_switching_day{0};
+  int TACT_id{0};
 
-    virtual std::string to_string() const;
-    virtual void update_end_of_time_step();
+  TACTSwitchingTStrategy();
+  //    TACTSwitchingTStrategy(const TACTSwitchingTStrategy& orig);
+  virtual ~TACTSwitchingTStrategy();
 
-
-
-private:
+  void update_end_of_time_step() override;
+  
+  std::string to_string() const override;
 
 };
 
 #endif /* TACTSTRATEGY_H */
-

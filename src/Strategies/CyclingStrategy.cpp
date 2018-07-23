@@ -13,51 +13,51 @@
 #include "IStrategy.h"
 #include "Therapies/Therapy.h"
 
-CyclingStrategy::CyclingStrategy() : index_(0), cycling_time_(0) {
-}
+CyclingStrategy::CyclingStrategy() : IStrategy("CyclingStrategy", Cycling) {}
 
+CyclingStrategy::~CyclingStrategy() = default;
 
-CyclingStrategy::~CyclingStrategy() {
-}
-
-void CyclingStrategy::add_therapy(Therapy *therapy) {
-  therapy_list_.push_back(therapy);
+void CyclingStrategy::add_therapy(Therapy* therapy) {
+  therapy_list.push_back(therapy);
 }
 
 void CyclingStrategy::switch_therapy() {
   //    std::cout << "Switch from: " << index_ << "\t - to: " << index_ + 1;
-  index_++;
-  index_ %= therapy_list().size();
+  index++;
+  index %= therapy_list.size();
   Model::DATA_COLLECTOR->update_UTL_vector();
 
   // TODO: cycling_time should be match with calendar day
-  next_switching_day_ = Model::SCHEDULER->current_time() + cycling_time_;
+  next_switching_day = Model::SCHEDULER->current_time() + cycling_time;
 }
 
-Therapy *CyclingStrategy::get_therapy(Person *person) {
+Therapy* CyclingStrategy::get_therapy(Person* person) {
 
   //int index = ((Global::scheduler->currentTime - Global::startTreatmentDay) / circleTime) % therapyList.size();
   //    std::cout << therapy_list()[index_]->id() << std::endl;
-  return therapy_list()[index_];
+  return therapy_list[index];
 }
 
 std::string CyclingStrategy::to_string() const {
   std::stringstream sstm;
-  sstm << IStrategy::id << "-" << IStrategy::name << "-";
-  for (int i = 0; i < therapy_list_.size() - 1; i++) {
-    sstm << therapy_list_[i]->id() << ",";
+  sstm << id << "-" << name << "-";
+  std::string sep;
+  for(auto* therapy : therapy_list) {
+    sstm << sep << therapy->id();
+    sep = ",";
   }
-  sstm << therapy_list_[therapy_list_.size() - 1]->id();
   return sstm.str();
 }
 
-IStrategy::StrategyType CyclingStrategy::get_type() const {
-  return IStrategy::Cycling;
+void CyclingStrategy::update_end_of_time_step() {
+  if (Model::SCHEDULER->current_time() == next_switching_day) {
+    switch_therapy();
+    //            std::cout << to_string() << std::endl;
+  }
 }
 
-void CyclingStrategy::update_end_of_time_step() {
-    if (Model::SCHEDULER->current_time() == next_switching_day_) {
-      switch_therapy();
-      //            std::cout << to_string() << std::endl;
-    }
+void CyclingStrategy::adjust_started_time_point(const int& current_time) {
+  next_switching_day = Model::SCHEDULER->current_time() + cycling_time;
 }
+
+void CyclingStrategy::monthly_update() { }

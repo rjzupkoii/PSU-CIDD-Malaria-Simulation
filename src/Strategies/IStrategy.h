@@ -14,59 +14,69 @@
 #ifndef ISTRATEGY_H
 #define ISTRATEGY_H
 #include <string>
+#include <utility>
 #include <vector>
 #include "Core/PropertyMacro.h"
 #include <map>
+#include "Core/Config/IConfigItem.h"
 
 class Therapy;
 class Person;
+
 class IStrategy {
 public:
 
-    enum StrategyType {
-        SFT = 0,
-        Cycling = 1,
-        MFT = 2,
-        AdaptiveCycling = 3,
-        ACTIncreaseOvertime = 4,
-        NovelNonACTSwitching = 5,
-        TACTSwitching = 6,
-        MFTRebalancing = 7,
-        NestedSwitching = 8,
-        MFTDifferentDistributionByLocation = 9,
-        NestedSwitchingDifferentDistributionByLocation = 10
-    };
-    static std::map<std::string, StrategyType> StrategyTypeMap;
+  enum StrategyType {
+    SFT = 0,
+    Cycling = 1,
+    MFT = 2,
+    AdaptiveCycling = 3,
+    ACTIncreaseOvertime = 4,
+    NovelNonACTSwitching = 5,
+    TACTSwitching = 6,
+    MFTRebalancing = 7,
+    NestedSwitching = 8,
+    MFTDifferentDistributionByLocation = 9,
+    NestedSwitchingDifferentDistributionByLocation = 10
+  };
 
-    DISALLOW_COPY_AND_ASSIGN(IStrategy)
-public:
-    int id;
-    std::string name;
+  static std::map<std::string, StrategyType> StrategyTypeMap;
+
+DISALLOW_COPY_AND_ASSIGN(IStrategy)
 
 public:
+  int id{-1};
+  std::string name;
+  StrategyType type;
+public:
 
-    IStrategy() {
-    }
+  IStrategy(std::string name, const StrategyType& type): name{std::move(name)}, type{type}{}
 
-    virtual ~IStrategy() {
-    }
+  virtual ~IStrategy() = default;
 
-    virtual void add_therapy(Therapy* therapy) = 0;
+  virtual bool is_strategy(const std::string& s_name) {
+    return name == s_name;
+  }
+  virtual StrategyType get_type() const {
+    return type;
+  };
 
-    virtual Therapy *get_therapy(Person *person) = 0;
+  virtual void add_therapy(Therapy* therapy) = 0;
 
-    virtual std::string to_string() const = 0;
+  virtual Therapy* get_therapy(Person* person) = 0;
 
-    virtual StrategyType get_type() const = 0;
+  virtual std::string to_string() const = 0;
 
-    /**
-     * This function will be executed at end of time step, to check and switch therapy if needed
-     */
-    virtual void update_end_of_time_step() = 0;
+  virtual void adjust_started_time_point(const int& current_time) = 0;
+
+  /**
+   * This function will be executed at end of time step, to check and switch therapy if needed
+   */
+  virtual void update_end_of_time_step() = 0;
+
+  virtual void monthly_update() = 0;
 
 };
 
 
-
 #endif /* ISTRATEGY_H */
-

@@ -20,32 +20,30 @@
 #include <sstream>
 
 // TODO: check if it match with calendar day
+// TODO: consider remove this class with an event
 
 
 NovelNonACTSwitchingStrategy::NovelNonACTSwitchingStrategy() {
+  name = "NovelNonACTSwitchingStrategy";
+  type = NovelNonACTSwitching;
 }
 
-NovelNonACTSwitchingStrategy::~NovelNonACTSwitchingStrategy() {
-}
-
-IStrategy::StrategyType NovelNonACTSwitchingStrategy::get_type() const {
-  return IStrategy::NovelNonACTSwitching;
-}
+NovelNonACTSwitchingStrategy::~NovelNonACTSwitchingStrategy() = default;
 
 
 std::string NovelNonACTSwitchingStrategy::to_string() const {
   std::stringstream sstm;
   sstm << MFTStrategy::to_string() << "-";
-  sstm << non_artemisinin_switching_day_ << "-" << non_art_therapy_id_ << "-" << fraction_non_art_replacement_;
+  sstm << non_artemisinin_switching_day << "-" << non_art_therapy_id << "-" << fraction_non_art_replacement;
 
   return sstm.str();
 }
 
 void NovelNonACTSwitchingStrategy::update_end_of_time_step() {
-  if (Model::SCHEDULER->current_time() == non_artemisinin_switching_day_) {
+  if (Model::SCHEDULER->current_time() == non_artemisinin_switching_day) {
 //        std::cout << to_string() << std::endl;
 
-    if (fraction_non_art_replacement_ > 0.0) {
+    if (fraction_non_art_replacement > 0.0) {
       //collect the current TF
       //TODO: multiple location
       Model::DATA_COLLECTOR->tf_at_15() = Model::DATA_COLLECTOR->current_TF_by_location()[0];
@@ -65,15 +63,15 @@ void NovelNonACTSwitchingStrategy::update_end_of_time_step() {
 
 
       //switch therapy 2 to therapy 3
-      const int number_of_therapies = therapy_list().size();
+      const int number_of_therapies = therapy_list.size();
 
       //switch the first therapy in the list
-      therapy_list()[0] = Model::CONFIG->therapy_db()[non_art_therapy_id_];
+      therapy_list[0] = Model::CONFIG->therapy_db()[non_art_therapy_id];
       //change the distribution
-      distribution()[0] = fraction_non_art_replacement_;
+      distribution[0] = fraction_non_art_replacement;
 
-      for (int i = 1; i < number_of_therapies; i++) {
-        distribution()[i] = (1 - fraction_non_art_replacement_) / static_cast<double>(number_of_therapies - 1);
+      for (auto i = 1; i < number_of_therapies; i++) {
+        distribution[i] = (1 - fraction_non_art_replacement) / static_cast<double>(number_of_therapies - 1);
       }
 
 //            std::cout << to_string() << std::endl;

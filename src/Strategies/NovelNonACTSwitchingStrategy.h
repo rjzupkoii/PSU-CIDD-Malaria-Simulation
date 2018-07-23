@@ -17,24 +17,21 @@
 #include "MFTStrategy.h"
 
 class NovelNonACTSwitchingStrategy : public MFTStrategy {
-    DISALLOW_COPY_AND_ASSIGN(NovelNonACTSwitchingStrategy)
-    VIRTUAL_PROPERTY_REF(int, non_artemisinin_switching_day)
-    VIRTUAL_PROPERTY_REF(int, non_art_therapy_id)
-    VIRTUAL_PROPERTY_REF(double, fraction_non_art_replacement)
+DISALLOW_COPY_AND_ASSIGN(NovelNonACTSwitchingStrategy)
+DISALLOW_MOVE(NovelNonACTSwitchingStrategy)
+
+  int non_artemisinin_switching_day{0};
+  int non_art_therapy_id{0};
+  double fraction_non_art_replacement{0};
 public:
-    NovelNonACTSwitchingStrategy();
-    //    NovelNonACTSwitchingStrategy(const NovelNonACTSwitchingStrategy& orig);
-    virtual ~NovelNonACTSwitchingStrategy();
+  NovelNonACTSwitchingStrategy();
+  //    NovelNonACTSwitchingStrategy(const NovelNonACTSwitchingStrategy& orig);
+  virtual ~NovelNonACTSwitchingStrategy();
 
-    virtual IStrategy::StrategyType get_type() const;
+  void update_end_of_time_step() override;
 
-    virtual std::string to_string() const;
-
-    virtual void update_end_of_time_step();
-
-private:
+  std::string to_string() const override;
 
 };
 
 #endif /* NOVELNONACTSWITCHINGSTRATEGY_H */
-

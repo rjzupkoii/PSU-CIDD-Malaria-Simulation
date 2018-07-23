@@ -20,41 +20,43 @@
 class Config;
 
 class NestedSwitchingStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN(NestedSwitchingStrategy)
-    VIRTUAL_PROPERTY_REF(std::vector<IStrategy*>, strategy_list)
-    VIRTUAL_PROPERTY_REF(std::vector<double>, distribution)
-    VIRTUAL_PROPERTY_REF(std::vector<double>, start_distribution)
-    VIRTUAL_PROPERTY_REF(std::vector<double>, end_distribution)
+DISALLOW_COPY_AND_ASSIGN(NestedSwitchingStrategy)
+DISALLOW_MOVE(NestedSwitchingStrategy)
 
-    VIRTUAL_PROPERTY_REF(int, strategy_switching_day)
-    VIRTUAL_PROPERTY_REF(int, switch_to_strategy_id)
 public:
-    NestedSwitchingStrategy();
-    //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
-    virtual ~NestedSwitchingStrategy();
+  std::vector<IStrategy*> strategy_list;
+  std::vector<double> distribution;
+  std::vector<double> start_distribution;
+  std::vector<double> end_distribution;
 
-    virtual void add_strategy(IStrategy* strategy);
+  int strategy_switching_day;
+  int switch_to_strategy_id;
 
-    virtual void add_therapy(Therapy* therapy);
+  NestedSwitchingStrategy();
+  //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
+  virtual ~NestedSwitchingStrategy();
 
-    virtual Therapy *get_therapy(Person *person);
+  virtual void add_strategy(IStrategy* strategy);
 
-    virtual std::string to_string() const;
+  void add_therapy(Therapy* therapy) override;
 
-    virtual StrategyType get_type() const;
+  Therapy* get_therapy(Person* person) override;
 
-    /**
-     * This function will be executed at end of time step, to check and switch therapy if needed
-     */
-    virtual void update_end_of_time_step();
+  std::string to_string() const override;
 
-    void adjustDisttribution(int time, int totaltime);
-    
-    void initialize_update_time(Config* config);
+  StrategyType get_type() const override;
 
+  /**
+   * This function will be executed at end of time step, to check and switch therapy if needed
+   */
+  void update_end_of_time_step() override;
+
+  void adjustDisttribution(int time, int totaltime);
+  
+  void adjust_started_time_point(const int& current_time) override;
+  void monthly_update() override;
 private:
 
 };
 
 #endif /* NESTEDSWITCHINGSTRATEGY_H */
-

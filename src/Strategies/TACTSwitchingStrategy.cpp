@@ -19,26 +19,26 @@
 // TODO: check if it match with calendar day
 
 TACTSwitchingTStrategy::TACTSwitchingTStrategy() {
+  name = "";
+  type = TACTSwitching;
 }
 
-TACTSwitchingTStrategy::~TACTSwitchingTStrategy() {
-}
+TACTSwitchingTStrategy::~TACTSwitchingTStrategy() {}
 
 std::string TACTSwitchingTStrategy::to_string() const {
   std::stringstream sstm;
   sstm << ACTIncreaseStrategy::to_string() << "-";
-  sstm << TACT_switching_day_ << "-" << TACT_id_;
+  sstm << TACT_switching_day << "-" << TACT_id;
 
   return sstm.str();
 }
 
 void TACTSwitchingTStrategy::update_end_of_time_step() {
-  if (Model::SCHEDULER->current_time() == TACT_switching_day_) {
+  if (Model::SCHEDULER->current_time() == TACT_switching_day) {
     //        std::cout << to_string() << std::endl;
     //by defaults, tact will simply replace the first therapy in the MFT strategy
-    therapy_list()[0] = Model::CONFIG->therapy_db()[TACT_id_];
+    therapy_list[0] = Model::CONFIG->therapy_db()[TACT_id];
     //        std::cout << to_string() << std::endl;
 
   }
 }
-

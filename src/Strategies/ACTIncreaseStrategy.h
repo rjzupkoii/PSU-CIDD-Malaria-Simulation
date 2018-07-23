@@ -21,32 +21,28 @@
 class Random;
 
 class ACTIncreaseStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN(ACTIncreaseStrategy)
-    VIRTUAL_PROPERTY_REF(std::vector<Therapy*>, therapy_list)
-    VIRTUAL_PROPERTY_REF(std::vector<double>, distribution)
-    VIRTUAL_PROPERTY_REF(std::vector<double>, start_distribution)
-    VIRTUAL_PROPERTY_REF(std::vector<double>, end_distribution)
-    POINTER_PROPERTY(Random, random)
+DISALLOW_COPY_AND_ASSIGN(ACTIncreaseStrategy)
+
 public:
-    ACTIncreaseStrategy();
-    //    MFTStrategy(const MFTStrategy& orig);
-    virtual ~ACTIncreaseStrategy();
 
-    virtual void add_therapy(Therapy* therapy);
+  std::vector<Therapy*> therapy_list;
+  std::vector<double> distribution;
+  std::vector<double> start_distribution;
+  std::vector<double> end_distribution;
+  ACTIncreaseStrategy();
+  //    MFTStrategy(const MFTStrategy& orig);
+  virtual ~ACTIncreaseStrategy();
+  void add_therapy(Therapy* therapy) override;
+  Therapy* get_therapy(Person* person) override;
+  void update_end_of_time_step() override;
 
-    virtual Therapy *get_therapy(Person *person);
+  void adjust_disttribution(const int time, const int totaltime);
 
-    virtual std::string to_string() const;
-
-    virtual StrategyType get_type() const;
-
-    virtual void update_end_of_time_step();
-
-    void adjustDisttribution(int time, int totaltime);
-
+  std::string to_string() const override;
+  void adjust_started_time_point(const int& current_time) override;
+  void monthly_update() override;
 private:
 
 };
 
 #endif /* ACTINCREASESTRATEGY_H */
-

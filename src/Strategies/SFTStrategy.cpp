@@ -11,38 +11,36 @@
 #include "IStrategy.h"
 #include <sstream>
 
-SFTStrategy::SFTStrategy() {
-}
+SFTStrategy::SFTStrategy():IStrategy("SFTStrategy", SFT) {}
 
-SFTStrategy::~SFTStrategy() {
-}
+SFTStrategy::~SFTStrategy() = default;
 
 std::vector<Therapy*>& SFTStrategy::get_therapy_list() {
-    return therapy_list_;
+  return therapy_list_;
 }
 
 void SFTStrategy::add_therapy(Therapy* therapy) {
-    therapy_list_.push_back(therapy);
+  therapy_list_.push_back(therapy);
 }
 
-bool SFTStrategy::is_strategy(const std::string& sName) {
-    return (IStrategy::name == sName);
-}
-
-Therapy * SFTStrategy::get_therapy(Person *person) {
-    return therapy_list_[0];
+Therapy* SFTStrategy::get_therapy(Person* person) {
+  return therapy_list_[0];
 }
 
 std::string SFTStrategy::to_string() const {
-    std::stringstream sstm;
-    sstm << IStrategy::id << "-" << IStrategy::name << "-" << therapy_list_[0]->id();
-    return sstm.str();
-}
-
-IStrategy::StrategyType SFTStrategy::get_type() const {
-    return IStrategy::SFT;
+  std::stringstream sstm;
+  sstm << id << "-" << name << "-" << therapy_list_[0]->id();
+  return sstm.str();
 }
 
 void SFTStrategy::update_end_of_time_step() {
-    //do nothing here
+  //do nothing here
+}
+
+void SFTStrategy::adjust_started_time_point(const int& current_time) {
+  //do nothing 
+}
+
+void SFTStrategy::monthly_update() {
+  //do nothing
 }

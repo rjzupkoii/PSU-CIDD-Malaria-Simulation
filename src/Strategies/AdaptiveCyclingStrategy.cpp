@@ -9,67 +9,65 @@
 #include "Model.h"
 #include "MDC/ModelDataCollector.h"
 #include "Core/Config/Config.h"
-#include <iostream>
 #include <sstream>
 #include "IStrategy.h"
 #include "Therapies/Therapy.h"
 
-AdaptiveCyclingStrategy::AdaptiveCyclingStrategy() : trigger_value_(0), delay_until_actual_trigger_(0),
-                                                     turn_off_days_(0), latest_switch_time_(0) {
-  set_index(0);
-}
+AdaptiveCyclingStrategy::AdaptiveCyclingStrategy(): IStrategy("AdaptiveCyclingStrategy",AdaptiveCycling) {}
 
 
-AdaptiveCyclingStrategy::~AdaptiveCyclingStrategy() {}
+AdaptiveCyclingStrategy::~AdaptiveCyclingStrategy() = default;
 
-std::vector<Therapy *>& AdaptiveCyclingStrategy::get_therapy_list() {
-  return therapy_list_;
-}
 
 void AdaptiveCyclingStrategy::add_therapy(Therapy* therapy) {
-  therapy_list_.push_back(therapy);
+  therapy_list.push_back(therapy);
 }
 
 void AdaptiveCyclingStrategy::switch_therapy() {
   //    std::cout << "Switch from: " << index_ << "\t - to: " << index_ + 1;
-  index_++;
-  index_ %= therapy_list().size();
+  index++;
+  index %= therapy_list.size();
 
   Model::DATA_COLLECTOR->update_UTL_vector();
 }
 
 Therapy* AdaptiveCyclingStrategy::get_therapy(Person* person) {
-  return therapy_list()[index_];
+  return therapy_list[index];
 }
 
 std::string AdaptiveCyclingStrategy::to_string() const {
   std::stringstream sstm;
-  sstm << IStrategy::id << "-" << IStrategy::name << "-";
-  for (int i = 0; i < therapy_list_.size() - 1; i++) {
-    sstm << therapy_list_[i]->id() << ",";
+  sstm << id << "-" << name << "-";
+  std::string sep;
+  for (auto* therapy : therapy_list) {
+    sstm << sep << therapy->id();
+    sep = ",";
   }
-  sstm << therapy_list_[therapy_list_.size() - 1]->id();
   return sstm.str();
 }
 
-IStrategy::StrategyType AdaptiveCyclingStrategy::get_type() const {
-  return IStrategy::AdaptiveCycling;
-}
 
 void AdaptiveCyclingStrategy::update_end_of_time_step() {
 
-  if (Model::SCHEDULER->current_time() == latest_switch_time_) {
+  if (Model::SCHEDULER->current_time() == latest_switch_time) {
     switch_therapy();
     //            std::cout << to_string() << std::endl;
   }
   else {
-    if (Model::DATA_COLLECTOR->current_tf_by_therapy()[get_therapy(nullptr)->id()] > trigger_value_) {
+    if (Model::DATA_COLLECTOR->current_tf_by_therapy()[get_therapy(nullptr)->id()] > trigger_value) {
       // TODO:: turn_off_days and delay_until_actual_trigger should be match with calendar day
-      if (Model::SCHEDULER->current_time() > latest_switch_time_ + turn_off_days_) {
-        latest_switch_time_ = Model::SCHEDULER->current_time() + delay_until_actual_trigger_;
+      if (Model::SCHEDULER->current_time() > latest_switch_time + turn_off_days) {
+        latest_switch_time = Model::SCHEDULER->current_time() + delay_until_actual_trigger;
         //                    std::cout << "TF: " << Model::DATA_COLLECTOR->current_TF_by_therapy()[get_therapy()->id()] << std::endl;
       }
     }
   }
 
 }
+
+void AdaptiveCyclingStrategy::adjust_started_time_point(const int& current_time) {
+  latest_switch_time = -1;
+  index = 0;
+}
+
+void AdaptiveCyclingStrategy::monthly_update() {}

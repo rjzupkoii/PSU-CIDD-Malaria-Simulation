@@ -11,40 +11,37 @@
 
 class Config;
 
-class NestedSwitchingDifferentDistributionByLocationStrategy  : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN(NestedSwitchingDifferentDistributionByLocationStrategy)
-    VIRTUAL_PROPERTY_REF(std::vector<IStrategy*>, strategy_list)
-    VIRTUAL_PROPERTY_REF(DoubleVector2, distribution)
-    VIRTUAL_PROPERTY_REF(DoubleVector2, start_distribution)
-
-    VIRTUAL_PROPERTY_REF(int, strategy_switching_day)
-    VIRTUAL_PROPERTY_REF(int, switch_to_strategy_id)
-    VIRTUAL_PROPERTY_REF(int, peak_at)
+class NestedSwitchingDifferentDistributionByLocationStrategy : public IStrategy {
+DISALLOW_COPY_AND_ASSIGN(NestedSwitchingDifferentDistributionByLocationStrategy)
+DISALLOW_MOVE(NestedSwitchingDifferentDistributionByLocationStrategy)
 public:
-    NestedSwitchingDifferentDistributionByLocationStrategy();
-    //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
-    virtual ~NestedSwitchingDifferentDistributionByLocationStrategy();
+  std::vector<IStrategy*> strategy_list;
+  DoubleVector2 distribution;
+  DoubleVector2 start_distribution;
+  int strategy_switching_day{0};
+  int switch_to_strategy_id{0};
+  int peak_at{0};
+  NestedSwitchingDifferentDistributionByLocationStrategy();
+  //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
+  virtual ~NestedSwitchingDifferentDistributionByLocationStrategy();
 
-    virtual void add_strategy(IStrategy* strategy);
+  virtual void add_strategy(IStrategy* strategy);
 
-    void add_therapy(Therapy* therapy) override;
+  void add_therapy(Therapy* therapy) override;
 
-    Therapy *get_therapy(Person *person) override;
+  Therapy* get_therapy(Person* person) override;
 
-    std::string to_string() const override;
+  std::string to_string() const override;
 
-    StrategyType get_type() const override;
+  /**
+   * This function will be executed at end of time step, to check and switch therapy if needed
+   */
+  void update_end_of_time_step() override;
 
-    /**
-     * This function will be executed at end of time step, to check and switch therapy if needed
-     */
-    void update_end_of_time_step() override;
+  void adjust_distribution(int time, int peak_at);
 
-    void adjustDistribution(int time, int totaltime);
-
-    void initialize_update_time(Config* config);
-
-private:
+  void adjust_started_time_point(const int& current_time) override;
+  void monthly_update() override;
 
 };
 

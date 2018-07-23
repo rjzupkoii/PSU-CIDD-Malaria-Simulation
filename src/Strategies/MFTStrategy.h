@@ -15,28 +15,27 @@ class Random;
 class Therapy;
 
 class MFTStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN(MFTStrategy)
-    VIRTUAL_PROPERTY_REF(std::vector<Therapy*>, therapy_list)
-    VIRTUAL_PROPERTY_REF(std::vector<double>, distribution)
+DISALLOW_COPY_AND_ASSIGN(MFTStrategy)
+DISALLOW_MOVE(MFTStrategy)
 
 public:
-    MFTStrategy();
-    //    MFTStrategy(const MFTStrategy& orig);
-    virtual ~MFTStrategy();
-    
-    virtual void add_therapy(Therapy* therapy);
+  std::vector<Therapy*> therapy_list;
+  std::vector<double> distribution;
 
-    virtual Therapy *get_therapy(Person *person);
+  MFTStrategy();
+  //    MFTStrategy(const MFTStrategy& orig);
+  virtual ~MFTStrategy();
 
-    virtual std::string to_string() const;
+  void add_therapy(Therapy* therapy) override;
 
-    virtual IStrategy::StrategyType get_type() const;
+  Therapy* get_therapy(Person* person) override;
 
-    virtual void update_end_of_time_step();
+  void update_end_of_time_step() override;
 
-private:
+  std::string to_string() const override;
 
+  void adjust_started_time_point(const int& current_time) override;
+  void monthly_update() override;
 };
 
 #endif /* MFTSTRATEGY_H */
-

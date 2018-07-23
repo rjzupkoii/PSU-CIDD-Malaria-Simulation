@@ -93,13 +93,16 @@ Model::~Model() {
 void Model::set_treatment_strategy(const int& strategy_id) {
   treatment_strategy_ = strategy_id == -1 ? nullptr : config_->strategy_db()[strategy_id];
   TREATMENT_STRATEGY = treatment_strategy_;
-  // TODO::rework here
-  if (treatment_strategy_->get_type() == IStrategy::NestedSwitching) {
-    dynamic_cast<NestedSwitchingStrategy *>(treatment_strategy_)->initialize_update_time(config_);
-  }
-  if (treatment_strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
-    dynamic_cast<NestedSwitchingDifferentDistributionByLocationStrategy *>(treatment_strategy_)->initialize_update_time(config_);
-  }
+  
+  treatment_strategy_->adjust_started_time_point(Model::SCHEDULER->current_time());
+
+  //
+  // if (treatment_strategy_->get_type() == IStrategy::NestedSwitching) {
+  //   dynamic_cast<NestedSwitchingStrategy *>(treatment_strategy_)->initialize_update_time(config_);
+  // }
+  // if (treatment_strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
+  //   dynamic_cast<NestedSwitchingDifferentDistributionByLocationStrategy *>(treatment_strategy_)->initialize_update_time(config_);
+  // }
 }
 
 void Model::set_treatment_coverage(ITreatmentCoverageModel* tcm) {
@@ -306,8 +309,13 @@ void Model::monthly_update() {
 
   //reset monthly variables
   data_collector()->monthly_update();
+
+  //
+  treatment_strategy_->monthly_update();
+
   //update treatment coverage
   treatment_coverage_->monthly_update();
+
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst

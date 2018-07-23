@@ -12,58 +12,53 @@
 #include "IStrategy.h"
 #include "Therapies/Therapy.h"
 
-MFTStrategy::MFTStrategy() : distribution_() {
-    //    if (config != nullptr) {
-    //        if (config->model() != nullptr) {
-    //            random_ = config->model()->random();
-    //        }
-    //    }
+MFTStrategy::MFTStrategy(): IStrategy("MFTStrategy",MFT) { }
 
-}
-
-MFTStrategy::~MFTStrategy() {
-}
+MFTStrategy::~MFTStrategy() = default;
 
 void MFTStrategy::add_therapy(Therapy* therapy) {
-    therapy_list_.push_back(therapy);
+  therapy_list.push_back(therapy);
 }
 
-Therapy * MFTStrategy::get_therapy(Person *person) {
+Therapy* MFTStrategy::get_therapy(Person* person) {
 
-    double P = Model::RANDOM->random_flat(0.0, 1.0);
+  const auto p = Model::RANDOM->random_flat(0.0, 1.0);
 
-    double sum = 0;
-    for (int i = 0; i < distribution_.size(); i++) {
-        sum += distribution_[i];
-        if (P <= sum) {       
-            return therapy_list()[i];
-        }
+  double sum = 0;
+  for (auto i = 0; i < distribution.size(); i++) {
+    sum += distribution[i];
+    if (p <= sum) {
+      return therapy_list[i];
     }
+  }
 
-    return therapy_list()[therapy_list().size() - 1];
+  return therapy_list[therapy_list.size() - 1];
 }
 
 std::string MFTStrategy::to_string() const {
-    std::stringstream sstm;
-    sstm << IStrategy::id << "-" << IStrategy::name << "-";
-
-    for (int i = 0; i < therapy_list_.size() - 1; i++) {
-        sstm << therapy_list_[i]->id() << ",";
-    }
-    sstm << therapy_list_[therapy_list_.size() - 1]->id() << "-";
-
-    for (int i = 0; i < distribution_.size() - 1; i++) {
-        sstm << distribution_[i] << ",";
-    }
-    sstm << distribution_[therapy_list_.size() - 1];
-
-    return sstm.str();
+  std::stringstream sstm;
+  sstm << id << "-" << name << "-";
+  std::string sep;
+  for (auto* therapy : therapy_list) {
+    sstm << sep << therapy->id();
+    sep = ",";
+  }
+  sep = "";
+  sstm << "-";
+  for (auto dist : distribution) {
+    sstm << sep << dist;
+    sep = ",";
+  }
+  return sstm.str();
 }
 
-IStrategy::StrategyType MFTStrategy::get_type() const {
-    return IStrategy::MFT;
+void MFTStrategy::adjust_started_time_point(const int& current_time) { }
+
+void MFTStrategy::monthly_update() {
+  //do nothing here
+
 }
 
 void MFTStrategy::update_end_of_time_step() {
-    //do nothing here
+  //do nothing here
 }

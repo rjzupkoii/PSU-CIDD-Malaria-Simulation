@@ -13,38 +13,32 @@
 #include "Core/PropertyMacro.h"
 
 class AdaptiveCyclingStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN(AdaptiveCyclingStrategy)
-    VIRTUAL_PROPERTY_REF(std::vector<Therapy*>, therapy_list)
-    VIRTUAL_PROPERTY_REF(int, index)
-
-    VIRTUAL_PROPERTY_REF(double, trigger_value)
-    VIRTUAL_PROPERTY_REF(int, delay_until_actual_trigger)
-    VIRTUAL_PROPERTY_REF(int, turn_off_days)
-    VIRTUAL_PROPERTY_REF(int, latest_switch_time)
-
+DISALLOW_COPY_AND_ASSIGN(AdaptiveCyclingStrategy)
+DISALLOW_MOVE(AdaptiveCyclingStrategy)
 
 public:
-    AdaptiveCyclingStrategy();
-    //    AdaptiveCyclingStrategy(const AdaptiveCyclingStrategy& orig);
-    virtual ~AdaptiveCyclingStrategy();
-    
-    virtual std::vector<Therapy*>& get_therapy_list();
-    
-    virtual void add_therapy(Therapy* therapy);
+  std::vector<Therapy*> therapy_list;
+  int index{0};
+  double trigger_value{0.1};
+  int delay_until_actual_trigger{365};
+  int turn_off_days{365};
+  int latest_switch_time{0};
 
-    virtual void switch_therapy();
+  AdaptiveCyclingStrategy();
+  virtual ~AdaptiveCyclingStrategy();
+  
+  void add_therapy(Therapy* therapy) override;
 
-    virtual Therapy *get_therapy(Person *person);
+  virtual void switch_therapy();
 
-    virtual std::string to_string() const;
+  Therapy* get_therapy(Person* person) override;
 
-    virtual IStrategy::StrategyType get_type() const;
+  std::string to_string() const override;
 
-    virtual void update_end_of_time_step();
+  void update_end_of_time_step() override;
 
-private:
-
+  void adjust_started_time_point(const int& current_time) override;
+  void monthly_update() override;
 };
 
 #endif /* ADAPTIVECYCLINGSTRATEGY_H */
-

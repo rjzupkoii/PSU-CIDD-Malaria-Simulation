@@ -19,75 +19,73 @@
 #include "Core/Config/Config.h"
 #include <sstream>
 
-ACTIncreaseStrategy::ACTIncreaseStrategy() {
-}
+ACTIncreaseStrategy::ACTIncreaseStrategy(): IStrategy("ACTIncreaseStrategy", ACTIncreaseOvertime) {}
 
-ACTIncreaseStrategy::~ACTIncreaseStrategy() {
-}
+ACTIncreaseStrategy::~ACTIncreaseStrategy() = default;
 
 void ACTIncreaseStrategy::add_therapy(Therapy* therapy) {
-    therapy_list_.push_back(therapy);
+  therapy_list.push_back(therapy);
 }
 
-Therapy * ACTIncreaseStrategy::get_therapy(Person *person) {
-    double P = Model::RANDOM->random_flat(0.0, 1.0);
+Therapy* ACTIncreaseStrategy::get_therapy(Person* person) {
+  auto P = Model::RANDOM->random_flat(0.0, 1.0);
 
-    double sum = 0;
-    for (int i = 0; i < distribution_.size(); i++) {
-        sum += distribution_[i];
-        if (P <= sum) {
-            return therapy_list()[i];
-        }
+  double sum = 0;
+  for (auto i = 0; i < distribution.size(); i++) {
+    sum += distribution[i];
+    if (P <= sum) {
+      return therapy_list[i];
     }
+  }
 
-    return therapy_list()[therapy_list().size() - 1];
+  return therapy_list[therapy_list.size() - 1];
 }
 
 std::string ACTIncreaseStrategy::to_string() const {
-    std::stringstream sstm;
-    sstm << IStrategy::id << "-" << IStrategy::name << "-";
-    for (int i = 0; i < therapy_list_.size() - 1; i++) {
-        sstm << therapy_list_[i]->id() << ",";
-    }
-    sstm << therapy_list_[therapy_list_.size() - 1]->id() << "-";
+  std::stringstream sstm;
+  sstm << IStrategy::id << "-" << IStrategy::name << "-";
+  for (auto i = 0; i < therapy_list.size() - 1; i++) {
+    sstm << therapy_list[i]->id() << ",";
+  }
+  sstm << therapy_list[therapy_list.size() - 1]->id() << "-";
 
-    for (int i = 0; i < start_distribution_.size() - 1; i++) {
-        sstm << start_distribution_[i] << ",";
-    }
-    sstm << start_distribution_[therapy_list_.size() - 1] << "-";
+  for (auto i = 0; i < start_distribution.size() - 1; i++) {
+    sstm << start_distribution[i] << ",";
+  }
+  sstm << start_distribution[therapy_list.size() - 1] << "-";
 
 
-    for (int i = 0; i < end_distribution_.size() - 1; i++) {
-        sstm << end_distribution_[i] << ",";
-    }
-    sstm << end_distribution_[therapy_list_.size() - 1] << "-";
+  for (int i = 0; i < end_distribution.size() - 1; i++) {
+    sstm << end_distribution[i] << ",";
+  }
+  sstm << end_distribution[therapy_list.size() - 1] << "-";
 
-    for (int i = 0; i < distribution_.size() - 1; i++) {
-        sstm << distribution_[i] << ",";
-    }
-    sstm << distribution_[therapy_list_.size() - 1];
+  for (int i = 0; i < distribution.size() - 1; i++) {
+    sstm << distribution[i] << ",";
+  }
+  sstm << distribution[therapy_list.size() - 1];
 
-    return sstm.str();
-}
-
-IStrategy::StrategyType ACTIncreaseStrategy::get_type() const {
-    return IStrategy::ACTIncreaseOvertime;
+  return sstm.str();
 }
 
 void ACTIncreaseStrategy::update_end_of_time_step() {
-    if (Model::SCHEDULER->current_time() % 30 == 0) {
-        adjustDisttribution(Model::SCHEDULER->current_time(), Model::CONFIG->total_time());
-//        std::cout << to_string() << std::endl;
-    }
+  if (Model::SCHEDULER->current_time() % 30 == 0) {
+    adjust_disttribution(Model::SCHEDULER->current_time(), Model::CONFIG->total_time());
+    //        std::cout << to_string() << std::endl;
+  }
 }
 
-void ACTIncreaseStrategy::adjustDisttribution(int time, int totaltime) {
+void ACTIncreaseStrategy::adjust_disttribution(const int time, const int totaltime) {
 
-    double dACT = ((end_distribution_[0] - start_distribution_[0]) * time) / totaltime + start_distribution_[0];
+  const auto dACT = ((end_distribution[0] - start_distribution[0]) * time) / totaltime + start_distribution[0];
 
-    distribution_[0] = dACT;
-    double otherD = (1 - dACT) / (distribution_.size() - 1);
-    for (int i = 1; i < distribution_.size(); i++) {
-        distribution_[i] = otherD;
-    }
+  distribution[0] = dACT;
+  const auto otherD = (1 - dACT) / (distribution.size() - 1);
+  for (auto i = 1; i < distribution.size(); i++) {
+    distribution[i] = otherD;
+  }
 }
+
+void ACTIncreaseStrategy::adjust_started_time_point(const int& current_time) {}
+void ACTIncreaseStrategy::monthly_update() {}
+

@@ -24,25 +24,25 @@
 
 // TODO: check if it match with calendar day
 
-NestedSwitchingStrategy::NestedSwitchingStrategy() {}
+NestedSwitchingStrategy::NestedSwitchingStrategy(): IStrategy("NestedSwitchingStrategy", NestedSwitching) {}
 
-NestedSwitchingStrategy::~NestedSwitchingStrategy() {}
+NestedSwitchingStrategy::~NestedSwitchingStrategy() = default;
 
 void NestedSwitchingStrategy::add_strategy(IStrategy* strategy) {
-  strategy_list_.push_back(strategy);
+  strategy_list.push_back(strategy);
 }
 
 Therapy* NestedSwitchingStrategy::get_therapy(Person* person) {
   double P = Model::RANDOM->random_flat(0.0, 1.0);
 
   double sum = 0;
-  for (int i = 0; i < distribution_.size(); i++) {
-    sum += distribution_[i];
+  for (int i = 0; i < distribution.size(); i++) {
+    sum += distribution[i];
     if (P <= sum) {
-      return strategy_list_[i]->get_therapy(person);
+      return strategy_list[i]->get_therapy(person);
     }
   }
-  return strategy_list_[strategy_list_.size() - 1]->get_therapy(person);
+  return strategy_list[strategy_list.size() - 1]->get_therapy(person);
 }
 
 void NestedSwitchingStrategy::add_therapy(Therapy* therapy) {}
@@ -55,18 +55,19 @@ std::string NestedSwitchingStrategy::to_string() const {
   std::stringstream sstm;
   sstm << IStrategy::id << "-" << IStrategy::name << "-";
 
-  for (int i = 0; i < distribution_.size(); i++) {
-    sstm << distribution_[i] << "::";
+  for (int i = 0; i < distribution.size(); i++) {
+    sstm << distribution[i] << "::";
   }
   return sstm.str();
 }
 
 void NestedSwitchingStrategy::update_end_of_time_step() {
-  if (Model::SCHEDULER->current_time() == strategy_switching_day_) {
+  if (Model::SCHEDULER->current_time() == strategy_switching_day) {
     //        std::cout << to_string() << std::endl;
-    strategy_list_[0] = Model::CONFIG->strategy_db()[switch_to_strategy_id_];
-    if (Model::CONFIG->strategy_db()[switch_to_strategy_id_]->get_type() == IStrategy::NestedSwitching) {
-      ((NestedSwitchingStrategy *)Model::CONFIG->strategy_db()[switch_to_strategy_id_])->adjustDisttribution(
+    strategy_list[0] = Model::CONFIG->strategy_db()[switch_to_strategy_id];
+
+    if (Model::CONFIG->strategy_db()[switch_to_strategy_id]->get_type() == IStrategy::NestedSwitching) {
+      dynamic_cast<NestedSwitchingStrategy *>(Model::CONFIG->strategy_db()[switch_to_strategy_id])->adjustDisttribution(
         Model::SCHEDULER->current_time(), Model::CONFIG->total_time());
     }
     //        std::cout << to_string() << std::endl;
@@ -77,41 +78,31 @@ void NestedSwitchingStrategy::update_end_of_time_step() {
     //        std::cout << to_string() << std::endl;
   }
   // update each strategy in the nest
-  for (int i = 0; i < strategy_list_.size(); i++) {
-    strategy_list_[i]->update_end_of_time_step();
+  for (auto& strategy : strategy_list) {
+    strategy->update_end_of_time_step();
   }
 }
 
 void NestedSwitchingStrategy::adjustDisttribution(int time, int totaltime) {
-  double dACT = ((end_distribution_[0] - start_distribution_[0]) * time) / totaltime + start_distribution_[0];
+  const double dACT = ((end_distribution[0] - start_distribution[0]) * time) / totaltime + start_distribution[0];
 
-  distribution_[0] = dACT;
-  double otherD = (1 - dACT) / (distribution_.size() - 1);
-  for (int i = 1; i < distribution_.size(); i++) {
-    distribution_[i] = otherD;
+  distribution[0] = dACT;
+  const double otherD = (1 - dACT) / (distribution.size() - 1);
+  for (int i = 1; i < distribution.size(); i++) {
+    distribution[i] = otherD;
   }
   //    std::cout << to_string() << std::endl;
 }
 
-void NestedSwitchingStrategy::initialize_update_time(Config* config) {
 
+void NestedSwitchingStrategy::adjust_started_time_point(const int& current_time) {
   // when switch to MFTBalancing
-  if (config->strategy_db()[switch_to_strategy_id_]->get_type() == IStrategy::MFTRebalancing) {
-    auto* s = dynamic_cast<MFTRebalancingStrategy *>(config->strategy_db()[switch_to_strategy_id_]);
+  if (Model::CONFIG->strategy_db()[switch_to_strategy_id]->get_type() == IStrategy::MFTRebalancing) {
+    auto* s = dynamic_cast<MFTRebalancingStrategy *>(Model::CONFIG->strategy_db()[switch_to_strategy_id]);
     //        std::cout << "hello" << std::endl;
-    s->set_next_update_time(-1);
-    s->set_latest_adjust_distribution_time(strategy_switching_day_);
+    s->next_update_time = -1;
+    s->latest_adjust_distribution_time = current_time;
   }
-  // when switch to Cycling
-  if (config->strategy_db()[switch_to_strategy_id_]->get_type() == IStrategy::Cycling) {
-    auto* s = dynamic_cast<CyclingStrategy *>(config->strategy_db()[switch_to_strategy_id_]);
-    //        std::cout << "hello" << std::endl;
-    s->set_next_switching_day(strategy_switching_day_ + s->cycling_time());
-  }
-  // when switch to AdaptiveCycling
-  if (config->strategy_db()[switch_to_strategy_id_]->get_type() == IStrategy::AdaptiveCycling) {
-    auto* s = dynamic_cast<AdaptiveCyclingStrategy *>(config->strategy_db()[switch_to_strategy_id_]);
-    s->set_latest_switch_time(strategy_switching_day_);
-    s->set_index(-1);
-  }
+
 }
+void NestedSwitchingStrategy::monthly_update() {}

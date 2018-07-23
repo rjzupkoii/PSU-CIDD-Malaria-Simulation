@@ -12,31 +12,33 @@
 #include "Core/PropertyMacro.h"
 
 class CyclingStrategy : public IStrategy {
-    DISALLOW_COPY_AND_ASSIGN(CyclingStrategy)
-    VIRTUAL_PROPERTY_REF(std::vector<Therapy*>, therapy_list)
-    VIRTUAL_PROPERTY_REF(int, index)
-    VIRTUAL_PROPERTY_REF(int, cycling_time)
-    VIRTUAL_PROPERTY_REF(int, next_switching_day)
+DISALLOW_COPY_AND_ASSIGN(CyclingStrategy)
 
 public:
-    CyclingStrategy();
-    //    CyclingStrategy(const CyclingStrategy& orig);
-    virtual ~CyclingStrategy();
+  std::vector<Therapy*> therapy_list;
+  int index{0};
+  int cycling_time{0};
+  int next_switching_day{0};
 
-    virtual void add_therapy(Therapy* therapy);
+  CyclingStrategy();
+  //    CyclingStrategy(const CyclingStrategy& orig);
+  virtual ~CyclingStrategy();
 
-    virtual void switch_therapy();
+  void add_therapy(Therapy* therapy) override;
 
-    virtual Therapy *get_therapy(Person *person);
+  virtual void switch_therapy();
 
-    virtual std::string to_string() const;
+  Therapy* get_therapy(Person* person) override;
 
-    virtual IStrategy::StrategyType get_type() const;
+  std::string to_string() const override;
 
-    virtual void update_end_of_time_step();
+  void update_end_of_time_step() override;
+
+  void adjust_started_time_point(const int& current_time) override;
+
+  void monthly_update() override;
 private:
 
 };
 
 #endif /* CYCLINGSTRATEGY_H */
-

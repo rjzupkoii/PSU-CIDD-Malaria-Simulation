@@ -12,30 +12,21 @@
 
 class MFTDifferentDistributionByLocationStrategy : public IStrategy {
 DISALLOW_COPY_AND_ASSIGN(MFTDifferentDistributionByLocationStrategy)
-
-VIRTUAL_PROPERTY_REF(std::vector<Therapy *>, therapy_list)
-
-VIRTUAL_PROPERTY_REF(DoubleVector2, distribution_by_location)
-
+DISALLOW_MOVE(MFTDifferentDistributionByLocationStrategy)
 
 public:
-    MFTDifferentDistributionByLocationStrategy();
+  std::vector<Therapy *> therapy_list;
+  DoubleVector2 distribution_by_location;
 
-    //    MFTStrategy(const MFTStrategy& orig);
-    virtual ~MFTDifferentDistributionByLocationStrategy();
-
-    void add_therapy(Therapy *therapy) override;
-
-    Therapy *get_therapy(Person *person) override;
-
-    std::string to_string() const override;
-
-    IStrategy::StrategyType get_type() const override;
-
-    void update_end_of_time_step() override;
-
-private:
-
+  MFTDifferentDistributionByLocationStrategy();
+  //    MFTStrategy(const MFTStrategy& orig);
+  virtual ~MFTDifferentDistributionByLocationStrategy();
+  void add_therapy(Therapy* therapy) override;
+  Therapy* get_therapy(Person* person) override;
+  std::string to_string() const override;
+  void update_end_of_time_step() override;
+  void adjust_started_time_point(const int& current_time) override;
+  void monthly_update() override;
 };
 
 
