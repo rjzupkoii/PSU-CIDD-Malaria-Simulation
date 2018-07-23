@@ -15,7 +15,7 @@
 starting_date: 1990/1/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 1991/1/1
+ending_date: 2010/1/1
 
 # the day at which the simulation's reporting functionality begins collecting data for 
 # the purposes of displaying it
@@ -77,10 +77,10 @@ location_db:
 
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
-  beta_by_location: [0.065]
+  beta_by_location: [0.08]
 
 #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [1000, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090 ]
+  population_size_by_location: [10000, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090 ]
   #spatial_model could be Gravity, Barabasi, or Wesolowski
 
 # seasonality parameters for all location
@@ -117,6 +117,8 @@ death_rate_by_age_class: [0.053979329, 0.018935757, 0.006867257, 0.001124347, 0.
 mortality_when_treatment_fail_by_age_class: [0.040, 0.020,0.020,0.020,0.020,0.004,0.004,0.004,0.004,0.004,0.004, 0.001, 0.001, 0.001, 0.001]
 
 
+# definitions of some log parasite density levels
+#
 parasite_density_level:
 #  log_parasite_density_cured:        -2.699    # corresponds to 10,000 total parasites (0.002 per μl)
   log_parasite_density_cured:        -4.699    # corresponds to 100 total parasites (0.00002 per μl)
@@ -675,63 +677,26 @@ strategy_db:
         delay_until_actual_trigger: 365
         update_duration_after_rebalancing: 1460
     9:
-        name: AL-BaseLineStrategy
-        type: NestedSwitching
-        strategy_ids: [1,0]
-        start_distribution: [0.05, 0.95]
-        end_distribution: [0.8,0.2]
-        strategy_switching_day: 5110
-        switch_to_strategy_id: 1
-    10:
-        name: ASAQ-BaseLineStrategy
-        type: NestedSwitching
-        strategy_ids: [2,0]
-        start_distribution: [0.05, 0.95]
-        end_distribution: [0.8,0.2]
-        strategy_switching_day: 5110
-        switch_to_strategy_id: 2        
-    11:
         name: DPM-SFTStrategy
         type: SFT
         therapy_id: 10
-    12:
+    10:
         name: AL-AQ-SFTStrategy
         type: SFT
-        therapy_id: 11
+        therapy_id: 11   
+    11:
+        name: AL-BaseLineStrategy
+        type: NestedMFT
+        strategy_ids: [1,0]
+        start_distribution: [0.05, 0.95]
+        end_distribution: [0.8,0.2]        
+    12:
+        name: ASAQ-BaseLineStrategy
+        type: NestedMFT
+        strategy_ids: [2,0]
+        start_distribution: [0.05, 0.95]
+        end_distribution: [0.8,0.2]
     13:
-        name: Switch_AL_to_DPM
-        type: NestedSwitching
-        strategy_ids: [1,0]
-        start_distribution: [0.05, 0.95]
-        end_distribution: [0.8,0.2]
-        strategy_switching_day: 5110
-        switch_to_strategy_id: 11
-    14:
-        name: Switch_AL_to_AL-AQ
-        type: NestedSwitching
-        strategy_ids: [1,0]
-        start_distribution: [0.05, 0.95]
-        end_distribution: [0.8,0.2]
-        strategy_switching_day: 5110
-        switch_to_strategy_id: 12
-    15:
-        name: Switch_ASAQ_to_DPM
-        type: NestedSwitching
-        strategy_ids: [2,0]
-        start_distribution: [0.05, 0.95]
-        end_distribution: [0.8,0.2]
-        strategy_switching_day: 5110
-        switch_to_strategy_id: 11
-    16:
-        name: Switch_ASAQ_to_AL-AQ
-        type: NestedSwitching
-        strategy_ids: [2,0]
-        start_distribution: [0.05, 0.95]
-        end_distribution: [0.8,0.2]
-        strategy_switching_day: 5110
-        switch_to_strategy_id: 12
-
-    17:
         name: MFTDifferentDistributionByLocation
         type: MFTDifferentDistributionByLocation
         therapy_ids: [6,8,10,7,9]
@@ -746,28 +711,22 @@ strategy_db:
         [0.84,0.06,0.05,0.03,0.09],
         [0.84,0.06,0.05,0.03,0.10]
         ]
-    18:
+    14:
         name: BaseLineStrategy
-        type: NestedSwitchingDifferentDistributionByLocation
+        type: NestedMFTDifferentDistributionByLocation
         strategy_ids: [0,1]
         peak_at: -1
         start_distribution: [[0.05, 0.95]]
         strategy_switching_day: 5110
         switch_to_strategy_id: 0
 
-initial_strategy_id: 6
+initial_strategy_id: 1
 
     
 
 # this number use to detemine whether a therapy is "useful" or not and it is used to calculate 
 # the useful therapeutic duration of a therapy
 TF_rate: 0.1
-
-# definitions of some log parasite density levels
-#
-
-
-
 
 # days from end of liver-stage infection to appearance of symptoms
 days_to_clinical_under_five: 4
@@ -873,7 +832,7 @@ using_free_recombination: true
 # today's treatment failure rate, as these data are never assembled that quickly in
 # real life; rather, it is the average treatment failure rate observed over the 
 # past 60 days
-tf_window_size: 60
+tf_window_size: 90
 
 # special function to make the mean biting rate (across hosts) depend on age
 using_age_dependent_bitting_level: false
@@ -936,9 +895,7 @@ events:
         p_treatment_for_more_than_5_by_location_to: [0.90000]
   - name: change_treatment_strategy
     info:
-      - day: 1990/3/2
+      - day: 1995/3/2
         strategy_id: 2
-      - day: 1990/6/2
-        strategy_id: 3
-      - day: 1990/9/2
-        strategy_id: 4
+      - day: 2000/6/2
+        strategy_id: 7

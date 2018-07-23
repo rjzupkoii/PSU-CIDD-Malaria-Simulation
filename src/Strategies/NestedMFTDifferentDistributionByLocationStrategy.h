@@ -11,19 +11,19 @@
 
 class Config;
 
-class NestedSwitchingDifferentDistributionByLocationStrategy : public IStrategy {
-DISALLOW_COPY_AND_ASSIGN(NestedSwitchingDifferentDistributionByLocationStrategy)
-DISALLOW_MOVE(NestedSwitchingDifferentDistributionByLocationStrategy)
+class NestedMFTDifferentDistributionByLocationStrategy : public IStrategy {
+DISALLOW_COPY_AND_ASSIGN(NestedMFTDifferentDistributionByLocationStrategy)
+DISALLOW_MOVE(NestedMFTDifferentDistributionByLocationStrategy)
 public:
   std::vector<IStrategy*> strategy_list;
   DoubleVector2 distribution;
   DoubleVector2 start_distribution;
-  int strategy_switching_day{0};
-  int switch_to_strategy_id{0};
   int peak_at{0};
-  NestedSwitchingDifferentDistributionByLocationStrategy();
+  int starting_time{0};
+
+  NestedMFTDifferentDistributionByLocationStrategy();
   //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
-  virtual ~NestedSwitchingDifferentDistributionByLocationStrategy();
+  virtual ~NestedMFTDifferentDistributionByLocationStrategy();
 
   virtual void add_strategy(IStrategy* strategy);
 
@@ -38,7 +38,7 @@ public:
    */
   void update_end_of_time_step() override;
 
-  void adjust_distribution(int time, int peak_at);
+  void adjust_distribution_yearly(const int &time, const int& peak_at);
 
   void adjust_started_time_point(const int& current_time) override;
   void monthly_update() override;

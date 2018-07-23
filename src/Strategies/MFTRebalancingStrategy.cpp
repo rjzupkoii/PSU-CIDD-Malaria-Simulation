@@ -50,15 +50,16 @@ void MFTRebalancingStrategy::update_end_of_time_step() {
     for (auto i = 0; i < distribution.size(); i++) {
       distribution[i] = next_distribution[i];
     }
-    // TODO: update_duration_after_rebalancing_ should be match with calendar day
     next_update_time = Model::SCHEDULER->current_time() + update_duration_after_rebalancing;
+    LOG(INFO) << date::year_month_day{Model::SCHEDULER->calendar_date} << ": MFT Rebalancing adjust distribution: " << to_string();
     //            std::cout << to_string() << std::endl;
   }
   else {
     if (Model::SCHEDULER->current_time() == next_update_time) {
       double sum = 0;
       for (auto i = 0; i < distribution.size(); i++) {
-        //            std::cout << Model::DATA_COLLECTOR->current_TF_by_therapy()[therapy_list()[i]->id()] << "-";
+        LOG(INFO) << "Current treatment failure rate of " << therapy_list[i]->id() << " : " << Model::DATA_COLLECTOR->
+          current_tf_by_therapy()[therapy_list[i]->id()];
         if (Model::DATA_COLLECTOR->current_tf_by_therapy()[therapy_list[i]->id()] < 0.05) {
           next_distribution[i] = 1.0 / 0.05;
         }
@@ -72,12 +73,14 @@ void MFTRebalancingStrategy::update_end_of_time_step() {
         next_distribution[i] = next_distribution[i] / sum;
       }
       latest_adjust_distribution_time = Model::SCHEDULER->current_time() + delay_until_actual_trigger;
+      LOG(INFO) << date::year_month_day{Model::SCHEDULER->calendar_date} << ": MFT Rebalancing will adjust distribution after " <<
+        delay_until_actual_trigger << "days";
     }
   }
 
 }
 
 void MFTRebalancingStrategy::adjust_started_time_point(const int& current_time) {
-  next_update_time = (-1);
-  latest_adjust_distribution_time = current_time;
+  next_update_time = Model::SCHEDULER->current_time() + update_duration_after_rebalancing;
+  latest_adjust_distribution_time = -1;
 }

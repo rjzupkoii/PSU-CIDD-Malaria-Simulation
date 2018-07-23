@@ -1,12 +1,14 @@
 TODO:
-  - Update/implement time points for tratement strategy ie. 
+  - Test All Strategies
+  - remove reduntdant strategies
 	- Test if Strategies still functioning?
+  - Bring in location test
   - New Indexer
   - bring back object pool
   - remove affecting allele
   - Remove resist_to function ???
   - build Core library
-  - Using event to change treatment coverage / strategy and set up those event from input file
-  - 
 
  - Use Docker to do memory check with Valgrind
+
+ - YAML to JSON???

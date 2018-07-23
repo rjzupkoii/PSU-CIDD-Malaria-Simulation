@@ -34,8 +34,6 @@
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
 #include "Strategies/IStrategy.h"
-#include "Strategies/NestedSwitchingStrategy.h"
-#include "Strategies/NestedSwitchingDifferentDistributionByLocationStrategy.h"
 #include "Malaria/SteadyTCM.h"
 #include "Constants.h"
 #include "Helpers/TimeHelpers.h"
@@ -101,7 +99,7 @@ void Model::set_treatment_strategy(const int& strategy_id) {
   //   dynamic_cast<NestedSwitchingStrategy *>(treatment_strategy_)->initialize_update_time(config_);
   // }
   // if (treatment_strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
-  //   dynamic_cast<NestedSwitchingDifferentDistributionByLocationStrategy *>(treatment_strategy_)->initialize_update_time(config_);
+  //   dynamic_cast<NestedMFTDifferentDistributionByLocationStrategy *>(treatment_strategy_)->initialize_update_time(config_);
   // }
 }
 

@@ -13,7 +13,7 @@
 #include "IStrategy.h"
 #include "Therapies/Therapy.h"
 
-AdaptiveCyclingStrategy::AdaptiveCyclingStrategy(): IStrategy("AdaptiveCyclingStrategy",AdaptiveCycling) {}
+AdaptiveCyclingStrategy::AdaptiveCyclingStrategy(): IStrategy("AdaptiveCyclingStrategy", AdaptiveCycling) {}
 
 
 AdaptiveCyclingStrategy::~AdaptiveCyclingStrategy() = default;
@@ -29,6 +29,8 @@ void AdaptiveCyclingStrategy::switch_therapy() {
   index %= therapy_list.size();
 
   Model::DATA_COLLECTOR->update_UTL_vector();
+  LOG(INFO) << date::year_month_day{Model::SCHEDULER->calendar_date}
+    << ": Cycling Strategy Swith Therapy to: " << therapy_list[index]->id();
 }
 
 Therapy* AdaptiveCyclingStrategy::get_therapy(Person* person) {
@@ -58,6 +60,7 @@ void AdaptiveCyclingStrategy::update_end_of_time_step() {
       // TODO:: turn_off_days and delay_until_actual_trigger should be match with calendar day
       if (Model::SCHEDULER->current_time() > latest_switch_time + turn_off_days) {
         latest_switch_time = Model::SCHEDULER->current_time() + delay_until_actual_trigger;
+        LOG(INFO) << date::year_month_day{Model::SCHEDULER->calendar_date} << ": Adaptive Cyling will switch therapy next year";
         //                    std::cout << "TF: " << Model::DATA_COLLECTOR->current_TF_by_therapy()[get_therapy()->id()] << std::endl;
       }
     }

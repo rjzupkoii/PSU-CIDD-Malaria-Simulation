@@ -18,7 +18,6 @@
 #include <vector>
 #include "Core/PropertyMacro.h"
 #include <map>
-#include "Core/Config/IConfigItem.h"
 
 class Therapy;
 class Person;
@@ -32,12 +31,10 @@ public:
     MFT = 2,
     AdaptiveCycling = 3,
     ACTIncreaseOvertime = 4,
-    NovelNonACTSwitching = 5,
-    TACTSwitching = 6,
-    MFTRebalancing = 7,
-    NestedSwitching = 8,
-    MFTDifferentDistributionByLocation = 9,
-    NestedSwitchingDifferentDistributionByLocation = 10
+    MFTRebalancing = 5,
+    MFTDifferentDistributionByLocation = 6,
+    NestedMFT = 7,
+    NestedMFTDifferentDistributionByLocation = 8
   };
 
   static std::map<std::string, StrategyType> StrategyTypeMap;
@@ -50,13 +47,14 @@ public:
   StrategyType type;
 public:
 
-  IStrategy(std::string name, const StrategyType& type): name{std::move(name)}, type{type}{}
+  IStrategy(std::string name, const StrategyType& type): name{std::move(name)}, type{type} {}
 
   virtual ~IStrategy() = default;
 
   virtual bool is_strategy(const std::string& s_name) {
     return name == s_name;
   }
+
   virtual StrategyType get_type() const {
     return type;
   };

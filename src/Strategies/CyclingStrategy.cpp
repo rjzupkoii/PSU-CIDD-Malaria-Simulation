@@ -7,6 +7,7 @@
 
 #include "CyclingStrategy.h"
 #include "Model.h"
+#include "Scheduler.h"
 #include "Core/Config/Config.h"
 #include "MDC/ModelDataCollector.h"
 #include <sstream>
@@ -29,6 +30,8 @@ void CyclingStrategy::switch_therapy() {
 
   // TODO: cycling_time should be match with calendar day
   next_switching_day = Model::SCHEDULER->current_time() + cycling_time;
+  LOG(INFO) << date::year_month_day{Model::SCHEDULER->calendar_date}
+    << ": Cycling Strategy Swith Therapy to: " << therapy_list[index]->id();
 }
 
 Therapy* CyclingStrategy::get_therapy(Person* person) {
@@ -42,7 +45,7 @@ std::string CyclingStrategy::to_string() const {
   std::stringstream sstm;
   sstm << id << "-" << name << "-";
   std::string sep;
-  for(auto* therapy : therapy_list) {
+  for (auto* therapy : therapy_list) {
     sstm << sep << therapy->id();
     sep = ",";
   }
@@ -58,6 +61,7 @@ void CyclingStrategy::update_end_of_time_step() {
 
 void CyclingStrategy::adjust_started_time_point(const int& current_time) {
   next_switching_day = Model::SCHEDULER->current_time() + cycling_time;
+  index = 0;
 }
 
 void CyclingStrategy::monthly_update() { }

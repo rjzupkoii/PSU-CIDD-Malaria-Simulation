@@ -15,17 +15,14 @@
 #include "IStrategy.h"
 #include "SFTStrategy.h"
 #include "Core/Config/Config.h"
-#include "Model.h"
 #include "CyclingStrategy.h"
 #include "AdaptiveCyclingStrategy.h"
 #include "MFTStrategy.h"
 #include "ACTIncreaseStrategy.h"
-#include "NovelNonACTSwitchingStrategy.h"
-#include "TACTSwitchingStrategy.h"
-#include "NestedSwitchingStrategy.h"
+#include "NestedMFTStrategy.h"
 #include "MFTRebalancingStrategy.h"
 #include "MFTDifferentDistributionByLocationStrategy.h"
-#include "NestedSwitchingDifferentDistributionByLocationStrategy.h"
+#include "NestedMFTDifferentDistributionByLocationStrategy.h"
 
 StrategyBuilder::StrategyBuilder() = default;
 
@@ -44,18 +41,14 @@ IStrategy* StrategyBuilder::build(const YAML::Node& ns, const int& strategy_id, 
     return buildMFTStrategy(ns, strategy_id, config);
   case IStrategy::ACTIncreaseOvertime:
     return buildACTIncreaseStrategy(ns, strategy_id, config);
-  case IStrategy::NovelNonACTSwitching:
-    return buildNovelNonACTSwitchingStrategy(ns, strategy_id, config);
-  case IStrategy::TACTSwitching:
-    return buildTACTSwitchingStrategy(ns, strategy_id, config);
   case IStrategy::MFTRebalancing:
     return buildMFTRebalancingStrategy(ns, strategy_id, config);
-  case IStrategy::NestedSwitching:
+  case IStrategy::NestedMFT:
     return buildNestedSwitchingStrategy(ns, strategy_id, config);
   case IStrategy::MFTDifferentDistributionByLocation:
     return buildMFTDifferentDistributionByLocationStrategy(ns, strategy_id, config);
-  case IStrategy::NestedSwitchingDifferentDistributionByLocation:
-    return buildNestedSwitchingDifferentDistributionByLocationStrategy(ns, strategy_id, config);
+  case IStrategy::NestedMFTDifferentDistributionByLocation:
+    return buildNestedMFTDifferentDistributionByLocationStrategy(ns, strategy_id, config);
   default:
     return nullptr;
   }
@@ -131,40 +124,9 @@ IStrategy* StrategyBuilder::buildACTIncreaseStrategy(const YAML::Node& ns, const
   return result;
 }
 
-IStrategy* StrategyBuilder::buildNovelNonACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
-  auto* result = new NovelNonACTSwitchingStrategy();
-  result->id = strategy_id;
-  result->name = ns["name"].as<std::string>();
-
-  add_distributions(ns["distribution"], result->distribution);
-  add_therapies(ns, result, config);
-
-  result->non_artemisinin_switching_day = ns["non_artemisinin_switching_day"].as<int>();
-  result->non_art_therapy_id = ns["non_art_therapy_id"].as<int>();
-  result->fraction_non_art_replacement = ns["fraction_non_art_replacement"].as<double>();
-
-  return result;
-}
-
-IStrategy* StrategyBuilder::buildTACTSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
-  auto* result = new TACTSwitchingTStrategy();
-  result->id = strategy_id;
-  result->name = ns["name"].as<std::string>();
-
-
-  add_distributions(ns["start_distribution"], result->start_distribution);
-  add_distributions(ns["start_distribution"], result->distribution);
-  add_distributions(ns["end_distribution"], result->end_distribution);
-
-  add_therapies(ns, result, config);
-
-  result->TACT_switching_day = ns["TACT_switching_day"].as<int>();
-  result->TACT_id = ns["TACT_id"].as<int>();
-  return result;
-}
 
 IStrategy* StrategyBuilder::buildNestedSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
-  auto* result = new NestedSwitchingStrategy();
+  auto* result = new NestedMFTStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
@@ -176,9 +138,6 @@ IStrategy* StrategyBuilder::buildNestedSwitchingStrategy(const YAML::Node& ns, c
     result->add_strategy(
       config->strategy_db()[ns["strategy_ids"][i].as<int>()]);
   }
-
-  result->strategy_switching_day = ns["strategy_switching_day"].as<int>();
-  result->switch_to_strategy_id = ns["switch_to_strategy_id"].as<int>();
 
 
   return result;
@@ -220,9 +179,9 @@ IStrategy* StrategyBuilder::buildMFTDifferentDistributionByLocationStrategy(cons
   return result;
 }
 
-IStrategy* StrategyBuilder::buildNestedSwitchingDifferentDistributionByLocationStrategy(const YAML::Node& ns,
+IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrategy(const YAML::Node& ns,
                                                                                         const int& strategy_id, Config* config) {
-  auto* result = new NestedSwitchingDifferentDistributionByLocationStrategy();
+  auto* result = new NestedMFTDifferentDistributionByLocationStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
@@ -246,9 +205,6 @@ IStrategy* StrategyBuilder::buildNestedSwitchingDifferentDistributionByLocationS
   }
 
   result->peak_at = ns["peak_at"].as<int>();
-  result->strategy_switching_day = ns["strategy_switching_day"].as<int>();
-  result->switch_to_strategy_id = ns["switch_to_strategy_id"].as<int>();
-
   //    std::cout << result->to_string() << std::endl;
 
   return result;

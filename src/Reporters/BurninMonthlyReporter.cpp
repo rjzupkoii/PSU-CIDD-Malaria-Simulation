@@ -16,8 +16,8 @@
 #include "MDC/ModelDataCollector.h"
 #include "Core/Config/Config.h"
 #include "Strategies/IStrategy.h"
-#include "Strategies/NestedSwitchingStrategy.h"
 #include "Strategies/MFTRebalancingStrategy.h"
+#include "Strategies/NestedMFTStrategy.h"
 
 BurninMonthlyReporter::BurninMonthlyReporter() {
 
@@ -87,15 +87,15 @@ void BurninMonthlyReporter::monthly_report() {
         }
 
         //output for MFT rebalencing
-        if (Model::TREATMENT_STRATEGY->get_type() == IStrategy::NestedSwitching) {
-            if (Model::CONFIG->strategy_db()[((NestedSwitchingStrategy *) Model::TREATMENT_STRATEGY)->switch_to_strategy_id]->get_type() ==
-                IStrategy::MFTRebalancing) {
-                std::cout << "-1111" << "\t";
-                MFTRebalancingStrategy *s = (MFTRebalancingStrategy *) (Model::CONFIG->strategy_db()[((NestedSwitchingStrategy *) Model::TREATMENT_STRATEGY)->switch_to_strategy_id]);
-                for (int i = 0; i < s->distribution.size(); i++) {
-                    std::cout << s->distribution[i] << "\t";
-                }
-            }
+        if (Model::TREATMENT_STRATEGY->get_type() == IStrategy::NestedMFT) {
+            // if (Model::CONFIG->strategy_db()[((NestedMFTStrategy *) Model::TREATMENT_STRATEGY)->switch_to_strategy_id]->get_type() ==
+            //     IStrategy::MFTRebalancing) {
+            //     std::cout << "-1111" << "\t";
+            //     MFTRebalancingStrategy *s = (MFTRebalancingStrategy *) (Model::CONFIG->strategy_db()[((NestedMFTStrategy *) Model::TREATMENT_STRATEGY)->switch_to_strategy_id]);
+            //     for (int i = 0; i < s->distribution.size(); i++) {
+            //         std::cout << s->distribution[i] << "\t";
+            //     }
+            // }
         }
 
 
