@@ -934,3 +934,11 @@ events:
         #p_treatment_for_more_than_5_by_location_from: [0.500000]
         p_treatment_for_less_than_5_by_location_to: [0.900000]
         p_treatment_for_more_than_5_by_location_to: [0.90000]
+  - name: change_treatment_strategy
+    info:
+      - day: 1990/3/2
+        strategy_id: 2
+      - day: 1990/6/2
+        strategy_id: 3
+      - day: 1990/9/2
+        strategy_id: 4

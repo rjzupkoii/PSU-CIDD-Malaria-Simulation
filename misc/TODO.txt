@@ -1,5 +1,5 @@
 TODO:
-  - Change Strategy Event
+  - Update/implement time points for tratement strategy ie. 
 	- Test if Strategies still functioning?
   - New Indexer
   - bring back object pool

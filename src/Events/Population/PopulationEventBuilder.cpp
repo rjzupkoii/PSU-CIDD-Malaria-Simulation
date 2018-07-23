@@ -5,6 +5,7 @@
 #include "ImportationEvent.h"
 #include "ImportationPeriodicallyEvent.h"
 #include "ChangeTreatmentCoverageEvent.h"
+#include "ChangeStrategyEvent.h"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
@@ -16,8 +17,8 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(cons
         auto num = node[i]["parasite_info"][j]["number_of_cases"].as<int>();
 
         const auto starting_date = node[i]["parasite_info"][j]["day"].as<date::year_month_day>();
-        auto time = (date::sys_days{ starting_date } -date::sys_days{ config->starting_date() }).count();
-        
+        auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+
         auto* event = new ImportationEvent(location, time, genotype_id, num);
         events.push_back(event);
       }
@@ -43,8 +44,8 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasites_periodical
         const auto num = node[i]["parasite_info"][j]["number_of_cases"].as<int>();
 
         const auto starting_date = node[i]["parasite_info"][j]["start_day"].as<date::year_month_day>();
-        auto time = (date::sys_days{ starting_date } -date::sys_days{ config->starting_date() }).count();
-        
+        auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+
         auto* event = new ImportationPeriodicallyEvent(loc, dur, genotype_id, num, time);
         events.push_back(event);
       }
@@ -54,19 +55,32 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasites_periodical
 }
 
 
-
 std::vector<Event*> PopulationEventBuilder::build_change_treatment_coverage_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
-    auto* tcm = ITreatmentCoverageModel::build(node[i],config);
+    auto* tcm = ITreatmentCoverageModel::build(node[i], config);
     // std::cout << tcm->starting_time << std::endl;
     auto* e = new ChangeTreatmentCoverageEvent(tcm);
     events.push_back(e);
-  }  
+  }
   return events;
 }
 
-std::vector<Event*> PopulationEventBuilder::Build(const YAML::Node& node, Config* config) {
+std::vector<Event*> PopulationEventBuilder::build_change_treatment_strategy_event(const YAML::Node& node, Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {    
+    const auto starting_date = node[i]["day"].as<date::year_month_day>();
+    auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+    auto strategy_id = node[i]["strategy_id"].as<int>();
+    
+    auto* e = new ChangeStrategyEvent(time, strategy_id);
+    events.push_back(e);
+  }
+
+  return events;
+}
+
+std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   const auto name = node["name"].as<std::string>();
 
@@ -80,5 +94,8 @@ std::vector<Event*> PopulationEventBuilder::Build(const YAML::Node& node, Config
     events = build_change_treatment_coverage_event(node["info"], config);
   }
 
+  if (name == "change_treatment_strategy") {
+    events = build_change_treatment_strategy_event(node["info"], config);
+  }
   return events;
 }

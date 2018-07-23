@@ -136,14 +136,7 @@ void Model::initialize() {
   //Read input file
   config_->read_from_file(config_filename_);
 
-  LOG(INFO) << "Initialing initial strategy";
-  //set treatment strategy
-  set_treatment_strategy(config_->initial_strategy_id());
-
-  LOG(INFO) << "Initialing initial treatment coverage model";
-  build_initial_treatment_coverage();
-
-  // modify parameters
+    // modify parameters
   //modify parameters && update config
   LOG_IF(override_parameter_line_number_!= -1, INFO) << fmt::format("Override parameter from {} at line {}",
                                                                     override_parameter_filename_,
@@ -159,12 +152,17 @@ void Model::initialize() {
     reporter->initialize();
   }
 
-
   LOG(INFO) << "Initialzing scheduler";
-
   LOG(INFO) << "Starting day is " << CONFIG->starting_date();
   //initialize scheduler
   scheduler_->initialize(CONFIG->starting_date(), config_->total_time());
+
+  LOG(INFO) << "Initialing initial strategy";
+  //set treatment strategy
+  set_treatment_strategy(config_->initial_strategy_id());
+
+  LOG(INFO) << "Initialing initial treatment coverage model";
+  build_initial_treatment_coverage();
 
   LOG(INFO) << "Initializing data collector";
   //initialize data_collector
