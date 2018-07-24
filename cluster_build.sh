@@ -2,7 +2,5 @@
 git pull
 mkdir -p build
 cd build
-module load gcc/5.3.1
-module load boost/1.63.0
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/storage/home/uut47/work/dev_env/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 make -j 8

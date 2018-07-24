@@ -1,13 +1,16 @@
 TODO:
-  - Test All Strategies  
   - Test on cluster
+  
+  
+Someday/maybe
   - bring back object pool
-  - New Indexer
+  
   - remove affecting allele
   - Remove resist_to function ???
   - build Core library
   - Rework on Model Data Collector
 
- - Use Docker to do memory check with Valgrind
+  - New Indexer
+  - Use Docker to do memory check with Valgrind
 
- - YAML to JSON???
+  - YAML to JSON???
