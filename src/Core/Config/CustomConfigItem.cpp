@@ -1,18 +1,20 @@
 #define _USE_MATH_DEFINES
+#define NOMINMAX
 
 #include "CustomConfigItem.h"
 #include "Config.h"
 #include "Spatial/SpatialModelBuilder.h"
 #include "Helpers/ObjectHelpers.h"
 #include "Helpers/NumberHelpers.h"
-#include <gsl/gsl_cdf.h>
-#include <cmath>
-#include <date/date.h>
 #include "Therapies/Therapy.h"
 #include "Therapies/TherapyBuilder.h"
 #include "Strategies/IStrategy.h"
 #include "Strategies/StrategyBuilder.h"
 #include "Events/Population/PopulationEventBuilder.h"
+#include <gsl/gsl_cdf.h>
+#include <cmath>
+#include <date/date.h>
+#include <algorithm> 
 
 void total_time::set_value(const YAML::Node& node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
@@ -435,7 +437,7 @@ void initial_parasite_info::set_value(const YAML::Node& node) {
   for (size_t index = 0; index < info_node.size(); index++) {
     const auto location = info_node[index]["location_id"].as<int>();
     const auto location_from = location == -1 ? 0 : location;
-    const auto location_to = location == -1 ? config_->number_of_locations() : min(location + 1,config_->number_of_locations());
+    const auto location_to = location == -1 ? config_->number_of_locations() : std::min(location + 1,config_->number_of_locations());
 
     //apply for all location
     for (auto loc = location_from; loc < location_to; ++loc) {
