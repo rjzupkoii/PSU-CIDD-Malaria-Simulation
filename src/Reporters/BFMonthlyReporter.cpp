@@ -93,7 +93,7 @@ void BFMonthlyReporter::after_run() {
   //    }
 
 
-  // CLOG(INFO, "monthly_reporter") << ss.str();
+  CLOG(INFO, "summary_reporter") << ss.str();
   ss.str("");
 }
 
