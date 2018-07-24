@@ -5,7 +5,7 @@
  * Created on April 15, 2013, 10:49 AM
  */
 
-#include <cmath>
+
 #include "Constants.h"
 #include "Population.h"
 #include "Model.h"
@@ -26,6 +26,8 @@
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
 #include "Spatial/SpatialModel.h"
+#include <cmath>
+#include <cfloat>
 
 Population::Population(Model* model) : model_(model) {
   person_index_list_ = new PersonIndexPtrList();
@@ -157,7 +159,7 @@ void Population::perform_infection_event() {
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     for (auto parasite_type_id = 0;
          parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
-      const double force_of_infection = force_of_infection_for7days_by_location_parasite_type_[
+      const auto force_of_infection = force_of_infection_for7days_by_location_parasite_type_[
         Model::SCHEDULER->current_time() % Model::CONFIG->number_of_tracking_days()][loc][parasite_type_id];
       if (force_of_infection <= DBL_EPSILON)
         continue;
