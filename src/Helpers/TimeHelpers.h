@@ -6,7 +6,6 @@
 #define PCMS_TIMEHELPERS_H
 
 #include <sstream>
-#include <iostream>
 #include "date/date.h"
 
 inline std::ostream& operator<<(std::ostream& stream, const date::sys_days& o_days) {
@@ -62,7 +61,7 @@ inline int TimeHelpers::number_of_days_to_next_year(const date::sys_days& today)
 inline int TimeHelpers::get_simulation_time_birthday(const int& days_to_next_birthday, const int& age,
                                                      const date::sys_days& starting_day) {
   date::year_month_day ymd{starting_day};
-  const auto calendar_birthday = floor<date::days>(
+  const auto calendar_birthday = date::floor<date::days>(
     starting_day + date::days{days_to_next_birthday + 1} - date::years{age + 1});
 
   return number_of_days(starting_day, calendar_birthday);
