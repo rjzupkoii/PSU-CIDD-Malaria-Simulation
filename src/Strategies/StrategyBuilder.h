@@ -36,11 +36,8 @@ public:
   static IStrategy* buildAdaptiveCyclingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
   static IStrategy* buildMFTStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
   static IStrategy* buildMFTRebalancingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
-  static IStrategy* buildACTIncreaseStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
   static IStrategy* buildNestedSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config);
-
   static IStrategy* buildMFTDifferentDistributionByLocationStrategy(const YAML::Node& node, const int& id, Config* config);
-
   static IStrategy* buildNestedMFTDifferentDistributionByLocationStrategy(const YAML::Node& ns, const int& strategy_id,
                                                                                 Config* config);
 };

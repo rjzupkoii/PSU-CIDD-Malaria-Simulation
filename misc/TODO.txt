@@ -1,8 +1,8 @@
 TODO:
-  - Test All Strategies
-  - New Indexer
+  - Test All Strategies  
   - Test on cluster
   - bring back object pool
+  - New Indexer
   - remove affecting allele
   - Remove resist_to function ???
   - build Core library

@@ -30,11 +30,10 @@ public:
     Cycling = 1,
     MFT = 2,
     AdaptiveCycling = 3,
-    ACTIncreaseOvertime = 4,
-    MFTRebalancing = 5,
-    MFTDifferentDistributionByLocation = 6,
-    NestedMFT = 7,
-    NestedMFTDifferentDistributionByLocation = 8
+    MFTRebalancing = 4,
+    MFTDifferentDistributionByLocation = 5,
+    NestedMFT = 6,
+    NestedMFTDifferentDistributionByLocation = 7
   };
 
   static std::map<std::string, StrategyType> StrategyTypeMap;

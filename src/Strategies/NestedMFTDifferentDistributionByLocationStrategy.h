@@ -18,8 +18,9 @@ public:
   std::vector<IStrategy*> strategy_list;
   DoubleVector2 distribution;
   DoubleVector2 start_distribution;
-  int peak_at{0};
+  DoubleVector2 peak_distribution;
   int starting_time{0};
+  int peak_after{0};
 
   NestedMFTDifferentDistributionByLocationStrategy();
   //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
@@ -38,7 +39,7 @@ public:
    */
   void update_end_of_time_step() override;
 
-  void adjust_distribution_yearly(const int &time, const int& peak_at);
+  void adjust_distribution(const int &time);
 
   void adjust_started_time_point(const int& current_time) override;
   void monthly_update() override;

@@ -686,13 +686,15 @@ strategy_db:
         type: NestedMFT
         strategy_ids: [1,0]
         start_distribution: [0.05, 0.95]
-        end_distribution: [0.8,0.2]        
+        peak_distribution: [0.8,0.2]        
+        peak_after: 3650
     12:
         name: ASAQ-BaseLineStrategy
         type: NestedMFT
         strategy_ids: [2,0]
         start_distribution: [0.05, 0.95]
-        end_distribution: [0.8,0.2]     
+        peak_distribution: [0.8,0.2]
+        peak_after: 3650
     13:
         name: MFTDifferentDistributionByLocation
         type: MFTDifferentDistributionByLocation
@@ -712,10 +714,9 @@ strategy_db:
         name: BaseLineStrategy
         type: NestedMFTDifferentDistributionByLocation
         strategy_ids: [0,1]
-        peak_at: -1
         start_distribution: [[0.05, 0.95]]
-        strategy_switching_day: 5110
-        switch_to_strategy_id: 0
+        peak_distribution: [[0.8,0.2]]
+        peak_after: 3650
 
 initial_strategy_id: 5
 

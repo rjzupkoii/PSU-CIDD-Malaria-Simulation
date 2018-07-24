@@ -20,6 +20,7 @@ file(GLOB SRC_FILES
 	${PROJECT_SOURCE_DIR}/src/Spatial/*.cpp
 	${PROJECT_SOURCE_DIR}/src/Core/*.cpp
 	${PROJECT_SOURCE_DIR}/src/Core/Config/*.cpp
+	${PROJECT_SOURCE_DIR}/src/Core/Index/*.cpp
 	${PROJECT_SOURCE_DIR}/src/Helpers/*.cpp 	
 	${PROJECT_SOURCE_DIR}/src/Therapies/*.cpp
 	${PROJECT_SOURCE_DIR}/src/Strategies/*.cpp

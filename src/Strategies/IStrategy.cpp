@@ -5,7 +5,6 @@ std::map<std::string, IStrategy::StrategyType> IStrategy::StrategyTypeMap{
     {"Cycling", Cycling},
     {"AdaptiveCycling", AdaptiveCycling},
     {"MFT", MFT},
-    {"ACTIncreaseOvertime", ACTIncreaseOvertime},
     {"MFTRebalancing", MFTRebalancing},
     {"NestedMFT", NestedMFT},
     {"MFTDifferentDistributionByLocation", MFTDifferentDistributionByLocation},

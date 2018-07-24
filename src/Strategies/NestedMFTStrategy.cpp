@@ -39,6 +39,7 @@ void NestedMFTStrategy::adjust_started_time_point(const int& current_time) {
   for (auto& strategy : strategy_list) {
     strategy->adjust_started_time_point(current_time);
   }
+  starting_time = current_time;
 }
 
 void NestedMFTStrategy::update_end_of_time_step() {
@@ -49,16 +50,19 @@ void NestedMFTStrategy::update_end_of_time_step() {
 }
 
 void NestedMFTStrategy::monthly_update() {
-  adjust_disttribution(Model::SCHEDULER->current_time(), Model::CONFIG->total_time());
+  adjust_disttribution(Model::SCHEDULER->current_time());
+  // std::cout << distribution[0] << "-" << distribution[1] << std::endl;
 }
 
 
-void NestedMFTStrategy::adjust_disttribution(const int& time, const int& totaltime) {
-  const auto d_act = ((end_distribution[0] - start_distribution[0]) * time) / totaltime + start_distribution[0];
+void NestedMFTStrategy::adjust_disttribution(const int& time) {
+  if (time < starting_time + peak_after) {
+    const auto d_act = (peak_distribution[0] - start_distribution[0]) * (time - starting_time) / peak_after + start_distribution[0];
 
-  distribution[0] = d_act;
-  const auto other_d = (1 - d_act) / (distribution.size() - 1);
-  for (auto i = 1; i < distribution.size(); i++) {
-    distribution[i] = other_d;
+    distribution[0] = d_act;
+    const auto other_d = (1 - d_act) / (distribution.size() - 1);
+    for (auto i = 1; i < distribution.size(); i++) {
+      distribution[i] = other_d;
+    }
   }
 }

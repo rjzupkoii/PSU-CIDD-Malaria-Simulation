@@ -8,7 +8,9 @@ public:
   std::vector<IStrategy*> strategy_list;
   std::vector<double> distribution;
   std::vector<double> start_distribution;
-  std::vector<double> end_distribution;
+  std::vector<double> peak_distribution;
+  int starting_time{0};
+  int peak_after{0};
 
 
   NestedMFTStrategy()
@@ -23,6 +25,6 @@ public:
   void update_end_of_time_step() override;
   void monthly_update() override;
 
-  void adjust_disttribution(const int& time, const int& totaltime);
+  void adjust_disttribution(const int& time);
 };
 #endif // NESTEDMFTSTRATEGY_H

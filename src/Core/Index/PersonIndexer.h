@@ -6,7 +6,6 @@
 #define MODERNCPP_SINGLEARRAYPERSONINDEX_H
 
 #include "Core/Index/IObjectIndexer.h"
-#include <iostream>
 #include "Person.h"
 
 template <Person::Property ... Properties>

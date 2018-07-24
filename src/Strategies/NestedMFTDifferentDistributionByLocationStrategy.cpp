@@ -60,22 +60,18 @@ std::string NestedMFTDifferentDistributionByLocationStrategy::to_string() const 
   return sstm.str();
 }
 
-void NestedMFTDifferentDistributionByLocationStrategy::update_end_of_time_step() {
-  const auto time = Model::SCHEDULER->current_time();
-  if (time > starting_time && (time - starting_time) % Constants::DAYS_IN_YEAR() == 0) {
-    adjust_distribution_yearly(time, peak_at);
-  }
+void NestedMFTDifferentDistributionByLocationStrategy::update_end_of_time_step() {  
   // update each strategy in the nest
   for (auto& strategy : strategy_list) {
     strategy->update_end_of_time_step();
   }
 }
 
-void NestedMFTDifferentDistributionByLocationStrategy::adjust_distribution_yearly(const int& time, const int& peak_at) {  
-  if (peak_at == -1) {
+void NestedMFTDifferentDistributionByLocationStrategy::adjust_distribution(const int& time) {
+  if (peak_after == -1) {
     // inflation every year
     for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      const auto d_act = distribution[loc][0] * (1 + Model::CONFIG->inflation_factor());
+      const auto d_act = distribution[loc][0] * (1 + Model::CONFIG->inflation_factor()/12);
       distribution[loc][0] = d_act;
       const auto other_d = (1 - d_act) / (distribution[loc].size() - 1);
       for (auto i = 1; i < distribution[loc].size(); i++) {
@@ -85,14 +81,17 @@ void NestedMFTDifferentDistributionByLocationStrategy::adjust_distribution_yearl
   }
   else {
     // increasing linearly
-    if (distribution[0][0] < 1) {
-      for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-        auto d_act = ((1 - start_distribution[loc][0]) * time) / peak_at + start_distribution[loc][0];
-        d_act = d_act >= 1 ? 1 : d_act;
-        distribution[loc][0] = d_act;
-        const auto other_d = (1 - d_act) / (distribution[loc].size() - 1);
-        for (auto i = 1; i < distribution[loc].size(); i++) {
-          distribution[loc][i] = other_d;
+    if (time <= starting_time + peak_after) {
+      if (distribution[0][0] < 1) {
+        for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+          auto d_act = (peak_distribution[loc][0] - start_distribution[loc][0]) * (time - starting_time) / peak_after + start_distribution[
+            loc][0];
+          d_act = d_act >= 1 ? 1 : d_act;
+          distribution[loc][0] = d_act;
+          const auto other_d = (1 - d_act) / (distribution[loc].size() - 1);
+          for (auto i = 1; i < distribution[loc].size(); i++) {
+            distribution[loc][i] = other_d;
+          }
         }
       }
     }
@@ -108,4 +107,7 @@ void NestedMFTDifferentDistributionByLocationStrategy::adjust_started_time_point
   }
 }
 
-void NestedMFTDifferentDistributionByLocationStrategy::monthly_update() { }
+void NestedMFTDifferentDistributionByLocationStrategy::monthly_update() {
+  adjust_distribution(Model::SCHEDULER->current_time());
+  // std::cout << distribution[0] << "-" << distribution[1] << std::endl;
+}

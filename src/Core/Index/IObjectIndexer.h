@@ -38,13 +38,13 @@ struct MultidimensionalVector {
 
     template<typename Prop>
     static void add(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
-        MultidimensionalVector<T, Dimension - 1>::add(id, container[object->getPropertyValue(v[pos])], v, pos + 1,
+        MultidimensionalVector<T, Dimension - 1>::add(id, container[object->get_property_value(v[pos])], v, pos + 1,
                                                        object);
     }
 
     template<typename Prop>
     static void remove(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
-        MultidimensionalVector<T, Dimension - 1>::remove(id, container[object->getPropertyValue(v[pos])], v, pos + 1,
+        MultidimensionalVector<T, Dimension - 1>::remove(id, container[object->get_property_value(v[pos])], v, pos + 1,
                                                           object);
     }
 };
@@ -63,12 +63,12 @@ struct MultidimensionalVector<T, 2> {
 
     template<typename Prop>
     static void add(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
-        MultidimensionalVector<T, 1>::add(id, container[object->getPropertyValue(v[pos])], v, pos + 1, object);
+        MultidimensionalVector<T, 1>::add(id, container[object->get_property_value(v[pos])], v, pos + 1, object);
     }
 
     template<typename Prop>
     static void remove(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
-        MultidimensionalVector<T, 1>::remove(id, container[object->getPropertyValue(v[pos])], v, pos + 1, object);
+        MultidimensionalVector<T, 1>::remove(id, container[object->get_property_value(v[pos])], v, pos + 1, object);
     }
 };
 
@@ -88,12 +88,10 @@ struct MultidimensionalVector<T, 1> {
     static void remove(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
         size_t index = object->getPositionInDeepestNestedVector(id);
         container.back()->setPositionInDeepestNestedVector(index, id);
-//        object->setPositionInDeepestNestedVector(SIZE_MAX, id);
 
         std::swap(container[index], container[container.size() -1]);
 
         container.pop_back();
-
     }
 };
 

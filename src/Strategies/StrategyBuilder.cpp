@@ -18,7 +18,6 @@
 #include "CyclingStrategy.h"
 #include "AdaptiveCyclingStrategy.h"
 #include "MFTStrategy.h"
-#include "ACTIncreaseStrategy.h"
 #include "NestedMFTStrategy.h"
 #include "MFTRebalancingStrategy.h"
 #include "MFTDifferentDistributionByLocationStrategy.h"
@@ -39,8 +38,6 @@ IStrategy* StrategyBuilder::build(const YAML::Node& ns, const int& strategy_id, 
     return buildAdaptiveCyclingStrategy(ns, strategy_id, config);
   case IStrategy::MFT:
     return buildMFTStrategy(ns, strategy_id, config);
-  case IStrategy::ACTIncreaseOvertime:
-    return buildACTIncreaseStrategy(ns, strategy_id, config);
   case IStrategy::MFTRebalancing:
     return buildMFTRebalancingStrategy(ns, strategy_id, config);
   case IStrategy::NestedMFT:
@@ -110,19 +107,6 @@ IStrategy* StrategyBuilder::buildMFTStrategy(const YAML::Node& ns, const int& st
   return result;
 }
 
-IStrategy* StrategyBuilder::buildACTIncreaseStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
-  auto* result = new ACTIncreaseStrategy();
-  result->id = strategy_id;
-  result->name = ns["name"].as<std::string>();
-
-  add_distributions(ns["start_distribution"], result->start_distribution);
-  add_distributions(ns["start_distribution"], result->distribution);
-  add_distributions(ns["end_distribution"], result->end_distribution);
-
-  add_therapies(ns, result, config);
-
-  return result;
-}
 
 
 IStrategy* StrategyBuilder::buildNestedSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
@@ -132,7 +116,9 @@ IStrategy* StrategyBuilder::buildNestedSwitchingStrategy(const YAML::Node& ns, c
 
   add_distributions(ns["start_distribution"], result->start_distribution);
   add_distributions(ns["start_distribution"], result->distribution);
-  add_distributions(ns["end_distribution"], result->end_distribution);
+  add_distributions(ns["peak_distribution"], result->peak_distribution);
+
+  result->peak_after = ns["peak_after"].as<int>();
 
   for (int i = 0; i < ns["strategy_ids"].size(); i++) {
     result->add_strategy(
@@ -180,7 +166,7 @@ IStrategy* StrategyBuilder::buildMFTDifferentDistributionByLocationStrategy(cons
 }
 
 IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrategy(const YAML::Node& ns,
-                                                                                        const int& strategy_id, Config* config) {
+                                                                                  const int& strategy_id, Config* config) {
   auto* result = new NestedMFTDifferentDistributionByLocationStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
@@ -191,8 +177,11 @@ IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrateg
   result->start_distribution.clear();
   result->start_distribution.resize(static_cast<unsigned long long int>(config->number_of_locations()));
 
+  result->peak_distribution.clear();
+  result->peak_distribution.resize(static_cast<unsigned long long int>(config->number_of_locations()));
+
   for (auto loc = 0; loc < config->number_of_locations(); loc++) {
-    int input_loc = ns["start_distribution"].size() < config->number_of_locations() ? 0 : loc;
+    auto input_loc = ns["start_distribution"].size() < config->number_of_locations() ? 0 : loc;
     add_distributions(ns["start_distribution"][input_loc], result->distribution[loc]);
   }
   for (auto loc = 0; loc < config->number_of_locations(); loc++) {
@@ -200,11 +189,16 @@ IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrateg
     add_distributions(ns["start_distribution"][input_loc], result->start_distribution[loc]);
   }
 
+  for (auto loc = 0; loc < config->number_of_locations(); loc++) {
+    auto input_loc = ns["peak_distribution"].size() < config->number_of_locations() ? 0 : loc;
+    add_distributions(ns["peak_distribution"][input_loc], result->peak_distribution[loc]);
+  }
+
   for (auto i = 0; i < ns["strategy_ids"].size(); i++) {
     result->add_strategy(config->strategy_db()[ns["strategy_ids"][i].as<int>()]);
   }
 
-  result->peak_at = ns["peak_at"].as<int>();
+  result->peak_after = ns["peak_after"].as<int>();
   //    std::cout << result->to_string() << std::endl;
 
   return result;
