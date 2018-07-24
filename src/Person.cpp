@@ -80,7 +80,7 @@ Person::~Person() {
   ObjectHelpers::delete_pointer<IntVector>(today_target_locations_);
 }
 
-void Person::NotifyChange(const PersonProperties& property, const void* oldValue, const void* newValue) {
+void Person::NotifyChange(const Property& property, const void* oldValue, const void* newValue) {
   if (population_ != nullptr) {
     population_->notify_change(this, property, oldValue, newValue);
   }
@@ -352,7 +352,7 @@ int Person::complied_dosing_days(const int& dosing_day) const {
   return dosing_day;
 }
 
-void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite_) {
+void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite) {
   //if therapy is SCTherapy
   auto* sc_therapy = dynamic_cast<SCTherapy *>(therapy);
   if (sc_therapy != nullptr) {
@@ -368,17 +368,17 @@ void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinica
     auto* mac_therapy = dynamic_cast<MACTherapy *>(therapy);
     assert(macTherapy != nullptr);
     for (auto i = 0; i < mac_therapy->therapy_ids().size(); i++) {
-      auto therapy_id = mac_therapy->therapy_ids()[i];
+      const auto therapy_id = mac_therapy->therapy_ids()[i];
       const auto start_day = mac_therapy->start_at_days()[i];
 
       if (start_day == 1) {
-        receive_therapy(Model::CONFIG->therapy_db()[therapy_id], clinical_caused_parasite_);
+        receive_therapy(Model::CONFIG->therapy_db()[therapy_id], clinical_caused_parasite);
       }
       else {
         assert(start_day > 1);
         ReceiveTherapyEvent::schedule_event(Model::SCHEDULER, this, Model::CONFIG->therapy_db()[therapy_id],
                                             Model::SCHEDULER->current_time() + start_day - 1,
-                                            clinical_caused_parasite_);
+                                            clinical_caused_parasite);
       }
     }
   }
@@ -411,21 +411,21 @@ void Person::schedule_update_by_drug_event(ClonalParasitePopulation* clinical_ca
                                                Model::SCHEDULER->current_time() + 1);
 }
 
-void Person::schedule_end_clinical_event(ClonalParasitePopulation* blood_parasite) {
+void Person::schedule_end_clinical_event(ClonalParasitePopulation* clinical_caused_parasite) {
 
   int dClinical = Model::RANDOM->random_normal(7, 2);
   dClinical = std::min<int>(std::max<int>(dClinical, 5), 14);
 
-  EndClinicalEvent::schedule_event(Model::SCHEDULER, this, blood_parasite,
+  EndClinicalEvent::schedule_event(Model::SCHEDULER, this, clinical_caused_parasite,
                                    Model::SCHEDULER->current_time() + dClinical);
 }
 
-void Person::schedule_end_clinical_by_no_treatment_event(ClonalParasitePopulation* blood_parasite) {
+void Person::schedule_end_clinical_by_no_treatment_event(ClonalParasitePopulation* clinical_caused_parasite) {
 
   auto d_clinical = Model::RANDOM->random_normal(7, 2);
   d_clinical = std::min<int>(std::max<int>(d_clinical, 5), 14);
 
-  EndClinicalByNoTreatmentEvent::schedule_event(Model::SCHEDULER, this, blood_parasite,
+  EndClinicalByNoTreatmentEvent::schedule_event(Model::SCHEDULER, this, clinical_caused_parasite,
                                                 Model::SCHEDULER->current_time() + d_clinical);
 
 }
@@ -611,11 +611,11 @@ void Person::schedule_move_parasite_to_blood(Genotype* genotype, const int& time
   MoveParasiteToBloodEvent::schedule_event(Model::SCHEDULER, this, genotype, Model::SCHEDULER->current_time() + time);
 }
 
-void Person::schedule_mature_gametocyte_event(ClonalParasitePopulation* blood_parasite) {
+void Person::schedule_mature_gametocyte_event(ClonalParasitePopulation* clinical_caused_parasite) {
   const auto day_mature_gametocyte = (age_ <= 5)
                                        ? Model::CONFIG->days_mature_gametocyte_under_five()
                                        : Model::CONFIG->days_mature_gametocyte_over_five();
-  MatureGametocyteEvent::schedule_event(Model::SCHEDULER, this, blood_parasite,
+  MatureGametocyteEvent::schedule_event(Model::SCHEDULER, this, clinical_caused_parasite,
                                         Model::SCHEDULER->current_time() + day_mature_gametocyte);
 }
 

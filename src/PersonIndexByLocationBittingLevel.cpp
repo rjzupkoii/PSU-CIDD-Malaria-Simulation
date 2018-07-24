@@ -38,7 +38,7 @@ void PersonIndexByLocationBittingLevel::remove(Person* p) {
     p->PersonIndexByLocationBittingLevelHandler::set_index(-1);
 }
 
-void PersonIndexByLocationBittingLevel::notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue, const void* newValue) {
+void PersonIndexByLocationBittingLevel::notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue) {
     switch (property) {
         case Person::LOCATION:
             change_property(p, *(int*) newValue, p->bitting_level());

@@ -64,7 +64,7 @@ int PersonIndexByLocationStateAgeClass::size() const {
     return 0;
 }
 
-void PersonIndexByLocationStateAgeClass::notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue, const void* newValue) {
+void PersonIndexByLocationStateAgeClass::notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue) {
 
     switch (property) {
         case Person::LOCATION:

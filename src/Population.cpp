@@ -84,7 +84,7 @@ void Population::remove_dead_person(Person* person) {
   ObjectHelpers::delete_pointer<Person>(person);
 }
 
-void Population::notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue,
+void Population::notify_change(Person* p, const Person::Property& property, const void* oldValue,
                                const void* newValue) {
 
   for (PersonIndex* person_index : *person_index_list_) {

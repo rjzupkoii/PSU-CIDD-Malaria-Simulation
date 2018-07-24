@@ -14,9 +14,7 @@
 #include "Person.h"
 #include "PersonIndex.h"
 #include "Dispatcher.h"
-#include "Spatial/Location.h"
-#include <date/date.h>
-#include <chrono>
+#include <vector>
 
 //#include "PersonIndexByLocationStateAgeClass.h"
 
@@ -78,7 +76,7 @@ public:
    * @param newValue
    */
   virtual void
-  notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue, const void* newValue);
+  notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue);
 
   /**
    * Return the number of individuals in the population

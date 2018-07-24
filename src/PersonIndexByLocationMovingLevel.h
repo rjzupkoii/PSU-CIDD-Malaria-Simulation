@@ -30,7 +30,7 @@ public:
     
     virtual void update();
 
-    virtual void notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue, const void* newValue);
+    virtual void notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue);
 
 private:
     void remove_without_set_index(Person* p);

@@ -34,7 +34,7 @@ int PersonIndexAll::size() const {
   return vPerson_.size();
 }
 
-void PersonIndexAll::notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue, const void* newValue) {}
+void PersonIndexAll::notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue) {}
 
 void PersonIndexAll::update() {
   vPerson_.shrink_to_fit();

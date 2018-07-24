@@ -39,7 +39,7 @@ void PersonIndexByLocationMovingLevel::remove(Person* p) {
 	p->PersonIndexByLocationMovingLevelHandler::set_index(-1);
 }
 
-void PersonIndexByLocationMovingLevel::notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue, const void* newValue) {
+void PersonIndexByLocationMovingLevel::notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue) {
 	switch (property) {
 	case Person::LOCATION:
 		change_property(p, *(int*) newValue, p->moving_level());

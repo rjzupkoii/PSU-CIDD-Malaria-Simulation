@@ -26,7 +26,7 @@ public:
     virtual int size() const;
     virtual void update();
     
-    virtual void notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue, const void* newValue);
+    virtual void notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue);
     
     
 private:

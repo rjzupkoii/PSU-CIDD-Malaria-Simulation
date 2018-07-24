@@ -38,7 +38,7 @@ void PersonIndexByLocationExternalPopulationMovingLevel::remove(Person* p) {
     p->PersonIndexByLocationExternalPopulationMovingLevelHandler::set_index(-1);
 }
 
-void PersonIndexByLocationExternalPopulationMovingLevel::notify_change(Person* p, const Person::PersonProperties& property, const void* oldValue, const void* newValue) {
+void PersonIndexByLocationExternalPopulationMovingLevel::notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue) {
     switch (property) {
         case Person::LOCATION:
             change_property(p, *(int*) newValue, p->external_population_moving_level());

@@ -40,7 +40,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
                public Dispatcher{
 public:
 
-  enum PersonProperties {
+  enum Property {
     LOCATION = 0,
     HOST_STATE,
     AGE,
@@ -101,7 +101,7 @@ public:
   //    Person(const Person& orig);
   virtual ~Person();
 
-  void init();
+  void init() override;
 
   //    Model* model();
   //    Scheduler* scheduler();
@@ -109,7 +109,7 @@ public:
   //    Random* random();
 
 
-  void NotifyChange(const PersonProperties& property, const void* oldValue, const void* newValue);
+  void NotifyChange(const Property& property, const void* oldValue, const void* newValue);
   virtual void increase_age_by_1_year();
 
   //    BloodParasite* add_new_parasite_to_blood(Genotype* parasite_type);
@@ -137,7 +137,7 @@ public:
 
   int complied_dosing_days(const int& dosing_day) const;
 
-  void receive_therapy(Therapy* therapy, ClonalParasitePopulation* clincial_caused_parasite_);
+  void receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite);
   void add_drug_to_blood(DrugType* dt, const int& dosing_days);
 
   void schedule_progress_to_clinical_event_by(ClonalParasitePopulation* blood_parasite);
@@ -145,9 +145,9 @@ public:
   void schedule_test_treatment_failure_event(ClonalParasitePopulation* blood_parasite, const int& testing_day,
                                              const int& t_id = 0);
 
-  void schedule_update_by_drug_event(ClonalParasitePopulation* blood_parasite);
-  void schedule_end_clinical_event(ClonalParasitePopulation* blood_parasite);
-  void schedule_end_clinical_by_no_treatment_event(ClonalParasitePopulation* blood_parasite);
+  void schedule_update_by_drug_event(ClonalParasitePopulation* clinical_caused_parasite);
+  void schedule_end_clinical_event(ClonalParasitePopulation* clinical_caused_parasite);
+  void schedule_end_clinical_by_no_treatment_event(ClonalParasitePopulation* clinical_caused_parasite);
   void schedule_relapse_event(ClonalParasitePopulation* clinical_caused_parasite, const int& time_until_relapse);
 
   void schedule_move_parasite_to_blood(Genotype* genotype, const int& time);
