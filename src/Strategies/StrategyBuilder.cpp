@@ -20,8 +20,8 @@
 #include "MFTStrategy.h"
 #include "NestedMFTStrategy.h"
 #include "MFTRebalancingStrategy.h"
-#include "MFTDifferentDistributionByLocationStrategy.h"
-#include "NestedMFTDifferentDistributionByLocationStrategy.h"
+#include "MFTMultiLocationStrategy.h"
+#include "NestedMFTMultiLocationStrategy.h"
 
 StrategyBuilder::StrategyBuilder() = default;
 
@@ -42,9 +42,9 @@ IStrategy* StrategyBuilder::build(const YAML::Node& ns, const int& strategy_id, 
     return buildMFTRebalancingStrategy(ns, strategy_id, config);
   case IStrategy::NestedMFT:
     return buildNestedSwitchingStrategy(ns, strategy_id, config);
-  case IStrategy::MFTDifferentDistributionByLocation:
-    return buildMFTDifferentDistributionByLocationStrategy(ns, strategy_id, config);
-  case IStrategy::NestedMFTDifferentDistributionByLocation:
+  case IStrategy::MFTMultiLocation:
+    return buildMFTMultiLocationStrategy(ns, strategy_id, config);
+  case IStrategy::NestedMFTMultiLocation:
     return buildNestedMFTDifferentDistributionByLocationStrategy(ns, strategy_id, config);
   default:
     return nullptr;
@@ -146,8 +146,8 @@ IStrategy* StrategyBuilder::buildMFTRebalancingStrategy(const YAML::Node& ns, co
   return result;
 }
 
-IStrategy* StrategyBuilder::buildMFTDifferentDistributionByLocationStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
-  auto* result = new MFTDifferentDistributionByLocationStrategy();
+IStrategy* StrategyBuilder::buildMFTMultiLocationStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
+  auto* result = new MFTMultiLocationStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
@@ -167,7 +167,7 @@ IStrategy* StrategyBuilder::buildMFTDifferentDistributionByLocationStrategy(cons
 
 IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrategy(const YAML::Node& ns,
                                                                                   const int& strategy_id, Config* config) {
-  auto* result = new NestedMFTDifferentDistributionByLocationStrategy();
+  auto* result = new NestedMFTMultiLocationStrategy();
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 

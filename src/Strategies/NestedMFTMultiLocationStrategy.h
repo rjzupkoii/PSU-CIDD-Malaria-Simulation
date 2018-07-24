@@ -8,23 +8,22 @@
 #include "IStrategy.h"
 #include "Core/TypeDef.h"
 
-
 class Config;
 
-class NestedMFTDifferentDistributionByLocationStrategy : public IStrategy {
-DISALLOW_COPY_AND_ASSIGN(NestedMFTDifferentDistributionByLocationStrategy)
-DISALLOW_MOVE(NestedMFTDifferentDistributionByLocationStrategy)
+class NestedMFTMultiLocationStrategy : public IStrategy {
+  DISALLOW_COPY_AND_ASSIGN(NestedMFTMultiLocationStrategy)
+    DISALLOW_MOVE(NestedMFTMultiLocationStrategy)
 public:
   std::vector<IStrategy*> strategy_list;
   DoubleVector2 distribution;
   DoubleVector2 start_distribution;
   DoubleVector2 peak_distribution;
-  int starting_time{0};
-  int peak_after{0};
+  int starting_time{ 0 };
+  int peak_after{ 0 };
 
-  NestedMFTDifferentDistributionByLocationStrategy();
+  NestedMFTMultiLocationStrategy();
   //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
-  virtual ~NestedMFTDifferentDistributionByLocationStrategy();
+  virtual ~NestedMFTMultiLocationStrategy();
 
   virtual void add_strategy(IStrategy* strategy);
 
@@ -35,8 +34,8 @@ public:
   std::string to_string() const override;
 
   /**
-   * This function will be executed at end of time step, to check and switch therapy if needed
-   */
+  * This function will be executed at end of time step, to check and switch therapy if needed
+  */
   void update_end_of_time_step() override;
 
   void adjust_distribution(const int &time);
@@ -45,6 +44,7 @@ public:
   void monthly_update() override;
 
 };
+
 
 
 #endif //POMS_NESTEDSWITCHINGDIFFERENTDISTRIBUTIONBYLOCATION_H

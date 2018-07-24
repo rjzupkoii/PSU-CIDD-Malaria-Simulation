@@ -3,33 +3,28 @@
 //
 
 #include <sstream>
-#include "NestedMFTDifferentDistributionByLocationStrategy.h"
+#include "NestedMFTMultiLocationStrategy.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "Person.h"
 #include "Scheduler.h"
 #include "Therapies/Therapy.h"
-#include "MFTRebalancingStrategy.h"
-#include "CyclingStrategy.h"
-#include "AdaptiveCyclingStrategy.h"
-#include "Constants.h"
-#include "NestedMFTStrategy.h"
 
 // TODO: check if it match with the calendar day
 
-NestedMFTDifferentDistributionByLocationStrategy::NestedMFTDifferentDistributionByLocationStrategy(): IStrategy(
-  "NestedMFTDifferentDistributionByLocationStrategy", NestedMFTDifferentDistributionByLocation) {}
+NestedMFTMultiLocationStrategy::NestedMFTMultiLocationStrategy(): IStrategy(
+  "NestedMFTMultiLocationStrategy", NestedMFTMultiLocation) {}
 
-NestedMFTDifferentDistributionByLocationStrategy::~NestedMFTDifferentDistributionByLocationStrategy() = default;
+NestedMFTMultiLocationStrategy::~NestedMFTMultiLocationStrategy() = default;
 
-void NestedMFTDifferentDistributionByLocationStrategy::add_strategy(IStrategy* strategy) {
+void NestedMFTMultiLocationStrategy::add_strategy(IStrategy* strategy) {
   strategy_list.push_back(strategy);
 }
 
-void NestedMFTDifferentDistributionByLocationStrategy::add_therapy(Therapy* therapy) {}
+void NestedMFTMultiLocationStrategy::add_therapy(Therapy* therapy) {}
 
-Therapy* NestedMFTDifferentDistributionByLocationStrategy::get_therapy(Person* person) {
+Therapy* NestedMFTMultiLocationStrategy::get_therapy(Person* person) {
   const auto loc = person->location();
   const auto p = Model::RANDOM->random_flat(0.0, 1.0);
 
@@ -43,7 +38,7 @@ Therapy* NestedMFTDifferentDistributionByLocationStrategy::get_therapy(Person* p
   return strategy_list[strategy_list.size() - 1]->get_therapy(person);
 }
 
-std::string NestedMFTDifferentDistributionByLocationStrategy::to_string() const {
+std::string NestedMFTMultiLocationStrategy::to_string() const {
   std::stringstream sstm;
   sstm << IStrategy::id << "-" << IStrategy::name << std::endl;
 
@@ -60,14 +55,14 @@ std::string NestedMFTDifferentDistributionByLocationStrategy::to_string() const 
   return sstm.str();
 }
 
-void NestedMFTDifferentDistributionByLocationStrategy::update_end_of_time_step() {  
+void NestedMFTMultiLocationStrategy::update_end_of_time_step() {  
   // update each strategy in the nest
   for (auto& strategy : strategy_list) {
     strategy->update_end_of_time_step();
   }
 }
 
-void NestedMFTDifferentDistributionByLocationStrategy::adjust_distribution(const int& time) {
+void NestedMFTMultiLocationStrategy::adjust_distribution(const int& time) {
   if (peak_after == -1) {
     // inflation every year
     for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
@@ -99,7 +94,7 @@ void NestedMFTDifferentDistributionByLocationStrategy::adjust_distribution(const
 }
 
 
-void NestedMFTDifferentDistributionByLocationStrategy::adjust_started_time_point(const int& current_time) {
+void NestedMFTMultiLocationStrategy::adjust_started_time_point(const int& current_time) {
   starting_time = current_time;
   // update each strategy in the nest
   for (auto& strategy : strategy_list) {
@@ -107,7 +102,7 @@ void NestedMFTDifferentDistributionByLocationStrategy::adjust_started_time_point
   }
 }
 
-void NestedMFTDifferentDistributionByLocationStrategy::monthly_update() {
+void NestedMFTMultiLocationStrategy::monthly_update() {
   adjust_distribution(Model::SCHEDULER->current_time());
   // std::cout << distribution[0] << "-" << distribution[1] << std::endl;
 }

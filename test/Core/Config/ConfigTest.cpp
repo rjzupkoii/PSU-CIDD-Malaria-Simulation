@@ -153,7 +153,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.strategy_db()[0]->name== "SP-AQ-CQ-AL-MFTStrategy");
     REQUIRE(c.strategy_db()[0]->get_type()== IStrategy::MFT);
     REQUIRE(c.strategy_db()[14]->name== "BaseLineStrategy");
-    REQUIRE(c.strategy_db()[14]->get_type()== IStrategy::NestedMFTDifferentDistributionByLocation);
+    REQUIRE(c.strategy_db()[14]->get_type()== IStrategy::NestedMFTMultiLocation);
 
     REQUIRE(c.initial_strategy_id()== 5);
 

@@ -9,18 +9,17 @@
 #include "IStrategy.h"
 #include "Core/TypeDef.h"
 
-
-class MFTDifferentDistributionByLocationStrategy : public IStrategy {
-DISALLOW_COPY_AND_ASSIGN(MFTDifferentDistributionByLocationStrategy)
-DISALLOW_MOVE(MFTDifferentDistributionByLocationStrategy)
+class MFTMultiLocationStrategy : public IStrategy {
+DISALLOW_COPY_AND_ASSIGN(MFTMultiLocationStrategy)
+DISALLOW_MOVE(MFTMultiLocationStrategy)
 
 public:
   std::vector<Therapy *> therapy_list;
   DoubleVector2 distribution_by_location;
 
-  MFTDifferentDistributionByLocationStrategy();
+  MFTMultiLocationStrategy();
   //    MFTStrategy(const MFTStrategy& orig);
-  virtual ~MFTDifferentDistributionByLocationStrategy();
+  virtual ~MFTMultiLocationStrategy();
   void add_therapy(Therapy* therapy) override;
   Therapy* get_therapy(Person* person) override;
   std::string to_string() const override;

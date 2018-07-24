@@ -99,7 +99,7 @@ void Model::set_treatment_strategy(const int& strategy_id) {
   //   dynamic_cast<NestedSwitchingStrategy *>(treatment_strategy_)->initialize_update_time(config_);
   // }
   // if (treatment_strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
-  //   dynamic_cast<NestedMFTDifferentDistributionByLocationStrategy *>(treatment_strategy_)->initialize_update_time(config_);
+  //   dynamic_cast<NestedMFTMultiLocationStrategy *>(treatment_strategy_)->initialize_update_time(config_);
   // }
 }
 

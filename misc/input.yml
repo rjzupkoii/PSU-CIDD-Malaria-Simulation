@@ -696,8 +696,8 @@ strategy_db:
         peak_distribution: [0.8,0.2]
         peak_after: 3650
     13:
-        name: MFTDifferentDistributionByLocation
-        type: MFTDifferentDistributionByLocation
+        name: MFTMultiLocation
+        type: MFTMultiLocation
         therapy_ids: [6,8,10,7,9]
         distribution: [
         [0.84,0.06,0.05,0.03,0.02],
@@ -712,7 +712,7 @@ strategy_db:
         ]
     14:
         name: BaseLineStrategy
-        type: NestedMFTDifferentDistributionByLocation
+        type: NestedMFTMultiLocation
         strategy_ids: [0,1]
         start_distribution: [[0.05, 0.95]]
         peak_distribution: [[0.8,0.2]]

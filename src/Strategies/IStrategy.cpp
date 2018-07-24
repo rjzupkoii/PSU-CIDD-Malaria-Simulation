@@ -7,6 +7,6 @@ std::map<std::string, IStrategy::StrategyType> IStrategy::StrategyTypeMap{
     {"MFT", MFT},
     {"MFTRebalancing", MFTRebalancing},
     {"NestedMFT", NestedMFT},
-    {"MFTDifferentDistributionByLocation", MFTDifferentDistributionByLocation},
-    {"NestedMFTDifferentDistributionByLocation", NestedMFTDifferentDistributionByLocation},
+    {"MFTMultiLocation", MFTMultiLocation},
+    {"NestedMFTMultiLocation", NestedMFTMultiLocation},
 };
