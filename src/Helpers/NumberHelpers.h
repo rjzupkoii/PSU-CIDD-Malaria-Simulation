@@ -6,6 +6,9 @@
 #define PCMS_NUMBERHELPERS_H
 
 #include <cmath>
+#include <limits>
+#include <string>
+#include <sstream>
 
 class NumberHelpers {
 public:
