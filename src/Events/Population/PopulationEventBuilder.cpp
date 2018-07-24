@@ -1,3 +1,5 @@
+#define NOMINMAX
+
 #include "PopulationEventBuilder.h"
 #include <vector>
 #include "yaml-cpp/yaml.h"
@@ -6,6 +8,7 @@
 #include "ImportationPeriodicallyEvent.h"
 #include "ChangeTreatmentCoverageEvent.h"
 #include "ChangeStrategyEvent.h"
+#include <algorithm>
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
@@ -33,7 +36,7 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasites_periodical
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto location = node[i]["location"].as<int>();
     const auto location_from = location == -1 ? 0 : location;
-    const auto location_to = location == -1 ? config->number_of_locations() : min(location + 1,config->number_of_locations());
+    const auto location_to = location == -1 ? config->number_of_locations() : std::min(location + 1,config->number_of_locations());
 
     for (auto loc = location_from; loc < location_to; ++loc) {
       for (std::size_t j = 0; j < node[i]["parasite_info"].size(); j++) {
