@@ -13,7 +13,7 @@
   ConfigItem<type> name{#name,default_value, this};
 
 #define CUSTOM_CONFIG_ITEM(name,default_value)\
-  name name{#name,default_value, this};
+  ::name name{#name,default_value, this};
 
 class Config;
 

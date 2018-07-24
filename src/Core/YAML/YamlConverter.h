@@ -4,6 +4,7 @@
 #include <yaml-cpp/yaml.h>
 #include "Spatial/Location.h"
 #include "Core/TypeDef.h"
+#include <cmath>
 
 namespace YAML {
   template <>

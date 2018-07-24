@@ -7,7 +7,6 @@
 #include "Therapies/DrugDatabase.h"
 #include "Parasites/GenotypeDatabase.h"
 #include "Core/MultinomialDistributionGenerator.h"
-#include "Malaria/ITreatmentCoverageModel.h"
 
 
 namespace YAML {
