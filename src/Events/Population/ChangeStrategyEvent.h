@@ -1,6 +1,7 @@
 #ifndef CHANGESTRATEGYEVENT_H
 #define CHANGESTRATEGYEVENT_H
 #include "Events/Event.h"
+#include <string>
 
 class ChangeStrategyEvent : public Event {
 public:

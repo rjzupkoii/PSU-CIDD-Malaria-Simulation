@@ -895,3 +895,21 @@ events:
     info:
       - day: 1993/3/2
         strategy_id: 14
+  - name: single_round_MDA
+    info:
+      - day: 2000/1/1
+        fraction_population_targeted: [0.7]
+        fraction_of_targeted_population_participating: [0.7]
+        #index start from 0
+        age_class_min: 2
+        age_class_max: 13
+      - day: 2000/2/1
+        fraction_population_targeted: [0.7]
+        fraction_of_targeted_population_participating: [0.7]
+        age_class_min: 2
+        age_class_max: 13
+      - day: 2000/3/1
+        fraction_population_targeted: [0.7]
+        fraction_of_targeted_population_participating: [0.7]
+        age_class_min: 2
+        age_class_max: 13

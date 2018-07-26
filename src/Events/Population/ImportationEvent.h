@@ -11,9 +11,11 @@
 #include "ObjectPool.h"
 #include "Core/PropertyMacro.h"
 #include "Events/Event.h"
+#include <string>
 
 class ImportationEvent : public Event {
 DISALLOW_COPY_AND_ASSIGN(ImportationEvent)
+DISALLOW_MOVE(ImportationEvent)
 OBJECTPOOL(ImportationEvent)
 VIRTUAL_PROPERTY_REF(int, location)
 VIRTUAL_PROPERTY_REF(int, genotype_id)

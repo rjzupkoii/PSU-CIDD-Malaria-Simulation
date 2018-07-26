@@ -21,7 +21,7 @@ TEST_CASE("ConfigTest", "[Core]") {
 
     REQUIRE(c.total_time() == 365);
 
-    REQUIRE(c.start_collect_data_day() == 0);
+    REQUIRE(c.start_collect_data_day() == 365);
     REQUIRE(c.start_of_comparison_period()==10926);
 
     REQUIRE(c.number_of_tracking_days() == 11);
@@ -174,7 +174,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     // REQUIRE(c.initial_parasite_info()[19].prevalence == 0.1);
     // REQUIRE(c.initial_parasite_info()[19].location == 10);
 
-    REQUIRE(c.preconfig_population_events().size() == 11);
+    REQUIRE(c.preconfig_population_events().size() == 14);
     REQUIRE(c.preconfig_population_events()[0]->time ==78);
     REQUIRE(c.preconfig_population_events()[1]->time ==104);
     REQUIRE(c.preconfig_population_events()[2]->time ==236);
@@ -186,6 +186,9 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.preconfig_population_events()[8]->time == 60);
     REQUIRE(c.preconfig_population_events()[9]->time == 152);
     REQUIRE(c.preconfig_population_events()[10]->time == 244);
+    REQUIRE(c.preconfig_population_events()[11]->time == 3652);
+    REQUIRE(c.preconfig_population_events()[12]->time == 3683);
+    REQUIRE(c.preconfig_population_events()[13]->time == 3712);
 
     REQUIRE(c.bitting_level_generator().level_density.size()==100);
     REQUIRE(c.moving_level_generator().level_density.size()==100);
