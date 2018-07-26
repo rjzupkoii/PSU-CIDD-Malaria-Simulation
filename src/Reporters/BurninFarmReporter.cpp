@@ -155,7 +155,7 @@ void BurninFarmReporter::output_parameters() {
 }
 
 void BurninFarmReporter::print_ntf_by_location() {
-  double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
+  double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
                                (double) Constants::DAYS_IN_YEAR();
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     double location_discounted_NTF = Model::DATA_COLLECTOR->cumulative_discounted_NTF_by_location()[location] * 100 /
@@ -250,7 +250,7 @@ void BurninFarmReporter::print_death_by_age_group() {
 }
 
 void BurninFarmReporter::print_number_of_clinical_episode_by_age_class() {
-  double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
+  double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
                                (double) Constants::DAYS_IN_YEAR();
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {

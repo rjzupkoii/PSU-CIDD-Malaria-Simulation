@@ -18,11 +18,12 @@ starting_date: 1990/1/1
 ending_date: 2010/1/1
 
 # the day at which the simulation's reporting functionality begins collecting data for 
-# the purposes of displaying it
-start_collect_data_day: 0
+# EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
+# for monthly data display
+start_collect_data_day: 365
 
-# the day at which the MDC will begin collecting NTF
-start_intervention_day: 0
+# the day at which the MDC will begin collecting NTF, AMU, UTL
+start_of_comparison_period: 2019/12/1
 
 # number of days to keep track total number of parasites in population
 # in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
@@ -184,9 +185,7 @@ circulation_info:
   length_of_stay:
     mean: 5
     sd: 10
-
-
-
+    
 genotype_info:
   loci:
     # here we start defining the first locus
@@ -343,9 +342,6 @@ initial_parasite_info:
 #        prevalence: 0.1
 #      - parasite_type_id: 4
 #        prevalence: 0.1
-        
-
-        
 
 
 # drug information below
@@ -686,6 +682,7 @@ strategy_db:
         therapy_id: 11   
     11:
         name: AL-BaseLineStrategy
+        #Nested Strategy
         type: NestedMFT
         strategy_ids: [1,0]
         start_distribution: [0.05, 0.95]

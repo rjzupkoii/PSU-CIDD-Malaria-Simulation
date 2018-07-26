@@ -358,4 +358,12 @@ public:
   void set_value(const YAML::Node& node) override;
 };
 
+class start_of_comparison_period : public ConfigItem<int> {
+public:
+  start_of_comparison_period(const std::string& name, const int& default_value, Config* config) : ConfigItem<int>(name, default_value, config) {}
+
+  void set_value(const YAML::Node& node) override;
+};
+
+
 #endif // CUSTOMCONFIGITEM_H

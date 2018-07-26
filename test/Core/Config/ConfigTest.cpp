@@ -22,7 +22,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.total_time() == 365);
 
     REQUIRE(c.start_collect_data_day() == 0);
-    REQUIRE(c.start_intervention_day()==0);
+    REQUIRE(c.start_of_comparison_period()==10926);
 
     REQUIRE(c.number_of_tracking_days() == 11);
     REQUIRE(c.p_infection_from_an_infectious_bite() == 0.1);

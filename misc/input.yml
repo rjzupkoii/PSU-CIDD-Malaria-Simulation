@@ -18,11 +18,12 @@ starting_date: 1990/1/1
 ending_date: 1991/1/1
 
 # the day at which the simulation's reporting functionality begins collecting data for 
-# the purposes of displaying it
-start_collect_data_day: 0
+# EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
+# for monthly data display
+start_collect_data_day: 365
 
-# the day at which the MDC will begin collecting NTF
-start_intervention_day: 0
+# the day at which the MDC will begin collecting NTF, AMU, UTL
+start_of_comparison_period: 2019/12/1
 
 # number of days to keep track total number of parasites in population
 # in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history

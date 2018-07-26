@@ -468,3 +468,8 @@ void preconfig_population_events::set_value(const YAML::Node& node) {
     value_.insert(value_.end(), events.begin(), events.end());
   }
 }
+
+void start_of_comparison_period::set_value(const YAML::Node& node) {
+  const auto ymd = node[name_].as<date::year_month_day>();
+  value_ = (date::sys_days{ ymd } - date::sys_days(config_->starting_date())).count();
+}

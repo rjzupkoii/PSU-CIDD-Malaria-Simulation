@@ -671,7 +671,7 @@ void ModelDataCollector::record_1_TF(const int& location, const bool& by_drug) {
   }
 
   //TODO: start_intervention_day should have another proper name
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_intervention_day()) {
+  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
     const auto current_discounted_tf = exp(
       log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) /
         Constants::DAYS_IN_YEAR()));
@@ -723,14 +723,14 @@ void ModelDataCollector::record_1_RITF(const int& location) {
 
 void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy,
                                         ClonalParasitePopulation* clinical_caused_parasite) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_intervention_day()) {
+  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
     auto sc_therapy = dynamic_cast<SCTherapy *>(therapy);
     if (sc_therapy != nullptr) {
       const auto art_id = sc_therapy->get_arteminsinin_id();
       if (art_id != -1 && sc_therapy->drug_ids().size() > 1) {
         const auto number_of_drugs_in_therapy = sc_therapy->drug_ids().size();
         const auto discounted_fraction = exp(
-          log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
+          log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
             Constants::DAYS_IN_YEAR()));
         //            assert(false);
         //combine therapy

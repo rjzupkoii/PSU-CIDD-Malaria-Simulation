@@ -1,6 +1,5 @@
 TODO:
-  - Test on cluster
-  
+  - add swith strategy event for NestedMFT
   
 Someday/maybe
   - bring back object pool

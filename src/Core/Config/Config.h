@@ -35,9 +35,8 @@ POINTER_PROPERTY(Model, model)
   CONFIG_ITEM(ending_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 2 })
 
   CUSTOM_CONFIG_ITEM(total_time, 100)
-
-  CONFIG_ITEM(start_collect_data_day, int, 0)
-  CONFIG_ITEM(start_intervention_day, int, 0)
+  
+  CONFIG_ITEM(start_collect_data_day, int, 365)
 
   CONFIG_ITEM(number_of_tracking_days, int, 0)
   CONFIG_ITEM(p_infection_from_an_infectious_bite, double, 0.0)
@@ -90,6 +89,8 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(initial_strategy_id, int , -1)
 
+  CUSTOM_CONFIG_ITEM(start_of_comparison_period, 0)
+
   CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
 
   CUSTOM_CONFIG_ITEM(number_of_locations, 1)
@@ -120,7 +121,7 @@ POINTER_PROPERTY(Model, model)
 
   CUSTOM_CONFIG_ITEM(initial_parasite_info, std::vector<InitialParasiteInfo>())
 
-  CUSTOM_CONFIG_ITEM(preconfig_population_events,std::vector<Event*>());
+  CUSTOM_CONFIG_ITEM(preconfig_population_events,std::vector<Event*>())
 
   CUSTOM_CONFIG_ITEM(bitting_level_generator, MultinomialDistributionGenerator())
   CUSTOM_CONFIG_ITEM(moving_level_generator, MultinomialDistributionGenerator())
@@ -134,8 +135,6 @@ VIRTUAL_PROPERTY_REF(double, modified_daily_cost_of_resistance)
 
 VIRTUAL_PROPERTY_REF(double, modified_mutation_probability)
 
-
-public:
   explicit Config(Model* model = nullptr);
 
   virtual ~Config();

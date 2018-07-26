@@ -70,7 +70,7 @@ void BFMonthlyReporter::after_run() {
   ss << Model::TREATMENT_STRATEGY->id << "\t";
 
   //output NTF
-  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_intervention_day()) /
+  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
     static_cast<double>(Constants::DAYS_IN_YEAR());
 
   auto sum_ntf = 0.0;
