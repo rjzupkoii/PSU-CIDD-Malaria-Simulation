@@ -54,7 +54,7 @@ Person::Person() :
   today_infections_ = nullptr;
   today_target_locations_ = nullptr;
   latest_update_time_ = -1;
-  
+  prob_present_at_mda_ = 0;
 }
 
 void Person::init() {
@@ -751,11 +751,10 @@ bool Person::isGametocytaemic() const {
 }
 
 void Person::generate_prob_present_at_mda_by_age() {
-  if (prob_present_at_mda_by_age().empty()) {
+  if (!prob_present_at_mda_by_age().empty()) {
     for (auto i = 0; i < Model::CONFIG->mean_prob_individual_present_at_mda().size(); i++) {
-      auto value = Model::RANDOM->random_beta(Model::CONFIG->prob_individual_present_at_mda_distribution()[i].alpha,
-                                              Model::CONFIG->prob_individual_present_at_mda_distribution()[i].beta);
-      prob_present_at_mda_by_age_.push_back(value);
+      Model::RANDOM->random_beta(Model::CONFIG->prob_individual_present_at_mda_distribution()[i].alpha,
+                                 Model::CONFIG->prob_individual_present_at_mda_distribution()[i].beta);
     }
   }
 }

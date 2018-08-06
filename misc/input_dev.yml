@@ -899,17 +899,12 @@ events:
     info:
       - day: 2000/1/1
         fraction_population_targeted: [0.7]
-        fraction_of_targeted_population_participating: [0.7]
-        #index start from 0
-        age_class_min: 2
-        age_class_max: 13
       - day: 2000/2/1
         fraction_population_targeted: [0.7]
-        fraction_of_targeted_population_participating: [0.7]
-        age_class_min: 2
-        age_class_max: 13
       - day: 2000/3/1
         fraction_population_targeted: [0.7]
-        fraction_of_targeted_population_participating: [0.7]
-        age_class_min: 2
-        age_class_max: 13
+
+mda_therapy_id: 8        
+prob_present_at_mda_age: [10, 40]
+prob_present_at_mda_mean: [0.85, 0.75, 0.85]
+prob_present_at_mda_sd: [0.03, 0.03, 0.03]

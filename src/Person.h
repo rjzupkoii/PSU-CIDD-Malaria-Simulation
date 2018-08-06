@@ -61,8 +61,7 @@ public:
 
 OBJECTPOOL(Person)
 DISALLOW_COPY_AND_ASSIGN(Person)
-DISALLOW_MOVE(Person)
-
+DISALLOW_MOVE(Person)  
 POINTER_PROPERTY(Population, population)
 PROPERTY_HEADER(int, location)
 PROPERTY_REF(int, residence_location)
@@ -95,6 +94,8 @@ PROPERTY_REF(int, number_of_times_bitten)
 PROPERTY_REF(int, number_of_trips_taken)
   //    PROPERTY_REF(bool, is_tracking_treatment_number);
 PROPERTY_REF(int, last_therapy_id)
+
+PROPERTY_REF(std::vector<double>, prob_present_at_mda_by_age)
 
 public:
   Person();
@@ -191,8 +192,9 @@ public:
 
   bool isGametocytaemic() const;
 
-private:
+  void generate_prob_present_at_mda_by_age();
 
+  double prob_present_at_mda();
 };
 
 #endif	/* PERSON_H */

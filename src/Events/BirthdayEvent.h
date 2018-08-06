@@ -9,6 +9,7 @@
 #define	BIRTHDAYEVENT_H
 #include "Event.h"
 #include "ObjectPool.h"
+#include <string>
 
 class Person;
 

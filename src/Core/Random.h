@@ -10,13 +10,14 @@
 
 #include <gsl/gsl_rng.h>
 #include "PropertyMacro.h"
+#include "Strategies/AdaptiveCyclingStrategy.h"
 
 class Model;
 
 class Random {
 DISALLOW_COPY_AND_ASSIGN(Random)
 DISALLOW_MOVE(Random)
-
+  
 VIRTUAL_PROPERTY(unsigned long, seed)
 public:
   gsl_rng* G_RNG;
@@ -50,6 +51,7 @@ public:
   virtual void random_shuffle(void* base, size_t base_length, size_t size_of_type);
   virtual double cdf_standard_normal_distribution(const double& p);
   virtual int random_binomial(const double& p, const unsigned int& n);
+  void shuffle(void* base, const size_t &n, const size_t &size);
 };
 
 #endif	/* RANDOM_H */

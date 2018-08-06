@@ -14,7 +14,7 @@
 #include <gsl/gsl_cdf.h>
 #include <cmath>
 #include <date/date.h>
-#include <algorithm> 
+#include <algorithm>
 
 void total_time::set_value(const YAML::Node& node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
@@ -437,7 +437,7 @@ void initial_parasite_info::set_value(const YAML::Node& node) {
   for (size_t index = 0; index < info_node.size(); index++) {
     const auto location = info_node[index]["location_id"].as<int>();
     const auto location_from = location == -1 ? 0 : location;
-    const auto location_to = location == -1 ? config_->number_of_locations() : std::min(location + 1,config_->number_of_locations());
+    const auto location_to = location == -1 ? config_->number_of_locations() : std::min(location + 1, config_->number_of_locations());
 
     //apply for all location
     for (auto loc = location_from; loc < location_to; ++loc) {
@@ -464,12 +464,35 @@ void moving_level_generator::set_value(const YAML::Node& node) {
 
 void preconfig_population_events::set_value(const YAML::Node& node) {
   for (std::size_t i = 0; i < node["events"].size(); ++i) {
-      auto events = PopulationEventBuilder::build(node["events"][i], config_);
+    auto events = PopulationEventBuilder::build(node["events"][i], config_);
     value_.insert(value_.end(), events.begin(), events.end());
   }
 }
 
 void start_of_comparison_period::set_value(const YAML::Node& node) {
   const auto ymd = node[name_].as<date::year_month_day>();
-  value_ = (date::sys_days{ ymd } - date::sys_days(config_->starting_date())).count();
+  value_ = (date::sys_days{ymd} - date::sys_days(config_->starting_date())).count();
+}
+
+void prob_individual_present_at_mda_distribution::set_value(const YAML::Node& node) {
+  value_.clear();
+  for (std::size_t i = 0; i < config_->mean_prob_individual_present_at_mda().size(); i++) {
+    auto mean = config_->mean_prob_individual_present_at_mda()[i];
+    auto sd = config_->sd_prob_individual_present_at_mda()[i];
+
+    beta_distribution_params params{};
+
+    if (NumberHelpers::is_equal(sd, 0.0)) {
+      params.alpha = mean;
+      params.beta = 0.0;
+    }
+    else {
+      params.alpha = mean * mean * (1 - mean) / (sd * sd) - mean;
+      params.beta = params.alpha / mean - params.alpha;
+    }
+
+    value_.push_back(params);
+  }
+
+
 }

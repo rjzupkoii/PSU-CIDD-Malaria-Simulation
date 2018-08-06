@@ -10,9 +10,6 @@ DISALLOW_MOVE(SingleRoundMDAEvent)
 
 public:
   std::vector<double> fraction_population_targeted;
-  std::vector<double> fraction_of_targeted_population_participating;
-  int age_class_min{0};
-  int age_class_max{100};
 
   explicit SingleRoundMDAEvent(const int& execute_at);
 

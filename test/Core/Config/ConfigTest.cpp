@@ -12,7 +12,6 @@ TEST_CASE("ConfigTest", "[Core]") {
 
   SECTION("Config can read from default input.yml") {
     Config c;
-    std::cout << "hello" << std::endl;
     c.read_from_file("input.yml");
 
 
@@ -195,5 +194,38 @@ TEST_CASE("ConfigTest", "[Core]") {
 
 
     // REQUIRE(2== 2);
+  }
+
+  SECTION("Config can read MDA Individual parameters") {
+    Config c;
+    c.read_from_file("input.yml");
+
+    REQUIRE(c.age_bracket_prob_individual_present_at_mda().size() == 2);
+    REQUIRE(c.age_bracket_prob_individual_present_at_mda()[0]== 10);
+    REQUIRE(c.age_bracket_prob_individual_present_at_mda()[1]== 40);
+
+    REQUIRE(c.mean_prob_individual_present_at_mda().size() == 3);
+    REQUIRE(c.mean_prob_individual_present_at_mda()[0] == 0.85);
+    REQUIRE(c.mean_prob_individual_present_at_mda()[1] == 0.75);
+    REQUIRE(c.mean_prob_individual_present_at_mda()[2] == 0.85);
+
+    REQUIRE(c.sd_prob_individual_present_at_mda().size() == 3);
+    REQUIRE(c.sd_prob_individual_present_at_mda()[0] == 0.03);
+    REQUIRE(c.sd_prob_individual_present_at_mda()[1] == 0.03);
+    REQUIRE(c.sd_prob_individual_present_at_mda()[2] == 0.03);
+  }
+
+
+  SECTION("Config has MDA prob_individual_present_at_mda_distribution") {
+    Config c;
+    c.read_from_file("input.yml");
+
+    REQUIRE(c.prob_individual_present_at_mda_distribution().size() == 3);
+    std::cout << c.prob_individual_present_at_mda_distribution()[0].alpha << " - " << c.prob_individual_present_at_mda_distribution()[0].beta
+      << std::endl;
+    std::cout << c.prob_individual_present_at_mda_distribution()[1].alpha << " - " << c.prob_individual_present_at_mda_distribution()[1].beta
+      << std::endl;
+    std::cout << c.prob_individual_present_at_mda_distribution()[2].alpha << " - " << c.prob_individual_present_at_mda_distribution()[2].beta
+      << std::endl;
   }
 }

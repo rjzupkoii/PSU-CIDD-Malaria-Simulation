@@ -197,7 +197,7 @@ void Population::perform_infection_event() {
 
 
       for (auto bitting_level = 0; bitting_level < v_int_number_of_bites.size(); bitting_level++) {
-        const std::size_t size = pi->vPerson()[loc][bitting_level].size();
+        const auto size = pi->vPerson()[loc][bitting_level].size();
         if (size == 0) continue;
         for (auto j = 0u; j < v_int_number_of_bites[bitting_level]; j++) {
           //select 1 random person from level i
@@ -346,6 +346,8 @@ void Population::initialize() {
 
           int time = Model::RANDOM->random_uniform(Model::CONFIG->update_frequency()) + 1;
           p->schedule_update_every_K_days_event(time);
+          p->generate_prob_present_at_mda_by_age();
+
           add_person(p);
         }
       }
@@ -520,6 +522,7 @@ void Population::give_1_birth(const int& location) {
 
   //    p->startLivingTime = (Global::startTreatmentDay > Global::scheduler->currentTime) ? Global::startTreatmentDay : Global::scheduler->currentTime;
   p->schedule_update_every_K_days_event(Model::CONFIG->update_frequency());
+  p->generate_prob_present_at_mda_by_age();
 
   add_person(p);
 }

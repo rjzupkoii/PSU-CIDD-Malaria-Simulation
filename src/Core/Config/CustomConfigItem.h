@@ -345,8 +345,8 @@ protected:
 public:
   //constructor
   explicit preconfig_population_events(const std::string& name, std::vector<Event*> default_value,
-                                  Config* config = nullptr) : IConfigItem(config, name),
-                                                              value_{std::move(default_value)} { }
+                                       Config* config = nullptr) : IConfigItem(config, name),
+                                                                   value_{std::move(default_value)} { }
 
   // destructor
   virtual ~preconfig_population_events() = default;
@@ -360,7 +360,35 @@ public:
 
 class start_of_comparison_period : public ConfigItem<int> {
 public:
-  start_of_comparison_period(const std::string& name, const int& default_value, Config* config) : ConfigItem<int>(name, default_value, config) {}
+  start_of_comparison_period(const std::string& name, const int& default_value, Config* config) : ConfigItem<int>(
+    name, default_value, config) {}
+
+  void set_value(const YAML::Node& node) override;
+};
+
+
+struct beta_distribution_params {
+  double alpha;
+  double beta;
+};
+
+class prob_individual_present_at_mda_distribution : public IConfigItem {
+DISALLOW_COPY_AND_ASSIGN(prob_individual_present_at_mda_distribution)
+DISALLOW_MOVE(prob_individual_present_at_mda_distribution)
+protected:
+  std::vector<beta_distribution_params> value_;
+public:
+  //constructor
+  explicit prob_individual_present_at_mda_distribution(const std::string& name, std::vector<beta_distribution_params> default_value,
+                                                       Config* config = nullptr) : IConfigItem(config, name),
+                                                                                   value_{std::move(default_value)} { }
+
+  // destructor
+  virtual ~prob_individual_present_at_mda_distribution() = default;
+
+  virtual std::vector<beta_distribution_params>& operator()() {
+    return value_;
+  }
 
   void set_value(const YAML::Node& node) override;
 };

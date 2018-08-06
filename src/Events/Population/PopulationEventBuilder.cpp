@@ -94,15 +94,6 @@ std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const Y
       auto input_loc = node[i]["fraction_population_targeted"].size() < config->number_of_locations() ? 0 : loc;
       e->fraction_population_targeted.push_back(node[i]["fraction_population_targeted"][input_loc].as<double>());
     }
-    
-    for (std::size_t loc = 0; loc < config->number_of_locations(); loc++) {
-      auto input_loc = node[i]["fraction_of_targeted_population_participating"].size() < config->number_of_locations() ? 0 : loc;
-      e->fraction_of_targeted_population_participating.push_back(node[i]["fraction_of_targeted_population_participating"][input_loc].as<double>());
-    }
-
-    e->age_class_min = node[i]["age_class_min"].as<int>();
-    e->age_class_max = node[i]["age_class_max"].as<int>();
-
     events.push_back(e);
   }
 

@@ -89,6 +89,14 @@ POINTER_PROPERTY(Model, model)
 
   CONFIG_ITEM(initial_strategy_id, int , -1)
 
+  CONFIG_ITEM(age_bracket_prob_individual_present_at_mda, IntVector , IntVector())
+
+  CONFIG_ITEM(mean_prob_individual_present_at_mda, DoubleVector , DoubleVector())
+
+  CONFIG_ITEM(sd_prob_individual_present_at_mda, DoubleVector , DoubleVector())
+
+  CONFIG_ITEM(mda_therapy_id, int, 0)
+
   CUSTOM_CONFIG_ITEM(start_of_comparison_period, 0)
 
   CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
@@ -125,6 +133,8 @@ POINTER_PROPERTY(Model, model)
 
   CUSTOM_CONFIG_ITEM(bitting_level_generator, MultinomialDistributionGenerator())
   CUSTOM_CONFIG_ITEM(moving_level_generator, MultinomialDistributionGenerator())
+
+  CUSTOM_CONFIG_ITEM(prob_individual_present_at_mda_distribution, std::vector<beta_distribution_params>())
 
 
 VIRTUAL_PROPERTY_REF(double, modified_mutation_factor)

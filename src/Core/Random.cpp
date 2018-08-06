@@ -134,3 +134,7 @@ double Random::cdf_standard_normal_distribution(const double& p) {
 int Random::random_binomial(const double& p, const unsigned int& n) {
   return gsl_ran_binomial(G_RNG, p, n);
 }
+
+void Random::shuffle(void* base, const size_t& n, const size_t& size) {
+  gsl_ran_shuffle(G_RNG, base, n, size);
+}

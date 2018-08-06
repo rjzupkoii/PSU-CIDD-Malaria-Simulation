@@ -54,7 +54,7 @@ Person::Person() :
   today_infections_ = nullptr;
   today_target_locations_ = nullptr;
   latest_update_time_ = -1;
-  
+  prob_present_at_mda_ = 0;
 }
 
 void Person::init() {
