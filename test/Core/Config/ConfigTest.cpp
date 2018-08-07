@@ -7,6 +7,7 @@
 #include "Strategies/IStrategy.h"
 #include "Events/Event.h"
 #include "date/date.h"
+#include "Events/Population/SingleRoundMDAEvent.h"
 
 TEST_CASE("ConfigTest", "[Core]") {
 
@@ -185,9 +186,15 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.preconfig_population_events()[8]->time == 60);
     REQUIRE(c.preconfig_population_events()[9]->time == 152);
     REQUIRE(c.preconfig_population_events()[10]->time == 244);
-    REQUIRE(c.preconfig_population_events()[11]->time == 3652);
-    REQUIRE(c.preconfig_population_events()[12]->time == 3683);
-    REQUIRE(c.preconfig_population_events()[13]->time == 3712);
+    REQUIRE(c.preconfig_population_events()[11]->time == 10957);
+
+    REQUIRE(dynamic_cast<SingleRoundMDAEvent*>(c.preconfig_population_events()[11])->fraction_population_targeted[0]== 1);
+    REQUIRE(dynamic_cast<SingleRoundMDAEvent*>(c.preconfig_population_events()[11])->fraction_population_targeted[1]== 1);
+    REQUIRE(dynamic_cast<SingleRoundMDAEvent*>(c.preconfig_population_events()[11])->fraction_population_targeted[2]== 1);
+    REQUIRE(dynamic_cast<SingleRoundMDAEvent*>(c.preconfig_population_events()[11])->days_to_complete_all_treatments == 14);
+
+    REQUIRE(c.preconfig_population_events()[12]->time == 10995);
+    REQUIRE(c.preconfig_population_events()[13]->time == 11030);
 
     REQUIRE(c.bitting_level_generator().level_density.size()==100);
     REQUIRE(c.moving_level_generator().level_density.size()==100);
@@ -221,11 +228,14 @@ TEST_CASE("ConfigTest", "[Core]") {
     c.read_from_file("input.yml");
 
     REQUIRE(c.prob_individual_present_at_mda_distribution().size() == 3);
-    std::cout << c.prob_individual_present_at_mda_distribution()[0].alpha << " - " << c.prob_individual_present_at_mda_distribution()[0].beta
+    std::cout << c.prob_individual_present_at_mda_distribution()[0].alpha << " - " << c.prob_individual_present_at_mda_distribution()[0].
+      beta
       << std::endl;
-    std::cout << c.prob_individual_present_at_mda_distribution()[1].alpha << " - " << c.prob_individual_present_at_mda_distribution()[1].beta
+    std::cout << c.prob_individual_present_at_mda_distribution()[1].alpha << " - " << c.prob_individual_present_at_mda_distribution()[1].
+      beta
       << std::endl;
-    std::cout << c.prob_individual_present_at_mda_distribution()[2].alpha << " - " << c.prob_individual_present_at_mda_distribution()[2].beta
+    std::cout << c.prob_individual_present_at_mda_distribution()[2].alpha << " - " << c.prob_individual_present_at_mda_distribution()[2].
+      beta
       << std::endl;
   }
 }

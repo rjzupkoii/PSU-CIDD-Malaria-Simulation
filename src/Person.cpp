@@ -450,7 +450,7 @@ void Person::change_state_when_no_parasite_in_blood() {
 
 void Person::determine_relapse_or_not(ClonalParasitePopulation* clinical_caused_parasite) {
   if (all_clonal_parasite_populations_->contain(clinical_caused_parasite)) {
-    const double p = Model::RANDOM->random_flat(0.0, 1.0);
+    const auto p = Model::RANDOM->random_flat(0.0, 1.0);
 
     if (p <= Model::CONFIG->p_relapse()) {
       //        if (P <= get_probability_progress_to_clinical()) {

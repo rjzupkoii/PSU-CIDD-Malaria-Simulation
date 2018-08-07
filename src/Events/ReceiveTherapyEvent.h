@@ -16,21 +16,23 @@ class Therapy;
 class ClonalParasitePopulation;
 
 class ReceiveTherapyEvent : public Event {
-    DISALLOW_COPY_AND_ASSIGN(ReceiveTherapyEvent)
-    POINTER_PROPERTY(Therapy, received_therapy)
-    POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite);
+DISALLOW_COPY_AND_ASSIGN(ReceiveTherapyEvent)
+DISALLOW_MOVE(ReceiveTherapyEvent)
+POINTER_PROPERTY(Therapy, received_therapy)
+POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
 public:
-    ReceiveTherapyEvent();
-    //    ReceiveTherapyEvent(const ReceiveTherapyEvent& orig);
-    virtual ~ReceiveTherapyEvent();
-    static void schedule_event(Scheduler* scheduler, Person* p, Therapy* therapy, const int& time, ClonalParasitePopulation* clinical_caused_parasite);
+  ReceiveTherapyEvent();
+  //    ReceiveTherapyEvent(const ReceiveTherapyEvent& orig);
+  virtual ~ReceiveTherapyEvent();
+  static void schedule_event(Scheduler* scheduler, Person* p, Therapy* therapy, const int& time,
+                             ClonalParasitePopulation* clinical_caused_parasite);
 
-    virtual std::string name() {
-        return "ReceiveTherapyEvent";
-    }
+  std::string name() override {
+    return "ReceiveTherapyEvent";
+  }
+
 private:
-    virtual void execute();
+  void execute() override;
 };
 
 #endif	/* RECEIVETHERAPYEVENT_H */
-

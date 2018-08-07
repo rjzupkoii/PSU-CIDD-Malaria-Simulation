@@ -901,15 +901,15 @@ events:
         strategy_id: 4
   - name: single_round_MDA
     info:
-      - day: 2000/1/1
+      - day: 2020/1/1
         fraction_population_targeted: [1.0] 
-        days_to_complete_all_treatments: 30
-      - day: 2000/3/1
+        days_to_complete_all_treatments: 14
+      - day: 2020/2/8
         fraction_population_targeted: [0.03333333]
-        days_to_complete_all_treatments: 30
-      - day: 2000/5/1
+        days_to_complete_all_treatments: 14
+      - day: 2020/3/14
         fraction_population_targeted: [0.7]
-        days_to_complete_all_treatments: 30
+        days_to_complete_all_treatments: 14
 
 
 mda_therapy_id : 8

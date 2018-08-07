@@ -7,6 +7,7 @@
 #include "Population.h"
 #include "PersonIndexByLocationStateAgeClass.h"
 #include "Core/Random.h"
+#include "Events/ReceiveTherapyEvent.h"
 
 SingleRoundMDAEvent::SingleRoundMDAEvent(const int& execute_at) {
   time = execute_at;
@@ -46,7 +47,11 @@ void SingleRoundMDAEvent::execute() {
       if (prob < p->prob_present_at_mda()) {
         // receive MDA
         auto* therapy = Model::CONFIG->therapy_db()[Model::CONFIG->mda_therapy_id()];
-        p->receive_therapy(therapy, nullptr);
+        // schedule received therapy in within days_to_complete_all_treatments
+        int days_to_receive_mda_therapy = Model::RANDOM->random_uniform(days_to_complete_all_treatments) + 1;
+        ReceiveTherapyEvent::schedule_event(Model::SCHEDULER, p, therapy,
+                                            Model::SCHEDULER->current_time() + days_to_complete_all_treatments, nullptr);
+
       }
     }
   }

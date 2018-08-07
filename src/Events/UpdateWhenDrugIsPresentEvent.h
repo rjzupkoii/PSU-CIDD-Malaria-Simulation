@@ -11,6 +11,7 @@
 #include "Event.h"
 #include "ObjectPool.h"
 #include "Core/PropertyMacro.h"
+#include <string>
 
 class ClonalParasitePopulation;
 class Scheduler;
