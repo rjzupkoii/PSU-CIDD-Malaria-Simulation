@@ -15,7 +15,7 @@
 #include "Core/Random.h"
 #include "Core/Config/Config.h"
 #include "Strategies/IStrategy.h"
-#include "Events/ReceiveMDADrugEvent.h"
+#include "Events/ReceiveMDATherapyEvent.h"
 
 MDAAction::MDAAction() {
 }
@@ -38,7 +38,7 @@ void MDAAction::perform_weekly_action(const int& location) {
 
                 double prob_receive_MDA = Model::RANDOM->random_uniform();
                 auto day = static_cast<int>(floor(prob_receive_MDA / percent_MDA_treated_per_day) + 1);
-                ReceiveMDADrugEvent::schedule_event(Model::SCHEDULER, p,
+                ReceiveMDATherapyEvent::schedule_event(Model::SCHEDULER, p,
                                                     Model::CONFIG->tme_strategy()->get_therapy(p), Model::SCHEDULER->current_time() + day);
                 //                std::cout << prob_receive_MDA << "\t" << day << std::endl;
             }

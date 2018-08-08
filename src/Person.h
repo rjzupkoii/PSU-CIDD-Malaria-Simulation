@@ -195,6 +195,8 @@ public:
   void generate_prob_present_at_mda_by_age();
 
   double prob_present_at_mda();
+
+  bool has_effective_drug_in_blood() const;
 };
 
 #endif	/* PERSON_H */

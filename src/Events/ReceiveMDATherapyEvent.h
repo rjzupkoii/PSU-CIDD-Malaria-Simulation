@@ -8,19 +8,22 @@
 #ifndef RECEIVEMDADRUGEVENT_H
 #define	RECEIVEMDADRUGEVENT_H
 #include "Event.h"
+#include <string>
+#include "Core/PropertyMacro.h"
 
 class Scheduler;
 class Person;
 class Therapy;
 
-class ReceiveMDADrugEvent : public Event {
-DISALLOW_COPY_AND_ASSIGN(ReceiveMDADrugEvent)
+class ReceiveMDATherapyEvent : public Event {
+DISALLOW_COPY_AND_ASSIGN(ReceiveMDATherapyEvent)
+DISALLOW_MOVE(ReceiveMDATherapyEvent)
 POINTER_PROPERTY(Therapy, received_therapy)
 
 public:
-  ReceiveMDADrugEvent();
+  ReceiveMDATherapyEvent();
   //    ReceiveMDADrugEvent(const ReceiveMDADrugEvent& orig);
-  virtual ~ReceiveMDADrugEvent();
+  virtual ~ReceiveMDATherapyEvent();
 
   static void schedule_event(Scheduler* scheduler, Person* p, Therapy* therapy, const int& time);
 

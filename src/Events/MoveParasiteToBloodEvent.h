@@ -10,6 +10,7 @@
 #include "Event.h"
 #include "ObjectPool.h"
 #include "Core/PropertyMacro.h"
+#include <string>
 
 
 class ClonalParasitePopulation;
@@ -19,8 +20,9 @@ class Genotype;
 
 class MoveParasiteToBloodEvent : public Event {
 DISALLOW_COPY_AND_ASSIGN(MoveParasiteToBloodEvent)
+DISALLOW_MOVE(MoveParasiteToBloodEvent)
 OBJECTPOOL(MoveParasiteToBloodEvent)
-POINTER_PROPERTY(Genotype, infection_type)
+POINTER_PROPERTY(Genotype, infection_genotype)
 
 public:
   MoveParasiteToBloodEvent();

@@ -58,40 +58,5 @@ void UpdateWhenDrugIsPresentEvent::execute() {
         person->determine_relapse_or_not(blood_parasite);
       }
     }
-
-
-    //        map<int, BloodParasite*>::iterator pos;
-    //        for (pos = person->parasitePopulation->parasitePop.begin(); pos != person->parasitePopulation->parasitePop.end(); ++pos) {
-    //            BloodParasite* bloodParasite = pos->second;
-    //            int pID = pos->first;
-    //
-    //            if (bloodParasite->updateFunction == BloodParasite::drugUpdateFunction) {
-    //
-    //                double PClinical = person->getClinicalProbability();
-    //                double P = Random::randFlat(0.0, 1.0);
-    //                if (!Global::AllowNewCoinfectionToCauseSymptoms && person->parasitePopulation->size > 1) {
-    //                    PClinical = -1;
-    //                }
-    //
-    //                if (P < PClinical) {
-    //                    //progress to clinical after several days
-    //                    person->parasitePopulation->parasitePop[pID]->updateFunction = BloodParasite::clinicalUpdateFunction;
-    //                    person->scheduleProgressToClinicalEvent(pID);
-    //
-    //                } else {
-    //                    //only progress to clearance by Immune system
-    //                    //progress to clearance
-    //                    person->parasitePopulation->parasitePop[pID]->updateFunction = BloodParasite::clearanceUpdateFunction;
-    //
-    //                    //        person->scheduleClearParasiteByImmneSystemEvent(pID);
-    //                    //        if (person->drugsInBlood->getSize() == 0) {
-    //                    //            person->cancelAllEventsExceptID(Events::UpdateEveryKDays, id);
-    //                    //            person->scheduleUpdateEveryKDays();
-    //                    //        }
-    //                }
-    //
-    //            }
-    //        }
-
   }
 }

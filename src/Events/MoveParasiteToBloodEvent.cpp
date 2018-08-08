@@ -18,7 +18,7 @@
 
 OBJECTPOOL_IMPL(MoveParasiteToBloodEvent)
 
-MoveParasiteToBloodEvent::MoveParasiteToBloodEvent(): infection_type_(nullptr) {}
+MoveParasiteToBloodEvent::MoveParasiteToBloodEvent(): infection_genotype_(nullptr) {}
 
 MoveParasiteToBloodEvent::~MoveParasiteToBloodEvent() {}
 
@@ -26,7 +26,7 @@ void MoveParasiteToBloodEvent::schedule_event(Scheduler* scheduler, Person* p, G
   if (scheduler != nullptr) {
     auto* e = new MoveParasiteToBloodEvent();
     e->dispatcher = p;
-    e->set_infection_type(infection_type);
+    e->set_infection_genotype(infection_type);
     e->time = time;
 
     p->add(e);
@@ -35,7 +35,7 @@ void MoveParasiteToBloodEvent::schedule_event(Scheduler* scheduler, Person* p, G
 }
 
 void MoveParasiteToBloodEvent::execute() {
-  auto* person = static_cast<Person*>(dispatcher);
+  auto* person = dynamic_cast<Person*>(dispatcher);
   auto* parasite_type = person->liver_parasite_type();
   person->set_liver_parasite_type(nullptr);
 
@@ -46,15 +46,14 @@ void MoveParasiteToBloodEvent::execute() {
 
   person->immune_system()->set_increase(true);
 
-  ClonalParasitePopulation* new_parasite = person->add_new_parasite_to_blood(parasite_type);
+  auto new_parasite = person->add_new_parasite_to_blood(parasite_type);
 
   new_parasite->set_last_update_log10_parasite_density(
     Model::RANDOM->random_normal_truncated(Model::CONFIG->parasite_density_level().log_parasite_density_asymptomatic, 0.5));
 
-  if (person->drugs_in_blood()->size() > 0) {
+  if (person->has_effective_drug_in_blood()) {
     //person has drug in blood
     new_parasite->set_update_function(Model::MODEL->having_drug_update_function());
-
   }
   else {
 

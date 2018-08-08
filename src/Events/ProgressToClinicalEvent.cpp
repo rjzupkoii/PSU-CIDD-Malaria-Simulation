@@ -20,12 +20,12 @@
 
 OBJECTPOOL_IMPL(ProgressToClinicalEvent)
 
-ProgressToClinicalEvent::ProgressToClinicalEvent() = default;
+ProgressToClinicalEvent::ProgressToClinicalEvent(): clinical_caused_parasite_(nullptr) {}
 
 ProgressToClinicalEvent::~ProgressToClinicalEvent() = default;
 
 void ProgressToClinicalEvent::execute() {
-  auto* person = static_cast<Person *>(dispatcher);
+  auto* person = dynamic_cast<Person *>(dispatcher);
   if (person->all_clonal_parasite_populations()->size() == 0) {
     //parasites might be cleaned by immune system or other things else
     return;
@@ -33,7 +33,6 @@ void ProgressToClinicalEvent::execute() {
 
   //if the clinical_caused_parasite eventually removed then do nothing
   if (!person->all_clonal_parasite_populations()->contain(clinical_caused_parasite_)) {
-
     return;
   }
 

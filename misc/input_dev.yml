@@ -724,7 +724,7 @@ initial_strategy_id: 1
 
 # this number use to detemine whether a therapy is "useful" or not and it is used to calculate 
 # the useful therapeutic duration of a therapy
-TF_rate: 0.1
+tf_rate: 0.1
 
 # days from end of liver-stage infection to appearance of symptoms
 days_to_clinical_under_five: 4
@@ -898,13 +898,16 @@ events:
   - name: single_round_MDA
     info:
       - day: 2000/1/1
-        fraction_population_targeted: [0.7]
+        fraction_population_targeted: [1.0]
+        days_to_complete_all_treatments: 14
       - day: 2000/2/1
-        fraction_population_targeted: [0.7]
+        fraction_population_targeted: [1.0]
+        days_to_complete_all_treatments: 14
       - day: 2000/3/1
-        fraction_population_targeted: [0.7]
+        fraction_population_targeted: [1.0]
+        days_to_complete_all_treatments: 14
 
-mda_therapy_id: 8        
-prob_present_at_mda_age: [10, 40]
-prob_present_at_mda_mean: [0.85, 0.75, 0.85]
-prob_present_at_mda_sd: [0.03, 0.03, 0.03]
+mda_therapy_id : 8
+age_bracket_prob_individual_present_at_mda: [10, 40]
+mean_prob_individual_present_at_mda: [0.85, 0.75, 0.85]
+sd_prob_individual_present_at_mda: [0.03, 0.03, 0.03]

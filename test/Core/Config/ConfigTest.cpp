@@ -50,7 +50,7 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.update_frequency() ==7);
     REQUIRE(c.report_frequency() == 30);
 
-    REQUIRE(c.TF_rate() ==0.1);
+    REQUIRE(c.tf_rate() ==0.1);
     REQUIRE(c.using_free_recombination() == true);
     REQUIRE(c.tf_window_size() ==60);
 

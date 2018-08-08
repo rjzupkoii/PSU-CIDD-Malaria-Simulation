@@ -11,6 +11,7 @@
 #include "Events/Event.h"
 #include "Core/PropertyMacro.h"
 #include "ObjectPool.h"
+#include <string>
 
 class Scheduler;
 class Person;

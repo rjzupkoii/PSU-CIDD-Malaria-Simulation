@@ -11,32 +11,32 @@
 #include "Event.h"
 #include "ObjectPool.h"
 #include "Core/PropertyMacro.h"
-
-
+#include <string>
 
 class Person;
 class Scheduler;
 class ClonalParasitePopulation;
 
 class ProgressToClinicalEvent : public Event {
-    OBJECTPOOL(ProgressToClinicalEvent)
-    POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite);
+OBJECTPOOL(ProgressToClinicalEvent)
+DISALLOW_COPY_AND_ASSIGN(ProgressToClinicalEvent)
+DISALLOW_MOVE(ProgressToClinicalEvent)
+POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
 
 public:
-    ProgressToClinicalEvent();
-    ProgressToClinicalEvent(const ProgressToClinicalEvent& orig);
-    virtual ~ProgressToClinicalEvent();
+  ProgressToClinicalEvent();
+  virtual ~ProgressToClinicalEvent();
 
-    static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time);
+  static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time);
 
-    void receive_no_treatment_routine(Person* p);
+  static void receive_no_treatment_routine(Person* p);
 
-    virtual std::string name() {
-        return "ProgressToClinicalEvent";
-    }
+  std::string name() override {
+    return "ProgressToClinicalEvent";
+  }
+
 private:
-    virtual void execute();
+  void execute() override;
 };
 
 #endif	/* PROGRESSTOCLINICALEVENT_H */
-

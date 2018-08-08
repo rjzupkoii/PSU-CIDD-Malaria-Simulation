@@ -596,7 +596,7 @@ void ModelDataCollector::end_of_time_step() {
     }
 
     //update UTL
-    if ((avg_tf / static_cast<double>(Model::CONFIG->number_of_locations())) <= Model::CONFIG->TF_rate()) {
+    if ((avg_tf / static_cast<double>(Model::CONFIG->number_of_locations())) <= Model::CONFIG->tf_rate()) {
       current_utl_duration_ += 1;
     }
     for (auto therapy_id = 0; static_cast<size_t>(therapy_id) < Model::CONFIG->therapy_db().size(); therapy_id++) {

@@ -105,7 +105,7 @@ std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const Y
 std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   const auto name = node["name"].as<std::string>();
-
+  // std::cout << name << std::endl;
   if (name == "introduce_parasites") {
     events = build_introduce_parasite_events(node["info"], config);
   }

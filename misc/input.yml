@@ -725,7 +725,7 @@ initial_strategy_id: 5
 
 # this number use to detemine whether a therapy is "useful" or not and it is used to calculate 
 # the useful therapeutic duration of a therapy
-TF_rate: 0.1
+tf_rate: 0.1
 
 
 # days from end of liver-stage infection to appearance of symptoms

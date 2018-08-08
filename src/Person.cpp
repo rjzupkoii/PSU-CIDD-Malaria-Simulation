@@ -54,7 +54,7 @@ Person::Person() :
   today_infections_ = nullptr;
   today_target_locations_ = nullptr;
   latest_update_time_ = -1;
-  
+
 }
 
 void Person::init() {
@@ -265,8 +265,7 @@ double Person::get_probability_progress_to_clinical() {
 }
 
 void Person::cancel_all_other_progress_to_clinical_events_except(Event* event) const {
-
-  for (Event* e : *events()) {
+  for (auto* e : *events()) {
     if (e != event && dynamic_cast<ProgressToClinicalEvent *>(e) != nullptr) {
       //            std::cout << "Hello"<< std::endl;
       e->executable = false;
@@ -276,7 +275,7 @@ void Person::cancel_all_other_progress_to_clinical_events_except(Event* event) c
 
 void Person::cancel_all_events_except(Event* event) const {
 
-  for (Event* e : *events()) {
+  for (auto* e : *events()) {
     if (e != event) {
       //            e->set_dispatcher(nullptr);
       e->executable = false;
@@ -304,8 +303,8 @@ Person::change_all_parasite_update_function(ParasiteDensityUpdateFunction* from,
 
 bool Person::will_progress_to_death_when_receive_no_treatment() {
   //yes == death
-  double P = Model::RANDOM->random_flat(0.0, 1.0);
-  return P <= Model::CONFIG->mortality_when_treatment_fail_by_age_class()[age_class_];
+  const auto p = Model::RANDOM->random_flat(0.0, 1.0);
+  return p <= Model::CONFIG->mortality_when_treatment_fail_by_age_class()[age_class_];
 }
 
 bool Person::will_progress_to_death_when_recieve_treatment() {
@@ -762,9 +761,18 @@ void Person::generate_prob_present_at_mda_by_age() {
 
 double Person::prob_present_at_mda() {
   auto i = 0;
+  // std::cout << "hello " << i << std::endl;
   while (age_ > Model::CONFIG->age_bracket_prob_individual_present_at_mda()[i]
     && i < Model::CONFIG->age_bracket_prob_individual_present_at_mda().size()) {
     i++;
   }
+
   return prob_present_at_mda_by_age_[i];
+}
+
+bool Person::has_effective_drug_in_blood() const {
+  for (const auto& kv_drug : *drugs_in_blood_->drugs()) {
+    if (kv_drug.second->last_update_value() > 0.5) return true;
+  }
+  return false;
 }
