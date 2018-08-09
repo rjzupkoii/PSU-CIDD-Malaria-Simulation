@@ -291,21 +291,7 @@ location_db:
   - [0.0334, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
     0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
     0.0387]
-  beta_by_location: !!python/object/apply:numpy.core.multiarray._reconstruct
-    args:
-    - !!python/name:numpy.ndarray ''
-    - !!python/tuple [0]
-    - !!binary |
-      Yg==
-    state: !!python/tuple
-    - 1
-    - !!python/tuple [1]
-    - !!python/object/apply:numpy.dtype
-      args: [f8, 0, 1]
-      state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
-    - false
-    - !!binary |
-      M4UcHi4x2z8=
+  beta_by_location: [0.4248767179543222]
   location_info:
   - [0, 0, 0]
   p_treatment_for_less_than_5_by_location: [0.6]

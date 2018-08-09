@@ -43,7 +43,7 @@ for index,event in enumerate(data['events']):
 betas = np.logspace(log(0.05,10), log(0.5,10), num= 100)
 
 for index,beta in enumerate(betas):
-    data['location_db']['beta_by_location'] = np.full(number_of_locations, beta)
+    data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
     output_filename = 'beta/input_beta_%d.yml'%index;
     output_stream = open(output_filename, 'w');
     yaml.dump(data, output_stream);
