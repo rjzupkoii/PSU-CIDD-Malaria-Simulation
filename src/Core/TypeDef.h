@@ -12,6 +12,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include <ostream>
 
 class Person;
 class PersonIndex;
