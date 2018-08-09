@@ -116,56 +116,27 @@ drug_db:
     half_life: 10
     k: 4
     maximum_parasite_killing_rate: 0.95
-    mutation_probability: 0.0005
+    mutation_probability: 0.005
     n: 19
     name: CQ
     selecting_alleles:
     - [1]
     - [1, 3, 5, 7]
-ending_date: 1991/1/1
+ending_date: 2022/1/1
 events:
-- info:
-  - location: 0
-    parasite_info:
-    - {day: 1990/3/20, genotype_id: 1, number_of_cases: 5}
-    - {day: 1990/4/15, genotype_id: 2, number_of_cases: 5}
-  - location: 1
-    parasite_info:
-    - {day: 1990/8/25, genotype_id: 4, number_of_cases: 5}
-    - {day: 1990/10/20, genotype_id: 8, number_of_cases: 5}
+- info: []
   name: introduce_parasites
 - info:
   - location: 0
     parasite_info:
-    - {duration: 10, genotype_id: -1, number_of_cases: 1, start_day: 1990/6/2}
+    - {duration: 10, genotype_id: -1, number_of_cases: 1, start_day: 2006/2/1}
   name: introduce_parasites_periodically
 - info:
-  - day: 1990/2/1
-    p_treatment_for_less_than_5_by_location: [0.6]
-    p_treatment_for_more_than_5_by_location: [0.55]
-    type: SteadyTCM
-  - {annual_inflation_rate: 0.01, day: 1990/3/1, type: InflatedTCM}
-  - from_day: 1990/6/1
-    p_treatment_for_less_than_5_by_location_to: [0.9]
-    p_treatment_for_more_than_5_by_location_to: [0.9]
-    to_day: 1990/12/1
-    type: LinearTCM
+  - {annual_inflation_rate: 0.03, day: 2006/1/1, type: InflatedTCM}
   name: change_treatment_coverage
-- info:
-  - {day: 1990/3/2, strategy_id: 2}
-  - {day: 1990/6/2, strategy_id: 3}
-  - {day: 1990/9/2, strategy_id: 4}
+- info: []
   name: change_treatment_strategy
-- info:
-  - day: 2020/1/1
-    days_to_complete_all_treatments: 14
-    fraction_population_targeted: [1.0]
-  - day: 2020/2/8
-    days_to_complete_all_treatments: 14
-    fraction_population_targeted: [0.03333333]
-  - day: 2020/3/14
-    days_to_complete_all_treatments: 14
-    fraction_population_targeted: [0.7]
+- info: []
   name: single_round_MDA
 external_population_circulation_information:
   circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01]
@@ -314,34 +285,10 @@ initial_parasite_info:
   parasite_info:
   - {parasite_type_id: 15, prevalence: 0.05}
   - {parasite_type_id: 20, prevalence: 0.1}
-initial_strategy_id: 5
+initial_strategy_id: 3
 location_db:
   age_distribution_by_location:
   - [0.0334, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
-    0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
-    0.0387]
-  - [0.0334, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
-    0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
-    0.0387]
-  - [0.0335, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
-    0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
-    0.0387]
-  - [0.0335, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
-    0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
-    0.0387]
-  - [0.0336, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
-    0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
-    0.0387]
-  - [0.0336, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
-    0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
-    0.0387]
-  - [0.0337, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
-    0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
-    0.0387]
-  - [0.0337, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
-    0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
-    0.0387]
-  - [0.0338, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
     0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
     0.0387]
   beta_by_location: [0.05]
@@ -349,7 +296,7 @@ location_db:
   - [0, 0, 0]
   p_treatment_for_less_than_5_by_location: [0.6]
   p_treatment_for_more_than_5_by_location: [0.5]
-  population_size_by_location: [300000]
+  population_size_by_location: [10000]
 lumefantrine_drug_id: 2
 mda_therapy_id: 8
 mean_prob_individual_present_at_mda: [0.85, 0.75, 0.85]
@@ -379,7 +326,7 @@ report_frequency: 30
 sd_prob_individual_present_at_mda: [0.03, 0.03, 0.03]
 seasonal_info:
   a: [1]
-  enable: true
+  enable: 'false'
   min_value: [0.1]
   period: 365
   phi: [250]
@@ -387,88 +334,20 @@ spatial_model:
   Barabasi: {beta_r: 1.65, kappa: 350, r_g_0: 5.8}
   Wesolowski: {alpha: 0.22268982, beta: 0.14319618, gamma: 0.83741484, kappa: 0.01093251}
   name: Wesolowski
-start_collect_data_day: 365
-start_of_comparison_period: 2019/12/1
-starting_date: 1990/1/1
+start_collect_data_day: 0
+start_of_comparison_period: 2020/1/1
+starting_date: 2006/1/1
 strategy_db:
   0:
     distribution: [0.3, 0.3, 0.3, 0.1]
-    name: SP-AQ-CQ-AL-MFTStrategy
+    name: SP-AQ-CQ-AL-OPP
     therapy_ids: [5, 2, 12, 6]
     type: MFT
   1: {name: AL-SFTStrategy, therapy_id: 6, type: SFT}
   2: {name: ASAQ-SFTStrategy, therapy_id: 7, type: SFT}
   3:
-    cycling_time: 1825
-    name: CyclingStrategy
-    therapy_ids: [8, 7, 6]
-    type: Cycling
-  4:
-    delay_until_actual_trigger: 365
-    name: AdaptiveCyclingStrategy
-    therapy_ids: [8, 7, 6]
-    trigger_value: 0.1
-    turn_off_days: 365
-    type: AdaptiveCycling
-  5:
-    distribution: [0.333333, 0.333333, 0.333334]
-    name: MFTStrategy
-    therapy_ids: [8, 7, 6]
-    type: MFT
-  6:
-    delay_until_actual_trigger: 365
-    distribution: [0.333333, 0.333333, 0.333334]
-    name: AL-ASAQ-DP-MFTRebalancingStrategy1
-    therapy_ids: [8, 7, 6]
-    type: MFTRebalancing
-    update_duration_after_rebalancing: 365
-  7:
-    delay_until_actual_trigger: 365
-    distribution: [0.333333, 0.333333, 0.333334]
-    name: AL-ASAQ-DP-MFTRebalancingStrategy2
-    therapy_ids: [8, 7, 6]
-    type: MFTRebalancing
-    update_duration_after_rebalancing: 730
-  8:
-    delay_until_actual_trigger: 365
-    distribution: [0.333333, 0.333333, 0.333334]
-    name: AL-ASAQ-DP-MFTRebalancingStrategy4
-    therapy_ids: [8, 7, 6]
-    type: MFTRebalancing
-    update_duration_after_rebalancing: 1460
-  9: {name: DPM-SFTStrategy, therapy_id: 10, type: SFT}
-  10: {name: AL-AQ-SFTStrategy, therapy_id: 11, type: SFT}
-  11:
-    name: AL-BaseLineStrategy
-    peak_after: 3650
-    peak_distribution: [0.8, 0.2]
-    start_distribution: [0.05, 0.95]
-    strategy_ids: [1, 0]
-    type: NestedMFT
-  12:
-    name: ASAQ-BaseLineStrategy
-    peak_after: 3650
-    peak_distribution: [0.8, 0.2]
-    start_distribution: [0.05, 0.95]
-    strategy_ids: [2, 0]
-    type: NestedMFT
-  13:
-    distribution:
-    - [0.84, 0.06, 0.05, 0.03, 0.02]
-    - [0.84, 0.06, 0.05, 0.03, 0.03]
-    - [0.84, 0.06, 0.05, 0.03, 0.04]
-    - [0.84, 0.06, 0.05, 0.03, 0.05]
-    - [0.84, 0.06, 0.05, 0.03, 0.06]
-    - [0.84, 0.06, 0.05, 0.03, 0.07]
-    - [0.84, 0.06, 0.05, 0.03, 0.08]
-    - [0.84, 0.06, 0.05, 0.03, 0.09]
-    - [0.84, 0.06, 0.05, 0.03, 0.1]
-    name: MFTMultiLocation
-    therapy_ids: [6, 8, 10, 7, 9]
-    type: MFTMultiLocation
-  14:
     name: BaseLineStrategy
-    peak_after: 3650
+    peak_after: 12410
     peak_distribution:
     - [0.8, 0.2]
     start_distribution:

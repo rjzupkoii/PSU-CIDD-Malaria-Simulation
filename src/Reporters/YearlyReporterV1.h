@@ -13,27 +13,23 @@
 #include <string>
 
 class YearlyReporterV1 : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN(YearlyReporterV1)
+DISALLOW_COPY_AND_ASSIGN(YearlyReporterV1)
 
-    std::fstream fs_;
-    std::string file_name_;
+  std::fstream fs_;
+  std::string file_name_;
 
 
 public:
-    YearlyReporterV1(const std::string& file_name);
-    //    YearlyReporterV1(const YearlyReporterV1& orig);
-    virtual ~YearlyReporterV1();
+  explicit YearlyReporterV1(const std::string& file_name);
+  //    YearlyReporterV1(const YearlyReporterV1& orig);
+  virtual ~YearlyReporterV1();
 
-    virtual void initialize();
-    virtual void before_run();
-    virtual void after_run();
-    virtual void begin_time_step();
-    virtual void monthly_report();
-
-
-private:
+  void initialize() override;
+  void before_run() override;
+  void after_run() override;
+  void begin_time_step() override;
+  void monthly_report() override;
 
 };
 
 #endif	/* YEARLYREPORTERV1_H */
-
