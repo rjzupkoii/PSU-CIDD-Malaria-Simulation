@@ -726,12 +726,6 @@ external_population_circulation_information:
     phi: [180]
     period: 360
     min_value: 0.1
-
-# this functionality works, but it was not used in any analyses for the 2015 LGH paper
-tme_info:
-  tme_starting_day: 0
-  mda_coverage: [0.8, 0.8, 0.8, 0.8]
-  mda_duration: [4, 4, 4, 4]
   
 # free recombination among the drug resistance loci
 using_free_recombination: true

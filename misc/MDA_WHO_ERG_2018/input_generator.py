@@ -7,7 +7,9 @@ Created on Tue Aug  7 14:23:33 2018
 
 import yaml;
 import numpy as np;
-from math import log ;
+from math import log;
+import copy;
+
 import inflect;
 p = inflect.engine();
 
@@ -31,23 +33,39 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-data['location_db']['population_size_by_location'] = [300000];       
+popsize = 300000
+data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
-number_MDA_round = 0;
-for index,event in enumerate(data['events']):
-    if event['name'] == 'single_round_MDA':
-        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
+number_MDA_round = [0,1,2,3,4];
+
+#for index,event in enumerate(data['events']):
+#    if event['name'] == 'single_round_MDA':
+#        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
 
 
-betas = np.logspace(log(0.05,10), log(0.5,10), num= 100)
+betas = [0.23, 0.085]
 
-for index,beta in enumerate(betas):
-    data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
-    output_filename = 'beta/input_beta_%d.yml'%index;
-    output_stream = open(output_filename, 'w');
-    yaml.dump(data, output_stream);
-    output_stream.close();
+for mda_round in number_MDA_round:
+    for beta in betas:
+        new_data = copy.deepcopy(data)
+        new_data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
+
+        for index,event in enumerate(data['events']):
+            if event['name'] == 'single_round_MDA':
+                new_data['events'][index]['info'] = data['events'][index]['info'][0:mda_round]
+        pfpr_str = 'PFPR15' if beta ==0.23 else 'PFPR3'
+        output_filename = 'oneloc/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL.yml'%(kFormatter(popsize),mda_round,pfpr_str);
+        output_stream = open(output_filename, 'w');
+        yaml.dump(new_data, output_stream); 
+        output_stream.close();
+
+#for index,beta in enumerate(betas):
+#    data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
+#    output_filename = 'beta/input_beta_%d.yml'%index;
+#    output_stream = open(output_filename, 'w');
+#    yaml.dump(data, output_stream);
+#    output_stream.close();
 
 #
 #
