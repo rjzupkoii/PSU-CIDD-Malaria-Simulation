@@ -142,7 +142,7 @@ events:
     fraction_population_targeted: [1.0]
   - day: 2020/2/5
     days_to_complete_all_treatments: 14
-    fraction_population_targeted: [0.03333333]
+    fraction_population_targeted: [1.0]
   name: single_round_MDA
 external_population_circulation_information:
   circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01]

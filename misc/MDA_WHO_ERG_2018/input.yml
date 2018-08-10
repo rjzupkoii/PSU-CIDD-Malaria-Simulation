@@ -773,13 +773,13 @@ events:
         fraction_population_targeted: [1.0] 
         days_to_complete_all_treatments: 14
       - day: 2020/2/5
-        fraction_population_targeted: [0.03333333]
+        fraction_population_targeted: [1.0]
         days_to_complete_all_treatments: 14
       - day: 2020/3/12
-        fraction_population_targeted: [0.7]
+        fraction_population_targeted: [1.0]
         days_to_complete_all_treatments: 14
       - day: 2020/4/16
-        fraction_population_targeted: [0.7]
+        fraction_population_targeted: [1.0]
         days_to_complete_all_treatments: 14
 
 
