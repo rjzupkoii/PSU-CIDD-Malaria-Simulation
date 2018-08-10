@@ -73,7 +73,7 @@ Model::Model(const int& object_pool_size) {
 
   reporters_ = std::vector<Reporter *>();
 
-  initial_seed_number_ = -1;
+  initial_seed_number_ = 0;
   config_filename_ = "config.yml";
   tme_filename_ = "tme.txt";
   override_parameter_filename_ = "";
