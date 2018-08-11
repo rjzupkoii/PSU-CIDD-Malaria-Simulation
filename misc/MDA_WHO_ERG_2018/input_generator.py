@@ -17,7 +17,7 @@ def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
 
-stream = open('input.yml', 'r');
+stream = open('input_improved_treatment_coverage.yml', 'r');
 data = yaml.load(stream);
 
 data['starting_date'] = '2006/1/1';
@@ -55,7 +55,7 @@ for mda_round in number_MDA_round:
             if event['name'] == 'single_round_MDA':
                 new_data['events'][index]['info'] = data['events'][index]['info'][0:mda_round]
         pfpr_str = 'PFPR15' if beta ==0.23 else 'PFPR3'
-        output_filename = 'oneloc/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL.yml'%(kFormatter(popsize),mda_round,pfpr_str);
+        output_filename = 'oneloc_improved_treatment_coverage/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL.yml'%(kFormatter(popsize),mda_round,pfpr_str);
         output_stream = open(output_filename, 'w');
         yaml.dump(new_data, output_stream); 
         output_stream.close();
