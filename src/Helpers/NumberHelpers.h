@@ -9,6 +9,7 @@
 #include <limits>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 class NumberHelpers {
 public:
@@ -30,6 +31,18 @@ public:
    * \return 
    */
   static unsigned long good_seed(unsigned long a, unsigned long b, unsigned long c) {
+    std::ifstream file("/dev/urandom", std::ios::binary);
+    if (file.is_open()) {
+      //for unix
+      const int size = sizeof(int);
+      auto* memblock = new char [size];
+      file.read(memblock, size);
+      file.close();
+      const unsigned int random_seed_a = *reinterpret_cast<int*>(memblock);
+      delete[] memblock;
+      return random_seed_a ^ b;
+    }
+    //for windows
     a = a - b;
     a = a - c;
     a = a ^ (c >> 13);
@@ -62,9 +75,9 @@ public:
 
   template <typename T>
   static std::string number_to_string(T number) {
-	  std::ostringstream ss;
-	  ss << number;
-	  return ss.str();
+    std::ostringstream ss;
+    ss << number;
+    return ss.str();
   }
 };
 
