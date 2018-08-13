@@ -19,6 +19,7 @@ def kFormatter(num):
 
 stream = open('input.yml', 'r');
 data = yaml.load(stream);
+stream.close();
 
 data['starting_date'] = '2006/1/1';
 data['ending_date'] = '2040/1/1';
@@ -44,11 +45,12 @@ number_MDA_round = [0,1,2,3,4];
 #        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
 
 
-betas = [0.19, 0.08, 0.065]
+betas = [0.19, 0.08, 0.065, 0.05]
 
 pfpr = {0.19: 'PFPR15',
-        0.08: 'PFPR3',
-        0.065: 'PFPR1'}
+        0.08: 'PFPR5',
+        0.065: 'PFPR3',
+        0.05: 'PFPR1'}
 
 
 for mda_round in number_MDA_round:
