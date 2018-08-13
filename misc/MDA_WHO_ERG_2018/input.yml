@@ -761,10 +761,7 @@ events:
           number_of_cases: 1
           start_day: 2006/2/1
   - name: change_treatment_coverage
-    info:
-      - type: InflatedTCM
-        day: 2006/1/1
-        annual_inflation_rate: 0.03
+    info: []
   - name: change_treatment_strategy
     info: []
   - name: single_round_MDA

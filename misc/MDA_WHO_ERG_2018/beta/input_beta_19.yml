@@ -131,8 +131,7 @@ events:
     parasite_info:
     - {duration: 10, genotype_id: -1, number_of_cases: 1, start_day: 2006/2/1}
   name: introduce_parasites_periodically
-- info:
-  - {annual_inflation_rate: 0.03, day: 2006/1/1, type: InflatedTCM}
+- info: []
   name: change_treatment_coverage
 - info: []
   name: change_treatment_strategy
@@ -397,10 +396,6 @@ therapy_db:
   12:
     dosing_days: 3
     drug_id: [6]
-tme_info:
-  mda_coverage: [0.8, 0.8, 0.8, 0.8]
-  mda_duration: [4, 4, 4, 4]
-  tme_starting_day: 0
 update_frequency: 7
 using_age_dependent_bitting_level: false
 using_free_recombination: true
