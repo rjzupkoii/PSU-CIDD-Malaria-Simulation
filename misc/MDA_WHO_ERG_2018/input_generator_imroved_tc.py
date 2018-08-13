@@ -21,7 +21,7 @@ stream = open('input_improved_treatment_coverage.yml', 'r');
 data = yaml.load(stream);
 
 data['starting_date'] = '2006/1/1';
-data['ending_date'] = '2022/1/1';
+data['ending_date'] = '2040/1/1';
 data['start_of_comparison_period']= '2020/1/1';
 
 data['seasonal_info']['enable'] = 'false';
