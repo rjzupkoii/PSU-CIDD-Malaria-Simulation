@@ -132,7 +132,6 @@ events:
     - {duration: 10, genotype_id: -1, number_of_cases: 1, start_day: 2006/2/1}
   name: introduce_parasites_periodically
 - info:
-  - {annual_inflation_rate: 0.03, day: 2006/1/1, type: InflatedTCM}
   - from_day: 2020/1/1
     p_treatment_for_less_than_5_by_location_to: [0.8]
     p_treatment_for_more_than_5_by_location_to: [0.8]

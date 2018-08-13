@@ -762,9 +762,6 @@ events:
           start_day: 2006/2/1
   - name: change_treatment_coverage
     info:
-      - type: InflatedTCM
-        day: 2006/1/1
-        annual_inflation_rate: 0.03
       - type: LinearTCM
         from_day: 2020/1/1
         to_day: 2020/6/1
