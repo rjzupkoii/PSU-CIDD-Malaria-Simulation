@@ -54,7 +54,7 @@ for mda_round in number_MDA_round:
         for index,event in enumerate(data['events']):
             if event['name'] == 'single_round_MDA':
                 new_data['events'][index]['info'] = data['events'][index]['info'][0:mda_round]
-        pfpr_str = 'PFPR15' if beta ==0.23 else 'PFPR3'
+        pfpr_str = 'PFPR15' if beta ==0.19 else 'PFPR3'
         output_filename = 'oneloc_improved_treatment_coverage/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL.yml'%(kFormatter(popsize),mda_round,pfpr_str);
         output_stream = open(output_filename, 'w');
         yaml.dump(new_data, output_stream); 
