@@ -44,7 +44,7 @@ number_MDA_round = [0,1,2,3,4];
 #        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
 
 
-betas = [0.23, 0.085]
+betas = [0.19, 0.08]
 
 for mda_round in number_MDA_round:
     for beta in betas:
