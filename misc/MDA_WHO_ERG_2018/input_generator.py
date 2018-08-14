@@ -40,6 +40,10 @@ data['location_db']['population_size_by_location'] = [popsize];
 #3RMDA
 number_MDA_round = [0,1,2,3,4];
 
+
+sd_prob_individual_present_at_mda = [0.5, 0.5, 0.5]
+data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
+
 #for index,event in enumerate(data['events']):
 #    if event['name'] == 'single_round_MDA':
 #        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
@@ -53,20 +57,30 @@ pfpr = {0.19: 'PFPR15',
         0.06: 'PFPR1p5',
         0.058: 'PFPR1'}
 
+improved_tc = {True: '_itc' , 
+               False: ''}
+
 
 for mda_round in number_MDA_round:
     for beta in betas:
-        new_data = copy.deepcopy(data)
-        new_data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
-
-        for index,event in enumerate(data['events']):
-            if event['name'] == 'single_round_MDA':
-                new_data['events'][index]['info'] = data['events'][index]['info'][0:mda_round]
-        pfpr_str = pfpr[beta]
-        output_filename = 'oneloc/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL.yml'%(kFormatter(popsize),mda_round,pfpr_str);
-        output_stream = open(output_filename, 'w');
-        yaml.dump(new_data, output_stream); 
-        output_stream.close();
+        for _,itc in improved_tc.items():                
+            new_data = copy.deepcopy(data)
+            new_data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
+    
+            for index,event in enumerate(data['events']):
+                if event['name'] == 'single_round_MDA':
+                    new_data['events'][index]['info'] = data['events'][index]['info'][0:mda_round]
+            pfpr_str = pfpr[beta]
+            
+            if itc == '':
+                for index,event in enumerate(data['events']):
+                    if event['name'] == 'change_treatment_coverage':
+                        new_data['events'][index]['info']= []
+            
+            output_filename = 'oneloc/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize),mda_round,pfpr_str,itc);
+            output_stream = open(output_filename, 'w');
+            yaml.dump(new_data, output_stream); 
+            output_stream.close();
 
 #for index,beta in enumerate(betas):
 #    data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()

@@ -150,9 +150,6 @@ events:
   - day: 2020/3/12
     days_to_complete_all_treatments: 14
     fraction_population_targeted: [1.0]
-  - day: 2020/4/16
-    days_to_complete_all_treatments: 14
-    fraction_population_targeted: [1.0]
   name: single_round_MDA
 external_population_circulation_information:
   circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01]
@@ -339,7 +336,7 @@ relative_bitting_info:
   number_of_biting_levels: 100
 relative_infectivity: {blood_meal_volume: 3, ro: 0.00031, sigma: 3.91}
 report_frequency: 30
-sd_prob_individual_present_at_mda: [0.03, 0.03, 0.03]
+sd_prob_individual_present_at_mda: [0.5, 0.5, 0.5]
 seasonal_info:
   a: [1]
   enable: 'false'

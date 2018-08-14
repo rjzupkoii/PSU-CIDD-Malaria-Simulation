@@ -322,7 +322,7 @@ relative_bitting_info:
   number_of_biting_levels: 100
 relative_infectivity: {blood_meal_volume: 3, ro: 0.00031, sigma: 3.91}
 report_frequency: 30
-sd_prob_individual_present_at_mda: [0.03, 0.03, 0.03]
+sd_prob_individual_present_at_mda: [0.5, 0.5, 0.5]
 seasonal_info:
   a: [1]
   enable: 'false'

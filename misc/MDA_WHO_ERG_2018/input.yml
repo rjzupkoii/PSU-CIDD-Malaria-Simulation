@@ -761,7 +761,12 @@ events:
           number_of_cases: 1
           start_day: 2006/2/1
   - name: change_treatment_coverage
-    info: []
+    info:
+      - type: LinearTCM
+        from_day: 2020/1/1
+        to_day: 2020/6/1
+        p_treatment_for_less_than_5_by_location_to: [0.80000]
+        p_treatment_for_more_than_5_by_location_to: [0.80000]
   - name: change_treatment_strategy
     info: []
   - name: single_round_MDA
