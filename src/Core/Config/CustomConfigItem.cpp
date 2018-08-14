@@ -477,8 +477,8 @@ void start_of_comparison_period::set_value(const YAML::Node& node) {
 void prob_individual_present_at_mda_distribution::set_value(const YAML::Node& node) {
   value_.clear();
   for (std::size_t i = 0; i < config_->mean_prob_individual_present_at_mda().size(); i++) {
-    auto mean = config_->mean_prob_individual_present_at_mda()[i];
-    auto sd = config_->sd_prob_individual_present_at_mda()[i];
+    const auto mean = config_->mean_prob_individual_present_at_mda()[i];
+    const auto sd = config_->sd_prob_individual_present_at_mda()[i];
 
     beta_distribution_params params{};
 
@@ -493,6 +493,4 @@ void prob_individual_present_at_mda_distribution::set_value(const YAML::Node& no
 
     value_.push_back(params);
   }
-
-
 }

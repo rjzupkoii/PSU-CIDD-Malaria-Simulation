@@ -40,9 +40,9 @@ data['location_db']['population_size_by_location'] = [popsize];
 #3RMDA
 number_MDA_round = [0,1,2,3,4];
 
-
-sd_prob_individual_present_at_mda = [0.5, 0.5, 0.5]
-data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
+#
+#sd_prob_individual_present_at_mda = [0.5, 0.5, 0.5]
+#data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 
 #for index,event in enumerate(data['events']):
 #    if event['name'] == 'single_round_MDA':
@@ -66,17 +66,16 @@ for mda_round in number_MDA_round:
         for _,itc in improved_tc.items():                
             new_data = copy.deepcopy(data)
             new_data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
-    
+            
             for index,event in enumerate(data['events']):
                 if event['name'] == 'single_round_MDA':
-                    new_data['events'][index]['info'] = data['events'][index]['info'][0:mda_round]
-            pfpr_str = pfpr[beta]
-            
+                    new_data['events'][index]['info'] = data['events'][index]['info'][0:mda_round]                    
+            pfpr_str = pfpr[beta]#            
             if itc == '':
                 for index,event in enumerate(data['events']):
                     if event['name'] == 'change_treatment_coverage':
                         new_data['events'][index]['info']= []
-            
+        
             output_filename = 'oneloc/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize),mda_round,pfpr_str,itc);
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 

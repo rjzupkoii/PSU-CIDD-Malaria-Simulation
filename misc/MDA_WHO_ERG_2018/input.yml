@@ -65,7 +65,7 @@ location_db:
   beta_by_location: [0.05]
 
 #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [300000 ]
+  population_size_by_location: [300000]
   #spatial_model could be Gravity, Barabasi, or Wesolowski
 
 # seasonality parameters for all location
@@ -791,4 +791,4 @@ age_bracket_prob_individual_present_at_mda: [10, 40]
 
 mean_prob_individual_present_at_mda: [0.85, 0.75, 0.85]
 
-sd_prob_individual_present_at_mda: [0.03, 0.03, 0.03]
+sd_prob_individual_present_at_mda: [0.3, 0.3, 0.3]
