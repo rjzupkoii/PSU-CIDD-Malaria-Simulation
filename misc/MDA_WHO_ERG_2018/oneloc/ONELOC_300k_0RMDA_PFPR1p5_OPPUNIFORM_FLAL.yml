@@ -135,19 +135,7 @@ events:
   name: change_treatment_coverage
 - info: []
   name: change_treatment_strategy
-- info:
-  - day: 2020/1/1
-    days_to_complete_all_treatments: 14
-    fraction_population_targeted: [1.0]
-  - day: 2020/2/5
-    days_to_complete_all_treatments: 14
-    fraction_population_targeted: [1.0]
-  - day: 2020/3/12
-    days_to_complete_all_treatments: 14
-    fraction_population_targeted: [1.0]
-  - day: 2020/4/16
-    days_to_complete_all_treatments: 14
-    fraction_population_targeted: [1.0]
+- info: []
   name: single_round_MDA
 external_population_circulation_information:
   circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01]
@@ -302,7 +290,7 @@ location_db:
   - [0.0334, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
     0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
     0.0387]
-  beta_by_location: [0.055]
+  beta_by_location: [0.06]
   location_info:
   - [0, 0, 0]
   p_treatment_for_less_than_5_by_location: [0.6]
