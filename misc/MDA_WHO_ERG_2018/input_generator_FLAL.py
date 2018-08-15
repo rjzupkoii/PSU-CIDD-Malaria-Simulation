@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 40000
+popsize = 300000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
@@ -76,7 +76,7 @@ for mda_round in number_MDA_round:
                     if event['name'] == 'change_treatment_coverage':
                         new_data['events'][index]['info']= []
         
-            output_filename = 'FLAL/40k/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize),mda_round,pfpr_str,itc);
+            output_filename = 'FLAL/300k/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize),mda_round,pfpr_str,itc);
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 
             output_stream.close();
