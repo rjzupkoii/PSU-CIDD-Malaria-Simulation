@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 300000
+popsize = 40000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
@@ -49,13 +49,13 @@ data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 #        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
 
 
-betas = [0.22, 0.1, 0.08, 0.07, 0.065]
+betas = [0.18, 0.078, 0.065, 0.058,0.055]
 
-pfpr = {0.22: 'PFPR15',
-        0.1: 'PFPR5',
-        0.08: 'PFPR2p5',
-        0.07: 'PFPR1p5',
-        0.065: 'PFPR1'}
+pfpr = {0.18: 'PFPR15',        
+        0.078: 'PFPR5',
+        0.065: 'PFPR3',
+        0.058: 'PFPR1p5',
+        0.055: 'PFPR1'}
 
 improved_tc = {True: '_itc' , 
                False: ''}
@@ -76,7 +76,7 @@ for mda_round in number_MDA_round:
                     if event['name'] == 'change_treatment_coverage':
                         new_data['events'][index]['info']= []
         
-            output_filename = 'FLAL/300k/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize),mda_round,pfpr_str,itc);
+            output_filename = 'FLAL/%s/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize), kFormatter(popsize),mda_round,pfpr_str,itc);
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 
             output_stream.close();
