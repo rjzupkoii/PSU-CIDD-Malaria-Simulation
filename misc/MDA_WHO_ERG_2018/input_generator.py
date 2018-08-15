@@ -34,15 +34,15 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 300000
+popsize = 40000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
 number_MDA_round = [0,1,2,3,4];
 
 #
-#sd_prob_individual_present_at_mda = [0.5, 0.5, 0.5]
-#data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
+sd_prob_individual_present_at_mda = [0.3, 0.3, 0.3]
+data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 
 #for index,event in enumerate(data['events']):
 #    if event['name'] == 'single_round_MDA':
@@ -76,7 +76,7 @@ for mda_round in number_MDA_round:
                     if event['name'] == 'change_treatment_coverage':
                         new_data['events'][index]['info']= []
         
-            output_filename = 'oneloc/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize),mda_round,pfpr_str,itc);
+            output_filename = 'oneloc_sd_present_0p3_pop_40k/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize),mda_round,pfpr_str,itc);
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 
             output_stream.close();
