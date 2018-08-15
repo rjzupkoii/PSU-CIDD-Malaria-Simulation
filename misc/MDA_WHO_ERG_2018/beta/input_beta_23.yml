@@ -131,7 +131,12 @@ events:
     parasite_info:
     - {duration: 10, genotype_id: -1, number_of_cases: 1, start_day: 2006/2/1}
   name: introduce_parasites_periodically
-- info: []
+- info:
+  - from_day: 2020/1/1
+    p_treatment_for_less_than_5_by_location_to: [0.8]
+    p_treatment_for_more_than_5_by_location_to: [0.8]
+    to_day: 2020/6/1
+    type: LinearTCM
   name: change_treatment_coverage
 - info: []
   name: change_treatment_strategy
@@ -322,7 +327,7 @@ relative_bitting_info:
   number_of_biting_levels: 100
 relative_infectivity: {blood_meal_volume: 3, ro: 0.00031, sigma: 3.91}
 report_frequency: 30
-sd_prob_individual_present_at_mda: [0.03, 0.03, 0.03]
+sd_prob_individual_present_at_mda: [0.3, 0.3, 0.3]
 seasonal_info:
   a: [1]
   enable: 'false'
@@ -351,7 +356,7 @@ strategy_db:
     - [0.8, 0.2]
     start_distribution:
     - [0.05, 0.95]
-    strategy_ids: [0, 1]
+    strategy_ids: [1, 0]
     type: NestedMFTMultiLocation
 tf_rate: 0.1
 tf_testing_day: 28

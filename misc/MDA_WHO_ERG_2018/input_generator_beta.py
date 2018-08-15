@@ -15,7 +15,7 @@ def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
 
-stream = open('input.yml', 'r');
+stream = open('input_FLAL.yml', 'r');
 data = yaml.load(stream);
 
 data['starting_date'] = '2006/1/1';

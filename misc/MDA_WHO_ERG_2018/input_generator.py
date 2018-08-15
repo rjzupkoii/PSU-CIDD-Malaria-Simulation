@@ -17,7 +17,7 @@ def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
 
-stream = open('input.yml', 'r');
+stream = open('input_FLAL.yml', 'r');
 data = yaml.load(stream);
 stream.close();
 
@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 40000
+popsize = 300000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
