@@ -49,13 +49,13 @@ data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 #        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
 
 
-betas = [0.19, 0.08, 0.065, 0.06, 0.058]
+betas = [0.22, 0.1, 0.08, 0.07, 0.065]
 
-pfpr = {0.19: 'PFPR15',
-        0.08: 'PFPR5',
-        0.065: 'PFPR2p5',
-        0.06: 'PFPR1p5',
-        0.058: 'PFPR1'}
+pfpr = {0.22: 'PFPR15',
+        0.1: 'PFPR5',
+        0.08: 'PFPR2p5',
+        0.07: 'PFPR1p5',
+        0.065: 'PFPR1'}
 
 improved_tc = {True: '_itc' , 
                False: ''}
