@@ -17,7 +17,7 @@ def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
 
-stream = open('input_FLAL.yml', 'r');
+stream = open('input_FLAL_no_importation.yml', 'r');
 data = yaml.load(stream);
 stream.close();
 
@@ -76,7 +76,7 @@ for mda_round in number_MDA_round:
                     if event['name'] == 'change_treatment_coverage':
                         new_data['events'][index]['info']= []
         
-            output_filename = 'FLAL/%s/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize), kFormatter(popsize),mda_round,pfpr_str,itc);
+            output_filename = 'FLAL_no_importation/%s/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize), kFormatter(popsize),mda_round,pfpr_str,itc);
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 
             output_stream.close();
