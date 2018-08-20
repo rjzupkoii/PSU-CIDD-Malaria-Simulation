@@ -73,8 +73,10 @@ void ImportationPeriodicallyEvent::execute() {
     Genotype* imported_genotype = nullptr;
     if (genotype_id_ == -1) {
       //  1 <=random_id  <= 32  or < 33
-      int random_id = Model::RANDOM->random_uniform_int(1, 33);
-      random_id = random_id % 2 == 1 ? random_id * 4 : random_id * 4 - 2;
+      int random_id = Model::RANDOM->random_uniform_int(0, 128);
+      if ((random_id / 4) % 2 == 0) {
+        random_id += 4;
+      }
       imported_genotype = Model::CONFIG->genotype_db()->get(random_id);
     }
     else {
