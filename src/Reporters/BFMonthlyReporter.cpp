@@ -11,6 +11,8 @@
 #include "Helpers/TimeHelpers.h"
 #include "Constants.h"
 #include "easylogging++.h"
+#include "date/date.h"
+#include "Population.h"
 
 BFMonthlyReporter::BFMonthlyReporter() = default;
 
@@ -30,6 +32,7 @@ void BFMonthlyReporter::monthly_report() {
   ss << Model::MODEL->get_seasonal_factor(Model::SCHEDULER->calendar_date, 0) << sep;
   ss << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 1) << sep;
   ss << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 10) << sep;
+  ss << Model::POPULATION->size() << sep;
   ss << group_sep;
   print_EIR_PfPR_by_location();
   ss << group_sep;

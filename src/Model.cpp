@@ -185,6 +185,10 @@ void Model::initialize() {
     scheduler_->schedule_population_event(event);
     // LOG(INFO) << scheduler_->population_events_list_[event->time()].size();
   }
+  //
+  // for(auto it = CONFIG->genotype_db()->begin(); it != CONFIG->genotype_db()->end(); ++it) {
+  //   std::cout << it->first << " : " << it->second->daily_fitness_multiple_infection() << std::endl;
+  // }
 }
 
 void Model::initialize_object_pool(const int& size) {

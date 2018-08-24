@@ -35,7 +35,7 @@ POINTER_PROPERTY(Model, model)
   CONFIG_ITEM(ending_date, date::year_month_day, date::year_month_day{ date::year{ 1999 } / 1 / 2 })
 
   CUSTOM_CONFIG_ITEM(total_time, 100)
-  
+
   CONFIG_ITEM(start_collect_data_day, int, 365)
 
   CONFIG_ITEM(number_of_tracking_days, int, 0)
@@ -96,6 +96,8 @@ POINTER_PROPERTY(Model, model)
   CONFIG_ITEM(sd_prob_individual_present_at_mda, DoubleVector , DoubleVector())
 
   CONFIG_ITEM(mda_therapy_id, int, 0)
+
+  CONFIG_ITEM(artificial_rescaling_of_population_size, double, 1.0)
 
   CUSTOM_CONFIG_ITEM(start_of_comparison_period, 0)
 

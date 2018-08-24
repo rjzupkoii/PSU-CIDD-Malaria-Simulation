@@ -339,23 +339,22 @@ void SingleHostClonalParasitePopulations::clear_cured_parasites() {
 }
 
 void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in_blood) {
-  for (auto& bloodParasite : *parasites_) {
-    Genotype* new_genotype = bloodParasite->genotype();
+  for (auto& blood_parasite : *parasites_) {
+    auto* new_genotype = blood_parasite->genotype();
 
     double percent_parasite_remove = 0;
-    DrugPtrMap::iterator it;
-    for (it = drugs_in_blood->drugs()->begin(); it != drugs_in_blood->drugs()->end(); it++) {
-      Drug* drug = it->second;
-      double P = Model::RANDOM->random_flat(0.0, 1.0);
+    for (auto it = drugs_in_blood->drugs()->begin(); it != drugs_in_blood->drugs()->end(); ++it) {
+      const auto drug = it->second;
+      const auto p = Model::RANDOM->random_flat(0.0, 1.0);
 
-      if (P < drug->get_mutation_probability()) {
-        
+      if (p < drug->get_mutation_probability()) {
+
         // select all locus
         //TODO: rework here to only allow x to mutate after intervention day
         int mutation_locus = Model::RANDOM->random_uniform_int(0, new_genotype->gene_expression().size());
 
 
-        auto new_allele_value = bloodParasite->genotype()->select_mutation_allele(mutation_locus);
+        auto new_allele_value = blood_parasite->genotype()->select_mutation_allele(mutation_locus);
         //                std::cout << mutation_locus << "-" << bloodParasite->genotype()->gene_expression()[mutation_locus] << "-" << new_allele_value << std::endl;
         auto* mutation_genotype = new_genotype->combine_mutation_to(mutation_locus, new_allele_value);
 
@@ -365,29 +364,33 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
         if (mutation_genotype->get_EC50_power_n(drug->drug_type()) >
           new_genotype->get_EC50_power_n(drug->drug_type())) {
           //higher EC50^n means lower efficacy then allow mutation occur
+          // if (mutation_locus == 3 && new_allele_value == 1) {
+          //   std::cout << "Hello: " << Model::SCHEDULER->current_time() << " -- " << mutation_genotype->get_EC50_power_n(drug->drug_type()) << " - " << new_genotype->
+          //     get_EC50_power_n(drug->drug_type()) << std::endl;
+          // }
           new_genotype = mutation_genotype;
         }
 
       }
-      if (new_genotype != bloodParasite->genotype()) {
+      if (new_genotype != blood_parasite->genotype()) {
         //mutation occurs
-        Model::DATA_COLLECTOR->record_1_mutation(person_->location(), bloodParasite->genotype(), new_genotype);
+        Model::DATA_COLLECTOR->record_1_mutation(person_->location(), blood_parasite->genotype(), new_genotype);
         //                std::cout << bloodParasite->genotype()->genotype_id() << "==>" << new_genotype->genotype_id() << std::endl;
-        bloodParasite->set_genotype(new_genotype);
+        blood_parasite->set_genotype(new_genotype);
       }
 
-      double pTemp = drug->get_parasite_killing_rate(bloodParasite->genotype()->genotype_id());
+      const auto p_temp = drug->get_parasite_killing_rate(blood_parasite->genotype()->genotype_id());
 
-      percent_parasite_remove = percent_parasite_remove + pTemp - percent_parasite_remove * pTemp;
+      percent_parasite_remove = percent_parasite_remove + p_temp - percent_parasite_remove * p_temp;
     }
     if (percent_parasite_remove > 0) {
-      bloodParasite->perform_drug_action(percent_parasite_remove);
+      blood_parasite->perform_drug_action(percent_parasite_remove);
     }
   }
 
 }
 
-bool SingleHostClonalParasitePopulations::has_detectable_parasite() {
+bool SingleHostClonalParasitePopulations::has_detectable_parasite() const {
   for (auto& parasite : *parasites_) {
     if (parasite->last_update_log10_parasite_density() >=
       Model::CONFIG->parasite_density_level().log_parasite_density_detectable) {

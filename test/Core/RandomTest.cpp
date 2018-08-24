@@ -14,6 +14,7 @@ TEST_CASE("RandomTest", "[Core]") {
   }
 
   SECTION("Shuffle for std::vector") {
+    std::cout << "Shuffle Test" << std::endl;
     std::vector<int*> v_int_ptr;
 
     const auto number_of_individuals = 100;

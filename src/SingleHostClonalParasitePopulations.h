@@ -64,7 +64,7 @@ public:
 
     void update_by_drugs(DrugsInBlood* drugs_in_blood);
 
-    bool has_detectable_parasite();
+    bool has_detectable_parasite() const;
 
     void get_parasites_profiles(std::vector<double>& parasite_density, double& log10_total_relative_density);
 

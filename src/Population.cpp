@@ -267,7 +267,8 @@ void Population::initialize() {
 
     //initialize population
     for (auto loc = 0; loc < number_of_location; loc++) {
-      const auto popsize_by_location = Model::CONFIG->location_db()[loc].population_size;
+      const auto popsize_by_location = static_cast<int>(Model::CONFIG->location_db()[loc].population_size * Model::CONFIG->
+        artificial_rescaling_of_population_size());
       auto temp_sum = 0;
       for (auto age_class = 0; age_class < Model::CONFIG->initial_age_structure().size(); age_class++) {
         auto number_of_individual_by_loc_ageclass = 0;
@@ -360,18 +361,21 @@ void Population::introduce_initial_cases() {
 
     // std::cout << Model::CONFIG->initial_parasite_info().size() << std::endl;
     for (const auto p_info : Model::CONFIG->initial_parasite_info()) {
-      auto num_of_infections = static_cast<int>(std::round(size(p_info.location) * p_info.prevalence));
-      // std::cout << num_of_infections << std::endl;
+      auto num_of_infections = Model::RANDOM->random_poisson(std::round(size(p_info.location) * p_info.prevalence));
+      num_of_infections = num_of_infections <= 0 ? 1 : num_of_infections;
+
       auto* genotype = Model::CONFIG->genotype_db()->get(p_info.parasite_type_id);
+      LOG(INFO) << "Introducing genotype " << p_info.parasite_type_id << " with prevalence: " << p_info.prevalence << " : "
+        << num_of_infections << " infections at location " << p_info.location;
       // std::cout << p_info.location << "-" << p_info.parasite_type_id << "-" << num_of_infections << std::endl;
       introduce_parasite(p_info.location, genotype, num_of_infections);
     }
     //update force of infection for 7 days
     for (auto d = 0; d < Model::CONFIG->number_of_tracking_days(); d++) {
       for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-        for (auto ptype = 0; ptype < Model::CONFIG->number_of_parasite_types(); ptype++) {
-          force_of_infection_for7days_by_location_parasite_type_[d][loc][ptype] =
-            current_force_of_infection_by_location_parasite_type_[loc][ptype];
+        for (auto genotype = 0; genotype < Model::CONFIG->number_of_parasite_types(); genotype++) {
+          force_of_infection_for7days_by_location_parasite_type_[d][loc][genotype] =
+            current_force_of_infection_by_location_parasite_type_[loc][genotype];
         }
       }
     }
@@ -386,7 +390,7 @@ void Population::introduce_parasite(const int& location, Genotype* parasite_type
     auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
     for (auto i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
-      double temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] *
+      auto temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] *
         pi->vPerson()[location][i].size();
       vLevelDensity.push_back(temp);
     }
@@ -395,15 +399,15 @@ void Population::introduce_parasite(const int& location, Genotype* parasite_type
     model_->random()->random_multinomial(vLevelDensity.size(), num_of_infections, &vLevelDensity[0],
                                          &vIntNumberOfBites[0]);
 
-    for (int bitting_level = 0; bitting_level < vIntNumberOfBites.size(); bitting_level++) {
-      const int size = pi->vPerson()[location][bitting_level].size();
+    for (auto biting_level = 0; biting_level < vIntNumberOfBites.size(); biting_level++) {
+      const int size = pi->vPerson()[location][biting_level].size();
       if (size == 0) continue;
-      for (auto j = 0u; j < vIntNumberOfBites[bitting_level]; j++) {
+      for (auto j = 0u; j < vIntNumberOfBites[biting_level]; j++) {
 
         //                std::cout << vIntNumberOfBites[bitting_level] << "-" << j << std::endl;
         //select 1 random person from level i
-        int index = model_->random()->random_uniform(size);
-        Person* p = pi->vPerson()[location][bitting_level][index];
+        const int index = model_->random()->random_uniform(size);
+        auto* p = pi->vPerson()[location][biting_level][index];
 
         initial_infection(p, parasite_type);
       }
@@ -411,15 +415,15 @@ void Population::introduce_parasite(const int& location, Genotype* parasite_type
   }
 }
 
-void Population::initial_infection(Person* p, Genotype* parasite_type) const {
+void Population::initial_infection(Person* person, Genotype* parasite_type) const {
 
-  p->immune_system()->set_increase(true);
-  p->set_host_state(Person::ASYMPTOMATIC);
+  person->immune_system()->set_increase(true);
+  person->set_host_state(Person::ASYMPTOMATIC);
 
-  ClonalParasitePopulation* blood_parasite = p->add_new_parasite_to_blood(parasite_type);
+  auto* blood_parasite = person->add_new_parasite_to_blood(parasite_type);
   //    std::cout << "hello"<< std::endl;
 
-  double size = model_->random()->random_flat(
+  const auto size = model_->random()->random_flat(
     Model::CONFIG->parasite_density_level().log_parasite_density_from_liver,
     Model::CONFIG->parasite_density_level().log_parasite_density_clinical);
 
@@ -427,15 +431,13 @@ void Population::initial_infection(Person* p, Genotype* parasite_type) const {
   blood_parasite->set_last_update_log10_parasite_density(size);
 
 
-  const double PClinical = p->get_probability_progress_to_clinical();
-  const double P = model_->random()->random_flat(0.0, 1.0);
+  const auto p_clinical = person->get_probability_progress_to_clinical();
+  const auto p = model_->random()->random_flat(0.0, 1.0);
 
-  if (P < PClinical) {
+  if (p < p_clinical) {
     //progress to clinical after several days
     blood_parasite->set_update_function(model_->progress_to_clinical_update_function());
-    p->schedule_progress_to_clinical_event_by(blood_parasite);
-
-
+    person->schedule_progress_to_clinical_event_by(blood_parasite);
   }
   else {
     //only progress to clearance by Immune system
