@@ -107,12 +107,12 @@ location_db:
 # probability that a symptomatic and infected individual seeks and receives antimalarial treatment
 #if the number of values less than number of locations, the first value will be applied for all locations
 # this is the initial value, the modification values can be change by setting in events node
-  p_treatment_for_less_than_5_by_location: [0.500000]
-  p_treatment_for_more_than_5_by_location: [0.600000]
+  p_treatment_for_less_than_5_by_location: [0.24]
+  p_treatment_for_more_than_5_by_location: [0.24]
 
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
-  beta_by_location: [0.09]
+  beta_by_location: [0.25]
 
 #if the number of values less than number of locations, the first value will be applied for all locations
   population_size_by_location: [479892,658765,737542,346932,497425,472655,438888,892988,109726,218590,26917,830427,99057,785773,299382,78277,578227,129315,67339,397231,656305,56712,23805,19025,598805]
@@ -120,9 +120,9 @@ location_db:
 
 # seasonality parameters for all location
 seasonal_info:
-  enable: false
+  enable: true
   a: [1]
-  phi: [250]
+  phi: [120]
   min_value: [0.1]
   period: 365
 
@@ -212,7 +212,7 @@ circulation_info:
     Gamma:
       mean: 5
       sd: 10
-  circulation_percent: 0.0
+  circulation_percent: 0.01
   length_of_stay:
     mean: 5
     sd: 10
@@ -604,7 +604,18 @@ drug_db:
        16... : 1.19
        #TYFYF
        17... : 1.35
-     
+  7: 
+    name: "QN"
+    half_life: 0.625
+    maximum_parasite_killing_rate: 0.95
+    n: 20
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    mutation_probability: 0.000
+    affecting_loci: []
+    selecting_alleles: []
+    k: 4
+    EC50:
+      ..... : 0.926
        
 lumefantrine_drug_id: 2
 artemisinin_drug_id: 0
@@ -667,31 +678,123 @@ therapy_db:
   12:
     drug_id: [6]
     dosing_days: 3
+  #QN
+  13:
+    drug_id: [7]
+    dosing_days: 5
 
 # drug-deployment strategy - simply uncomment below to turn on a particular strategy
 strategy_db:
-    0:
-        name: SP-AQ-CQ-AL-OPP
-        type: MFT
-        therapy_ids: [5,2,12,6]
-        distribution: [0.3,0.3,0.3,0.1]
-    1:
-        name: AL-SFTStrategy
-        type: SFT
-        therapy_id: 6
-    2:
-        name: ASAQ-SFTStrategy
-        type: SFT
-        therapy_id: 7
-    3:
-        name: BaseLineStrategy
-        type: NestedMFTMultiLocation
-        strategy_ids: [1,0]
-        start_distribution: [[0.05, 0.95]]
-        peak_distribution: [[0.8,0.2]]
-        peak_after: 12418
-
-initial_strategy_id: 3
+  0:
+    name: MonoAS
+    type: SFT
+    therapy_id: 6
+  1:
+    name: CQ
+    type: SFT
+    therapy_id: 12
+  2:
+    name: QN
+    type: SFT
+    therapy_id: 13
+  3:
+    name: ASMQ
+    type: SFT
+    therapy_id: 9
+  4:
+    name: DHAPPQ
+    type: SFT
+    therapy_id: 8
+  5:
+    name: MQ
+    type: SFT
+    therapy_id: 4
+  6:
+    name: Public_1990-2000_ASMQ_DHAPPQ_MONOAS_CQ_QN,MQ
+    type: NestedMFT
+    strategy_ids: [3,4,0,1,2,5]
+    start_distribution: [0,0,0.05, 0.75,0.2,0]
+    peak_distribution: [0,0,0.2,0.6,0.2,0]        
+    peak_after: 3652
+  7:
+    name: public_2000-2010_ASMQ_DHAPPQ_MONOAS_CQ_QN,MQ
+    type: NestedMFT
+    strategy_ids: [3,4,0,1,2,5]
+    start_distribution: [0.25,0, 0.15,0.45,0.15,0]
+    peak_distribution: [0.67,0,0.06,0.23, 0.04,0]        
+    peak_after: 4017
+  8:
+    name: public_2011-2013_ASMQ_DHAPPQ_MONOAS_CQ_QN,MQ
+    type: NestedMFT
+    strategy_ids: [3,4,0,1,2,5]
+    start_distribution: [0.66, 0.0471,0.0471,0.2121, 0.0337,0]
+    peak_distribution: [0.3238, 0.5524,0.0,0.1238, 0.0,0]        
+    peak_after: 1095
+  9:
+    name: public_2014-end_ASMQ_DHAPPQ_MONOAS_CQ_QN,MQ
+    type: NestedMFT
+    strategy_ids: [3,4,0,1,2,5]
+    start_distribution: [0.3238, 0.5524,0,0.1238,0,0]
+    peak_distribution: [0.15, 0.8,0,0.05,0,0]        
+    peak_after: 730
+  10:
+    name: Private_1990-2000_ASMQ_DHAPPQ_MONOAS_CQ_QN,MQ
+    type: NestedMFT
+    strategy_ids: [3,4,0,1,2,5]
+    start_distribution: [0,0,0.05, 0.75,0.2,0]
+    peak_distribution: [0,0,0.2,0.6,0.2,0]        
+    peak_after: 3652
+  11:
+    name: Private_2000-2010_ASMQ_DHAPPQ_MONOAS_CQ_QN,MQ
+    type: NestedMFT
+    strategy_ids: [3,4,0,1,2,5]
+    start_distribution: [0.10,0,0.40,0.30,0.10,0.10]
+    peak_distribution: [0.66,0,0.06,0.2, 0.04, 0.04 ]        
+    peak_after: 4017
+  12:
+    name: Private_2010-2013_ASMQ_DHAPPQ_MONOAS_CQ_QN,MQ
+    type: NestedMFT
+    strategy_ids: [3,4,0,1,2,5]
+    start_distribution: [0.66, 0.02,0.05,0.2, 0.03, 0.04]
+    peak_distribution: [0.26, 0.73,0.0,0.01, 0.0, 0.0]        
+    peak_after: 1095
+  13:
+    name: Private_2014-end_ASMQ_DHAPPQ_MONOAS_CQ_QN,MQ
+    type: NestedMFT
+    strategy_ids: [3,4,0,1,2,5]
+    start_distribution: [0.26, 0.73,0,0.01,0,0]
+    peak_distribution: [0.2, 0.8,0,0.0,0,0]        
+    peak_after: 730
+    # ==========
+  14:
+    name: Public-Private-1990-2000
+    type: NestedMFTMultiLocation
+    strategy_ids: [6,10]
+    start_distribution: [[0.11, 0.89]]
+    peak_distribution: [[0.21, 0.79]]
+    peak_after: 3652 
+  15:
+    name: Public-Private-2000-2010
+    type: NestedMFTMultiLocation
+    strategy_ids: [7,11]
+    start_distribution: [[0.21, 0.79]]
+    peak_distribution: [[0.34, 0.66]]
+    peak_after: 4018 
+  16:
+    name: Public-Private-2010-2013
+    type: NestedMFTMultiLocation
+    strategy_ids: [8,12]
+    start_distribution: [[0.34, 0.66]]
+    peak_distribution: [[0.3, 0.7]]
+    peak_after: 1094
+  17:
+    name: Public-Private-2014-20end
+    type: NestedMFTMultiLocation
+    strategy_ids: [9,13]
+    start_distribution: [[0.3, 0.7]]
+    peak_distribution: [[0.3, 0.7]]
+    peak_after: 1 
+initial_strategy_id: 14
 
     
 
@@ -826,12 +929,23 @@ events:
   - name: change_treatment_coverage
     info:
       - type: LinearTCM
-        from_day: 2020/1/1
-        to_day: 2020/6/1
-        p_treatment_for_less_than_5_by_location_to: [0.80000]
-        p_treatment_for_more_than_5_by_location_to: [0.80000]
+        from_day: 1990/1/1
+        to_day: 2004/1/1
+        p_treatment_for_less_than_5_by_location_to: [0.660000]
+        p_treatment_for_more_than_5_by_location_to: [0.660000]
+      - type: LinearTCM
+        from_day: 2004/1/1
+        to_day: 2013/1/1
+        p_treatment_for_less_than_5_by_location_to: [0.90000]
+        p_treatment_for_more_than_5_by_location_to: [0.90000]
   - name: change_treatment_strategy
-    info: []
+    info: 
+      - day: 2000/1/1
+        strategy_id: 15
+      - day: 2011/1/1
+        strategy_id: 16
+      - day: 2014/1/1
+        strategy_id: 17
   - name: single_round_MDA
     info:
       - day: 2020/1/1

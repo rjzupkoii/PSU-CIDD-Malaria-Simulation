@@ -1,4 +1,5 @@
 TODO:
+  - different rate in Nested MFT Strategy
   - add swith strategy event for NestedMFT
   
 Someday/maybe

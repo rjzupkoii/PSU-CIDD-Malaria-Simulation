@@ -3,7 +3,6 @@
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "Therapies/Therapy.h"
-#include "MFTRebalancingStrategy.h"
 
 void NestedMFTStrategy::add_strategy(IStrategy* strategy) {
   strategy_list.push_back(strategy);
@@ -44,25 +43,27 @@ void NestedMFTStrategy::adjust_started_time_point(const int& current_time) {
 
 void NestedMFTStrategy::update_end_of_time_step() {
   // update each strategy in the nest
-  for (auto& strategy : strategy_list) {
+  for (auto* strategy : strategy_list) {
     strategy->update_end_of_time_step();
   }
 }
 
 void NestedMFTStrategy::monthly_update() {
-  adjust_disttribution(Model::SCHEDULER->current_time());
+  adjust_distribution(Model::SCHEDULER->current_time());
+  
+  for (auto* strategy : strategy_list) {
+    strategy->monthly_update();
+  }
   // std::cout << distribution[0] << "-" << distribution[1] << std::endl;
 }
 
 
-void NestedMFTStrategy::adjust_disttribution(const int& time) {
+void NestedMFTStrategy::adjust_distribution(const int& time) {
   if (time < starting_time + peak_after) {
-    const auto d_act = (peak_distribution[0] - start_distribution[0]) * (time - starting_time) / peak_after + start_distribution[0];
 
-    distribution[0] = d_act;
-    const auto other_d = (1 - d_act) / (distribution.size() - 1);
-    for (auto i = 1; i < distribution.size(); i++) {
-      distribution[i] = other_d;
+    for (auto i = 0; i < distribution.size(); i++) {
+      const auto dist = (peak_distribution[i] - start_distribution[i]) * (time - starting_time) / peak_after + start_distribution[i];
+      distribution[i] = dist;
     }
   }
 }

@@ -40,7 +40,7 @@ Therapy* NestedMFTMultiLocationStrategy::get_therapy(Person* person) {
 
 std::string NestedMFTMultiLocationStrategy::to_string() const {
   std::stringstream sstm;
-  sstm << IStrategy::id << "-" << IStrategy::name << std::endl;
+  sstm << id << "-" << name << std::endl;
 
 
   for (auto i : distribution[Model::CONFIG->number_of_locations() - 1]) {
@@ -79,14 +79,11 @@ void NestedMFTMultiLocationStrategy::adjust_distribution(const int& time) {
     if (time <= starting_time + peak_after) {
       if (distribution[0][0] < 1) {
         for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-          auto d_act = (peak_distribution[loc][0] - start_distribution[loc][0]) * (time - starting_time) / peak_after + start_distribution[
-            loc][0];
-          d_act = d_act >= 1 ? 1 : d_act;
-          distribution[loc][0] = d_act;
-          const auto other_d = (1 - d_act) / (distribution[loc].size() - 1);
-          for (auto i = 1; i < distribution[loc].size(); i++) {
-            distribution[loc][i] = other_d;
-          }
+          for (auto i = 0; i < distribution[loc].size(); i++) {
+            const auto dist = (peak_distribution[loc][i] - start_distribution[loc][i]) * (time - starting_time) / peak_after + start_distribution[
+            loc][i];
+             distribution[loc][i] = dist;
+          }          
         }
       }
     }
@@ -97,12 +94,20 @@ void NestedMFTMultiLocationStrategy::adjust_distribution(const int& time) {
 void NestedMFTMultiLocationStrategy::adjust_started_time_point(const int& current_time) {
   starting_time = current_time;
   // update each strategy in the nest
-  for (auto& strategy : strategy_list) {
+  for (auto* strategy : strategy_list) {
     strategy->adjust_started_time_point(current_time);
   }
 }
 
 void NestedMFTMultiLocationStrategy::monthly_update() {
   adjust_distribution(Model::SCHEDULER->current_time());
-  // std::cout << distribution[0] << "-" << distribution[1] << std::endl;
+
+  for (auto* strategy : strategy_list) {
+    strategy->monthly_update();
+  }
+
+   // for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+   //   std::cout << distribution[loc] << std::endl;
+   // }
+  
 }

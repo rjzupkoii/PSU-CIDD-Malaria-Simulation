@@ -2,8 +2,10 @@
 #define NESTEDMFTSTRATEGY_H
 #include "IStrategy.h"
 
-class NestedMFTStrategy : public IStrategy {
 
+class NestedMFTStrategy : public IStrategy {
+DISALLOW_COPY_AND_ASSIGN(NestedMFTStrategy)
+DISALLOW_MOVE(NestedMFTStrategy)
 public:
   std::vector<IStrategy*> strategy_list;
   std::vector<double> distribution;
@@ -16,6 +18,7 @@ public:
   NestedMFTStrategy()
     : IStrategy("NestedMFTStrategy", NestedMFT) {}
 
+  virtual ~NestedMFTStrategy() = default;
   virtual void add_strategy(IStrategy* strategy);
 
   void add_therapy(Therapy* therapy) override;
@@ -25,6 +28,6 @@ public:
   void update_end_of_time_step() override;
   void monthly_update() override;
 
-  void adjust_disttribution(const int& time);
+  void adjust_distribution(const int& time);
 };
 #endif // NESTEDMFTSTRATEGY_H

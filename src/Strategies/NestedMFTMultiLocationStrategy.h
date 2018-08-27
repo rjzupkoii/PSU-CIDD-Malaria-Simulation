@@ -11,15 +11,15 @@
 class Config;
 
 class NestedMFTMultiLocationStrategy : public IStrategy {
-  DISALLOW_COPY_AND_ASSIGN(NestedMFTMultiLocationStrategy)
-    DISALLOW_MOVE(NestedMFTMultiLocationStrategy)
+DISALLOW_COPY_AND_ASSIGN(NestedMFTMultiLocationStrategy)
+DISALLOW_MOVE(NestedMFTMultiLocationStrategy)
 public:
   std::vector<IStrategy*> strategy_list;
   DoubleVector2 distribution;
   DoubleVector2 start_distribution;
   DoubleVector2 peak_distribution;
-  int starting_time{ 0 };
-  int peak_after{ 0 };
+  int starting_time{0};
+  int peak_after{0};
 
   NestedMFTMultiLocationStrategy();
   //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
@@ -38,13 +38,12 @@ public:
   */
   void update_end_of_time_step() override;
 
-  void adjust_distribution(const int &time);
+  void adjust_distribution(const int& time);
 
   void adjust_started_time_point(const int& current_time) override;
   void monthly_update() override;
 
 };
-
 
 
 #endif //POMS_NESTEDSWITCHINGDIFFERENTDISTRIBUTIONBYLOCATION_H

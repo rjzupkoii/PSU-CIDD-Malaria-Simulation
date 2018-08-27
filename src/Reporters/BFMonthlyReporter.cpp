@@ -13,6 +13,8 @@
 #include "easylogging++.h"
 #include "date/date.h"
 #include "Population.h"
+#include "Strategies/NestedMFTMultiLocationStrategy.h"
+#include "Strategies/NestedMFTStrategy.h"
 
 BFMonthlyReporter::BFMonthlyReporter() = default;
 
@@ -34,9 +36,28 @@ void BFMonthlyReporter::monthly_report() {
   ss << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 10) << sep;
   ss << Model::POPULATION->size() << sep;
   ss << group_sep;
+  ss << dynamic_cast<NestedMFTMultiLocationStrategy*>(Model::TREATMENT_STRATEGY)->distribution[0][0] << sep
+    << dynamic_cast<NestedMFTMultiLocationStrategy*>(Model::TREATMENT_STRATEGY)->distribution[0][1] << sep;
+  ss << group_sep;
+  for (auto i : dynamic_cast<NestedMFTStrategy*>(dynamic_cast<NestedMFTMultiLocationStrategy*>(Model::TREATMENT_STRATEGY)->strategy_list[0])
+       ->distribution) {
+    ss << i << sep;
+  }
+  for (auto i : dynamic_cast<NestedMFTStrategy*>(dynamic_cast<NestedMFTMultiLocationStrategy*>(Model::TREATMENT_STRATEGY)->strategy_list[1])
+       ->distribution) {
+    ss << i << sep;
+  }
+  ss << group_sep;
   print_EIR_PfPR_by_location();
   ss << group_sep;
-
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << sep;
+  }
+  ss << group_sep;
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
+  }
+  ss << group_sep;
   for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
     ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[i] << sep;
   }
@@ -47,6 +68,7 @@ void BFMonthlyReporter::monthly_report() {
       ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count_by_location()[loc][i] << sep;
     }
   }
+
 
   CLOG(INFO, "monthly_reporter") << ss.str();
   ss.str("");
@@ -60,7 +82,7 @@ void BFMonthlyReporter::after_run() {
   ss << Model::CONFIG->location_db()[0].population_size << sep;
   print_EIR_PfPR_by_location();
 
-  ss<< group_sep ;
+  ss << group_sep;
   //output last strategy information
   ss << Model::TREATMENT_STRATEGY->id << sep;
 
