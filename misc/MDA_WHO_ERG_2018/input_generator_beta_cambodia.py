@@ -18,19 +18,23 @@ data = yaml.load(stream);
 def loguniform(low=0, high=1, size=None):
     return np.exp(np.random.uniform(low, high, size))
 
+def ran_beta(alpha=2, beta=1, size=None):
+    return np.random.beta(alpha, beta, size)*0.2
+
 #%%
 
 number_of_locations = 25
 number_of_beta_sets = 400
 betas = [];
 for i in range(number_of_beta_sets):
-    betas.append(loguniform(log(0.05),log(0.5),number_of_locations))
+#    betas.append(loguniform(log(0.01),log(0.1),number_of_locations))
+    betas.append(ran_beta(2, 5,number_of_locations))
 
 
 #%%
 for index,beta in enumerate(betas):
     data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
-    output_filename = 'Cambodia/beta/input_beta_%d.yml'%index;
+    output_filename = 'Cambodia/run2/beta/input_beta_%d.yml'%index;
     output_stream = open(output_filename, 'w');
     yaml.dump(data, output_stream);
     output_stream.close();
@@ -39,7 +43,7 @@ for index,beta in enumerate(betas):
 
 import numpy
 a = numpy.asarray(betas)
-numpy.savetxt("Cambodia/beta.csv", a, delimiter=",")
+numpy.savetxt("Cambodia/run2/beta.csv", a, delimiter=",")
 #
 #
 #print(kFormatter(9000));
