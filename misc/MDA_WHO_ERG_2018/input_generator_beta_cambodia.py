@@ -19,7 +19,7 @@ def loguniform(low=0, high=1, size=None):
     return np.exp(np.random.uniform(low, high, size))
 
 def ran_beta(alpha=2, beta=1, size=None):
-    return np.random.beta(alpha, beta, size)*0.2
+    return np.random.beta(alpha, beta, size)*0.2 + 0.02
 
 #%%
 
