@@ -43,6 +43,7 @@ age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 20, 60, 100]
 # the last four rows of the matrix below are ignored when the number of locations is 1
 initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35, 45, 55, 65, 100]
 
+artificial_rescaling_of_population_size: 1.0
 
 #spatial information
 location_db:

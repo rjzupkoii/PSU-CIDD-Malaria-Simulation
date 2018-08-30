@@ -36,18 +36,29 @@ void BFMonthlyReporter::monthly_report() {
   ss << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 10) << sep;
   ss << Model::POPULATION->size() << sep;
   ss << group_sep;
-  ss << dynamic_cast<NestedMFTMultiLocationStrategy*>(Model::TREATMENT_STRATEGY)->distribution[0][0] << sep
-    << dynamic_cast<NestedMFTMultiLocationStrategy*>(Model::TREATMENT_STRATEGY)->distribution[0][1] << sep;
-  ss << group_sep;
-  for (auto i : dynamic_cast<NestedMFTStrategy*>(dynamic_cast<NestedMFTMultiLocationStrategy*>(Model::TREATMENT_STRATEGY)->strategy_list[0])
-       ->distribution) {
-    ss << i << sep;
-  }
-  for (auto i : dynamic_cast<NestedMFTStrategy*>(dynamic_cast<NestedMFTMultiLocationStrategy*>(Model::TREATMENT_STRATEGY)->strategy_list[1])
-       ->distribution) {
-    ss << i << sep;
-  }
-  ss << group_sep;
+
+  // auto* nested_MFT_MultiLocationStrategy = dynamic_cast<NestedMFTMultiLocationStrategy*>(Model::TREATMENT_STRATEGY);
+  // if (nested_MFT_MultiLocationStrategy != nullptr) {
+  //   ss << nested_MFT_MultiLocationStrategy->distribution[0][0] << sep
+  //     << nested_MFT_MultiLocationStrategy->distribution[0][1] << sep;
+  //   ss << group_sep;
+  //
+  //   auto* nested_MFT_Strategy1 = dynamic_cast<NestedMFTStrategy*>(nested_MFT_MultiLocationStrategy->strategy_list[0]);
+  //   if (nested_MFT_Strategy1 != nullptr) {
+  //     for (auto i : nested_MFT_Strategy1->distribution) {
+  //       ss << i << sep;
+  //     }
+  //   }
+  //   auto* nested_MFT_Strategy2 = dynamic_cast<NestedMFTStrategy*>(nested_MFT_MultiLocationStrategy->strategy_list[1]);
+  //   if (nested_MFT_Strategy2 != nullptr) {
+  //     for (auto i : nested_MFT_Strategy2->distribution) {
+  //       ss << i << sep;
+  //     }
+  //   }
+  //   ss << group_sep;
+  // }
+
+
   print_EIR_PfPR_by_location();
   ss << group_sep;
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
@@ -131,5 +142,4 @@ void BFMonthlyReporter::print_monthly_incidence_by_location() {
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
     ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
   }
-
 }
