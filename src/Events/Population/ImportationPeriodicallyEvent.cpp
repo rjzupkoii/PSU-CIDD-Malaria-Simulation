@@ -57,22 +57,22 @@ void ImportationPeriodicallyEvent::execute() {
  << " at location " << location_
     << " with genotype " << genotype_id_;
   for (auto i = 0; i < number_of_importation_cases; i++) {
-
-    const int ind_ac = Model::RANDOM->random_uniform(pi->vPerson()[0][0].size());
-    if (pi->vPerson()[0][0][ind_ac].empty()) {
+    
+    const int ind_ac = Model::RANDOM->random_uniform(pi->vPerson()[location_][0].size());
+    if (pi->vPerson()[location_][0][ind_ac].empty()) {
       continue;
     }
-    const int index = Model::RANDOM->random_uniform(pi->vPerson()[0][0][ind_ac].size());
-    auto* p = pi->vPerson()[0][0][ind_ac][index];
+
+    const int index = Model::RANDOM->random_uniform(pi->vPerson()[location_][0][ind_ac].size());
+    auto* p = pi->vPerson()[location_][0][ind_ac][index];
 
     p->immune_system()->set_increase(true);
     p->set_host_state(Person::ASYMPTOMATIC);
 
     //check and draw random Genotype 
-    // fix allele 580Y and x of the last loci, other alleles will be drawed randomly
+    // fix allele 580Y, other alleles will be drawn randomly
     Genotype* imported_genotype = nullptr;
     if (genotype_id_ == -1) {
-      //  1 <=random_id  <= 32  or < 33
       int random_id = Model::RANDOM->random_uniform_int(0, 128);
       if ((random_id / 4) % 2 == 0) {
         random_id += 4;

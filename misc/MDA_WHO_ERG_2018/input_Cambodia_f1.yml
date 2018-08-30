@@ -919,9 +919,9 @@ events:
     info: []
   - name: introduce_parasites_periodically
     info:
-    - location: 0
+    - location: -1
       parasite_info:
-        - duration: 10
+        - duration: 100
           # genotype_id -1: fix allele 580Y and x of the last loci, other alleles will be drawed randomly
           genotype_id: -1
           number_of_cases: 1

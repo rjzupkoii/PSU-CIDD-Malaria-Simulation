@@ -23,7 +23,7 @@ def loguniform(low=0, high=1, size=None):
 
 def ran_beta():
     result = np.random.normal(original_beta,original_beta_sd)    
-    result[result < 0] = 0.01
+    result[result < 0] = 0.02
     return result
 
 #%%
