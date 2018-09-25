@@ -35,7 +35,7 @@ for i in range(number_of_beta_sets):
 #%%
 for index,beta in enumerate(betas):
     data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
-    output_filename = 'Cambodia/run2/beta/input_beta_%d.yml'%index;
+    output_filename = 'Cambodia/pre1/beta/input_beta_%d.yml'%index;
     output_stream = open(output_filename, 'w');
     yaml.dump(data, output_stream);
     output_stream.close();
@@ -44,7 +44,7 @@ for index,beta in enumerate(betas):
 
 import numpy
 a = numpy.asarray(betas)
-numpy.savetxt("Cambodia/run2/beta.csv", a, delimiter=",")
+numpy.savetxt("Cambodia/pre1/beta.csv", a, delimiter=",")
 #
 #
 #print(kFormatter(9000));
