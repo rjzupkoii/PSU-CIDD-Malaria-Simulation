@@ -29,11 +29,11 @@ void GenotypeDatabase::add(Genotype* genotype) {
 
 void GenotypeDatabase::initialize_matting_matrix() {
   const int size = this->size();
-  mating_matrix_ = MatingMatrix(size, std::vector<std::vector<double>>(0, std::vector<double>()));
+  mating_matrix_ = MatingMatrix(size, std::vector<std::vector<double>>(size, std::vector<double>()));
 
   for (auto m = 0; m < size; m++) {
     for (auto f = 0; f < m; f++) {
-      mating_matrix_[m].push_back(generate_offspring_parasite_density((*this)[m]->gene_expression(), (*this)[f]->gene_expression()));
+      mating_matrix_[m][f] = generate_offspring_parasite_density((*this)[m]->gene_expression(), (*this)[f]->gene_expression());
     }
   }
 }
@@ -41,7 +41,7 @@ void GenotypeDatabase::initialize_matting_matrix() {
 std::vector<double> GenotypeDatabase::generate_offspring_parasite_density(const IntVector& m, const IntVector& f) {
   std::vector<IntVector> results;
   //add first one
-  IntVector ge(m.size(), 0);
+  const IntVector ge(m.size(), 0);
   results.push_back(ge);
 
   for (auto i = 0; i < m.size(); i++) {
