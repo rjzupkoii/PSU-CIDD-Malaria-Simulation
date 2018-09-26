@@ -597,7 +597,7 @@ void Person::infected_by(const int& parasite_type_id) {
       set_host_state(EXPOSED);
     }
 
-    Genotype* genotype = Model::CONFIG->genotype_db()->get(parasite_type_id);
+    Genotype* genotype = Model::CONFIG->genotype_db()->at(parasite_type_id);
     liver_parasite_type_ = genotype;
 
     //move parasite to blood in next 7 days
@@ -746,7 +746,7 @@ double Person::p_infection_from_an_infectious_bite() const {
 }
 
 bool Person::isGametocytaemic() const {
-  return all_clonal_parasite_populations_->isGameticytaemic();
+  return all_clonal_parasite_populations_->is_gametocytaemic();
 }
 
 void Person::generate_prob_present_at_mda_by_age() {

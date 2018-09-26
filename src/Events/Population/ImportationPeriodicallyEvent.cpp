@@ -77,10 +77,10 @@ void ImportationPeriodicallyEvent::execute() {
       if ((random_id / 4) % 2 == 0) {
         random_id += 4;
       }
-      imported_genotype = Model::CONFIG->genotype_db()->get(random_id);
+      imported_genotype = Model::CONFIG->genotype_db()->at(random_id);
     }
     else {
-      imported_genotype = Model::CONFIG->genotype_db()->get(genotype_id_);
+      imported_genotype = Model::CONFIG->genotype_db()->at(genotype_id_);
     }
 
     auto* blood_parasite = p->add_new_parasite_to_blood(imported_genotype);

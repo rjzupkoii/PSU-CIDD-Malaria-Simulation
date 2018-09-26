@@ -20,9 +20,9 @@ typedef std::vector<std::vector<std::vector<double>>> MatingMatrix;
 class GenotypeDatabase : public GenotypePtrMap {
 DISALLOW_COPY_AND_ASSIGN(GenotypeDatabase)
 DISALLOW_MOVE(GenotypeDatabase)
-// VIRTUAL_PROPERTY_REF(GenotypePtrMap, db);
-VIRTUAL_PROPERTY_REF(MatingMatrix, mating_matrix);
-VIRTUAL_PROPERTY_REF(IntVector, weight);
+
+VIRTUAL_PROPERTY_REF(MatingMatrix, mating_matrix)
+VIRTUAL_PROPERTY_REF(IntVector, weight)
 
 
 public:
@@ -30,13 +30,15 @@ public:
   virtual ~GenotypeDatabase();
 
   void add(Genotype* genotype);
-  Genotype* get(const int& id);
 
   int get_id(const IntVector& gene);
 
   void initialize_matting_matrix();
 
   std::vector<double> generate_offspring_parasite_density(const IntVector& m, const IntVector& f);
+
+  double get_offspring_density(const int&m, const int& f, const int&p);
+
 private:
 
 };

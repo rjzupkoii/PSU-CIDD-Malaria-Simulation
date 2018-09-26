@@ -180,6 +180,7 @@ void genotype_db::set_value(const YAML::Node& node) {
   }
 
   value_->initialize_matting_matrix();
+
 }
 
 void number_of_parasite_types::set_value(const YAML::Node& node) {
@@ -254,7 +255,7 @@ void EC50_power_n_table::set_value(const YAML::Node& node) {
 
   for (std::size_t g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
     for (std::size_t i = 0; i < config_->drug_db()->size(); i++) {
-      value_[g_id].push_back(config_->drug_db()->get(i)->infer_ec50(config_->genotype_db()->get(g_id)));
+      value_[g_id].push_back(config_->drug_db()->get(i)->infer_ec50(config_->genotype_db()->at(g_id)));
     }
   }
   //    std::cout << "ok " << std::endl;

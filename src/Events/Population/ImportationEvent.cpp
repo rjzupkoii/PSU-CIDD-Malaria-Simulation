@@ -53,7 +53,7 @@ void ImportationEvent::execute() {
     p->immune_system()->set_increase(true);
     p->set_host_state(Person::ASYMPTOMATIC);
 
-    auto* blood_parasite = p->add_new_parasite_to_blood(Model::CONFIG->genotype_db()->get(genotype_id_));
+    auto* blood_parasite = p->add_new_parasite_to_blood(Model::CONFIG->genotype_db()->at(genotype_id_));
 
     auto size = Model::CONFIG->parasite_density_level().log_parasite_density_asymptomatic;
 

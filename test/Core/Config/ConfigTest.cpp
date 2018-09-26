@@ -121,8 +121,8 @@ TEST_CASE("ConfigTest", "[Core]") {
 
     REQUIRE(c.genotype_db() != nullptr);
     REQUIRE(c.genotype_db()->size() ==128);
-    REQUIRE(c.genotype_db()->get(0)->gene_expression()==IntVector{ 0, 0, 0, 0, 0 });
-    REQUIRE(c.genotype_db()->get(127)->gene_expression() == IntVector{ 1,7,1,1,1});
+    REQUIRE(c.genotype_db()->at(0)->gene_expression()==IntVector{ 0, 0, 0, 0, 0 });
+    REQUIRE(c.genotype_db()->at(127)->gene_expression() == IntVector{ 1,7,1,1,1});
 
     //
     REQUIRE(c.number_of_parasite_types() == 128);

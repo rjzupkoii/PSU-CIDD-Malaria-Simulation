@@ -26,18 +26,14 @@ void GenotypeDatabase::add(Genotype* genotype) {
   (*this)[genotype->genotype_id()] = genotype;
 }
 
-// TODO: remove this function
-Genotype* GenotypeDatabase::get(const int& id) {
-  return this->at(id);
-}
 
 void GenotypeDatabase::initialize_matting_matrix() {
   const int size = this->size();
-  mating_matrix_ = MatingMatrix(size, std::vector<std::vector<double>>(size, std::vector<double>()));
+  mating_matrix_ = MatingMatrix(size, std::vector<std::vector<double>>(0, std::vector<double>()));
 
   for (auto m = 0; m < size; m++) {
-    for (auto f = 0; f < size; f++) {
-      mating_matrix_[m][f] = generate_offspring_parasite_density((*this)[m]->gene_expression(), (*this)[f]->gene_expression());
+    for (auto f = 0; f < m; f++) {
+      mating_matrix_[m].push_back(generate_offspring_parasite_density((*this)[m]->gene_expression(), (*this)[f]->gene_expression()));
     }
   }
 }
@@ -48,10 +44,9 @@ std::vector<double> GenotypeDatabase::generate_offspring_parasite_density(const 
   IntVector ge(m.size(), 0);
   results.push_back(ge);
 
-
   for (auto i = 0; i < m.size(); i++) {
     const int old_size = results.size();
-    for (int j = 0; j < old_size; j++) {
+    for (auto j = 0; j < old_size; j++) {
       results.push_back(results[j]);
       results[j][i] = m[i];
       results[results.size() - 1][i] = f[i];
@@ -67,12 +62,23 @@ std::vector<double> GenotypeDatabase::generate_offspring_parasite_density(const 
 
   for (auto& density : recombination_parasite_density) {
     if (NumberHelpers::is_enot_qual(density, 0.0)) {
-      density /= this->size();
+      density /= results.size();
     }
   }
 
   return recombination_parasite_density;
 
+}
+
+double GenotypeDatabase::get_offspring_density(const int& m, const int& f, const int& p) {
+  if (m == f && f==p)
+    return 1.0;
+  if(m==f)
+    return 0.0;
+  if(m < f)
+    return mating_matrix_[f][m][p];
+
+  return mating_matrix_[m][f][p];
 }
 
 int GenotypeDatabase::get_id(const IntVector& gene) {

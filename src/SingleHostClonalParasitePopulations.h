@@ -54,25 +54,25 @@ public:
 
     virtual bool contain(ClonalParasitePopulation* blood_parasite);
 
-    void change_all_parasite_update_function(ParasiteDensityUpdateFunction* from, ParasiteDensityUpdateFunction* to);
+    void change_all_parasite_update_function(ParasiteDensityUpdateFunction* from, ParasiteDensityUpdateFunction* to) const;
 
-    void update();
+    void update() const;
 
     void clear_cured_parasites();
 
     void clear();
 
-    void update_by_drugs(DrugsInBlood* drugs_in_blood);
+    void update_by_drugs(DrugsInBlood* drugs_in_blood) const;
 
     bool has_detectable_parasite() const;
 
-    void get_parasites_profiles(std::vector<double>& parasite_density, double& log10_total_relative_density);
+    void get_parasites_profiles(std::vector<double>& parasite_density, double& log10_total_relative_density) const;
 
     void update_relative_effective_parasite_density_using_free_recombination();
     
     void update_relative_effective_parasite_density_without_free_recombination();
     
-    bool isGameticytaemic();
+    bool is_gametocytaemic() const;
 private:
 
 };

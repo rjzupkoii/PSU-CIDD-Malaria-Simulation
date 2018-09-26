@@ -76,7 +76,7 @@ Genotype *Genotype::combine_mutation_to(const int &locus, const int &value) {
       id += Model::CONFIG->genotype_db()->weight()[i] * gene_expression_[i];
     }
   }
-  return Model::CONFIG->genotype_db()->get(id);
+  return Model::CONFIG->genotype_db()->at(id);
 }
 
 double Genotype::get_EC50_power_n(DrugType *dt) const {

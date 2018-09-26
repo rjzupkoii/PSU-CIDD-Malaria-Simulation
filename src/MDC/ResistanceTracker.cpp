@@ -51,7 +51,7 @@ void ResistanceTracker::initialize() {
     IntVector drugs_used;
 
 
-    all_resistance_id_ = Model::CONFIG->genotype_db()->get(
+    all_resistance_id_ = Model::CONFIG->genotype_db()->at(
             Model::CONFIG->genotype_db()->size() - 1)->genotype_id();
     //    
     make_resistance_profile(single_resistance_ids_, 1);
@@ -201,7 +201,7 @@ void ResistanceTracker::update_resistance_tracker() {
 double ResistanceTracker::calculate_total_resistance_frequency() {
 
 
-    const int size = Model::CONFIG->genotype_db()->get(0)->gene_expression().size();
+    const int size = Model::CONFIG->genotype_db()->at(0)->gene_expression().size();
 
     //get weighted sum
     total_resistance_frequency_ = 0;
