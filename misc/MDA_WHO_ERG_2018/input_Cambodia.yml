@@ -123,7 +123,7 @@ seasonal_info:
   enable: true
   a: [1]
   phi: [120]
-  min_value: [0.7]
+  min_value: [0.6]
   period: 365
 
 spatial_model:
