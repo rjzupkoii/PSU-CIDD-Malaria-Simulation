@@ -15,7 +15,7 @@ stream = open('input_Cambodia.yml', 'r');
 data = yaml.load(stream);
 #%%
 import numpy as np
-original_beta = np.array([0.13356084,0.15162966,0.09243984,0.16028422,0.20697847,0.15419583,0.10739227,0.09094083,0.16582377,0.23753038,0.21442202,0.096879,0.19005938,0.13223566,0.13402116,0.30217877,0.14398083,0.16429467,0.17459542,0.15144762,0.14584802,0.17901,0.08933166,0.13688217,0.21134582]);
+original_beta = np.array([0.06066162,0.06433545,0.046031743,0.04075625,0.055,0.06790156,0.047468297,0.039184507,0.021281302,0.11,0.14,0,0.11,0.057700768,0.08435011,0.14,0.055,0.04,0.13569869,0.010148501,0.005594737,0.052648053,0.028757822,0.046417046,0.055905398]);
 original_beta_sd = original_beta/3;
 
 def loguniform(low=0, high=1, size=None):
@@ -23,7 +23,7 @@ def loguniform(low=0, high=1, size=None):
 
 def ran_beta():
     result = np.random.normal(original_beta,original_beta_sd)    
-    result[result < 0] = 0.02
+    result[result < 0] = 0.001
     return result
 
 #%%
@@ -39,7 +39,7 @@ for i in range(number_of_beta_sets):
 #%%
 for index,beta in enumerate(betas):
     data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
-    output_filename = 'Cambodia/run1/beta/input_beta_%d.yml'%index;
+    output_filename = 'Cambodia/pre4/beta/input_beta_%d.yml'%index;
     output_stream = open(output_filename, 'w');
     yaml.dump(data, output_stream);
     output_stream.close();
@@ -48,7 +48,7 @@ for index,beta in enumerate(betas):
 
 import numpy
 a = numpy.asarray(betas)
-numpy.savetxt("Cambodia/run1/beta.csv", a, delimiter=",")
+numpy.savetxt("Cambodia/pre4/beta.csv", a, delimiter=",")
 
 #%%
 import pandas as pd
@@ -58,7 +58,7 @@ import matplotlib.pyplot as plt
 sns.set(style="darkgrid")
 
 
-betas= pd.read_csv('Cambodia/run1/beta.csv',delimiter=',',header=None)
+betas= pd.read_csv('Cambodia/pre4/beta.csv',delimiter=',',header=None)
 
 g = sns.boxplot(x="variable", y="value", data=pd.melt(betas))
 
