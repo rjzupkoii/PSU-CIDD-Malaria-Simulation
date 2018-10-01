@@ -25,7 +25,7 @@ start_collect_data_day: 0
 # the day at which the MDC will begin collecting NTF, AMU, UTL
 start_of_comparison_period: 2020/1/1
 
-artificial_rescaling_of_population_size: 0.1
+artificial_rescaling_of_population_size: 1.0
 
 # number of days to keep track total number of parasites in population
 # in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
@@ -112,7 +112,7 @@ location_db:
 
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
-  beta_by_location: [0.13356084,0.15162966,0.09243984,0.16028422,0.20697847,0.15419583,0.10739227,0.09094083,0.16582377,0.23753038,0.21442202,0.096879,0.19005938,0.13223566,0.13402116,0.30217877,0.14398083,0.16429467,0.17459542,0.15144762,0.14584802,0.17901,0.08933166,0.13688217,0.21134582]
+  beta_by_location: [0.05548071,0.0647519,0.043174572,0.042511154,0.052339487,0.063837804,0.049417004,0.03836203,0.022450952,0.09731948,0.11278777,-0.0018473221,0.090677805,0.05364143,0.079115726,0.104825124,0.055102676,0.04016091,0.10604624,0.010088981,0.005571655,0.061413415,0.028486919,0.04605999,0.056467038]
 
 #if the number of values less than number of locations, the first value will be applied for all locations
   population_size_by_location: [479892,658765,737542,346932,497425,472655,438888,892988,109726,218590,26917,830427,99057,785773,299382,78277,578227,129315,67339,397231,656305,56712,23805,19025,598805]
@@ -123,7 +123,7 @@ seasonal_info:
   enable: true
   a: [1]
   phi: [120]
-  min_value: [0.5]
+  min_value: [0.6]
   period: 365
 
 spatial_model:
