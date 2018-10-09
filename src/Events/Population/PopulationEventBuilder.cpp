@@ -10,6 +10,7 @@
 #include "ChangeStrategyEvent.h"
 #include <algorithm>
 #include "SingleRoundMDAEvent.h"
+#include "ModifyNestedMFTEvent.h"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
@@ -37,7 +38,7 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasites_periodical
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto location = node[i]["location"].as<int>();
     const auto location_from = location == -1 ? 0 : location;
-    const auto location_to = location == -1 ? config->number_of_locations() : std::min(location + 1,config->number_of_locations());
+    const auto location_to = location == -1 ? config->number_of_locations() : std::min(location + 1, config->number_of_locations());
 
     for (auto loc = location_from; loc < location_to; ++loc) {
       for (std::size_t j = 0; j < node[i]["parasite_info"].size(); j++) {
@@ -72,11 +73,11 @@ std::vector<Event*> PopulationEventBuilder::build_change_treatment_coverage_even
 
 std::vector<Event*> PopulationEventBuilder::build_change_treatment_strategy_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {    
+  for (std::size_t i = 0; i < node.size(); i++) {
     const auto starting_date = node[i]["day"].as<date::year_month_day>();
     auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
     auto strategy_id = node[i]["strategy_id"].as<int>();
-    
+
     auto* e = new ChangeStrategyEvent(time, strategy_id);
     events.push_back(e);
   }
@@ -88,7 +89,7 @@ std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const Y
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto starting_date = node[i]["day"].as<date::year_month_day>();
-    auto time = (date::sys_days{ starting_date } -date::sys_days{ config->starting_date() }).count();
+    auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
     auto* e = new SingleRoundMDAEvent(time);
     for (std::size_t loc = 0; loc < config->number_of_locations(); loc++) {
       auto input_loc = node[i]["fraction_population_targeted"].size() < config->number_of_locations() ? 0 : loc;
@@ -96,6 +97,20 @@ std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const Y
     }
 
     e->days_to_complete_all_treatments = node[i]["days_to_complete_all_treatments"].as<int>();
+    events.push_back(e);
+  }
+
+  return events;
+}
+
+std::vector<Event*> PopulationEventBuilder::build_modify_nested_mft_strategy_event(const YAML::Node& node, Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {
+    const auto starting_date = node[i]["day"].as<date::year_month_day>();
+    auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+    auto strategy_id = node[i]["strategy_id"].as<int>();
+
+    auto* e = new ModifyNestedMFTEvent(time, strategy_id);
     events.push_back(e);
   }
 
@@ -123,5 +138,11 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   if (name == "single_round_MDA") {
     events = build_single_round_mda_event(node["info"], config);
   }
+
+  if (name == "modify_nested_mft_strategy") {
+    events = build_modify_nested_mft_strategy_event(node["info"], config);
+  }
+
+
   return events;
 }
