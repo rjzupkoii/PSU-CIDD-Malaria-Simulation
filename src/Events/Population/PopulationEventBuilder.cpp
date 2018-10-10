@@ -11,6 +11,8 @@
 #include <algorithm>
 #include "SingleRoundMDAEvent.h"
 #include "ModifyNestedMFTEvent.h"
+#include "TurnOnMutationEvent.h"
+#include "TurnOffMutationEvent.h"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
@@ -117,6 +119,30 @@ std::vector<Event*> PopulationEventBuilder::build_modify_nested_mft_strategy_eve
   return events;
 }
 
+std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const YAML::Node& node, Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {
+    const auto starting_date = node[i]["day"].as<date::year_month_day>();
+    auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+    auto* e = new TurnOnMutationEvent(time);
+    events.push_back(e);
+  }
+
+  return events;
+}
+
+std::vector<Event*> PopulationEventBuilder::build_turn_off_mutation_event(const YAML::Node& node, Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {
+    const auto starting_date = node[i]["day"].as<date::year_month_day>();
+    auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+    auto* e = new TurnOffMutationEvent(time);
+    events.push_back(e);
+  }
+
+  return events;
+}
+
 std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   const auto name = node["name"].as<std::string>();
@@ -142,7 +168,11 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   if (name == "modify_nested_mft_strategy") {
     events = build_modify_nested_mft_strategy_event(node["info"], config);
   }
-
-
+  if (name == "turn_on_mutation") {
+    events = build_turn_on_mutation_event(node["info"], config);
+  }
+  if (name == "turn_off_mutation") {
+    events = build_turn_off_mutation_event(node["info"], config);
+  }
   return events;
 }

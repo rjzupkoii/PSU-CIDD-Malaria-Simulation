@@ -974,6 +974,7 @@ events:
     info:
       - day: 2020/1/1
         strategy_id: 1
+
   # - name: change_treatment_coverage
   #   info:
   #     - type: LinearTCM

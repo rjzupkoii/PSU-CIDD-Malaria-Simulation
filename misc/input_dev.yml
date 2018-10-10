@@ -901,7 +901,13 @@ events:
       - day: 2000/3/1
         fraction_population_targeted: [1.0]
         days_to_complete_all_treatments: 14
-
+  - name: turn_off_mutation
+    info:
+      - day: 1990/1/1        
+  - name: turn_on_mutation
+    info:
+      - day: 1990/2/1
+        
 mda_therapy_id : 8
 age_bracket_prob_individual_present_at_mda: [10, 40]
 mean_prob_individual_present_at_mda: [0.85, 0.75, 0.85]

@@ -14,7 +14,6 @@
 #include "ClinicalUpdateFunction.h"
 #include "ImmunityClearanceUpdateFunction.h"
 #include "Malaria/ITreatmentCoverageModel.h"
-#include "Malaria/SteadyTCM.h"
 
 class Scheduler;
 class Population;
