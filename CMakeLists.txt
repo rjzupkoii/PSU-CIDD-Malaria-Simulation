@@ -10,8 +10,8 @@ endif ()
 
 # for Windows only
 if (WIN32)
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+set(CMAKE_CXX_FLAGS_RELEASE "-DNOMINMAX ${CMAKE_CXX_FLAGS_RELEASE} /MT")
+set(CMAKE_CXX_FLAGS_DEBUG "-DNOMINMAX ${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif()
 
 
@@ -25,7 +25,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 find_package(GSL REQUIRED)
 if (GSL_FOUND)
-  MESSAGE(${GSL_LIBRARIES})
+  #MESSAGE(${GSL_LIBRARIES})
   include_directories(${GSL_INCLUDE_DIRS})
 endif ()
 
@@ -46,7 +46,10 @@ add_subdirectory(src)
 #Setup test project
 option(BUILD_TESTS "Build all tests." OFF) # Makes boolean 'test' available.
 if (BUILD_TESTS)
-  find_package(Catch2 REQUIRED)  
+#  find_package(Catch2 REQUIRED)  
+  find_path(CATCH_INCLUDE_DIR catch.hpp)
+  include_directories(${CATCH_INCLUDE_DIR})
+  
   set(PROJECT_TEST_NAME masim_test)
   add_subdirectory(test)
 endif ()
