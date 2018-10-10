@@ -1,4 +1,3 @@
-#include "catch/catch.hpp"
 #include "Core/Config/Config.h"
 #include "Spatial/WesolowskiSM.h"
 #include "Spatial/BarabasiSM.h"
@@ -8,6 +7,7 @@
 #include "Events/Event.h"
 #include "date/date.h"
 #include "Events/Population/SingleRoundMDAEvent.h"
+#include <catch2/catch.hpp>
 
 TEST_CASE("ConfigTest", "[Core]") {
 

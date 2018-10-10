@@ -1,9 +1,10 @@
 //
 // Created by Nguyen Tran on 7/3/2018.
 //
-#include "catch/catch.hpp"
+
 #include "Helpers/TimeHelpers.h"
 #include "date/date.h"
+#include <catch2/catch.hpp>
 using namespace date::literals;
 
 TEST_CASE("TimeHelpers", "[Core]") {

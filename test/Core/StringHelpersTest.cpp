@@ -1,7 +1,8 @@
-#include "catch/catch.hpp"
+
 #include "Helpers/TimeHelpers.h"
 #include "date/date.h"
 #include "Helpers/StringHelpers.h"
+#include <catch2/catch.hpp>
 using namespace date::literals;
 
 TEST_CASE("StringHelpers", "[Core]") {

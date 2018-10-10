@@ -1,9 +1,10 @@
 //
 // Created by Nguyen Tran on 1/25/2018.
 //
-#include "catch/catch.hpp"
+
 #include "Spatial/Coordinate.h"
 #include <math.h>
+#include <catch2/catch.hpp>
 
 using namespace Spatial;
 

@@ -4,8 +4,11 @@
 #include "easylogging++.h"
 INITIALIZE_EASYLOGGINGPP
 
+#define NOMINMAX 
+
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
+
 
 void config_logger() {
   el::Configurations default_conf;

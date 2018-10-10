@@ -1,10 +1,12 @@
 //
 // Created by Nguyen Tran on 1/25/2018.
 //
-#include "catch/catch.hpp"
+
 #include "Helpers/NumberHelpers.h"
 #include "Core/Random.h"
 #include <iostream>
+#include <catch2/catch.hpp>
+
 TEST_CASE("RandomTest", "[Core]") {
 
   SECTION("Good Seed Should have different value") {
