@@ -155,7 +155,7 @@ void handle_cli(Model* model, int argc, char** argv) {
   }
   model->set_config_filename(input);
 
-  const auto job_number = cluster_job_number ? args::get(cluster_job_number) : 0;
+  job_number = cluster_job_number ? args::get(cluster_job_number) : 0;
   model->set_cluster_job_number(job_number);
 
   const auto reporter_type = reporter ? args::get(reporter) : "";
