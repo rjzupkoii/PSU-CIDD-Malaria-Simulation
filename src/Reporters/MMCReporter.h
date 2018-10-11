@@ -23,7 +23,12 @@ public:
   void after_run() override;
 
   void begin_time_step() override;
+  void print_genotype_population_count();
 
+  void print_genotype_frequency();
+
+
+  void print_treatment_failure_rate_by_therapy();
   void monthly_report() override;
 
   void print_EIR_PfPR_by_location();

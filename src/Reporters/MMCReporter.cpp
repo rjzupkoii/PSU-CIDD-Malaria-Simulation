@@ -13,16 +13,112 @@
 #include "easylogging++.h"
 #include "date/date.h"
 #include "Population.h"
+#include "PersonIndexByLocationStateAgeClass.h"
+#include "SingleHostClonalParasitePopulations.h"
 
 MMCReporter::MMCReporter() = default;
 
 void MMCReporter::initialize() {}
 
 void MMCReporter::before_run() {
-  std::cout << "MMC Reporter" << std::endl;  
+  // std::cout << "MMC Reporter" << std::endl;
 }
 
 void MMCReporter::begin_time_step() {}
+
+void MMCReporter::print_genotype_population_count() {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
+      ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count_by_location()[loc][i] << sep;
+    }
+  }
+}
+
+void MMCReporter::print_genotype_frequency() {
+  // (a) number of parasite-positive individuals carrying genotype X / total number of parasite-positive
+  // individuals
+  // (b) number of clonal parasite populations carrying genotype X / total number of clonal parasite
+  // populations
+  // (c) weighted number of parasite-positive individuals carrying genotype X / total number of
+  // parasite-positive individuals (the weights for each person describe the fraction of their clonal
+  // populations carrying genotype X; e.g. an individual host with five clonal infections two of which
+  // carry genotype X would be given a weight of 2/5).
+
+  auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    std::vector<double> result1(Model::CONFIG->genotype_db()->size(), 0.0);
+    std::vector<double> result2(Model::CONFIG->genotype_db()->size(), 0.0);
+    std::vector<double> result3(Model::CONFIG->genotype_db()->size(), 0.0);
+
+    auto sum2 = 0.0;
+    auto sum1 = 0.0;
+    for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
+      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+        const auto size = pi->vPerson()[loc][hs][ac].size();
+        for (auto i = 0; i < size; i++) {
+          auto* person = pi->vPerson()[loc][hs][ac][i];
+
+          if (!person->all_clonal_parasite_populations()->parasites()->empty()) {
+            sum1 += 1;
+          }
+          sum2 += person->all_clonal_parasite_populations()->parasites()->size();
+          std::map<int, int> individual_genotype_map;
+
+          for (auto* parasite_population : *(person->all_clonal_parasite_populations()->parasites())) {
+            const auto g_id = parasite_population->genotype()->genotype_id();
+            result2[g_id] += 1;
+            if (individual_genotype_map.find(g_id) == individual_genotype_map.end()) {
+              individual_genotype_map[parasite_population->genotype()->genotype_id()] = 1;
+            }
+            else {
+              individual_genotype_map[parasite_population->genotype()->genotype_id()] += 1;
+            }
+          }
+
+          for (const auto genotype : individual_genotype_map) {
+            result1[genotype.first] += 1;
+            result3[genotype.first] += genotype.second / static_cast<double>(person->all_clonal_parasite_populations()->parasites()->size()
+            );
+          }
+        }
+      }
+    }
+
+    for (auto& i : result1) {
+      i /= sum1;
+    }
+
+    for (auto& i : result2) {
+      i /= sum2;
+    }
+
+    for (auto& i : result3) {
+      i /= sum1;
+    }
+
+    for (auto& i : result1) {
+      ss << i << sep;
+    }
+    ss << group_sep;
+
+    for (auto& i : result2) {
+      ss << i << sep;
+    }
+    ss << group_sep;
+
+    for (auto& i : result3) {
+      ss << i << sep;
+    }
+    ss << group_sep;
+  }
+}
+
+void MMCReporter::print_treatment_failure_rate_by_therapy() {
+  for (auto therapy_id = 0ull; therapy_id < Model::CONFIG->therapy_db().size(); therapy_id++) {
+    ss << Model::DATA_COLLECTOR->current_tf_by_therapy()[therapy_id] << sep;
+  }
+}
+
 
 void MMCReporter::monthly_report() {
   ss << Model::SCHEDULER->current_time() << sep;
@@ -65,17 +161,13 @@ void MMCReporter::monthly_report() {
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
   }
-  ss << group_sep;
-  for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
-    ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[i] << sep;
-  }
-  ss << group_sep;
 
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
-      ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count_by_location()[loc][i] << sep;
-    }
-  }
+  // ss << group_sep;
+  // print_genotype_population_count();
+  ss << group_sep;
+  print_genotype_frequency();
+  ss << group_sep;
+  print_treatment_failure_rate_by_therapy();
 
 
   CLOG(INFO, "monthly_reporter") << ss.str();
@@ -125,6 +217,7 @@ void MMCReporter::print_EIR_PfPR_by_location() {
 
     //pfpr <5 and all
     ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 0, 5) * 100 << sep;
+    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 2, 10) * 100 << sep;
     ss << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc] * 100 << sep;
   }
 }
