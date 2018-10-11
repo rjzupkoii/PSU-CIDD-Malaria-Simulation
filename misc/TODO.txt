@@ -1,8 +1,9 @@
 TODO:
-  - different rate in Nested MFT Strategy
-  - add swith strategy event for NestedMFT
+  - Clean up reporter
   
 Someday/maybe
+  - report to binary file to save space
+
   - bring back object pool
   
   - remove affecting allele

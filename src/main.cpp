@@ -54,7 +54,7 @@ void config_logger() {
 
 
   monthly_reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
-  monthly_reporter_logger.setGlobally(el::ConfigurationType::Filename, fmt::format("monthly_data_{}.txt",job_number));
+  monthly_reporter_logger.setGlobally(el::ConfigurationType::Filename, fmt::format("monthly_data_{}.txt", job_number));
   monthly_reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
   monthly_reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
   // default logger uses default configurations
@@ -63,13 +63,13 @@ void config_logger() {
   el::Configurations summary_reporter_logger;
   summary_reporter_logger.setToDefault();
   summary_reporter_logger.set(el::Level::Debug, el::ConfigurationType::Format,
-    "[%level] [%logger] [%host] [%func] [%loc] %msg");
+                              "[%level] [%logger] [%host] [%func] [%loc] %msg");
   summary_reporter_logger.set(el::Level::Error, el::ConfigurationType::Format,
-    "[%level] [%logger] [%host] [%func] [%loc] %msg");
+                              "[%level] [%logger] [%host] [%func] [%loc] %msg");
   summary_reporter_logger.set(el::Level::Fatal, el::ConfigurationType::Format,
-    "[%level] [%logger] [%host] [%func] [%loc] %msg");
+                              "[%level] [%logger] [%host] [%func] [%loc] %msg");
   summary_reporter_logger.set(el::Level::Trace, el::ConfigurationType::Format,
-    "[%level] [%logger] [%host] [%func] [%loc] %msg");
+                              "[%level] [%logger] [%host] [%func] [%loc] %msg");
   summary_reporter_logger.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
   summary_reporter_logger.set(el::Level::Warning, el::ConfigurationType::Format, "[%level] [%logger] %msg");
   summary_reporter_logger.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] [%logger] %msg");
@@ -81,7 +81,6 @@ void config_logger() {
   summary_reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
   // default logger uses default configurations
   el::Loggers::reconfigureLogger("summary_reporter", summary_reporter_logger);
-
 
 
   //
@@ -113,17 +112,21 @@ int main(const int argc, char** argv) {
 }
 
 
-
 void handle_cli(Model* model, int argc, char** argv) {
   args::ArgumentParser parser("Individual-based simulation for malaria.", "uut47@psu.edu");
   args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
   args::ValueFlag<std::string> input_file(parser, "string",
-                                          "The config file (YAML format). \nEx: malariasimulation -i input.yml",
+                                          "The config file (YAML format). \nEx: MaSim -i input.yml",
                                             {'i', 'c', "input", "config"});
 
   args::ValueFlag<int> cluster_job_number(parser, "int",
-                                          "Cluster job number. \nEx: malariasimulation -j 1",
+                                          "Cluster job number. \nEx: MaSim -j 1",
                                             {'j'});
+
+  args::ValueFlag<std::string> reporter(parser, "string",
+                                          "Reporter Type. \nEx: MaSim -r mmc",
+                                            {'r'});
+
   try {
     parser.ParseCLI(argc, argv);
   }
@@ -139,9 +142,7 @@ void handle_cli(Model* model, int argc, char** argv) {
   }
 
   const auto input = input_file ? args::get(input_file) : "input.yml";
-
-  job_number = cluster_job_number ? args::get(cluster_job_number) : 0;
-
+  
   if (input != "input.yml") {
     LOG(INFO) << fmt::format("Used input file: {0}", input);
   }
@@ -153,4 +154,11 @@ void handle_cli(Model* model, int argc, char** argv) {
     LOG(FATAL) << fmt::format("File {0} is not exists", input);
   }
   model->set_config_filename(input);
+
+  const auto job_number = cluster_job_number ? args::get(cluster_job_number) : 0;
+  model->set_cluster_job_number(job_number);
+
+  const auto reporter_type = reporter ? args::get(reporter) : "";
+  model->set_reporter_type(reporter_type);
+  
 }

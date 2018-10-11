@@ -9,6 +9,7 @@
 #define REPORTER_H
 
 #include "Core/PropertyMacro.h"
+#include <map>
 
 class Model;
 
@@ -29,9 +30,11 @@ POINTER_PROPERTY(Model, model)
     BURNIN_MONTHLY_REPORTER,
     BURNIN_FARM_REPORTER,
     BFREPORTER,
-    BFFARM_REPORTER
+    BFFARM_REPORTER,
+    MMC_REPORTER
   };
-
+public:
+   static std::map<std::string, ReportType> ReportTypeMap;
 
 public:
   Reporter();

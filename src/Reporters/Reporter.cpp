@@ -13,20 +13,26 @@
 #include "MultipleLocationGuiReporter.h"
 #include "YearlyReporterV1.h"
 #include "Model.h"
-#include "Core/Random.h"
-#include "MonthlyReporter.h"
 #include "MonthlyReporterConsole.h"
 #include "BurninMonthlyReporter.h"
 #include "BurninFarmReporter.h"
 #include "BFMonthlyReporter.h"
 #include "BFFarmReporter.h"
-#include <string>
+#include "MMCReporter.h"
+
+std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
+    {"Console", CONSOLE},
+    {"GUI", GUI},
+    {"MonthlyReporter", BFREPORTER},
+    {"MMC", MMC_REPORTER}
+};
+
+
 
 Reporter::Reporter() : model_(nullptr) {
 }
 
-Reporter::~Reporter() {
-}
+Reporter::~Reporter() = default;
 
 Reporter *Reporter::MakeReport(ReportType report_type) {
   switch (report_type) {
@@ -52,6 +58,8 @@ Reporter *Reporter::MakeReport(ReportType report_type) {
       return new BFMonthlyReporter();
     case BFFARM_REPORTER:
       return new BFFarmReporter();
+    case MMC_REPORTER:
+      return new MMCReporter();
     default:
       return new ConsoleReporter();
   }

@@ -80,6 +80,8 @@ Model::Model(const int& object_pool_size) {
   override_parameter_line_number_ = -1;
   gui_type_ = -1;
   is_farm_output_ = false;
+  cluster_job_number_ = 0;
+  reporter_type_ = "";
 }
 
 Model::~Model() {
@@ -91,7 +93,7 @@ Model::~Model() {
 void Model::set_treatment_strategy(const int& strategy_id) {
   treatment_strategy_ = strategy_id == -1 ? nullptr : config_->strategy_db()[strategy_id];
   TREATMENT_STRATEGY = treatment_strategy_;
-  
+
   treatment_strategy_->adjust_started_time_point(Model::SCHEDULER->current_time());
 
   //
@@ -137,7 +139,7 @@ void Model::initialize() {
   //Read input file
   config_->read_from_file(config_filename_);
 
-    // modify parameters
+  // modify parameters
   //modify parameters && update config
   LOG_IF(override_parameter_line_number_!= -1, INFO) << fmt::format("Override parameter from {} at line {}",
                                                                     override_parameter_filename_,
@@ -145,7 +147,15 @@ void Model::initialize() {
   config_->override_parameters(override_parameter_filename_, override_parameter_line_number_);
 
   //add reporter here
-  add_reporter(Reporter::MakeReport(Reporter::BFREPORTER));
+  if (reporter_type_.empty()) {
+    add_reporter(Reporter::MakeReport(Reporter::BFREPORTER));
+  }
+  else {
+    if (Reporter::ReportTypeMap.find(reporter_type_) != Reporter::ReportTypeMap.end()) {
+      add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));
+    }
+  }
+
 
   LOG(INFO) << "Initialing reports";
   //initialize reporters  
