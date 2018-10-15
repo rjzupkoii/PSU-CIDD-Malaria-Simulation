@@ -15,7 +15,7 @@
 starting_date: 2000/1/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 2040/1/1
+ending_date: 2011/1/1
 
 # the day at which the simulation's reporting functionality begins collecting data for 
 # EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
@@ -25,7 +25,7 @@ start_collect_data_day: 0
 # the day at which the MDC will begin collecting NTF, AMU, UTL
 start_of_comparison_period: 2020/1/1
 
-artificial_rescaling_of_population_size: 0.001
+artificial_rescaling_of_population_size: 0.01
 
 # number of days to keep track total number of parasites in population
 # in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
@@ -784,7 +784,7 @@ strategy_db:
     delay_until_actual_trigger: 360
     update_duration_after_rebalancing: 1440
   8:
-    name: MainStrategy
+    name: Pre2010Strategy
     type: NestedMFTMultiLocation
     strategy_ids: [1,0]
     start_distribution: [
@@ -834,8 +834,54 @@ strategy_db:
       [0.472340426,0.527659574],
       [0.472340426,0.527659574]
     ]
-    peak_distribution: [[0.8,0.2]]
-    peak_after: 7300
+    peak_distribution: [
+      [0.388257576,0.611742424],
+      [0.388257576,0.611742424],
+      [0.388257576,0.611742424],
+      [0.388257576,0.611742424],
+      [0.388257576,0.611742424],
+      [0.388257576,0.611742424],
+      [0.735905045,0.264094955],
+      [0.735905045,0.264094955],
+      [0.153846154,0.846153846],
+      [0.153846154,0.846153846],
+      [0.153846154,0.846153846],
+      [0.101476015,0.898523985],
+      [0.101476015,0.898523985],
+      [0.101476015,0.898523985],
+      [0.168091168,0.831908832],
+      [0.168091168,0.831908832],
+      [0.168091168,0.831908832],
+      [0.168091168,0.831908832],
+      [0.174212598,0.825787402],
+      [0.174212598,0.825787402],
+      [0.174212598,0.825787402],
+      [0.241935484,0.758064516],
+      [0.132612967,0.867387033],
+      [0.132612967,0.867387033],
+      [0.132612967,0.867387033],
+      [0.132612967,0.867387033],
+      [0.132612967,0.867387033],
+      [0.430569431,0.569430569],
+      [0.430569431,0.569430569],
+      [0.430569431,0.569430569],
+      [0.274975272,0.725024728],
+      [0.274975272,0.725024728],
+      [0.274975272,0.725024728],
+      [0.274975272,0.725024728],
+      [0.127344521,0.872655479],
+      [0.127344521,0.872655479],
+      [0.127344521,0.872655479],
+      [0.388224471,0.611775529],
+      [0.388224471,0.611775529],
+      [0.388224471,0.611775529],
+      [0.388224471,0.611775529],
+      [0.472340426,0.527659574],
+      [0.472340426,0.527659574],
+      [0.472340426,0.527659574],
+      [0.472340426,0.527659574]
+    ]
+    peak_after: 1
 
 initial_strategy_id: 8
 
@@ -959,6 +1005,12 @@ fraction_mosquitoes_interrupted_feeding: 0.0
 inflation_factor: 0.01
 
 events:
+  - name: turn_off_mutation
+    info:
+      - day: 2000/1/1        
+  - name: turn_on_mutation
+    info:
+      - day: 2006/1/1
   - name: introduce_parasites
     info: []
   - name: introduce_parasites_periodically
@@ -969,11 +1021,11 @@ events:
           # genotype_id -1: fix allele 580Y and x of the last loci, other alleles will be drawed randomly
           genotype_id: -1
           number_of_cases: 1
-          start_day: 2006/2/1
-  - name: modify_nested_mft_strategy
-    info:
-      - day: 2020/1/1
-        strategy_id: 1
+          start_day: 2006/1/1
+  # - name: modify_nested_mft_strategy
+  #   info:
+  #     - day: 2020/1/1
+  #       strategy_id: 1
 
   # - name: change_treatment_coverage
   #   info:
