@@ -126,9 +126,6 @@ void MMCReporter::print_treatment_failure_rate_by_therapy() {
 }
 
 void MMCReporter::print_ntf_by_location() {
-  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
-    static_cast<double>(Constants::DAYS_IN_YEAR());
-
   auto sum_ntf = 0.0;
   ul pop_size = 0;
   for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
@@ -136,8 +133,7 @@ void MMCReporter::print_ntf_by_location() {
     pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
   }
 
-  ss << (sum_ntf * 100 / pop_size) / total_time_in_years << sep;
-
+  ss << (sum_ntf * 100 / pop_size) << sep;
 }
 
 
