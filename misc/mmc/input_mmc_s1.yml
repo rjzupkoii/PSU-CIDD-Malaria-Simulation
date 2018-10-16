@@ -745,16 +745,16 @@ events:
       parasite_info:
         - day: 2020/1/1
           genotype_id: 2
-          number_of_cases: 25        
+          number_of_cases: 75        
         - day: 2020/1/1
           genotype_id: 10
-          number_of_cases: 25        
+          number_of_cases: 75        
         - day: 2020/1/1
           genotype_id: 66
-          number_of_cases: 25        
+          number_of_cases: 75        
         - day: 2020/1/1
           genotype_id: 74
-          number_of_cases: 25        
+          number_of_cases: 75        
   
 mda_therapy_id : 8
 age_bracket_prob_individual_present_at_mda: [10, 40]
