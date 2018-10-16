@@ -108,7 +108,6 @@ IStrategy* StrategyBuilder::buildMFTStrategy(const YAML::Node& ns, const int& st
 }
 
 
-
 IStrategy* StrategyBuilder::buildNestedSwitchingStrategy(const YAML::Node& ns, const int& strategy_id, Config* config) {
   auto* result = new NestedMFTStrategy();
   result->id = strategy_id;
@@ -151,17 +150,32 @@ IStrategy* StrategyBuilder::buildMFTMultiLocationStrategy(const YAML::Node& ns, 
   result->id = strategy_id;
   result->name = ns["name"].as<std::string>();
 
-  result->distribution_by_location.clear();
-  result->distribution_by_location.resize(
-    static_cast<unsigned long long int>(config->number_of_locations()));
+  result->distribution.clear();
+  result->distribution.resize(static_cast<unsigned long long int>(config->number_of_locations()));
+
+  result->start_distribution.clear();
+  result->start_distribution.resize(static_cast<unsigned long long int>(config->number_of_locations()));
+
+  result->peak_distribution.clear();
+  result->peak_distribution.resize(static_cast<unsigned long long int>(config->number_of_locations()));
+
 
   for (auto loc = 0; loc < config->number_of_locations(); loc++) {
-    auto input_loc = ns["distribution"].size() < config->number_of_locations() ? 0 : loc;
-    add_distributions(ns["distribution"][input_loc], result->distribution_by_location[loc]);
+    auto input_loc = ns["start_distribution"].size() < config->number_of_locations() ? 0 : loc;
+    add_distributions(ns["start_distribution"][input_loc], result->distribution[loc]);
+  }
+  for (auto loc = 0; loc < config->number_of_locations(); loc++) {
+    auto input_loc = ns["start_distribution"].size() < config->number_of_locations() ? 0 : loc;
+    add_distributions(ns["start_distribution"][input_loc], result->start_distribution[loc]);
+  }
+
+  for (auto loc = 0; loc < config->number_of_locations(); loc++) {
+    auto input_loc = ns["peak_distribution"].size() < config->number_of_locations() ? 0 : loc;
+    add_distributions(ns["peak_distribution"][input_loc], result->peak_distribution[loc]);
   }
 
   add_therapies(ns, result, config);
-
+  result->peak_after = ns["peak_after"].as<int>();
   return result;
 }
 
