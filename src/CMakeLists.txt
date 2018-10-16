@@ -1,20 +1,18 @@
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
-file(GLOB SRC_FILES *.cpp  Spatial/*.cpp  Reporters/*.cpp Strategies/*.cpp 
+file(GLOB SRC_FILES *.cpp  MaSim/*.cpp Spatial/*.cpp  Reporters/*.cpp Strategies/*.cpp 
 MDC/*.cpp  Helpers/*.cpp 	Core/*.cpp	 Core/Config/*.cpp 	Core/Index/*.cpp Therapies/*.cpp
 Parasites/*.cpp Events/*.cpp Events/Population/*.cpp Malaria/*.cpp)
 
-include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
 add_executable(MaSim ${SRC_FILES} 
-	${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h 
 	${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc)
 add_dependencies(MaSim date args)
 
 target_link_libraries(MaSim
     yaml-cpp
     GSL::gsl GSL::gslcblas	
-	fmt::fmt fmt::fmt-header-only
+	  fmt::fmt fmt::fmt-header-only
 	#unofficial::date::date
     )
 

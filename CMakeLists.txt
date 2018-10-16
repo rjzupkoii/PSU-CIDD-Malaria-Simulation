@@ -42,6 +42,7 @@ include_directories(${DATE_INCLUDE_DIR} ${ARGS_INCLUDE_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(src)
+add_subdirectory(src/DxGGenerator)
 
 #Setup test project
 option(BUILD_TESTS "Build all tests." OFF) # Makes boolean 'test' available.
