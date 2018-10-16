@@ -696,7 +696,7 @@ strategy_db:
   0:
     name: OPP-QN-SP-CQ-AQ_Pre2010
     type: MFTMultiLocation
-    therapy_ids: [14,5,13,2 ]
+    therapy_ids: [14,5,13,2]
     distribution: [
       [0.02027027,0,0.114864865,0.856981982],
       [0.02027027,0,0.114864865,0.856981982],
@@ -747,8 +747,7 @@ strategy_db:
   1:
     name: OPP-QN-SP-CQ-AQ_Post2010
     type: NestedMFTMultiLocation
-    therapy_ids: [14,5,13,2]
-    peak_after: 1460
+    strategy_ids: [14,5,13,2]
     start_distribution: [
       [0.02027027,0,0.114864865,0.856981982],
       [0.02027027,0,0.114864865,0.856981982],
@@ -843,6 +842,7 @@ strategy_db:
       [0.088709677,0.175806452,0.112903226,0.622580645],
       [0.088709677,0.175806452,0.112903226,0.622580645]
     ]
+    peak_after: 1460    
   2:
     name: RFT-AL-DPQ-ASSP-ASAQ-ASMQ
     type: MFT
