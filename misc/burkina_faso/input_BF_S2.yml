@@ -25,7 +25,7 @@ start_collect_data_day: 0
 # the day at which the MDC will begin collecting NTF, AMU, UTL
 start_of_comparison_period: 2020/1/1
 
-artificial_rescaling_of_population_size: 0.0001
+artificial_rescaling_of_population_size: 0.1
 
 # number of days to keep track total number of parasites in population
 # in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
@@ -1328,7 +1328,7 @@ events:
   - name: modify_nested_mft_strategy
     info:
       - day: 2020/1/1
-        strategy_id: 5
+        strategy_id: 6
 
 mda_therapy_id : 8
 

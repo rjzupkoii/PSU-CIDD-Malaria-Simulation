@@ -25,7 +25,7 @@ start_collect_data_day: 0
 # the day at which the MDC will begin collecting NTF, AMU, UTL
 start_of_comparison_period: 2020/1/1
 
-artificial_rescaling_of_population_size: 0.0001
+artificial_rescaling_of_population_size: 0.1
 
 # number of days to keep track total number of parasites in population
 # in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
@@ -901,10 +901,12 @@ strategy_db:
     therapy_ids: [8,10,7,9]
     distribution: [0.366757704,0.347379372,0.186760309,0.099102615]
   4:
-    name: MFT_AL_ASAQ
-    type: MFT
-    therapy_ids: [6,7]
-    distribution: [0.5,0.5]
+    name: AL-ASAQ-DP-5Year_MFTRebalancingStrategy
+    type: MFTRebalancing
+    therapy_ids: [8,7,6]
+    distribution: [0.333333,0.333333,0.333334]
+    delay_until_actual_trigger: 365
+    update_duration_after_rebalancing: 1460
   5:
     name: RFT-AL-DPQ-ASSP-ASAQ-ASMQ
     type: NestedMFTMultiLocation
@@ -913,7 +915,7 @@ strategy_db:
     peak_distribution: [[0.836684858,0.163272674]]
     peak_after: 1
   6:
-    name: Scenarios2_Nested_MFT
+    name: Scenarios4_MFT_Rebalancing
     type: NestedMFTMultiLocation
     strategy_ids: [4,3]
     start_distribution: [[0.836684858,0.163272674]]
@@ -1328,7 +1330,7 @@ events:
   - name: modify_nested_mft_strategy
     info:
       - day: 2020/1/1
-        strategy_id: 5
+        strategy_id: 6
 
 mda_therapy_id : 8
 
