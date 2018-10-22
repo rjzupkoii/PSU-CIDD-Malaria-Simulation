@@ -1328,7 +1328,7 @@ events:
   - name: modify_nested_mft_strategy
     info:
       - day: 2020/1/1
-        strategy_id: 5
+        strategy_id: 2
 
 mda_therapy_id : 8
 
