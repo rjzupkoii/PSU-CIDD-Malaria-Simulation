@@ -22,6 +22,7 @@
 #include "MFTRebalancingStrategy.h"
 #include "MFTMultiLocationStrategy.h"
 #include "NestedMFTMultiLocationStrategy.h"
+#include "NovelDrugSwitchingStrategy.h"
 
 StrategyBuilder::StrategyBuilder() = default;
 
@@ -46,6 +47,8 @@ IStrategy* StrategyBuilder::build(const YAML::Node& ns, const int& strategy_id, 
     return buildMFTMultiLocationStrategy(ns, strategy_id, config);
   case IStrategy::NestedMFTMultiLocation:
     return buildNestedMFTDifferentDistributionByLocationStrategy(ns, strategy_id, config);
+  case IStrategy::NovelDrugSwitching:
+    return buildNovelDrugSwitchingStrategy(ns, strategy_id, config);
   default:
     return nullptr;
   }
@@ -214,6 +217,21 @@ IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrateg
 
   result->peak_after = ns["peak_after"].as<int>();
   //    std::cout << result->to_string() << std::endl;
+
+  return result;
+}
+
+IStrategy* StrategyBuilder::buildNovelDrugSwitchingStrategy(const YAML::Node& ns, const int strategy_id, Config* config) {
+  auto* result = new NovelDrugSwitchingStrategy();
+  result->id = strategy_id;
+  result->name = ns["name"].as<std::string>();
+
+  add_distributions(ns["distribution"], result->distribution);
+  add_therapies(ns, result, config);
+
+  result->switch_to = ns["switch_to"].as<int>();
+  result->tf_threshold = ns["tf_threshold"].as<double>();
+
 
   return result;
 }

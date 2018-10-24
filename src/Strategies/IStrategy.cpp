@@ -9,4 +9,5 @@ std::map<std::string, IStrategy::StrategyType> IStrategy::StrategyTypeMap{
     {"NestedMFT", NestedMFT},
     {"MFTMultiLocation", MFTMultiLocation},
     {"NestedMFTMultiLocation", NestedMFTMultiLocation},
+    {"NovelDrugSwitching", NovelDrugSwitching },
 };

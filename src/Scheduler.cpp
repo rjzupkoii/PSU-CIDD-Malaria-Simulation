@@ -23,6 +23,15 @@ Scheduler::~Scheduler() {
   clear_all_events();
 }
 
+void Scheduler::extend_total_time(int new_total_time) {
+  if( total_available_time_ < new_total_time )
+  for (auto i = total_available_time_ ; i <= new_total_time; i ++ ) {
+    individual_events_list_.push_back(EventPtrVector());
+    population_events_list_.push_back(EventPtrVector());
+  }
+  total_available_time_ = new_total_time;
+}
+
 void Scheduler::clear_all_events() {
   clear_all_events(individual_events_list_);
   clear_all_events(population_events_list_);

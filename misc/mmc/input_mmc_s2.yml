@@ -731,10 +731,7 @@ using_variable_probability_infectious_bites_cause_infection: false
 
 fraction_mosquitoes_interrupted_feeding: 0.0
 
-inflation_factor: 1.01
-
-#//TODO: change time-> calendar date
-
+inflation_factor: 0.01
 events: 
   - name: turn_off_mutation
     info:

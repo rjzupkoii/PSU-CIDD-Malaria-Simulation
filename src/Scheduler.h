@@ -19,7 +19,7 @@ class Scheduler {
 DISALLOW_COPY_AND_ASSIGN(Scheduler)
 
 DISALLOW_MOVE(Scheduler)
-
+  
 PROPERTY_REF(int, current_time)
 
 PROPERTY_HEADER(int, total_available_time)
@@ -37,6 +37,8 @@ public:
   explicit Scheduler(Model* model = nullptr);
 
   virtual ~Scheduler();
+  
+  void extend_total_time(int new_total_time);
 
   void clear_all_events();
   void clear_all_events(EventPtrVector2& events_list) const;

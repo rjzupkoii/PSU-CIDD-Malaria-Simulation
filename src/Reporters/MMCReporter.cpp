@@ -15,13 +15,18 @@
 #include "Population.h"
 #include "PersonIndexByLocationStateAgeClass.h"
 #include "SingleHostClonalParasitePopulations.h"
+// #include "Parasites/GenotypeDatabase.h"
 
 MMCReporter::MMCReporter() = default;
 
 void MMCReporter::initialize() {}
 
 void MMCReporter::before_run() {
-  // std::cout << "MMC Reporter" << std::endl;
+  // // std::cout << "MMC Reporter" << std::endl;
+  // for (auto genotype : (*Model::CONFIG->genotype_db())){
+  //   std::cout << *genotype.second << std::endl;
+  // }
+
 }
 
 void MMCReporter::begin_time_step() {}
@@ -162,8 +167,7 @@ void MMCReporter::monthly_report() {
   print_ntf_by_location();
   ss << group_sep;
   print_treatment_failure_rate_by_therapy();
-
-
+  ss << Model::DATA_COLLECTOR->current_TF_by_location()[0] ;
   CLOG(INFO, "monthly_reporter") << ss.str();
   ss.str("");
 }

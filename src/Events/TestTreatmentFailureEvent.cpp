@@ -45,7 +45,9 @@ void TestTreatmentFailureEvent::schedule_event(Scheduler* scheduler, Person* p, 
 void TestTreatmentFailureEvent::execute() {
   auto* person = dynamic_cast<Person*>(dispatcher);  
 
-  if (person->has_detectable_parasite()) {
+  if (person->all_clonal_parasite_populations()->contain(clinical_caused_parasite()) 
+    && clinical_caused_parasite_->last_update_log10_parasite_density() > Model::CONFIG->parasite_density_level().log_parasite_density_detectable) {
+    
     Model::DATA_COLLECTOR->record_1_TF(person->location(), true);
     Model::DATA_COLLECTOR->record_1_treatment_failure_by_therapy(person->location(), person->age(), therapyId_);
   }

@@ -12,18 +12,18 @@
 # starting time point of the simulation (in yyyy/m/d format) 
 # which is day 0 in the simulation
 # including the burn-in period which we normally set to 4000# days;
-starting_date: 2006/1/1
+starting_date: 2000/1/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 2040/1/1
+ending_date: 2080/1/1
 
 # the day at which the simulation's reporting functionality begins collecting data for 
 # EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
 # for monthly data display
-start_collect_data_day: 0
+start_collect_data_day: 365
 
 # the day at which the MDC will begin collecting NTF, AMU, UTL
-start_of_comparison_period: 2020/1/1
+start_of_comparison_period: 2080/1/1
 
 # number of days to keep track total number of parasites in population
 # in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
@@ -43,6 +43,7 @@ age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 20, 60, 100]
 # the last four rows of the matrix below are ignored when the number of locations is 1
 initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35, 45, 55, 65, 100]
 
+artificial_rescaling_of_population_size: 1.0
 
 #spatial information
 location_db:
@@ -57,15 +58,15 @@ location_db:
 # probability that a symptomatic and infected individual seeks and receives antimalarial treatment
 #if the number of values less than number of locations, the first value will be applied for all locations
 # this is the initial value, the modification values can be change by setting in events node
-  p_treatment_for_less_than_5_by_location: [0.600000]
-  p_treatment_for_more_than_5_by_location: [0.500000]
+  p_treatment_for_less_than_5_by_location: [0.700000]
+  p_treatment_for_more_than_5_by_location: [0.70000]
 
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
-  beta_by_location: [0.05]
+  beta_by_location: [0.08]
 
 #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [300000]
+  population_size_by_location: [100000 ]
   #spatial_model could be Gravity, Barabasi, or Wesolowski
 
 # seasonality parameters for all location
@@ -356,22 +357,7 @@ initial_parasite_info:
   #if location id is -1 all location will have the same initial parasites
   - location_id: -1
     parasite_info:
-        #TNY__C1x
-      - parasite_type_id: 64
-        prevalence: 0.05
-      - parasite_type_id: 72
-        prevalence: 0.05
-  - location_id: 10
-    parasite_info:
-      - parasite_type_id: 15
-        prevalence: 0.05
-      - parasite_type_id: 20
-        prevalence: 0.1  
-#      - parasite_type_id: 2
-#        prevalence: 0.1
-#      - parasite_type_id: 4
-#        prevalence: 0.1
-
+      - {parasite_type_id: 576, prevalence: 0.1}
 
 # drug information below
 #
@@ -709,26 +695,26 @@ therapy_db:
 
 # drug-deployment strategy - simply uncomment below to turn on a particular strategy
 strategy_db:
-    0:
-        name: SP-AQ-CQ-AL-OPP
-        type: MFT
-        therapy_ids: [5,2,12,6]
-        distribution: [0.3,0.3,0.3,0.1]
-    1:
-        name: AL-SFTStrategy
-        type: SFT
-        therapy_id: 6
-    2:
-        name: ASAQ-SFTStrategy
-        type: SFT
-        therapy_id: 7
-    3:
-        name: BaseLineStrategy
-        type: NestedMFTMultiLocation
-        strategy_ids: [1,0]
-        start_distribution: [[0.05, 0.95]]
-        peak_distribution: [[0.8,0.2]]
-        peak_after: 12418
+  0:
+    name: SP-AQ-CQ-AL-OPP
+    type: MFT
+    therapy_ids: [5,2,12,6]
+    distribution: [0.3,0.3,0.3,0.1]
+  1:
+    name: AL-SFTStrategy
+    type: SFT
+    therapy_id: 6
+  2:
+    name: ASAQ-SFTStrategy
+    type: SFT
+    therapy_id: 7
+  3:
+    name: NovelDrugSwitchingStrategy
+    type: NovelDrugSwitching
+    therapy_ids: [6,6]
+    distribution: [0.3, 0.7]
+    switch_to: 7
+    tf_threshold: 0.35
 
 initial_strategy_id: 3
 
@@ -851,42 +837,14 @@ fraction_mosquitoes_interrupted_feeding: 0.0
 inflation_factor: 0.01
 
 events:
-  - name: introduce_parasites
-    info: []
-  - name: introduce_parasites_periodically
+  - name: turn_off_mutation
     info:
-    - location: 0
-      parasite_info:
-        - duration: 10
-          # genotype_id -1: fix allele 580Y and x of the last loci, other alleles will be drawed randomly
-          genotype_id: -1
-          number_of_cases: 1
-          start_day: 2006/2/1
-  - name: change_treatment_coverage
+      - day: 2000/1/1        
+  - name: turn_on_mutation
     info:
-      - type: LinearTCM
-        from_day: 2020/1/1
-        to_day: 2020/6/1
-        p_treatment_for_less_than_5_by_location_to: [0.80000]
-        p_treatment_for_more_than_5_by_location_to: [0.80000]
-  - name: change_treatment_strategy
-    info: []
-  - name: single_round_MDA
-    info:
-      - day: 2020/1/1
-        fraction_population_targeted: [1.0] 
-        days_to_complete_all_treatments: 14
-      - day: 2020/2/5
-        fraction_population_targeted: [1.0]
-        days_to_complete_all_treatments: 14
-      - day: 2020/3/12
-        fraction_population_targeted: [1.0]
-        days_to_complete_all_treatments: 14
-      - day: 2020/4/16
-        fraction_population_targeted: [1.0]
-        days_to_complete_all_treatments: 14
+      - day: 2005/1/1
 
-
+ 
 mda_therapy_id : 8
 
 age_bracket_prob_individual_present_at_mda: [10, 40]
