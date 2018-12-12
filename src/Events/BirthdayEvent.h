@@ -6,7 +6,8 @@
  */
 
 #ifndef BIRTHDAYEVENT_H
-#define	BIRTHDAYEVENT_H
+#define    BIRTHDAYEVENT_H
+
 #include "Event.h"
 #include "ObjectPool.h"
 #include <string>
@@ -15,18 +16,21 @@ class Person;
 
 class BirthdayEvent : public Event {
 OBJECTPOOL(BirthdayEvent)
+
 DISALLOW_COPY_AND_ASSIGN(BirthdayEvent)
+
 public:
-  BirthdayEvent();
-  //    BirthdayEvent(const BirthdayEvent& orig);
-  virtual ~BirthdayEvent();
+    BirthdayEvent();
 
-  static void schedule_event(Scheduler* scheduler, Person* p, const int& time);
+    //    BirthdayEvent(const BirthdayEvent& orig);
+    virtual ~BirthdayEvent();
 
-  std::string name() override;
+    static void schedule_event(Scheduler* scheduler, Person* p, const int& time);
+
+    std::string name() override;
 
 private:
-  void execute() override;
+    void execute() override;
 };
 
-#endif	/* BIRTHDAYEVENT_H */
+#endif    /* BIRTHDAYEVENT_H */

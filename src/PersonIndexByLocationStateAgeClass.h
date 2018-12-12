@@ -6,7 +6,7 @@
  */
 
 #ifndef PERSONINDEXBYLOCATIONSTATEAGECLASS_H
-#define	PERSONINDEXBYLOCATIONSTATEAGECLASS_H
+#define    PERSONINDEXBYLOCATIONSTATEAGECLASS_H
 
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
@@ -14,15 +14,17 @@
 #include "PersonIndex.h"
 
 class PersonIndexByLocationStateAgeClass : public PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationStateAgeClass)
+DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationStateAgeClass)
 
 
-    PROPERTY_REF(PersonPtrVector4, vPerson);
+PROPERTY_REF(PersonPtrVector4, vPerson);
 
 
 public:
     //    PersonIndexByLocationStateAgeClass();
-    PersonIndexByLocationStateAgeClass(const int& no_location = 1, const int& no_host_state = 1, const int& no_age_class = 1);
+    PersonIndexByLocationStateAgeClass(const int& no_location = 1, const int& no_host_state = 1,
+                                       const int& no_age_class = 1);
+
     //    PersonIndexByLocationStateAgeClass(const PersonIndexByLocationStateAgeClass& orig);
     virtual ~PersonIndexByLocationStateAgeClass();
 
@@ -41,9 +43,11 @@ public:
 
 private:
     void remove_without_set_index(Person* p);
+
     void add(Person* p, const int& location, const Person::HostStates& host_state, const int& age_class);
+
     void change_property(Person* p, const int& location, const Person::HostStates& host_state, const int& age_class);
 };
 
-#endif	/* PERSONINDEXBYLOCATIONSTATEAGECLASS_H */
+#endif    /* PERSONINDEXBYLOCATIONSTATEAGECLASS_H */
 

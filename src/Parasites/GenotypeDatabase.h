@@ -6,7 +6,8 @@
  */
 
 #ifndef INTPARASITEDATABASE_H
-#define	INTPARASITEDATABASE_H
+#define    INTPARASITEDATABASE_H
+
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "Genotype.h"
@@ -19,29 +20,32 @@ typedef std::vector<std::vector<std::vector<double>>> MatingMatrix;
 
 class GenotypeDatabase : public GenotypePtrMap {
 DISALLOW_COPY_AND_ASSIGN(GenotypeDatabase)
+
 DISALLOW_MOVE(GenotypeDatabase)
 
 VIRTUAL_PROPERTY_REF(MatingMatrix, mating_matrix)
+
 VIRTUAL_PROPERTY_REF(IntVector, weight)
 
 
 public:
-  GenotypeDatabase();
-  virtual ~GenotypeDatabase();
+    GenotypeDatabase();
 
-  void add(Genotype* genotype);
+    virtual ~GenotypeDatabase();
 
-  int get_id(const IntVector& gene);
+    void add(Genotype* genotype);
 
-  void initialize_matting_matrix();
+    int get_id(const IntVector& gene);
 
-  std::vector<double> generate_offspring_parasite_density(const IntVector& m, const IntVector& f);
+    void initialize_matting_matrix();
 
-  double get_offspring_density(const int&m, const int& f, const int&p);
+    std::vector<double> generate_offspring_parasite_density(const IntVector& m, const IntVector& f);
+
+    double get_offspring_density(const int& m, const int& f, const int& p);
 
 private:
 
 };
 
 
-#endif	/* INTPARASITEDATABASE_H */
+#endif    /* INTPARASITEDATABASE_H */

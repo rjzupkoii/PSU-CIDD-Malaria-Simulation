@@ -6,7 +6,8 @@
  */
 
 #ifndef PERSONINDEXBYLOCATIONMOVINGLEVEL_H
-#define	PERSONINDEXBYLOCATIONMOVINGLEVEL_H
+#define    PERSONINDEXBYLOCATIONMOVINGLEVEL_H
+
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "Person.h"
@@ -14,12 +15,14 @@
 
 
 class PersonIndexByLocationMovingLevel : public PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationMovingLevel);
-    PROPERTY_REF(PersonPtrVector3, vPerson);
+DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationMovingLevel);
+PROPERTY_REF(PersonPtrVector3, vPerson);
 public:
     PersonIndexByLocationMovingLevel(const int& no_location = 1, const int& no_level = 1);
+
     //    PersonIndexByLocationMovingLevel(const PersonIndexByLocationMovingLevel& orig);
     virtual ~PersonIndexByLocationMovingLevel();
+
     void Initialize(const int& no_location = 1, const int& no_level = 1);
 
     virtual void add(Person* p);
@@ -27,17 +30,19 @@ public:
     virtual void remove(Person* p);
 
     virtual int size() const;
-    
+
     virtual void update();
 
     virtual void notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue);
 
 private:
     void remove_without_set_index(Person* p);
+
     void add(Person* p, const int& location, const int& moving_level);
+
     void change_property(Person* p, const int& location, const int& bitting_level);
 
 };
 
-#endif	/* PERSONINDEXBYLOCATIONMOVINGLEVEL_H */
+#endif    /* PERSONINDEXBYLOCATIONMOVINGLEVEL_H */
 

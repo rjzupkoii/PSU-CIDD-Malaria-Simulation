@@ -6,7 +6,7 @@
  */
 
 #ifndef UPDATEEVERYKDAYSEVENT_H
-#define	UPDATEEVERYKDAYSEVENT_H
+#define    UPDATEEVERYKDAYSEVENT_H
 
 #include "Event.h"
 #include "ObjectPool.h"
@@ -16,21 +16,24 @@ class Person;
 
 class UpdateEveryKDaysEvent : public Event {
 DISALLOW_COPY_AND_ASSIGN(UpdateEveryKDaysEvent)
+
 OBJECTPOOL(UpdateEveryKDaysEvent)
 
 public:
-  UpdateEveryKDaysEvent();
-  //    UpdateEveryKDaysEvent(const UpdateEveryKDaysEvent& orig);
-  virtual ~UpdateEveryKDaysEvent();
-  static void schedule_event(Scheduler* scheduler, Person* p, const int& time);
+    UpdateEveryKDaysEvent();
 
-  std::string name() override {
-    return "UpdateEveryKDaysEvent";
-  }
+    //    UpdateEveryKDaysEvent(const UpdateEveryKDaysEvent& orig);
+    virtual ~UpdateEveryKDaysEvent();
+
+    static void schedule_event(Scheduler* scheduler, Person* p, const int& time);
+
+    std::string name() override {
+        return "UpdateEveryKDaysEvent";
+    }
 
 private:
-  void execute() override;
+    void execute() override;
 
 };
 
-#endif	/* UPDATEEVERYKDAYSEVENT_H */
+#endif    /* UPDATEEVERYKDAYSEVENT_H */

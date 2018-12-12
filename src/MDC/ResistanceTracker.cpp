@@ -19,7 +19,7 @@ ResistanceTracker::ResistanceTracker() : total_{0} {
 ResistanceTracker::~ResistanceTracker() {
 }
 
-void ResistanceTracker::make_resistance_profile(std::vector<int> &vResistanceID, const int &size) {
+void ResistanceTracker::make_resistance_profile(std::vector<int>& vResistanceID, const int& size) {
     vResistanceID.clear();
 
     for (auto& i : *(Model::CONFIG->genotype_db())) {
@@ -31,7 +31,7 @@ void ResistanceTracker::make_resistance_profile(std::vector<int> &vResistanceID,
 
 }
 
-void ResistanceTracker::make_arterminsinin_resistance_profile(std::vector<int> &vResistanceID) {
+void ResistanceTracker::make_arterminsinin_resistance_profile(std::vector<int>& vResistanceID) {
     vResistanceID.clear();
 
     for (auto& i:  *Model::CONFIG->genotype_db()) {
@@ -47,7 +47,7 @@ void ResistanceTracker::initialize() {
     parasite_population_count_by_location_.assign(Model::CONFIG->number_of_locations(),
                                                   LongVector(Model::CONFIG->number_of_parasite_types(), 0));
 
-    
+
     IntVector drugs_used;
 
 
@@ -112,20 +112,20 @@ void ResistanceTracker::initialize() {
     }
 }
 
-void ResistanceTracker::increase(const int &id, const int &location) {
+void ResistanceTracker::increase(const int& id, const int& location) {
 //    std::cout << id << std::endl;
     parasite_population_count_[id] += 1;
     parasite_population_count_by_location_[location][id] += 1;
     total_ += 1;
 }
 
-void ResistanceTracker::decrease(const int &id, const int &location) {
+void ResistanceTracker::decrease(const int& id, const int& location) {
     parasite_population_count_[id] -= 1;
     parasite_population_count_by_location_[location][id] -= 1;
     total_ -= 1;
 }
 
-void ResistanceTracker::change(const int &from, const int &to, const int &location) {
+void ResistanceTracker::change(const int& from, const int& to, const int& location) {
     parasite_population_count_[from] -= 1;
     parasite_population_count_[to] += 1;
 
@@ -134,7 +134,7 @@ void ResistanceTracker::change(const int &from, const int &to, const int &locati
 
 }
 
-void ResistanceTracker::change_location(const int &genotype_id, const int &from_location, const int &to_location) {
+void ResistanceTracker::change_location(const int& genotype_id, const int& from_location, const int& to_location) {
     parasite_population_count_by_location_[from_location][genotype_id] -= 1;
     parasite_population_count_by_location_[to_location][genotype_id] += 1;
 }
@@ -221,7 +221,7 @@ double ResistanceTracker::calculate_total_resistance_frequency() {
     return total_resistance_frequency_;
 }
 
-double ResistanceTracker::max_fraction_resistance(const IntVector &resitance_ids) {
+double ResistanceTracker::max_fraction_resistance(const IntVector& resitance_ids) {
     double max = 0;
 
     for (int i = 0; i < resitance_ids.size(); i++) {
@@ -234,7 +234,7 @@ double ResistanceTracker::max_fraction_resistance(const IntVector &resitance_ids
     return max;
 }
 
-double ResistanceTracker::min_fraction_resistance(const IntVector &resitance_ids) {
+double ResistanceTracker::min_fraction_resistance(const IntVector& resitance_ids) {
     double min = 1;
 
     for (int i = 0; i < resitance_ids.size(); i++) {
@@ -246,7 +246,7 @@ double ResistanceTracker::min_fraction_resistance(const IntVector &resitance_ids
     return min;
 }
 
-double ResistanceTracker::sum_fraction_resistance(const IntVector &resitance_ids) {
+double ResistanceTracker::sum_fraction_resistance(const IntVector& resitance_ids) {
     double sum = 0;
 
     for (int i = 0; i < resitance_ids.size(); i++) {
@@ -256,7 +256,7 @@ double ResistanceTracker::sum_fraction_resistance(const IntVector &resitance_ids
     return sum;
 }
 
-void ResistanceTracker::update_time_value(int &tracking_time, const double &value, const double &check_value) {
+void ResistanceTracker::update_time_value(int& tracking_time, const double& value, const double& check_value) {
 
     if (tracking_time == -1) {
         if (value >= check_value) {

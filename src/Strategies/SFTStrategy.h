@@ -13,26 +13,30 @@
 
 class SFTStrategy : public IStrategy {
 DISALLOW_COPY_AND_ASSIGN(SFTStrategy)
+
 DISALLOW_MOVE(SFTStrategy)
+
 VIRTUAL_PROPERTY_REF(std::vector<Therapy*>, therapy_list)
 
 public:
-  SFTStrategy();
-  //    SFTStrategy(const SFTStrategy& orig);
-  virtual ~SFTStrategy();
+    SFTStrategy();
 
-  virtual std::vector<Therapy*>& get_therapy_list();
+    //    SFTStrategy(const SFTStrategy& orig);
+    virtual ~SFTStrategy();
 
-  void add_therapy(Therapy* therapy) override;
+    virtual std::vector<Therapy*>& get_therapy_list();
 
-  Therapy* get_therapy(Person* person) override;
+    void add_therapy(Therapy* therapy) override;
 
-  std::string to_string() const override;
+    Therapy* get_therapy(Person* person) override;
 
-  void update_end_of_time_step() override;
+    std::string to_string() const override;
 
-  void adjust_started_time_point(const int& current_time) override;
-  void monthly_update() override;
+    void update_end_of_time_step() override;
+
+    void adjust_started_time_point(const int& current_time) override;
+
+    void monthly_update() override;
 
 };
 

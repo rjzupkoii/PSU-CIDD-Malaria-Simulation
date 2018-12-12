@@ -21,7 +21,7 @@ void ReturnToResidenceEvent::schedule_event(Scheduler* scheduler, Person* p, con
     if (scheduler != nullptr) {
         auto* e = new ReturnToResidenceEvent();
         e->dispatcher = p;
-        e->time = time;        
+        e->time = time;
         p->add(e);
         scheduler->schedule_individual_event(e);
     }

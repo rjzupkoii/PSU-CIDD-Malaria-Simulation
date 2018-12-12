@@ -7,11 +7,12 @@
 
 #include "Reporter.h"
 
-class BFFarmReporter: public Reporter {
-    DISALLOW_COPY_AND_ASSIGN(BFFarmReporter)
+class BFFarmReporter : public Reporter {
+DISALLOW_COPY_AND_ASSIGN(BFFarmReporter)
 
 public:
     BFFarmReporter();
+
     virtual ~BFFarmReporter();
 
     void initialize() override;

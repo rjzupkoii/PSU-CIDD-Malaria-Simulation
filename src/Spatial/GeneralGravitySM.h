@@ -18,9 +18,9 @@ namespace Spatial {
 
         virtual ~GeneralGravitySM();
 
-        DoubleVector get_v_relative_outmovement_to_destination(const int &from_location,const int &number_of_locations,
-                                                               const DoubleVector &relative_distance_vector,
-                                                               const IntVector &v_number_of_residents_by_location) const override;
+        DoubleVector get_v_relative_outmovement_to_destination(const int& from_location, const int& number_of_locations,
+                                                               const DoubleVector& relative_distance_vector,
+                                                               const IntVector& v_number_of_residents_by_location) const override;
     };
 }
 

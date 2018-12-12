@@ -12,30 +12,34 @@
 #include "Core/PropertyMacro.h"
 
 class Random;
+
 class Therapy;
 
 class MFTStrategy : public IStrategy {
 DISALLOW_COPY_AND_ASSIGN(MFTStrategy)
+
 DISALLOW_MOVE(MFTStrategy)
 
 public:
-  std::vector<Therapy*> therapy_list;
-  std::vector<double> distribution;
+    std::vector<Therapy*> therapy_list;
+    std::vector<double> distribution;
 
-  MFTStrategy();
-  //    MFTStrategy(const MFTStrategy& orig);
-  virtual ~MFTStrategy();
+    MFTStrategy();
 
-  void add_therapy(Therapy* therapy) override;
+    //    MFTStrategy(const MFTStrategy& orig);
+    virtual ~MFTStrategy();
 
-  Therapy* get_therapy(Person* person) override;
+    void add_therapy(Therapy* therapy) override;
 
-  void update_end_of_time_step() override;
+    Therapy* get_therapy(Person* person) override;
 
-  std::string to_string() const override;
+    void update_end_of_time_step() override;
 
-  void adjust_started_time_point(const int& current_time) override;
-  void monthly_update() override;
+    std::string to_string() const override;
+
+    void adjust_started_time_point(const int& current_time) override;
+
+    void monthly_update() override;
 };
 
 #endif /* MFTSTRATEGY_H */

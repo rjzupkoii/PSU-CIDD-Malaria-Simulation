@@ -13,16 +13,16 @@ namespace Spatial {
 
     Location::~Location() = default;
 
-  Location::Location(const Location &org) : id{org.id}, population_size{org.population_size},
-                                            beta{org.beta}, p_treatment_less_than_5(0), p_treatment_more_than_5(0),
-                                            coordinate{
-                                              std::make_unique<Coordinate>(
-                                                org.coordinate->latitude,
-                                                org.coordinate->longitude)
-                                            },
-                                            age_distribution(org.age_distribution) { }
+    Location::Location(const Location& org) : id{org.id}, population_size{org.population_size},
+                                              beta{org.beta}, p_treatment_less_than_5(0), p_treatment_more_than_5(0),
+                                              coordinate{
+                                                      std::make_unique<Coordinate>(
+                                                              org.coordinate->latitude,
+                                                              org.coordinate->longitude)
+                                              },
+                                              age_distribution(org.age_distribution) {}
 
-    Location &Location::operator=(const Location &other) {
+    Location& Location::operator=(const Location& other) {
         id = other.id;
         beta = other.beta;
         population_size = other.population_size;
@@ -33,7 +33,7 @@ namespace Spatial {
         return *this;
     }
 
-    std::ostream &operator<<(std::ostream &os, const Location &location) {
+    std::ostream& operator<<(std::ostream& os, const Location& location) {
         os << "id: " << location.id << ", populationSize: " << location.population_size << ", beta: " << location.beta
            << ", coordinate: " << *location.coordinate << ", age_distribution: [";
 

@@ -24,9 +24,9 @@ namespace Spatial {
         virtual ~Coordinate();
 
     public:
-        static double calculate_distance_in_km(const Coordinate &from, const Coordinate &to);
+        static double calculate_distance_in_km(const Coordinate& from, const Coordinate& to);
 
-        friend std::ostream &operator<<(std::ostream &os, const Coordinate &coordinate);
+        friend std::ostream& operator<<(std::ostream& os, const Coordinate& coordinate);
 
     };
 

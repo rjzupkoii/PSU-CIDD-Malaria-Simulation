@@ -15,39 +15,46 @@ class Model;
 
 class Reporter {
 DISALLOW_COPY_AND_ASSIGN(Reporter)
+
 DISALLOW_MOVE(Reporter)
+
 POINTER_PROPERTY(Model, model)
 
-  enum ReportType {
-    CONSOLE,
-    GUI,
-    AMU,
-    FARM,
-    MULTIPLE_LOCATION,
-    AGE_GROUP_2_TO_10,
-    YEARLY_REPORTER_V1,
-    MONTHLY_REPORTER,
-    BURNIN_MONTHLY_REPORTER,
-    BURNIN_FARM_REPORTER,
-    BFREPORTER,
-    BFFARM_REPORTER,
-    MMC_REPORTER
-  };
+    enum ReportType {
+        CONSOLE,
+        GUI,
+        AMU,
+        FARM,
+        MULTIPLE_LOCATION,
+        AGE_GROUP_2_TO_10,
+        YEARLY_REPORTER_V1,
+        MONTHLY_REPORTER,
+        BURNIN_MONTHLY_REPORTER,
+        BURNIN_FARM_REPORTER,
+        BFREPORTER,
+        BFFARM_REPORTER,
+        MMC_REPORTER
+    };
 public:
-   static std::map<std::string, ReportType> ReportTypeMap;
+    static std::map<std::string, ReportType> ReportTypeMap;
 
 public:
-  Reporter();
-  //    Reporter(const Reporter& orig);
-  virtual ~Reporter();
+    Reporter();
 
-  virtual void initialize() = 0;
-  virtual void before_run() = 0;
-  virtual void after_run() = 0;
-  virtual void begin_time_step() = 0;
-  virtual void monthly_report() = 0;
+    //    Reporter(const Reporter& orig);
+    virtual ~Reporter();
 
-  static Reporter* MakeReport(ReportType report_type);
+    virtual void initialize() = 0;
+
+    virtual void before_run() = 0;
+
+    virtual void after_run() = 0;
+
+    virtual void begin_time_step() = 0;
+
+    virtual void monthly_report() = 0;
+
+    static Reporter* MakeReport(ReportType report_type);
 
 
 private:

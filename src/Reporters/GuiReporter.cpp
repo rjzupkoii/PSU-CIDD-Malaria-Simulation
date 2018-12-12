@@ -33,13 +33,13 @@ GuiReporter::~GuiReporter() {
 }
 
 void GuiReporter::initialize() {
-  CommandsMap["con"] = ContinueCommand;
-  CommandsMap["pau"] = PauseCommand;
-  CommandsMap["sto"] = StopCommand;
+    CommandsMap["con"] = ContinueCommand;
+    CommandsMap["pau"] = PauseCommand;
+    CommandsMap["sto"] = StopCommand;
 }
 
 void GuiReporter::before_run() {
-  // TODO: rewrite using fmt
+    // TODO: rewrite using fmt
 
 //    std::cout << "version" << SEPARATOR << "3.0" << std::endl;
 //    std::cout << "time" << SEPARATOR << Model::CONFIG->total_time() << SEPARATOR << Model::CONFIG->update_frequency() << std::endl;
@@ -70,68 +70,68 @@ void GuiReporter::before_run() {
 }
 
 void GuiReporter::after_run() {
-  std::cout << std::endl;
+    std::cout << std::endl;
 
 }
 
 void GuiReporter::begin_time_step() {
-  std::cout << "Command?" << std::endl;
+    std::cout << "Command?" << std::endl;
 
-  std::string command;
-  std::cin >> command;
-
-  while (command != "con") {
-    //xu ly command
-    HandleGuiCommand(command);
+    std::string command;
     std::cin >> command;
-  }
+
+    while (command != "con") {
+        //xu ly command
+        HandleGuiCommand(command);
+        std::cin >> command;
+    }
 
 }
 
-void GuiReporter::HandleGuiCommand(const std::string &command) {
+void GuiReporter::HandleGuiCommand(const std::string& command) {
 
-  if (CommandsMap.find(command) == CommandsMap.end()) {
-    std::cout << "invalid command" << std::endl;
-  } else {
-    switch (CommandsMap[command]) {
-      case PauseCommand:
-        std::cout << "Pause" << std::endl;
-        break;
-      case StopCommand:
-        Model::SCHEDULER->set_is_force_stop(true);
-        break;
-      case ContinueCommand:
-        break;
+    if (CommandsMap.find(command) == CommandsMap.end()) {
+        std::cout << "invalid command" << std::endl;
+    } else {
+        switch (CommandsMap[command]) {
+            case PauseCommand:
+                std::cout << "Pause" << std::endl;
+                break;
+            case StopCommand:
+                Model::SCHEDULER->set_is_force_stop(true);
+                break;
+            case ContinueCommand:
+                break;
+        }
     }
-  }
 }
 
 void GuiReporter::monthly_report() {
-  if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
-    //        Model::DATA_COLLECTOR->perform_population_statistic();
+    if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
+        //        Model::DATA_COLLECTOR->perform_population_statistic();
 
-    send_prevalence_chart_data_for_location(0);
-    //        send_age_class_chart_data(0);
-    send_multiple_infection_chart_data(0);
-    send_mono_resistance_chart_data(0);
-    send_double_resistance_chart_data(0);
-    send_triple_resistance_chart_data(0);
+        send_prevalence_chart_data_for_location(0);
+        //        send_age_class_chart_data(0);
+        send_multiple_infection_chart_data(0);
+        send_mono_resistance_chart_data(0);
+        send_double_resistance_chart_data(0);
+        send_triple_resistance_chart_data(0);
 
-    send_mean_MOI_chart_data(0);
+        send_mean_MOI_chart_data(0);
 
-  }
+    }
 
 }
 
 void
-GuiReporter::CreateNewChart(const std::string &chartType, const std::string &chartName, const std::string &chartTitle,
-                            const std::string &xAxisTitle, const std::string &xAxisType, const int &xRangeFrom,
-                            const int &xRangeTo, const std::string &y1AxisTitle, const std::string &y1AxisType,
-                            const double &y1RangeFrom, const double &y1RangeTo, const std::string &y2AxisTitle,
-                            const std::string &y2AxisType, const double &y2RangeFrom, const double &y2RangeTo) {
+GuiReporter::CreateNewChart(const std::string& chartType, const std::string& chartName, const std::string& chartTitle,
+                            const std::string& xAxisTitle, const std::string& xAxisType, const int& xRangeFrom,
+                            const int& xRangeTo, const std::string& y1AxisTitle, const std::string& y1AxisType,
+                            const double& y1RangeFrom, const double& y1RangeTo, const std::string& y2AxisTitle,
+                            const std::string& y2AxisType, const double& y2RangeFrom, const double& y2RangeTo) {
 // TODO: rewrite using fmt
 
-  //  if (y2AxisTitle == "") {
+    //  if (y2AxisTitle == "") {
 //    std::cout <<
 //              boost::str(boost::format("%1%|%2%|%3%|%4%|%5%|%6%|%7%|%8%|%9%|%10%|%11%|%12%|")
 //                         % "ChartNew"
@@ -168,88 +168,88 @@ GuiReporter::CreateNewChart(const std::string &chartType, const std::string &cha
 //                         % y2RangeTo
 //              ) << std::endl;
 //  }
-  //
-  //    std::cout << "ChartNew" << SEPARATOR;
-  //    std::cout << chartType << SEPARATOR;
-  //    std::cout << chartName << SEPARATOR;
-  //    std::cout << chartTitle << SEPARATOR;
-  //    std::cout << xAxisTitle << SEPARATOR;
-  //    std::cout << xAxisType << SEPARATOR;
-  //    std::cout << xRangeFrom << SEPARATOR;
-  //    std::cout << xRangeTo << SEPARATOR;
-  //    std::cout << y1AxisTitle << SEPARATOR;
-  //    std::cout << y1AxisType << SEPARATOR;
-  //    std::cout << y1RangeFrom << SEPARATOR;
-  //    std::cout << y1RangeTo << SEPARATOR;
-  //    if (y2AxisTitle != "") {
-  //        std::cout << y2AxisTitle << SEPARATOR;
-  //        std::cout << y2AxisType << SEPARATOR;
-  //        std::cout << y2RangeFrom << SEPARATOR;
-  //        std::cout << y2RangeTo << SEPARATOR;
-  //    }
-  //
-  //    std::cout << std::endl;
+    //
+    //    std::cout << "ChartNew" << SEPARATOR;
+    //    std::cout << chartType << SEPARATOR;
+    //    std::cout << chartName << SEPARATOR;
+    //    std::cout << chartTitle << SEPARATOR;
+    //    std::cout << xAxisTitle << SEPARATOR;
+    //    std::cout << xAxisType << SEPARATOR;
+    //    std::cout << xRangeFrom << SEPARATOR;
+    //    std::cout << xRangeTo << SEPARATOR;
+    //    std::cout << y1AxisTitle << SEPARATOR;
+    //    std::cout << y1AxisType << SEPARATOR;
+    //    std::cout << y1RangeFrom << SEPARATOR;
+    //    std::cout << y1RangeTo << SEPARATOR;
+    //    if (y2AxisTitle != "") {
+    //        std::cout << y2AxisTitle << SEPARATOR;
+    //        std::cout << y2AxisType << SEPARATOR;
+    //        std::cout << y2RangeFrom << SEPARATOR;
+    //        std::cout << y2RangeTo << SEPARATOR;
+    //    }
+    //
+    //    std::cout << std::endl;
 }
 
-void GuiReporter::CreateWindowsTab(const std::string &command, const std::string &tabType, const std::string &tabName,
-                                   const std::string &tabTitle) {
-  std::cout << command << SEPARATOR <<
-            tabType << SEPARATOR <<
-            tabName << SEPARATOR <<
-            tabTitle << std::endl;
+void GuiReporter::CreateWindowsTab(const std::string& command, const std::string& tabType, const std::string& tabName,
+                                   const std::string& tabTitle) {
+    std::cout << command << SEPARATOR <<
+              tabType << SEPARATOR <<
+              tabName << SEPARATOR <<
+              tabTitle << std::endl;
 }
 
 void
-GuiReporter::CreateWindowsTableTab(const std::string &command, const std::string &tabType, const std::string &tabName,
-                                   const std::string &tabTitle, const std::string &switchRowWithColumn) {
-  std::cout << command << SEPARATOR <<
-            tabType << SEPARATOR <<
-            tabName << SEPARATOR <<
-            tabTitle << SEPARATOR <<
-            switchRowWithColumn << std::endl;
+GuiReporter::CreateWindowsTableTab(const std::string& command, const std::string& tabType, const std::string& tabName,
+                                   const std::string& tabTitle, const std::string& switchRowWithColumn) {
+    std::cout << command << SEPARATOR <<
+              tabType << SEPARATOR <<
+              tabName << SEPARATOR <<
+              tabTitle << SEPARATOR <<
+              switchRowWithColumn << std::endl;
 }
 
-void GuiReporter::SendLineChartData(const std::string &chartName, const std::string &legend, const std::string &xValue,
-                                    const std::string &yValue, const std::string &yAxis) {
-  std::cout << "ChartData" << SEPARATOR <<
-            chartName << SEPARATOR <<
-            legend << SEPARATOR <<
-            "" << SEPARATOR <<
-            xValue << SEPARATOR <<
-            yValue << SEPARATOR <<
-            yAxis << std::endl;
+void GuiReporter::SendLineChartData(const std::string& chartName, const std::string& legend, const std::string& xValue,
+                                    const std::string& yValue, const std::string& yAxis) {
+    std::cout << "ChartData" << SEPARATOR <<
+              chartName << SEPARATOR <<
+              legend << SEPARATOR <<
+              "" << SEPARATOR <<
+              xValue << SEPARATOR <<
+              yValue << SEPARATOR <<
+              yAxis << std::endl;
 }
 
-void GuiReporter::SendBarChartData(const std::string &chartName, const std::string &category, const std::string &legend,
-                                   const std::string &xValue, const std::string &yValue, const std::string &yAxis) {
-  std::cout << "ChartData" << SEPARATOR <<
-            chartName << SEPARATOR <<
-            category << SEPARATOR <<
-            legend << SEPARATOR <<
-            xValue << SEPARATOR <<
-            yValue << SEPARATOR <<
-            yAxis << std::endl;
+void GuiReporter::SendBarChartData(const std::string& chartName, const std::string& category, const std::string& legend,
+                                   const std::string& xValue, const std::string& yValue, const std::string& yAxis) {
+    std::cout << "ChartData" << SEPARATOR <<
+              chartName << SEPARATOR <<
+              category << SEPARATOR <<
+              legend << SEPARATOR <<
+              xValue << SEPARATOR <<
+              yValue << SEPARATOR <<
+              yAxis << std::endl;
 }
 
-void GuiReporter::SendTabData(const std::string &tabName, const std::string &group, const std::string &category,
-                              const std::string &time, const std::string &data, const std::string &format) {
-  std::cout << "TabData" << SEPARATOR <<
-            tabName << SEPARATOR <<
-            group << SEPARATOR <<
-            category << SEPARATOR <<
-            time << SEPARATOR <<
-            data << SEPARATOR <<
-            format << std::endl;
+void GuiReporter::SendTabData(const std::string& tabName, const std::string& group, const std::string& category,
+                              const std::string& time, const std::string& data, const std::string& format) {
+    std::cout << "TabData" << SEPARATOR <<
+              tabName << SEPARATOR <<
+              group << SEPARATOR <<
+              category << SEPARATOR <<
+              time << SEPARATOR <<
+              data << SEPARATOR <<
+              format << std::endl;
 }
 
-void GuiReporter::SendTabTableData(const std::string &tabName, const std::string &header, const std::string &data) {
-  std::cout << "TabData" << SEPARATOR <<
-            tabName << SEPARATOR <<
-            header << SEPARATOR <<
-            data << std::endl;
+void GuiReporter::SendTabTableData(const std::string& tabName, const std::string& header, const std::string& data) {
+    std::cout << "TabData" << SEPARATOR <<
+              tabName << SEPARATOR <<
+              header << SEPARATOR <<
+              data << std::endl;
 }
 
-void GuiReporter::send_prevalence_chart_data_for_location(const int &location) {
+void GuiReporter::send_prevalence_chart_data_for_location(const int& location) {
 // TODO: rewrite using fmt
 //  std::string chart_name = boost::str(boost::format("%1%%2%") % prevalanceChart % location);
 //  //    SendLineChartData(chart_name, "Blood Slide", NumberToString<int>(Model::SCHEDULER->current_time()), NumberToString<double>((Model::STATISTIC->popsize_by_location_hoststate()[location][Person::ASYMPTOMATIC] + Model::STATISTIC->popsize_by_location_hoststate()[location][Person::CLINICAL]) / (double) Model::STATISTIC->popsize_by_location()[location]), "0");
@@ -264,13 +264,13 @@ void GuiReporter::send_prevalence_chart_data_for_location(const int &location) {
 //                                           Model::DATA_COLLECTOR->popsize_by_location()[location]), "1");
 }
 
-void GuiReporter::send_age_class_chart_data(const int &location) {
+void GuiReporter::send_age_class_chart_data(const int& location) {
 
 
 }
 
-void GuiReporter::send_multiple_infection_chart_data(const int &location) {
-  // TODO: rewrite using fmt
+void GuiReporter::send_multiple_infection_chart_data(const int& location) {
+    // TODO: rewrite using fmt
 //  std::string chart_name = boost::str(boost::format("%1%%2%") % multiInfectionChart % location);
 //  SendBarChartData(chart_name, "1", "Number of Infection", NumberToString<int>(Model::SCHEDULER->current_time()),
 //                   NumberToString<int>(Model::DATA_COLLECTOR->multiple_of_infection_by_location()[location][0]), "0");
@@ -282,7 +282,7 @@ void GuiReporter::send_multiple_infection_chart_data(const int &location) {
 //                   NumberToString<int>(Model::DATA_COLLECTOR->multiple_of_infection_by_location()[location][3]), "0");
 }
 
-void GuiReporter::send_mono_resistance_chart_data(const int &location) {
+void GuiReporter::send_mono_resistance_chart_data(const int& location) {
 // TODO: rewrite using fmt
 //  std::string mono_chart_name = boost::str(boost::format("%1%%2%") % monoResistanceChart % location);
 //  //    std::string double_chart_name = boost::str(boost::format("%1%%2%") % doubleResistanceChart % location);
@@ -315,38 +315,38 @@ void GuiReporter::send_mono_resistance_chart_data(const int &location) {
 //  }
 
 
-  //    DrugTypePtrMap::iterator it1;
-  //    for (it1 = Model::CONFIG->drug_db()->drug_db().begin(); it1 != Model::CONFIG->drug_db()->drug_db().end(); it++) {
-  //        DrugTypePtrMap::iterator it2;
-  //        for (it2 = it1; it2 != Model::CONFIG->drug_db()->drug_db().end(); it++) {
-  //            if (it2 != it1) {
-  //                boost::dynamic_bitset<> double_res = (it1->second->resistance_bit_string() | it2->second->resistance_bit_string());
-  //                int res_id = double_res.to_ulong();
-  //                double num = Model::POPULATION->current_force_of_infection_by_location_parasite_type()[location][res_id];
-  //                num = (num < 0) ? 0 : num;
-  //
-  //                SendLineChartData(double_chart_name, NumberToString<int>(res_id), NumberToString<int>(Model::SCHEDULER->current_time()), NumberToString<double>(num), "0");
-  //
-  //            }
-  //        }
-  //    }
+    //    DrugTypePtrMap::iterator it1;
+    //    for (it1 = Model::CONFIG->drug_db()->drug_db().begin(); it1 != Model::CONFIG->drug_db()->drug_db().end(); it++) {
+    //        DrugTypePtrMap::iterator it2;
+    //        for (it2 = it1; it2 != Model::CONFIG->drug_db()->drug_db().end(); it++) {
+    //            if (it2 != it1) {
+    //                boost::dynamic_bitset<> double_res = (it1->second->resistance_bit_string() | it2->second->resistance_bit_string());
+    //                int res_id = double_res.to_ulong();
+    //                double num = Model::POPULATION->current_force_of_infection_by_location_parasite_type()[location][res_id];
+    //                num = (num < 0) ? 0 : num;
+    //
+    //                SendLineChartData(double_chart_name, NumberToString<int>(res_id), NumberToString<int>(Model::SCHEDULER->current_time()), NumberToString<double>(num), "0");
+    //
+    //            }
+    //        }
+    //    }
 
-  //    for (int i = 0; i < Global::strategy->drugTypeList.size() - 1; i++) {
-  //        int ptype1 = Global::strategy->drugTypeList[i]->id;
-  //        for (int j = i + 1; j < Global::strategy->drugTypeList.size(); j++) {
-  //            int ptype2 = Global::strategy->drugTypeList[j]->id;
-  //            string sType = toString(ptype1) + "-" + toString(ptype2);
-  //            int doubleResistanceType = ptype1 | ptype2;
-  //            int num = Population::currentNumberOfParasitesByLocationType[0][doubleResistanceType];
-  //            num = (num < 0) ? 0 : num;
-  //            Report::SendLineChartData(Report::doubleResistanceChart, sType, toString(currentTime), toString(num), "0");
-  //        }
-  //    }
+    //    for (int i = 0; i < Global::strategy->drugTypeList.size() - 1; i++) {
+    //        int ptype1 = Global::strategy->drugTypeList[i]->id;
+    //        for (int j = i + 1; j < Global::strategy->drugTypeList.size(); j++) {
+    //            int ptype2 = Global::strategy->drugTypeList[j]->id;
+    //            string sType = toString(ptype1) + "-" + toString(ptype2);
+    //            int doubleResistanceType = ptype1 | ptype2;
+    //            int num = Population::currentNumberOfParasitesByLocationType[0][doubleResistanceType];
+    //            num = (num < 0) ? 0 : num;
+    //            Report::SendLineChartData(Report::doubleResistanceChart, sType, toString(currentTime), toString(num), "0");
+    //        }
+    //    }
 }
 
-void GuiReporter::send_double_resistance_chart_data(const int &location) {
+void GuiReporter::send_double_resistance_chart_data(const int& location) {
 // TODO: rewrite using fmt
-  //    std::string mono_chart_name = boost::str(boost::format("%1%%2%") % monoResistanceChart % location);
+    //    std::string mono_chart_name = boost::str(boost::format("%1%%2%") % monoResistanceChart % location);
 
 //  std::string double_chart_name = boost::str(boost::format("%1%%2%") % doubleResistanceChart % location);
 //
@@ -369,38 +369,38 @@ void GuiReporter::send_double_resistance_chart_data(const int &location) {
 //  }
 
 
-  //    DrugTypePtrMap::iterator it1;
-  //    for (it1 = Model::CONFIG->drug_db()->drug_db().begin(); it1 != Model::CONFIG->drug_db()->drug_db().end(); it++) {
-  //        DrugTypePtrMap::iterator it2;
-  //        for (it2 = it1; it2 != Model::CONFIG->drug_db()->drug_db().end(); it++) {
-  //            if (it2 != it1) {
-  //                boost::dynamic_bitset<> double_res = (it1->second->resistance_bit_string() | it2->second->resistance_bit_string());
-  //                int res_id = double_res.to_ulong();
-  //                double num = Model::POPULATION->current_force_of_infection_by_location_parasite_type()[location][res_id];
-  //                num = (num < 0) ? 0 : num;
-  //
-  //                SendLineChartData(double_chart_name, NumberToString<int>(res_id), NumberToString<int>(Model::SCHEDULER->current_time()), NumberToString<double>(num), "0");
-  //
-  //            }
-  //        }
-  //    }
+    //    DrugTypePtrMap::iterator it1;
+    //    for (it1 = Model::CONFIG->drug_db()->drug_db().begin(); it1 != Model::CONFIG->drug_db()->drug_db().end(); it++) {
+    //        DrugTypePtrMap::iterator it2;
+    //        for (it2 = it1; it2 != Model::CONFIG->drug_db()->drug_db().end(); it++) {
+    //            if (it2 != it1) {
+    //                boost::dynamic_bitset<> double_res = (it1->second->resistance_bit_string() | it2->second->resistance_bit_string());
+    //                int res_id = double_res.to_ulong();
+    //                double num = Model::POPULATION->current_force_of_infection_by_location_parasite_type()[location][res_id];
+    //                num = (num < 0) ? 0 : num;
+    //
+    //                SendLineChartData(double_chart_name, NumberToString<int>(res_id), NumberToString<int>(Model::SCHEDULER->current_time()), NumberToString<double>(num), "0");
+    //
+    //            }
+    //        }
+    //    }
 
-  //    for (int i = 0; i < Global::strategy->drugTypeList.size() - 1; i++) {
-  //        int ptype1 = Global::strategy->drugTypeList[i]->id;
-  //        for (int j = i + 1; j < Global::strategy->drugTypeList.size(); j++) {
-  //            int ptype2 = Global::strategy->drugTypeList[j]->id;
-  //            string sType = toString(ptype1) + "-" + toString(ptype2);
-  //            int doubleResistanceType = ptype1 | ptype2;
-  //            int num = Population::currentNumberOfParasitesByLocationType[0][doubleResistanceType];
-  //            num = (num < 0) ? 0 : num;
-  //            Report::SendLineChartData(Report::doubleResistanceChart, sType, toString(currentTime), toString(num), "0");
-  //        }
-  //    }
+    //    for (int i = 0; i < Global::strategy->drugTypeList.size() - 1; i++) {
+    //        int ptype1 = Global::strategy->drugTypeList[i]->id;
+    //        for (int j = i + 1; j < Global::strategy->drugTypeList.size(); j++) {
+    //            int ptype2 = Global::strategy->drugTypeList[j]->id;
+    //            string sType = toString(ptype1) + "-" + toString(ptype2);
+    //            int doubleResistanceType = ptype1 | ptype2;
+    //            int num = Population::currentNumberOfParasitesByLocationType[0][doubleResistanceType];
+    //            num = (num < 0) ? 0 : num;
+    //            Report::SendLineChartData(Report::doubleResistanceChart, sType, toString(currentTime), toString(num), "0");
+    //        }
+    //    }
 }
 
-void GuiReporter::send_triple_resistance_chart_data(const int &location) {
+void GuiReporter::send_triple_resistance_chart_data(const int& location) {
 // TODO: rewrite using fmt
-  //    std::string mono_chart_name = boost::str(boost::format("%1%%2%") % monoResistanceChart % location);
+    //    std::string mono_chart_name = boost::str(boost::format("%1%%2%") % monoResistanceChart % location);
 //  std::string double_chart_name = boost::str(boost::format("%1%%2%") % tripleResistanceChart % location);
 //
 //  //    SendLineChartData(double_chart_name, "Non Resistance", NumberToString<int>(Model::SCHEDULER->current_time()), NumberToString<double>(Model::POPULATION->current_force_of_infection_by_location_parasite_type()[location][0]), "0");
@@ -422,7 +422,7 @@ void GuiReporter::send_triple_resistance_chart_data(const int &location) {
 
 }
 
-void GuiReporter::send_mean_MOI_chart_data(const int &location) {
+void GuiReporter::send_mean_MOI_chart_data(const int& location) {
 // TODO: rewrite using fmt
 //  std::string double_chart_name = boost::str(boost::format("%1%%2%") % meanMOIChart % location);
 //  SendLineChartData(double_chart_name, "Mean MOI", NumberToString<int>(Model::SCHEDULER->current_time()),

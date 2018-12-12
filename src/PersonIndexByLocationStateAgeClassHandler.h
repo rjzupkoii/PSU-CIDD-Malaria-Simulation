@@ -6,20 +6,23 @@
  */
 
 #ifndef PERSONINDEXBYLOCATIONSTATEAGECLASSHANDLER_H
-#define	PERSONINDEXBYLOCATIONSTATEAGECLASSHANDLER_H
+#define    PERSONINDEXBYLOCATIONSTATEAGECLASSHANDLER_H
 
 #include "Core/PropertyMacro.h"
 #include "IndexHandler.h"
 
-class PersonIndexByLocationStateAgeClassHandler: public IndexHandler {
-    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationStateAgeClassHandler)  
+class PersonIndexByLocationStateAgeClassHandler : public IndexHandler {
+DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationStateAgeClassHandler)
+
 public:
     PersonIndexByLocationStateAgeClassHandler();
+
 //    PersonIndexByLocationStateAgeClassHandler(const PersonIndexByLocationStateAgeClassHandler& orig);
     virtual ~PersonIndexByLocationStateAgeClassHandler();
+
 private:
 
 };
 
-#endif	/* PERSONINDEXBYLOCATIONSTATEAGECLASSHANDLER_H */
+#endif    /* PERSONINDEXBYLOCATIONSTATEAGECLASSHANDLER_H */
 

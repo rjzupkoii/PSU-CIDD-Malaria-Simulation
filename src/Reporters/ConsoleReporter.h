@@ -6,26 +6,32 @@
  */
 
 #ifndef CONSOLEREPORTER_H
-#define	CONSOLEREPORTER_H
+#define    CONSOLEREPORTER_H
 
 #include "Reporter.h"
 
 class ConsoleReporter : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN(ConsoleReporter)
+DISALLOW_COPY_AND_ASSIGN(ConsoleReporter)
+
 public:
     ConsoleReporter();
+
     //    ConsoleReporter(const ConsoleReporter& orig);
     virtual ~ConsoleReporter();
 
     virtual void initialize();
+
     virtual void before_run();
+
     virtual void after_run();
+
     virtual void begin_time_step();
+
     virtual void monthly_report();
 
 private:
 
 };
 
-#endif	/* CONSOLEREPORTER_H */
+#endif    /* CONSOLEREPORTER_H */
 

@@ -11,29 +11,31 @@
 
 class BFMonthlyReporter : public Reporter {
 DISALLOW_COPY_AND_ASSIGN(BFMonthlyReporter)
+
 DISALLOW_MOVE(BFMonthlyReporter)
 
 public:
-  std::stringstream ss;
-  const std::string group_sep = "-1111\t";
-  const std::string sep = "\t";
+    std::stringstream ss;
+    const std::string group_sep = "-1111\t";
+    const std::string sep = "\t";
 
-  BFMonthlyReporter();
-  virtual ~BFMonthlyReporter();
+    BFMonthlyReporter();
 
-  void initialize() override;
+    virtual ~BFMonthlyReporter();
 
-  void before_run() override;
+    void initialize() override;
 
-  void after_run() override;
+    void before_run() override;
 
-  void begin_time_step() override;
+    void after_run() override;
 
-  void monthly_report() override;
+    void begin_time_step() override;
 
-  void print_EIR_PfPR_by_location();
+    void monthly_report() override;
 
-  void print_monthly_incidence_by_location();
+    void print_EIR_PfPR_by_location();
+
+    void print_monthly_incidence_by_location();
 };
 
 

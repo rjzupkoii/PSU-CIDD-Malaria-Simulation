@@ -6,7 +6,7 @@
  */
 
 #ifndef PROPERTYMACRO_H
-#define	PROPERTYMACRO_H
+#define    PROPERTYMACRO_H
 
 #include <iostream>
 
@@ -99,4 +99,4 @@
         virtual property_type& property_name() { return property_name##_; }\
         virtual void set_##property_name(const property_type& value){ property_name##_ = value;}
 
-#endif	/* PROPERTYMACRO_H */
+#endif    /* PROPERTYMACRO_H */

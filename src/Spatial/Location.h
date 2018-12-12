@@ -34,11 +34,11 @@ namespace Spatial {
 
         virtual ~Location();
 
-        Location(const Location &org);
+        Location(const Location& org);
 
-        Location &operator=(const Location &other);
+        Location& operator=(const Location& other);
 
-        friend std::ostream &operator<<(std::ostream &os, const Location &location);
+        friend std::ostream& operator<<(std::ostream& os, const Location& location);
     };
 }
 

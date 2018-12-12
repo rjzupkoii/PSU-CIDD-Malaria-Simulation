@@ -4,22 +4,22 @@
 class ObjectHelpers {
 public:
 
-  template <typename T>
-  static void delete_pointer(T*& p) {
-    if (p != nullptr) {
-      delete p;
-      p = nullptr;
+    template<typename T>
+    static void delete_pointer(T*& p) {
+        if (p != nullptr) {
+            delete p;
+            p = nullptr;
+        }
     }
-  }
 
-  template <typename T>
-  static void clear_vector_memory(std::vector<T*>& vector) {
-    if (vector.empty()) return;
-    vector.clear();
-    std::vector<T*> temp;
+    template<typename T>
+    static void clear_vector_memory(std::vector<T*>& vector) {
+        if (vector.empty()) return;
+        vector.clear();
+        std::vector<T*> temp;
 
-    vector.swap(temp);
-  }
+        vector.swap(temp);
+    }
 };
 
 

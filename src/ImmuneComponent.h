@@ -6,14 +6,17 @@
  */
 
 #ifndef IMMUNECOMPONENT_H
-#define	IMMUNECOMPONENT_H
+#define    IMMUNECOMPONENT_H
+
 #include "Core/PropertyMacro.h"
+
 //#include "ObjectPool.h"
 class ImmuneSystem;
+
 class Model;
 
 class ImmuneComponent {
-  //    //OBJECTPOOL(ImmuneComponent)
+    //    //OBJECTPOOL(ImmuneComponent)
 DISALLOW_COPY_AND_ASSIGN(ImmuneComponent)
 
 POINTER_PROPERTY(ImmuneSystem, immune_system)
@@ -22,19 +25,21 @@ PROPERTY_REF(double, latest_value)
 
 
 public:
-  explicit ImmuneComponent(ImmuneSystem* immune_system = nullptr);
-  //    ImmuneComponent(const ImmuneComponent& orig);
-  virtual ~ImmuneComponent();
+    explicit ImmuneComponent(ImmuneSystem* immune_system = nullptr);
 
-  void update();
+    //    ImmuneComponent(const ImmuneComponent& orig);
+    virtual ~ImmuneComponent();
 
-  virtual void draw_random_immune();
+    void update();
 
-  virtual double get_current_value();
+    virtual void draw_random_immune();
 
-  virtual double get_decay_rate(const int& age = 0) const = 0;
-  virtual double get_acquire_rate(const int& age = 0) const = 0;
+    virtual double get_current_value();
+
+    virtual double get_decay_rate(const int& age = 0) const = 0;
+
+    virtual double get_acquire_rate(const int& age = 0) const = 0;
 
 };
 
-#endif	/* IMMUNECOMPONENT_H */
+#endif    /* IMMUNECOMPONENT_H */

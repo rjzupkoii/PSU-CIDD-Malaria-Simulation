@@ -6,33 +6,39 @@
  */
 
 #ifndef ENDCLINICALEVENT_H
-#define	ENDCLINICALEVENT_H
+#define    ENDCLINICALEVENT_H
+
 #include "Event.h"
 #include "ObjectPool.h"
 #include "Core/PropertyMacro.h"
 
 class ClonalParasitePopulation;
+
 class Scheduler;
+
 class Person;
 
 class EndClinicalEvent : public Event {
 DISALLOW_COPY_AND_ASSIGN(EndClinicalEvent);
 OBJECTPOOL(EndClinicalEvent)
+
 POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
 
 public:
-  EndClinicalEvent();
-  //    EndClinicalEvent(const EndClinicalEvent& orig);
-  virtual ~EndClinicalEvent();
+    EndClinicalEvent();
 
-  static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time);
+    //    EndClinicalEvent(const EndClinicalEvent& orig);
+    virtual ~EndClinicalEvent();
 
-  std::string name() override {
-    return "EndClinicalEvent";
-  }
+    static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite,
+                               const int& time);
+
+    std::string name() override {
+        return "EndClinicalEvent";
+    }
 
 private:
-  void execute() override;
+    void execute() override;
 };
 
-#endif	/* ENDCLINICALEVENT_H */
+#endif    /* ENDCLINICALEVENT_H */

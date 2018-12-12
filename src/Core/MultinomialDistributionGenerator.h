@@ -6,32 +6,38 @@
  */
 
 #ifndef MULTINOMIALDISTRIBUTIONGENERATOR_H
-#define	MULTINOMIALDISTRIBUTIONGENERATOR_H
+#define    MULTINOMIALDISTRIBUTIONGENERATOR_H
 
 #include "Core/TypeDef.h"
+
 class Random;
 
 class MultinomialDistributionGenerator {
-  // DISALLOW_COPY_AND_ASSIGN(MultinomialDistributionGenerator)
-  // DISALLOW_MOVE(MultinomialDistributionGenerator)
-  
+    // DISALLOW_COPY_AND_ASSIGN(MultinomialDistributionGenerator)
+    // DISALLOW_MOVE(MultinomialDistributionGenerator)
+
 
 public:
-	UIntVector data;
-	DoubleVector level_density;
+    UIntVector data;
+    DoubleVector level_density;
 
-  MultinomialDistributionGenerator() = default;
-  MultinomialDistributionGenerator(const MultinomialDistributionGenerator& orig) = default;
-  MultinomialDistributionGenerator& operator=(const MultinomialDistributionGenerator&) = default;
-  MultinomialDistributionGenerator(MultinomialDistributionGenerator&&) = default;
-  MultinomialDistributionGenerator& operator=(MultinomialDistributionGenerator&&) = default;
-  virtual ~MultinomialDistributionGenerator() = default;
+    MultinomialDistributionGenerator() = default;
 
-  int draw_random_level(Random* random);
+    MultinomialDistributionGenerator(const MultinomialDistributionGenerator& orig) = default;
 
-  void allocate(Random* random);
+    MultinomialDistributionGenerator& operator=(const MultinomialDistributionGenerator&) = default;
+
+    MultinomialDistributionGenerator(MultinomialDistributionGenerator&&) = default;
+
+    MultinomialDistributionGenerator& operator=(MultinomialDistributionGenerator&&) = default;
+
+    virtual ~MultinomialDistributionGenerator() = default;
+
+    int draw_random_level(Random* random);
+
+    void allocate(Random* random);
 
 
 };
 
-#endif	/* MULTINOMIALDISTRIBUTIONGENERATOR_H */
+#endif    /* MULTINOMIALDISTRIBUTIONGENERATOR_H */

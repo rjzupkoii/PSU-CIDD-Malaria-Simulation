@@ -12,15 +12,15 @@
 template<typename T, typename P>
 class IObjectIndexer {
 
-    virtual void add(T &object) =0;
+    virtual void add(T& object) = 0;
 
-    virtual void remove(T &object) =0;
+    virtual void remove(T& object) = 0;
 
-    virtual void size() =0;
+    virtual void size() = 0;
 
-    virtual void update() =0;
+    virtual void update() = 0;
 
-    virtual void notify_change(T &object, const P &property, int old_value, int new_value) = 0;
+    virtual void notify_change(T& object, const P& property, int old_value, int new_value) = 0;
 };
 
 
@@ -37,15 +37,15 @@ struct MultidimensionalVector {
     }
 
     template<typename Prop>
-    static void add(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
+    static void add(const size_t& id, type& container, const std::vector<Prop>& v, int pos, T& object) {
         MultidimensionalVector<T, Dimension - 1>::add(id, container[object->get_property_value(v[pos])], v, pos + 1,
-                                                       object);
+                                                      object);
     }
 
     template<typename Prop>
-    static void remove(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
+    static void remove(const size_t& id, type& container, const std::vector<Prop>& v, int pos, T& object) {
         MultidimensionalVector<T, Dimension - 1>::remove(id, container[object->get_property_value(v[pos])], v, pos + 1,
-                                                          object);
+                                                         object);
     }
 };
 
@@ -62,12 +62,12 @@ struct MultidimensionalVector<T, 2> {
     }
 
     template<typename Prop>
-    static void add(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
+    static void add(const size_t& id, type& container, const std::vector<Prop>& v, int pos, T& object) {
         MultidimensionalVector<T, 1>::add(id, container[object->get_property_value(v[pos])], v, pos + 1, object);
     }
 
     template<typename Prop>
-    static void remove(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
+    static void remove(const size_t& id, type& container, const std::vector<Prop>& v, int pos, T& object) {
         MultidimensionalVector<T, 1>::remove(id, container[object->get_property_value(v[pos])], v, pos + 1, object);
     }
 };
@@ -79,17 +79,17 @@ struct MultidimensionalVector<T, 1> {
     using value_type = typename MultidimensionalVector<T, 0>::type;
 
     template<typename Prop>
-    static void add(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
+    static void add(const size_t& id, type& container, const std::vector<Prop>& v, int pos, T& object) {
         object->setPositionInDeepestNestedVector(container.size(), id);
         container.push_back(object);
     }
 
     template<typename Prop>
-    static void remove(const size_t &id, type &container, const std::vector<Prop> &v, int pos, T &object) {
+    static void remove(const size_t& id, type& container, const std::vector<Prop>& v, int pos, T& object) {
         size_t index = object->getPositionInDeepestNestedVector(id);
         container.back()->setPositionInDeepestNestedVector(index, id);
 
-        std::swap(container[index], container[container.size() -1]);
+        std::swap(container[index], container[container.size() - 1]);
 
         container.pop_back();
     }

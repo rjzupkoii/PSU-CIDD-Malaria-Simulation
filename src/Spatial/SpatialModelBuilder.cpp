@@ -12,7 +12,7 @@ namespace Spatial {
 
     SpatialModelBuilder::~SpatialModelBuilder() = default;
 
-    SpatialModel *SpatialModelBuilder::Build(const std::string &name, const YAML::Node &node) {
+    SpatialModel* SpatialModelBuilder::Build(const std::string& name, const YAML::Node& node) {
 
         if (name == "Gravity") {
 

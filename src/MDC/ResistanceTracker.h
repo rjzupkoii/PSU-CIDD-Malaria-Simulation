@@ -14,7 +14,7 @@
 class ResistanceTracker {
 DISALLOW_COPY_AND_ASSIGN(ResistanceTracker)
 
-    void change_location(const int &genotype_id, const int &from_location, const int &to_location);
+    void change_location(const int& genotype_id, const int& from_location, const int& to_location);
 
 PROPERTY_REF(LongVector, parasite_population_count);
 PROPERTY_REF(LongVector2, parasite_population_count_by_location);
@@ -57,23 +57,23 @@ public:
     void update_resistance_tracker();
 
 
-    void increase(const int &id, const int &location);
+    void increase(const int& id, const int& location);
 
-    void decrease(const int &id, const int &location);
+    void decrease(const int& id, const int& location);
 
-    void change(const int &from, const int &to, const int &location);
+    void change(const int& from, const int& to, const int& location);
 
-    double max_fraction_resistance(const IntVector &resitance_ids);
+    double max_fraction_resistance(const IntVector& resitance_ids);
 
-    double min_fraction_resistance(const IntVector &resitance_ids);
+    double min_fraction_resistance(const IntVector& resitance_ids);
 
-    double sum_fraction_resistance(const IntVector &resitance_ids);
+    double sum_fraction_resistance(const IntVector& resitance_ids);
 
-    void update_time_value(int &tracking_time, const double &value, const double &check_value);
+    void update_time_value(int& tracking_time, const double& value, const double& check_value);
 
-    void make_resistance_profile(std::vector<int> &vResistanceID, const int &size);
+    void make_resistance_profile(std::vector<int>& vResistanceID, const int& size);
 
-    void make_arterminsinin_resistance_profile(std::vector<int> &vResistanceID);
+    void make_arterminsinin_resistance_profile(std::vector<int>& vResistanceID);
 
     double calculate_total_resistance_frequency();
 

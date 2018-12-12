@@ -36,6 +36,7 @@ class PersonIndexByLocationBittingLevel;
  */
 class Population : public Dispatcher {
 DISALLOW_COPY_AND_ASSIGN(Population)
+
 POINTER_PROPERTY(Model, model);
 
 POINTER_PROPERTY(PersonIndexPtrList, person_index_list);
@@ -47,99 +48,99 @@ PROPERTY_REF(std::vector<std::vector<std::vector<double> > >, force_of_infection
 
 
 public:
-  Population(Model* model = nullptr);
+    Population(Model* model = nullptr);
 
-  virtual ~Population();
+    virtual ~Population();
 
-  /**
-   * This function will add Person pointer to all of the person indexes
-   * @param person
-   */
-  virtual void add_person(Person* person);
+    /**
+     * This function will add Person pointer to all of the person indexes
+     * @param person
+     */
+    virtual void add_person(Person* person);
 
-  //just remove from index, no delete pointer
-  virtual void remove_person(Person* person);
+    //just remove from index, no delete pointer
+    virtual void remove_person(Person* person);
 
 
-  /**
-   * This function removes person pointer out of all of the person indexes
-   * This will also delete the @person out of memory
-   * @param person
-   */
-  virtual void remove_dead_person(Person* person);
+    /**
+     * This function removes person pointer out of all of the person indexes
+     * This will also delete the @person out of memory
+     * @param person
+     */
+    virtual void remove_dead_person(Person* person);
 
-  /**
-   * Notify change of a particular person's property to all person indexes
-   * @param p
-   * @param property
-   * @param oldValue
-   * @param newValue
-   */
-  virtual void
-  notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue);
+    /**
+     * Notify change of a particular person's property to all person indexes
+     * @param p
+     * @param property
+     * @param oldValue
+     * @param newValue
+     */
+    virtual void
+    notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue);
 
-  /**
-   * Return the number of individuals in the population
-   * If the input location is -1, return total size
-   * @param location
-   */
-  virtual int size(const int& location = -1, const int& age_class = -1);
+    /**
+     * Return the number of individuals in the population
+     * If the input location is -1, return total size
+     * @param location
+     */
+    virtual int size(const int& location = -1, const int& age_class = -1);
 
-  virtual int size(const int& location, const Person::HostStates& hs, const int& age_class);
-  
-  virtual void perform_infection_event();
+    virtual int size(const int& location, const Person::HostStates& hs, const int& age_class);
 
-  virtual void initialize();
+    virtual void perform_infection_event();
 
-  void introduce_initial_cases();
+    virtual void initialize();
 
-  template <typename T>
-  T* get_person_index();
+    void introduce_initial_cases();
 
-  void introduce_parasite(const int& location, Genotype* parasite_type, const int& num_of_infections);
+    template<typename T>
+    T* get_person_index();
 
-  void initial_infection(Person* person, Genotype* parasite_type) const;
+    void introduce_parasite(const int& location, Genotype* parasite_type, const int& num_of_infections);
 
-  virtual void notify_change_in_force_of_infection(const int& location, const int& parasite_type_id,
-                                                   const double& relative_force_of_infection);
+    void initial_infection(Person* person, Genotype* parasite_type) const;
 
-  // void update() override;
+    virtual void notify_change_in_force_of_infection(const int& location, const int& parasite_type_id,
+                                                     const double& relative_force_of_infection);
 
-  void update_force_of_infection(const int& current_time);
+    // void update() override;
 
-  void perform_birth_event();
+    void update_force_of_infection(const int& current_time);
 
-  void perform_death_event();
+    void perform_birth_event();
 
-  void give_1_birth(const int& location);
+    void perform_death_event();
 
-  void clear_all_dead_state_individual();
+    void give_1_birth(const int& location);
 
-  void perform_circulation_event();
-  
-  void perform_circulation_for_1_location(const int& from_location, const int& target_location,
-                                          const int& number_of_circulation,
-                                          std::vector<Person *>& today_circulations);
+    void clear_all_dead_state_individual();
 
-  bool has_0_case();
+    void perform_circulation_event();
 
-  void initialize_person_indices();
+    void perform_circulation_for_1_location(const int& from_location, const int& target_location,
+                                            const int& number_of_circulation,
+                                            std::vector<Person*>& today_circulations);
 
-  void perform_interupted_feeding_recombination();
+    bool has_0_case();
 
-  int size_residents_only(const int& location);
+    void initialize_person_indices();
+
+    void perform_interupted_feeding_recombination();
+
+    int size_residents_only(const int& location);
 };
 
-template <typename T>
+template<typename T>
 T* Population::get_person_index() {
 
-  for (PersonIndex* person_index : *person_index_list_) {
-    if (dynamic_cast<T *>(person_index) != nullptr) {
-      T* pi = dynamic_cast<T *>(person_index);
-      return pi;
+    for (PersonIndex* person_index : *person_index_list_) {
+        if (dynamic_cast<T*>(person_index) != nullptr) {
+            T* pi = dynamic_cast<T*>(person_index);
+            return pi;
+        }
     }
-  }
-  return nullptr;
+    return nullptr;
 }
 
 #endif    /* POPULATION_H */

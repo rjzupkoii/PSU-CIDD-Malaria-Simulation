@@ -12,20 +12,20 @@
 
 //OBJECTPOOL_IMPL(NonInfantImmuneComponent)
 
-NonInfantImmuneComponent::NonInfantImmuneComponent(ImmuneSystem* immune_system):ImmuneComponent(immune_system) {
+NonInfantImmuneComponent::NonInfantImmuneComponent(ImmuneSystem* immune_system) : ImmuneComponent(immune_system) {
 }
 
 NonInfantImmuneComponent::~NonInfantImmuneComponent() {
 }
 
-double NonInfantImmuneComponent::get_acquire_rate(const int &age) const {
+double NonInfantImmuneComponent::get_acquire_rate(const int& age) const {
     //    return FastImmuneComponent::acquireRate;
 
     return (age > 80) ? Model::CONFIG->immune_system_information().acquire_rate_by_age[80]
-            : Model::CONFIG->immune_system_information().acquire_rate_by_age[age];
+                      : Model::CONFIG->immune_system_information().acquire_rate_by_age[age];
 
 }
 
-double NonInfantImmuneComponent::get_decay_rate(const int &age) const {
+double NonInfantImmuneComponent::get_decay_rate(const int& age) const {
     return Model::CONFIG->immune_system_information().decay_rate;
 }

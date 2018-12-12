@@ -41,9 +41,13 @@ void MonthlyReporterConsole::monthly_report() {
         for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
             double location_discounted_NTF = Model::DATA_COLLECTOR->cumulative_discounted_NTF_by_location()[location];
             double NTF = Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
-            double change_in_NTF = Model::DATA_COLLECTOR->cumulative_discounted_NTF_by_location()[location] - last_reported_NTF_;
-            int change_in_clinical_episodes = Model::DATA_COLLECTOR->cumulative_clinical_episodes_by_location()[location] - last_reported_clinical_episodes_;
-            int change_in_mutants = Model::DATA_COLLECTOR->cumulative_mutants_by_location()[location] - last_reported_mutants_;
+            double change_in_NTF =
+                    Model::DATA_COLLECTOR->cumulative_discounted_NTF_by_location()[location] - last_reported_NTF_;
+            int change_in_clinical_episodes =
+                    Model::DATA_COLLECTOR->cumulative_clinical_episodes_by_location()[location] -
+                    last_reported_clinical_episodes_;
+            int change_in_mutants =
+                    Model::DATA_COLLECTOR->cumulative_mutants_by_location()[location] - last_reported_mutants_;
 
             last_reported_mutants_ = Model::DATA_COLLECTOR->cumulative_mutants_by_location()[location];
             last_reported_clinical_episodes_ = Model::DATA_COLLECTOR->cumulative_clinical_episodes_by_location()[location];
@@ -64,28 +68,33 @@ void MonthlyReporterConsole::monthly_report() {
         }
 
 
-
         std::cout << "-1111" << "\t";
         //        std::cout << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[0]<< "\t";
         //        std::cout << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[16]<< "\t";
         //        std::cout << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[16]/(double)Model::DATA_COLLECTOR->resistance_tracker().total()<< "\t";
         //        std::cout << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[80] / (double) Model::DATA_COLLECTOR->resistance_tracker().total() << "\t";
 
-        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(Model::DATA_COLLECTOR->resistance_tracker().single_resistance_ids()) << "\t";
-        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(Model::DATA_COLLECTOR->resistance_tracker().double_resistance_ids()) << "\t";
-        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(Model::DATA_COLLECTOR->resistance_tracker().tripple_resistance_ids()) << "\t";
-        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(Model::DATA_COLLECTOR->resistance_tracker().quadruple_resistance_ids()) << "\t";
-        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(Model::DATA_COLLECTOR->resistance_tracker().quintuple_resistance_ids()) << "\t";
-        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(Model::DATA_COLLECTOR->resistance_tracker().artemisinin_ids()) << "\t";
+        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
+                Model::DATA_COLLECTOR->resistance_tracker().single_resistance_ids()) << "\t";
+        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
+                Model::DATA_COLLECTOR->resistance_tracker().double_resistance_ids()) << "\t";
+        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
+                Model::DATA_COLLECTOR->resistance_tracker().tripple_resistance_ids()) << "\t";
+        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
+                Model::DATA_COLLECTOR->resistance_tracker().quadruple_resistance_ids()) << "\t";
+        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
+                Model::DATA_COLLECTOR->resistance_tracker().quintuple_resistance_ids()) << "\t";
+        std::cout << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
+                Model::DATA_COLLECTOR->resistance_tracker().artemisinin_ids()) << "\t";
         std::cout << Model::DATA_COLLECTOR->resistance_tracker().total_resistance_frequency() << "\t";
 
         for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
             std::cout << "-1111\t";
             //            report_number_by_state(location, pi);
-            std::cout << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location]*100 << "\t";
-            std::cout << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10)*100 << "\t";
-            std::cout << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 10, 15)*100 << "\t";
-            std::cout << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 15, 45)*100 << "\t";
+            std::cout << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100 << "\t";
+            std::cout << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100 << "\t";
+            std::cout << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 10, 15) * 100 << "\t";
+            std::cout << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 15, 45) * 100 << "\t";
             if (Model::DATA_COLLECTOR->EIR_by_location_year()[location].empty()) {
                 std::cout << 0 << "\t";
             } else {

@@ -19,7 +19,7 @@ PersonIndexByLocationBittingLevel::~PersonIndexByLocationBittingLevel() {
 
 void PersonIndexByLocationBittingLevel::Initialize(const int& no_location, const int& no_level) {
     vPerson_.clear();
-    
+
     PersonPtrVector ppv;
     PersonPtrVector2 ppv2;
     ppv2.assign(no_level, ppv);
@@ -38,7 +38,8 @@ void PersonIndexByLocationBittingLevel::remove(Person* p) {
     p->PersonIndexByLocationBittingLevelHandler::set_index(-1);
 }
 
-void PersonIndexByLocationBittingLevel::notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue) {
+void PersonIndexByLocationBittingLevel::notify_change(Person* p, const Person::Property& property, const void* oldValue,
+                                                      const void* newValue) {
     switch (property) {
         case Person::LOCATION:
             change_property(p, *(int*) newValue, p->bitting_level());
@@ -47,7 +48,7 @@ void PersonIndexByLocationBittingLevel::notify_change(Person* p, const Person::P
             change_property(p, p->location(), *(int*) newValue);
             break;
         default:
-            
+
             break;
     }
 }
@@ -62,22 +63,23 @@ void PersonIndexByLocationBittingLevel::add(Person* p, const int& location, cons
 }
 
 void PersonIndexByLocationBittingLevel::remove_without_set_index(Person* p) {
-    vPerson_[p->location()][p->bitting_level()].back()->PersonIndexByLocationBittingLevelHandler::set_index(p->PersonIndexByLocationBittingLevelHandler::index());
+    vPerson_[p->location()][p->bitting_level()].back()->PersonIndexByLocationBittingLevelHandler::set_index(
+            p->PersonIndexByLocationBittingLevelHandler::index());
     vPerson_[p->location()][p->bitting_level()][p->PersonIndexByLocationBittingLevelHandler::index()] = vPerson_[p->location()][p->bitting_level()].back();
     vPerson_[p->location()][p->bitting_level()].pop_back();
 }
 
-void PersonIndexByLocationBittingLevel::change_property(Person* p, const int& location, const int& bitting_level){
+void PersonIndexByLocationBittingLevel::change_property(Person* p, const int& location, const int& bitting_level) {
     //remove from old position
     remove_without_set_index(p); //to save 1 set and improve performance since the index of p will changed when add
-    
+
     //add to new position
     add(p, location, bitting_level);
 }
 
-void PersonIndexByLocationBittingLevel::update(){
+void PersonIndexByLocationBittingLevel::update() {
     for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-        for (int bl=0; bl < Model::CONFIG->relative_bitting_info().number_of_biting_levels; bl++) {
+        for (int bl = 0; bl < Model::CONFIG->relative_bitting_info().number_of_biting_levels; bl++) {
             std::vector<Person*>(vPerson_[location][bl]).swap(vPerson_[location][bl]);
         }
     }

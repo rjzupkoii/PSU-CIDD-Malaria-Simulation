@@ -6,7 +6,7 @@
  */
 
 #ifndef PERSONINDEXBYLOCATIONBITTINGLEVEL_H
-#define	PERSONINDEXBYLOCATIONBITTINGLEVEL_H
+#define    PERSONINDEXBYLOCATIONBITTINGLEVEL_H
 
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
@@ -14,11 +14,12 @@
 #include "PersonIndex.h"
 
 class PersonIndexByLocationBittingLevel : public PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationBittingLevel);
-    PROPERTY_REF(PersonPtrVector3, vPerson);
+DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationBittingLevel);
+PROPERTY_REF(PersonPtrVector3, vPerson);
 
 public:
     PersonIndexByLocationBittingLevel(const int& no_location = 1, const int& no_level = 1);
+
     //    PersonIndexByLocationBittingLevel(const PersonIndexByLocationBittingLevel& orig);
     virtual ~PersonIndexByLocationBittingLevel();
 
@@ -36,9 +37,11 @@ public:
 
 private:
     void remove_without_set_index(Person* p);
+
     void add(Person* p, const int& location, const int& bitting_level);
+
     void change_property(Person* p, const int& location, const int& bitting_level);
 };
 
-#endif	/* PERSONINDEXBYLOCATIONBITTINGLEVEL_H */
+#endif    /* PERSONINDEXBYLOCATIONBITTINGLEVEL_H */
 

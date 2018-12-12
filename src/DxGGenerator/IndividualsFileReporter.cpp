@@ -40,7 +40,8 @@ void IndividualsFileReporter::after_time_step() {
             Person* person = Model::POPULATION->all_persons()->vPerson()[i];
             double p_density = 0;
             if (person->all_clonal_parasite_populations()->parasites()->size() >= 1) {
-                p_density = person->all_clonal_parasite_populations()->parasites()->at(0)->last_update_log10_parasite_density();
+                p_density = person->all_clonal_parasite_populations()->parasites()->at(
+                        0)->last_update_log10_parasite_density();
             } else {
                 p_density = Model::CONFIG->parasite_density_level().log_parasite_density_cured;
             }
@@ -51,8 +52,7 @@ void IndividualsFileReporter::after_time_step() {
 
 }
 
-void IndividualsFileReporter::monthly_report()
-{
+void IndividualsFileReporter::monthly_report() {
 }
 
 void IndividualsFileReporter::after_run() {

@@ -6,7 +6,8 @@
  */
 
 #ifndef CSVROW_H
-#define	CSVROW_H
+#define    CSVROW_H
+
 #include <vector>
 #include <string>
 #include <sstream>
@@ -15,8 +16,11 @@
 class CSVRow {
 public:
     CSVRow();
+
     CSVRow(const CSVRow& orig);
+
     virtual ~CSVRow();
+
 public:
     std::string const& operator[](std::size_t index) const {
         return data_[index];
@@ -40,11 +44,11 @@ public:
             data_.push_back(cell);
         }
     }
+
 private:
     std::vector<std::string> data_;
 };
 
 
-
-#endif	/* CSVROW_H */
+#endif    /* CSVROW_H */
 

@@ -6,7 +6,7 @@
  */
 
 #ifndef RETURNTORESIDENCEEVENT_H
-#define	RETURNTORESIDENCEEVENT_H
+#define    RETURNTORESIDENCEEVENT_H
 
 #include "Event.h"
 #include "ObjectPool.h"
@@ -15,24 +15,30 @@
 
 
 class Scheduler;
+
 class Person;
 
 class ReturnToResidenceEvent : public Event {
 DISALLOW_COPY_AND_ASSIGN(ReturnToResidenceEvent)
-DISALLOW_MOVE(ReturnToResidenceEvent)
-OBJECTPOOL(ReturnToResidenceEvent)
-public:
-  ReturnToResidenceEvent();
-  //    ReturnToResidenceEvent(const ReturnToResidenceEvent& orig);
-  virtual ~ReturnToResidenceEvent();
-  static void schedule_event(Scheduler* scheduler, Person* p, const int& time);
 
-  std::string name() override {
-    return "ReturnToResidenceEvent";
-  }
+DISALLOW_MOVE(ReturnToResidenceEvent)
+
+OBJECTPOOL(ReturnToResidenceEvent)
+
+public:
+    ReturnToResidenceEvent();
+
+    //    ReturnToResidenceEvent(const ReturnToResidenceEvent& orig);
+    virtual ~ReturnToResidenceEvent();
+
+    static void schedule_event(Scheduler* scheduler, Person* p, const int& time);
+
+    std::string name() override {
+        return "ReturnToResidenceEvent";
+    }
 
 private:
-  void execute() override;
+    void execute() override;
 };
 
-#endif	/* RETURNTORESIDENCEEVENT_H */
+#endif    /* RETURNTORESIDENCEEVENT_H */

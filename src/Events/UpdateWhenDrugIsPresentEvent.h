@@ -6,7 +6,7 @@
  */
 
 #ifndef UPDATEWHENDRUGISPRESENTEVENT_H
-#define	UPDATEWHENDRUGISPRESENTEVENT_H
+#define    UPDATEWHENDRUGISPRESENTEVENT_H
 
 #include "Event.h"
 #include "ObjectPool.h"
@@ -14,26 +14,33 @@
 #include <string>
 
 class ClonalParasitePopulation;
+
 class Scheduler;
+
 class Person;
 
 class UpdateWhenDrugIsPresentEvent : public Event {
 DISALLOW_COPY_AND_ASSIGN(UpdateWhenDrugIsPresentEvent)
+
 OBJECTPOOL(UpdateWhenDrugIsPresentEvent)
+
 POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
+
 public:
-  UpdateWhenDrugIsPresentEvent();
-  //    UpdateByHavingDrugEvent(const UpdateByHavingDrugEvent& orig);
-  virtual ~UpdateWhenDrugIsPresentEvent();
+    UpdateWhenDrugIsPresentEvent();
 
-  static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time);
+    //    UpdateByHavingDrugEvent(const UpdateByHavingDrugEvent& orig);
+    virtual ~UpdateWhenDrugIsPresentEvent();
 
-  std::string name() override {
-    return "UpdateByHavingDrugEvent";
-  }
+    static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite,
+                               const int& time);
+
+    std::string name() override {
+        return "UpdateByHavingDrugEvent";
+    }
 
 private:
-  void execute() override;
+    void execute() override;
 };
 
-#endif	/* UPDATEWHENDRUGISPRESENTEVENT_H */
+#endif    /* UPDATEWHENDRUGISPRESENTEVENT_H */

@@ -6,7 +6,7 @@
  */
 
 #ifndef DRUGDATABASE_H
-#define	DRUGDATABASE_H
+#define    DRUGDATABASE_H
 
 #include "Core/PropertyMacro.h"
 #include "DrugType.h"
@@ -14,21 +14,23 @@
 
 typedef std::map<int, DrugType*> DrugTypePtrMap;
 
-class DrugDatabase: public DrugTypePtrMap {
-    DISALLOW_COPY_AND_ASSIGN(DrugDatabase)
+class DrugDatabase : public DrugTypePtrMap {
+DISALLOW_COPY_AND_ASSIGN(DrugDatabase)
     // VIRTUAL_PROPERTY_REF(DrugTypePtrMap, drug_db)
 
 public:
     DrugDatabase();
+
     //    DrugDatabase(const DrugDatabase& orig);
     virtual ~DrugDatabase();
 
     void add(DrugType* dt);
+
     DrugType* get(const int& id);
-    
+
 private:
 
 };
 
-#endif	/* DRUGDATABASE_H */
+#endif    /* DRUGDATABASE_H */
 

@@ -6,7 +6,7 @@
  */
 
 #ifndef THERAPY_H
-#define	THERAPY_H
+#define    THERAPY_H
 
 #include "Core/PropertyMacro.h"
 #include <vector>
@@ -14,14 +14,17 @@
 class DrugType;
 
 class Therapy {
-    DISALLOW_COPY_AND_ASSIGN(Therapy)
+DISALLOW_COPY_AND_ASSIGN(Therapy)
 
-    VIRTUAL_PROPERTY_REF(int, id)
-    VIRTUAL_PROPERTY_REF(int, testing_day)
-    VIRTUAL_PROPERTY_REF(std::vector<int>, drug_ids);
+VIRTUAL_PROPERTY_REF(int, id)
+
+VIRTUAL_PROPERTY_REF(int, testing_day)
+
+VIRTUAL_PROPERTY_REF(std::vector<int>, drug_ids);
 
 public:
     Therapy();
+
     //    Therapy(const Therapy& orig);
     virtual ~Therapy();
 
@@ -34,5 +37,5 @@ private:
 
 };
 
-#endif	/* THERAPY_H */
+#endif    /* THERAPY_H */
 

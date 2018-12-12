@@ -8,7 +8,6 @@
 #include "CSVRow.h"
 
 
-
 CSVRow::CSVRow() = default;
 
 CSVRow::CSVRow(const CSVRow& orig) {

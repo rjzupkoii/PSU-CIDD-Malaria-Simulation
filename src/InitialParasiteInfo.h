@@ -6,7 +6,7 @@
  */
 
 #ifndef INITIALPARASITEINFO_H
-#define	INITIALPARASITEINFO_H
+#define    INITIALPARASITEINFO_H
 
 #include <yaml-cpp/yaml.h>
 
@@ -102,5 +102,5 @@
 //}
 
 
-#endif	/* INITIALPARASITEINFO_H */
+#endif    /* INITIALPARASITEINFO_H */
 

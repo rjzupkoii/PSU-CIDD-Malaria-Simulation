@@ -6,28 +6,34 @@
  */
 
 #ifndef SWITCHIMMUNECOMPONENTEVENT_H
-#define	SWITCHIMMUNECOMPONENTEVENT_H
+#define    SWITCHIMMUNECOMPONENTEVENT_H
 
 #include "Event.h"
 #include "ObjectPool.h"
 
 class Scheduler;
+
 class Person;
 
 class SwitchImmuneComponentEvent : public Event {
-    OBJECTPOOL(SwitchImmuneComponentEvent)
+OBJECTPOOL(SwitchImmuneComponentEvent)
+
 public:
     SwitchImmuneComponentEvent();
+
     SwitchImmuneComponentEvent(const SwitchImmuneComponentEvent& orig);
+
     virtual ~SwitchImmuneComponentEvent();
+
     static void schedule_for_switch_immune_component_event(Scheduler* scheduler, Person* p, const int& time);
 
     virtual std::string name() {
         return "SwitchImmuneComponentEvent";
     }
+
 private:
     virtual void execute();
 };
 
-#endif	/* SWITCHIMMUNECOMPONENTEVENT_H */
+#endif    /* SWITCHIMMUNECOMPONENTEVENT_H */
 

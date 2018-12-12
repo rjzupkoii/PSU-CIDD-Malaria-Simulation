@@ -12,36 +12,40 @@ class Config;
 
 class NestedMFTMultiLocationStrategy : public IStrategy {
 DISALLOW_COPY_AND_ASSIGN(NestedMFTMultiLocationStrategy)
+
 DISALLOW_MOVE(NestedMFTMultiLocationStrategy)
+
 public:
-  std::vector<IStrategy*> strategy_list;
-  DoubleVector2 distribution;
-  DoubleVector2 start_distribution;
-  DoubleVector2 peak_distribution;
-  int starting_time{0};
-  int peak_after{0};
+    std::vector<IStrategy*> strategy_list;
+    DoubleVector2 distribution;
+    DoubleVector2 start_distribution;
+    DoubleVector2 peak_distribution;
+    int starting_time{0};
+    int peak_after{0};
 
-  NestedMFTMultiLocationStrategy();
-  //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
-  virtual ~NestedMFTMultiLocationStrategy();
+    NestedMFTMultiLocationStrategy();
 
-  virtual void add_strategy(IStrategy* strategy);
+    //    NestedSwitchingStrategy(const NestedSwitchingStrategy& orig);
+    virtual ~NestedMFTMultiLocationStrategy();
 
-  void add_therapy(Therapy* therapy) override;
+    virtual void add_strategy(IStrategy* strategy);
 
-  Therapy* get_therapy(Person* person) override;
+    void add_therapy(Therapy* therapy) override;
 
-  std::string to_string() const override;
+    Therapy* get_therapy(Person* person) override;
 
-  /**
-  * This function will be executed at end of time step, to check and switch therapy if needed
-  */
-  void update_end_of_time_step() override;
+    std::string to_string() const override;
 
-  void adjust_distribution(const int& time);
+    /**
+    * This function will be executed at end of time step, to check and switch therapy if needed
+    */
+    void update_end_of_time_step() override;
 
-  void adjust_started_time_point(const int& current_time) override;
-  void monthly_update() override;
+    void adjust_distribution(const int& time);
+
+    void adjust_started_time_point(const int& current_time) override;
+
+    void monthly_update() override;
 
 };
 

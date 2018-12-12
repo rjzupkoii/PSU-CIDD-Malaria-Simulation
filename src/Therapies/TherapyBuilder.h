@@ -13,6 +13,7 @@
 
 #ifndef THERAPYBUILDER_H
 #define THERAPYBUILDER_H
+
 #include <yaml-cpp/yaml.h>
 
 class Therapy;
@@ -20,7 +21,9 @@ class Therapy;
 class TherapyBuilder {
 public:
     TherapyBuilder();
+
     TherapyBuilder(const TherapyBuilder& orig) = default;
+
     virtual ~TherapyBuilder();
 
 

@@ -11,28 +11,36 @@
 
 class MFTMultiLocationStrategy : public IStrategy {
 DISALLOW_COPY_AND_ASSIGN(MFTMultiLocationStrategy)
+
 DISALLOW_MOVE(MFTMultiLocationStrategy)
 
 public:
-  std::vector<Therapy *> therapy_list;
-  // DoubleVector2 distribution_by_location;
-  DoubleVector2 distribution;
-  DoubleVector2 start_distribution;
-  DoubleVector2 peak_distribution;
-  int starting_time{0};
-  int peak_after{0};
+    std::vector<Therapy*> therapy_list;
+    // DoubleVector2 distribution_by_location;
+    DoubleVector2 distribution;
+    DoubleVector2 start_distribution;
+    DoubleVector2 peak_distribution;
+    int starting_time{0};
+    int peak_after{0};
 
-  MFTMultiLocationStrategy();
-  //    MFTStrategy(const MFTStrategy& orig);
-  virtual ~MFTMultiLocationStrategy();
-  void add_therapy(Therapy* therapy) override;
-  Therapy* get_therapy(Person* person) override;
-  std::string to_string() const override;
-  void update_end_of_time_step() override;
-  void adjust_started_time_point(const int& current_time) override;
-  void monthly_update() override;
+    MFTMultiLocationStrategy();
 
-  void adjust_distribution(const int& time);
+    //    MFTStrategy(const MFTStrategy& orig);
+    virtual ~MFTMultiLocationStrategy();
+
+    void add_therapy(Therapy* therapy) override;
+
+    Therapy* get_therapy(Person* person) override;
+
+    std::string to_string() const override;
+
+    void update_end_of_time_step() override;
+
+    void adjust_started_time_point(const int& current_time) override;
+
+    void monthly_update() override;
+
+    void adjust_distribution(const int& time);
 };
 
 

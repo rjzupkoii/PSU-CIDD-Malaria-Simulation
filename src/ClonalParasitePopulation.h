@@ -6,7 +6,7 @@
  */
 
 #ifndef CLONALPARASITEPOPULATION_H
-#define	CLONALPARASITEPOPULATION_H
+#define    CLONALPARASITEPOPULATION_H
 
 #include "Core/PropertyMacro.h"
 #include "ParasiteDensityUpdateFunction.h"
@@ -15,29 +15,33 @@
 #include "ObjectPool.h"
 
 class Therapy;
+
 class Genotype;
+
 class SingleHostClonalParasitePopulations;
 
 class ClonalParasitePopulation : public IndexHandler {
-    OBJECTPOOL(ClonalParasitePopulation);
-    DISALLOW_COPY_AND_ASSIGN(ClonalParasitePopulation)
+OBJECTPOOL(ClonalParasitePopulation);
+DISALLOW_COPY_AND_ASSIGN(ClonalParasitePopulation)
 
-    PROPERTY_HEADER(double, last_update_log10_parasite_density)
-    PROPERTY_HEADER(double, gametocyte_level)
+PROPERTY_HEADER(double, last_update_log10_parasite_density)
+
+PROPERTY_HEADER(double, gametocyte_level)
 //    PROPERTY_REF(double, clearance_rate)
-    PROPERTY_REF(int, first_date_in_blood)
+PROPERTY_REF(int, first_date_in_blood)
 
-    POINTER_PROPERTY(SingleHostClonalParasitePopulations, parasite_population)
+POINTER_PROPERTY(SingleHostClonalParasitePopulations, parasite_population)
     //    PROPERTY(int, parasite_type_id);
-    POINTER_PROPERTY_HEADER(Genotype, genotype)
+POINTER_PROPERTY_HEADER(Genotype, genotype)
 
-    POINTER_PROPERTY(ParasiteDensityUpdateFunction, update_function)
+POINTER_PROPERTY(ParasiteDensityUpdateFunction, update_function)
 
 public:
     static const double LOG_ZERO_PARASITE_DENSITY;
 
 public:
     ClonalParasitePopulation(Genotype* genotype = nullptr);
+
     //    BloodParasite(const BloodParasite& orig);
     virtual ~ClonalParasitePopulation();
 
@@ -48,7 +52,9 @@ public:
     void mutate_to(Genotype* genotype);
 
     bool resist_to(Therapy* therapy) const;
+
     bool resist_to(DrugType* dt) const;
+
     bool resist_to(const int& drug_id) const;
 
 
@@ -58,5 +64,5 @@ public:
 
 };
 
-#endif	/* CLONALPARASITEPOPULATION_H */
+#endif    /* CLONALPARASITEPOPULATION_H */
 

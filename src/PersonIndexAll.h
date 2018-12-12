@@ -6,32 +6,36 @@
  */
 
 #ifndef PERSONINDEXALL_H
-#define	PERSONINDEXALL_H
+#define    PERSONINDEXALL_H
 
 #include "PersonIndex.h"
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 
-class PersonIndexAll: public PersonIndex {
-    DISALLOW_COPY_AND_ASSIGN(PersonIndexAll)
-    
-    PROPERTY_REF(PersonPtrVector, vPerson)
-    
+class PersonIndexAll : public PersonIndex {
+DISALLOW_COPY_AND_ASSIGN(PersonIndexAll)
+
+PROPERTY_REF(PersonPtrVector, vPerson)
+
 public:
-    PersonIndexAll();    
+    PersonIndexAll();
+
     virtual ~PersonIndexAll();
-    
+
     virtual void add(Person* p);
+
     virtual void remove(Person* p);
+
     virtual int size() const;
+
     virtual void update();
-    
+
     virtual void notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue);
-    
-    
+
+
 private:
 
 };
 
-#endif	/* PERSONINDEXALL_H */
+#endif    /* PERSONINDEXALL_H */
 

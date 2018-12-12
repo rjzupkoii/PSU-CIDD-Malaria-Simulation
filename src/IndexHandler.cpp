@@ -7,8 +7,8 @@
 
 #include "IndexHandler.h"
 
-IndexHandler::IndexHandler():index_(-1) {
-    
+IndexHandler::IndexHandler() : index_(-1) {
+
 }
 
 IndexHandler::~IndexHandler() = default;

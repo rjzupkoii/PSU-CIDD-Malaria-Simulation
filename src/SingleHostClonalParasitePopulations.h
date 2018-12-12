@@ -6,7 +6,7 @@
  */
 
 #ifndef SINGLEHOSTCLONALPARASITEPOPULATIONS_H
-#define	SINGLEHOSTCLONALPARASITEPOPULATIONS_H
+#define    SINGLEHOSTCLONALPARASITEPOPULATIONS_H
 
 #include "Core/PropertyMacro.h"
 #include "ObjectPool.h"
@@ -14,23 +14,29 @@
 #include <vector>
 
 class ClonalParasitePopulation;
+
 class Person;
+
 class DrugType;
+
 class DrugsInBlood;
 
 class SingleHostClonalParasitePopulations {
-    OBJECTPOOL(SingleHostClonalParasitePopulations)
-    DISALLOW_COPY_AND_ASSIGN(SingleHostClonalParasitePopulations)
+OBJECTPOOL(SingleHostClonalParasitePopulations)
 
-    POINTER_PROPERTY(Person, person)
+DISALLOW_COPY_AND_ASSIGN(SingleHostClonalParasitePopulations)
 
-    POINTER_PROPERTY(std::vector<ClonalParasitePopulation*>, parasites)
-    POINTER_PROPERTY(DoubleVector, relative_effective_parasite_density)
+POINTER_PROPERTY(Person, person)
 
-    PROPERTY_REF(double, log10_total_relative_density);
+POINTER_PROPERTY(std::vector<ClonalParasitePopulation*>, parasites)
+
+POINTER_PROPERTY(DoubleVector, relative_effective_parasite_density)
+
+PROPERTY_REF(double, log10_total_relative_density);
 
 public:
     SingleHostClonalParasitePopulations(Person* person = nullptr);
+
     //    ParasitePopulation(const ParasitePopulation& orig);
     virtual ~SingleHostClonalParasitePopulations();
 
@@ -41,9 +47,11 @@ public:
     virtual void add(ClonalParasitePopulation* blood_parasite);
 
     virtual void remove(ClonalParasitePopulation* blood_parasite);
+
     virtual void remove(const int& index);
 
     virtual void add_all_infection_force();
+
     virtual void remove_all_infection_force();
 
     virtual void change_all_infection_force(const double& sign);
@@ -54,7 +62,8 @@ public:
 
     virtual bool contain(ClonalParasitePopulation* blood_parasite);
 
-    void change_all_parasite_update_function(ParasiteDensityUpdateFunction* from, ParasiteDensityUpdateFunction* to) const;
+    void
+    change_all_parasite_update_function(ParasiteDensityUpdateFunction* from, ParasiteDensityUpdateFunction* to) const;
 
     void update() const;
 
@@ -69,13 +78,14 @@ public:
     void get_parasites_profiles(std::vector<double>& parasite_density, double& log10_total_relative_density) const;
 
     void update_relative_effective_parasite_density_using_free_recombination();
-    
+
     void update_relative_effective_parasite_density_without_free_recombination();
-    
+
     bool is_gametocytaemic() const;
+
 private:
 
 };
 
-#endif	/* SINGLEHOSTCLONALPARASITEPOPULATIONS_H */
+#endif    /* SINGLEHOSTCLONALPARASITEPOPULATIONS_H */
 

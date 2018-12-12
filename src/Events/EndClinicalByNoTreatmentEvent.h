@@ -6,33 +6,41 @@
  */
 
 #ifndef ENDCLINICALBYNOTREATMENTEVENT_H
-#define	ENDCLINICALBYNOTREATMENTEVENT_H
+#define    ENDCLINICALBYNOTREATMENTEVENT_H
+
 #include "Event.h"
 #include "ObjectPool.h"
 #include "Core/PropertyMacro.h"
 
 class ClonalParasitePopulation;
+
 class Scheduler;
+
 class Person;
 
 class EndClinicalByNoTreatmentEvent : public Event {
 DISALLOW_COPY_AND_ASSIGN(EndClinicalByNoTreatmentEvent)
+
 OBJECTPOOL(EndClinicalByNoTreatmentEvent)
+
 POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
 
 
 public:
-  EndClinicalByNoTreatmentEvent();
-  //    EndClinicalByNoTreatmentEvent(const EndClinicalByNoTreatmentEvent& orig);
-  virtual ~EndClinicalByNoTreatmentEvent();
-  static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time);
+    EndClinicalByNoTreatmentEvent();
 
-  std::string name() override {
-    return "EndClinicalByNoTreatmentEvent";
-  }
+    //    EndClinicalByNoTreatmentEvent(const EndClinicalByNoTreatmentEvent& orig);
+    virtual ~EndClinicalByNoTreatmentEvent();
+
+    static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite,
+                               const int& time);
+
+    std::string name() override {
+        return "EndClinicalByNoTreatmentEvent";
+    }
 
 private:
-  void execute() override;
+    void execute() override;
 };
 
-#endif	/* ENDCLINICALBYNOTREATMENTEVENT_H */
+#endif    /* ENDCLINICALBYNOTREATMENTEVENT_H */

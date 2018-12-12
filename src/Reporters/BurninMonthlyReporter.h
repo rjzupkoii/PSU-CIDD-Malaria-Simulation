@@ -13,26 +13,34 @@
 
 #ifndef BURNINMONTHLYREPORTER_H
 #define BURNINMONTHLYREPORTER_H
+
 #include "Reporter.h"
 #include <string>
 
 class BurninMonthlyReporter : public Reporter {
-    DISALLOW_COPY_AND_ASSIGN(BurninMonthlyReporter)
+DISALLOW_COPY_AND_ASSIGN(BurninMonthlyReporter)
 
-    VIRTUAL_PROPERTY_REF(double, last_reported_NTF)
-    VIRTUAL_PROPERTY_REF(int, last_reported_clinical_episodes)
-    VIRTUAL_PROPERTY_REF(int, last_reported_mutants)
+VIRTUAL_PROPERTY_REF(double, last_reported_NTF)
+
+VIRTUAL_PROPERTY_REF(int, last_reported_clinical_episodes)
+
+VIRTUAL_PROPERTY_REF(int, last_reported_mutants)
 
 
 public:
     BurninMonthlyReporter();
+
     //    MonthlyReporter(const MonthlyReporter& orig);
     virtual ~BurninMonthlyReporter();
 
     virtual void initialize();
+
     virtual void before_run();
+
     virtual void after_run();
+
     virtual void begin_time_step();
+
     virtual void monthly_report();
 
 private:

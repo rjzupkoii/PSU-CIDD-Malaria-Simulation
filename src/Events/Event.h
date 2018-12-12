@@ -6,34 +6,40 @@
  */
 
 #ifndef EVENT_H
-#define	EVENT_H
+#define    EVENT_H
 
 #include "IndexHandler.h"
 #include "Core/PropertyMacro.h"
 #include <string>
+
 class Dispatcher;
+
 class Scheduler;
 
 class Event : public IndexHandler {
 DISALLOW_COPY_AND_ASSIGN(Event)
+
 DISALLOW_MOVE(Event)
+
 public:
-  Scheduler* scheduler{nullptr};
-  Dispatcher* dispatcher{nullptr};
-  bool executable{false};
-  int time{-1};
-  
-  Event();
-  //    Event(const Event& orig);
-  virtual ~Event();
+    Scheduler* scheduler{nullptr};
+    Dispatcher* dispatcher{nullptr};
+    bool executable{false};
+    int time{-1};
 
-  void perform_execute();
-  virtual std::string name() = 0;
+    Event();
+
+    //    Event(const Event& orig);
+    virtual ~Event();
+
+    void perform_execute();
+
+    virtual std::string name() = 0;
+
 private:
-  virtual void execute() = 0;
-
+    virtual void execute() = 0;
 
 
 };
 
-#endif	/* EVENT_H */
+#endif    /* EVENT_H */

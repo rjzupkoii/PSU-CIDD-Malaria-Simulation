@@ -1,33 +1,38 @@
 #ifndef NOVELDRUGSWITCHINGSTRATEGY_H
 #define NOVELDRUGSWITCHINGSTRATEGY_H
+
 #include <vector>
 #include "IStrategy.h"
 #include "Core/PropertyMacro.h"
 
 class NovelDrugSwitchingStrategy : public IStrategy {
 DISALLOW_COPY_AND_ASSIGN(NovelDrugSwitchingStrategy)
+
 DISALLOW_MOVE(NovelDrugSwitchingStrategy)
 
 public:
-  std::vector<Therapy*> therapy_list;
-  std::vector<double> distribution;
+    std::vector<Therapy*> therapy_list;
+    std::vector<double> distribution;
 
-  int switch_to{0};
-  double tf_threshold{0.1};
+    int switch_to{0};
+    double tf_threshold{0.1};
 
 
-  NovelDrugSwitchingStrategy();
-  virtual ~NovelDrugSwitchingStrategy() = default;
+    NovelDrugSwitchingStrategy();
 
-  void add_therapy(Therapy* therapy) override;
+    virtual ~NovelDrugSwitchingStrategy() = default;
 
-  Therapy* get_therapy(Person* person) override;
+    void add_therapy(Therapy* therapy) override;
 
-  std::string to_string() const override;
+    Therapy* get_therapy(Person* person) override;
 
-  void update_end_of_time_step() override;
+    std::string to_string() const override;
 
-  void adjust_started_time_point(const int& current_time) override;
-  void monthly_update() override;
+    void update_end_of_time_step() override;
+
+    void adjust_started_time_point(const int& current_time) override;
+
+    void monthly_update() override;
 };
+
 #endif // NOVELDRUGSWITCHINGSTRATEGY_H

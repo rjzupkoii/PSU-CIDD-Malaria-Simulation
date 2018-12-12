@@ -6,19 +6,23 @@
  */
 
 #ifndef PERSONINDEXBYLOCATIONMOVINGLEVELHANDLER_H
-#define	PERSONINDEXBYLOCATIONMOVINGLEVELHANDLER_H
+#define    PERSONINDEXBYLOCATIONMOVINGLEVELHANDLER_H
+
 #include "IndexHandler.h"
 #include "Core/PropertyMacro.h"
 
 class PersonIndexByLocationMovingLevelHandler : public IndexHandler {
-    DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationMovingLevelHandler)
+DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationMovingLevelHandler)
+
 public:
     PersonIndexByLocationMovingLevelHandler();
+
     //    PersonIndexByLocationMovingLevelHandler(const PersonIndexByLocationMovingLevelHandler& orig);
     virtual ~PersonIndexByLocationMovingLevelHandler();
+
 private:
 
 };
 
-#endif	/* PERSONINDEXBYLOCATIONMOVINGLEVELHANDLER_H */
+#endif    /* PERSONINDEXBYLOCATIONMOVINGLEVELHANDLER_H */
 

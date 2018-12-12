@@ -19,23 +19,27 @@
 
 class MFTRebalancingStrategy : public MFTStrategy {
 DISALLOW_COPY_AND_ASSIGN(MFTRebalancingStrategy)
+
 DISALLOW_MOVE(MFTRebalancingStrategy)
+
 public:
-  int update_duration_after_rebalancing{365};
-  int latest_adjust_distribution_time{0};
-  int delay_until_actual_trigger{365};
-  int next_update_time{0};
-  std::vector<double> next_distribution{0};
+    int update_duration_after_rebalancing{365};
+    int latest_adjust_distribution_time{0};
+    int delay_until_actual_trigger{365};
+    int next_update_time{0};
+    std::vector<double> next_distribution{0};
 
-  MFTRebalancingStrategy();
-  //        SmartMFTStrategy(const SmartMFTStrategy & orig);
-  virtual ~MFTRebalancingStrategy();
-  std::string to_string() const override;
+    MFTRebalancingStrategy();
 
-  void update_end_of_time_step() override;
+    //        SmartMFTStrategy(const SmartMFTStrategy & orig);
+    virtual ~MFTRebalancingStrategy();
+
+    std::string to_string() const override;
+
+    void update_end_of_time_step() override;
 
 
-  void adjust_started_time_point(const int& current_time) override;
+    void adjust_started_time_point(const int& current_time) override;
 };
 
 #endif /* SMARTMFTSTRATEGY_H */
