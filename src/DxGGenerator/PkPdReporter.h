@@ -12,31 +12,30 @@
 #include "Core/TypeDef.h"
 #include "Reporters/Reporter.h"
 
-
 class PkPdReporter : public Reporter {
-DISALLOW_COPY_AND_ASSIGN(PkPdReporter)
+ DISALLOW_COPY_AND_ASSIGN(PkPdReporter)
 
-PROPERTY_REF(DoubleVector, yesterday_density)
+ PROPERTY_REF(DoubleVector, yesterday_density)
 
-public:
-    PkPdReporter();
+ public:
+  PkPdReporter();
 
-    //    PkPdReporter(const PkPdReporter& orig);
-    virtual ~PkPdReporter();
+  //    PkPdReporter(const PkPdReporter& orig);
+  virtual ~PkPdReporter();
 
-    void initialize() override;
+  void initialize() override;
 
-    void before_run() override;
+  void before_run() override;
 
-    void after_run() override;
+  void after_run() override;
 
-    void begin_time_step() override;
+  void begin_time_step() override;
 
-    virtual void after_time_step();
+  virtual void after_time_step();
 
-    void monthly_report() override;
+  void monthly_report() override;
 
-private:
+ private:
 
 };
 

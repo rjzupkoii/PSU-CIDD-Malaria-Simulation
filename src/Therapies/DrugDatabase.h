@@ -12,23 +12,23 @@
 #include "DrugType.h"
 #include <map>
 
-typedef std::map<int, DrugType*> DrugTypePtrMap;
+typedef std::map<int, DrugType *> DrugTypePtrMap;
 
 class DrugDatabase : public DrugTypePtrMap {
-DISALLOW_COPY_AND_ASSIGN(DrugDatabase)
-    // VIRTUAL_PROPERTY_REF(DrugTypePtrMap, drug_db)
+ DISALLOW_COPY_AND_ASSIGN(DrugDatabase)
+  // VIRTUAL_PROPERTY_REF(DrugTypePtrMap, drug_db)
 
-public:
-    DrugDatabase();
+ public:
+  DrugDatabase();
 
-    //    DrugDatabase(const DrugDatabase& orig);
-    virtual ~DrugDatabase();
+  //    DrugDatabase(const DrugDatabase& orig);
+  virtual ~DrugDatabase();
 
-    void add(DrugType* dt);
+  void add(DrugType *dt);
 
-    DrugType* get(const int& id);
+  DrugType *get(const int &id);
 
-private:
+ private:
 
 };
 

@@ -15,24 +15,24 @@
 class Person;
 
 class UpdateEveryKDaysEvent : public Event {
-DISALLOW_COPY_AND_ASSIGN(UpdateEveryKDaysEvent)
+ DISALLOW_COPY_AND_ASSIGN(UpdateEveryKDaysEvent)
 
-OBJECTPOOL(UpdateEveryKDaysEvent)
+ OBJECTPOOL(UpdateEveryKDaysEvent)
 
-public:
-    UpdateEveryKDaysEvent();
+ public:
+  UpdateEveryKDaysEvent();
 
-    //    UpdateEveryKDaysEvent(const UpdateEveryKDaysEvent& orig);
-    virtual ~UpdateEveryKDaysEvent();
+  //    UpdateEveryKDaysEvent(const UpdateEveryKDaysEvent& orig);
+  virtual ~UpdateEveryKDaysEvent();
 
-    static void schedule_event(Scheduler* scheduler, Person* p, const int& time);
+  static void schedule_event(Scheduler *scheduler, Person *p, const int &time);
 
-    std::string name() override {
-        return "UpdateEveryKDaysEvent";
-    }
+  std::string name() override {
+    return "UpdateEveryKDaysEvent";
+  }
 
-private:
-    void execute() override;
+ private:
+  void execute() override;
 
 };
 

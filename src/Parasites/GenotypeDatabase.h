@@ -15,37 +15,35 @@
 
 class Genotype;
 
-typedef std::map<int, Genotype*> GenotypePtrMap;
+typedef std::map<int, Genotype *> GenotypePtrMap;
 typedef std::vector<std::vector<std::vector<double>>> MatingMatrix;
 
 class GenotypeDatabase : public GenotypePtrMap {
-DISALLOW_COPY_AND_ASSIGN(GenotypeDatabase)
+ DISALLOW_COPY_AND_ASSIGN(GenotypeDatabase)
 
-DISALLOW_MOVE(GenotypeDatabase)
+ DISALLOW_MOVE(GenotypeDatabase)
 
-VIRTUAL_PROPERTY_REF(MatingMatrix, mating_matrix)
+ VIRTUAL_PROPERTY_REF(MatingMatrix, mating_matrix)
 
-VIRTUAL_PROPERTY_REF(IntVector, weight)
+ VIRTUAL_PROPERTY_REF(IntVector, weight)
 
+ public:
+  GenotypeDatabase();
 
-public:
-    GenotypeDatabase();
+  virtual ~GenotypeDatabase();
 
-    virtual ~GenotypeDatabase();
+  void add(Genotype *genotype);
 
-    void add(Genotype* genotype);
+  int get_id(const IntVector &gene);
 
-    int get_id(const IntVector& gene);
+  void initialize_matting_matrix();
 
-    void initialize_matting_matrix();
+  std::vector<double> generate_offspring_parasite_density(const IntVector &m, const IntVector &f);
 
-    std::vector<double> generate_offspring_parasite_density(const IntVector& m, const IntVector& f);
+  double get_offspring_density(const int &m, const int &f, const int &p);
 
-    double get_offspring_density(const int& m, const int& f, const int& p);
-
-private:
+ private:
 
 };
-
 
 #endif    /* INTPARASITEDATABASE_H */

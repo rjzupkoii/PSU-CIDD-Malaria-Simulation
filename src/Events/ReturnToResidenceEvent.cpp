@@ -17,18 +17,18 @@ ReturnToResidenceEvent::ReturnToResidenceEvent() = default;
 
 ReturnToResidenceEvent::~ReturnToResidenceEvent() = default;
 
-void ReturnToResidenceEvent::schedule_event(Scheduler* scheduler, Person* p, const int& time) {
-    if (scheduler != nullptr) {
-        auto* e = new ReturnToResidenceEvent();
-        e->dispatcher = p;
-        e->time = time;
-        p->add(e);
-        scheduler->schedule_individual_event(e);
-    }
+void ReturnToResidenceEvent::schedule_event(Scheduler *scheduler, Person *p, const int &time) {
+  if (scheduler!=nullptr) {
+    auto *e = new ReturnToResidenceEvent();
+    e->dispatcher = p;
+    e->time = time;
+    p->add(e);
+    scheduler->schedule_individual_event(e);
+  }
 }
 
 void ReturnToResidenceEvent::execute() {
-    auto* person = dynamic_cast<Person*>(dispatcher);
-    person->set_location(person->residence_location());
+  auto *person = dynamic_cast<Person *>(dispatcher);
+  person->set_location(person->residence_location());
 
 }

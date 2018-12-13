@@ -6,5 +6,5 @@
 #include <catch2/catch.hpp>
 
 TEST_CASE("Sample Test", "[sample]") {
-    REQUIRE(true);
+  REQUIRE(true);
 }

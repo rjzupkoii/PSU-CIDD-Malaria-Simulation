@@ -13,21 +13,21 @@
 #include "Therapies/Therapy.h"
 
 class MACTherapy : public Therapy {
-DISALLOW_COPY_AND_ASSIGN(MACTherapy)
+ DISALLOW_COPY_AND_ASSIGN(MACTherapy)
 
-VIRTUAL_PROPERTY_REF(std::vector<int>, therapy_ids)
+ VIRTUAL_PROPERTY_REF(std::vector<int>, therapy_ids)
 
-VIRTUAL_PROPERTY_REF(std::vector<int>, start_at_days)
+ VIRTUAL_PROPERTY_REF(std::vector<int>, start_at_days)
 
-public:
-    MACTherapy();
+ public:
+  MACTherapy();
 
-    //    MACTherapy(const MACTherapy& orig);
-    virtual ~MACTherapy();
+  //    MACTherapy(const MACTherapy& orig);
+  virtual ~MACTherapy();
 
-    void add_therapy_id(const int& therapy_id);
+  void add_therapy_id(const int &therapy_id);
 
-    void add_schedule(const int& start_at_day);
+  void add_schedule(const int &start_at_day);
 
 };
 

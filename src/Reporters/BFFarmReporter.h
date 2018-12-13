@@ -8,25 +8,24 @@
 #include "Reporter.h"
 
 class BFFarmReporter : public Reporter {
-DISALLOW_COPY_AND_ASSIGN(BFFarmReporter)
+ DISALLOW_COPY_AND_ASSIGN(BFFarmReporter)
 
-public:
-    BFFarmReporter();
+ public:
+  BFFarmReporter();
 
-    virtual ~BFFarmReporter();
+  virtual ~BFFarmReporter();
 
-    void initialize() override;
+  void initialize() override;
 
-    void before_run() override;
+  void before_run() override;
 
-    void after_run() override;
+  void after_run() override;
 
-    void begin_time_step() override;
+  void begin_time_step() override;
 
-    void monthly_report() override;
+  void monthly_report() override;
 
-    void outout_parameters();
+  void outout_parameters();
 };
-
 
 #endif //POMS_BFFARMREPORTER_H

@@ -15,7 +15,7 @@ Therapy::~Therapy() {
 }
 
 void Therapy::add_drug(int drug_id) {
-    drug_ids_.push_back(drug_id);
+  drug_ids_.push_back(drug_id);
 }
 
 

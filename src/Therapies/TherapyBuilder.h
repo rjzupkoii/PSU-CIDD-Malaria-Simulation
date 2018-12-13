@@ -19,17 +19,16 @@
 class Therapy;
 
 class TherapyBuilder {
-public:
-    TherapyBuilder();
+ public:
+  TherapyBuilder();
 
-    TherapyBuilder(const TherapyBuilder& orig) = default;
+  TherapyBuilder(const TherapyBuilder &orig) = default;
 
-    virtual ~TherapyBuilder();
+  virtual ~TherapyBuilder();
 
+  static Therapy *build(const YAML::Node &ns, const int &t_id);
 
-    static Therapy* build(const YAML::Node& ns, const int& t_id);
-
-private:
+ private:
 
 };
 

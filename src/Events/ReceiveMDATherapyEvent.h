@@ -19,26 +19,26 @@ class Person;
 class Therapy;
 
 class ReceiveMDATherapyEvent : public Event {
-DISALLOW_COPY_AND_ASSIGN(ReceiveMDATherapyEvent)
+ DISALLOW_COPY_AND_ASSIGN(ReceiveMDATherapyEvent)
 
-DISALLOW_MOVE(ReceiveMDATherapyEvent)
+ DISALLOW_MOVE(ReceiveMDATherapyEvent)
 
-POINTER_PROPERTY(Therapy, received_therapy)
+ POINTER_PROPERTY(Therapy, received_therapy)
 
-public:
-    ReceiveMDATherapyEvent();
+ public:
+  ReceiveMDATherapyEvent();
 
-    //    ReceiveMDADrugEvent(const ReceiveMDADrugEvent& orig);
-    virtual ~ReceiveMDATherapyEvent();
+  //    ReceiveMDADrugEvent(const ReceiveMDADrugEvent& orig);
+  virtual ~ReceiveMDATherapyEvent();
 
-    static void schedule_event(Scheduler* scheduler, Person* p, Therapy* therapy, const int& time);
+  static void schedule_event(Scheduler *scheduler, Person *p, Therapy *therapy, const int &time);
 
-    std::string name() override {
-        return "ReceiveMDADrugEvent";
-    }
+  std::string name() override {
+    return "ReceiveMDADrugEvent";
+  }
 
-private:
-    void execute() override;
+ private:
+  void execute() override;
 
 };
 

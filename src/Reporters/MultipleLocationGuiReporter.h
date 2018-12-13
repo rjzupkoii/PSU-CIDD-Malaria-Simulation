@@ -12,29 +12,27 @@
 #include "Core/PropertyMacro.h"
 
 class MultipleLocationGuiReporter : public GuiReporter {
-DISALLOW_COPY_AND_ASSIGN(MultipleLocationGuiReporter)
+ DISALLOW_COPY_AND_ASSIGN(MultipleLocationGuiReporter)
 
-public:
-    MultipleLocationGuiReporter();
+ public:
+  MultipleLocationGuiReporter();
 
-    //    MultipleLocationGuiReporter(const MultipleLocationGuiReporter& orig);
-    virtual ~MultipleLocationGuiReporter();
+  //    MultipleLocationGuiReporter(const MultipleLocationGuiReporter& orig);
+  virtual ~MultipleLocationGuiReporter();
 
+  virtual void initialize();
 
-    virtual void initialize();
+  virtual void before_run();
 
-    virtual void before_run();
+  virtual void after_run();
 
-    virtual void after_run();
+  virtual void begin_time_step();
 
-    virtual void begin_time_step();
+  virtual void monthly_report();
 
-    virtual void monthly_report();
+  void send_tme_chart_data(const int &location);
 
-
-    void send_tme_chart_data(const int& location);
-
-private:
+ private:
 
 };
 

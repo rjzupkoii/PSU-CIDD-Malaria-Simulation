@@ -6,23 +6,23 @@
 #include <string>
 
 class ChangeStrategyEvent : public Event {
-DISALLOW_COPY_AND_ASSIGN(ChangeStrategyEvent)
+ DISALLOW_COPY_AND_ASSIGN(ChangeStrategyEvent)
 
-DISALLOW_MOVE(ChangeStrategyEvent)
+ DISALLOW_MOVE(ChangeStrategyEvent)
 
-public:
-    int strategy_id{-1};
+ public:
+  int strategy_id{-1};
 
-    ChangeStrategyEvent(const int& at_time, const int& strategy_id);
+  ChangeStrategyEvent(const int &at_time, const int &strategy_id);
 
-    virtual ~ChangeStrategyEvent() = default;
+  virtual ~ChangeStrategyEvent() = default;
 
-    std::string name() override {
-        return "ChangeStrategyEvent";
-    }
+  std::string name() override {
+    return "ChangeStrategyEvent";
+  }
 
-private:
-    void execute() override;
+ private:
+  void execute() override;
 };
 
 #endif // CHANGESTRATEGYEVENT_H

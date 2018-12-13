@@ -6,20 +6,19 @@
 
 class ChangeTreatmentCoverageEvent : public Event {
 
-public:
-    ITreatmentCoverageModel* treatment_coverage_model;
+ public:
+  ITreatmentCoverageModel *treatment_coverage_model;
 
-    explicit ChangeTreatmentCoverageEvent(ITreatmentCoverageModel* tcm);
+  explicit ChangeTreatmentCoverageEvent(ITreatmentCoverageModel *tcm);
 
-    virtual ~ChangeTreatmentCoverageEvent();
+  virtual ~ChangeTreatmentCoverageEvent();
 
+  std::string name() override {
+    return "ChangeTreatmentCoverageEvent";
+  }
 
-    std::string name() override {
-        return "ChangeTreatmentCoverageEvent";
-    }
-
-private:
-    void execute() override;
+ private:
+  void execute() override;
 };
 
 #endif // CHANGETREATMENTCOVERAGEEVENT_H

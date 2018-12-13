@@ -12,14 +12,14 @@
 #include "IndexHandler.h"
 
 class PersonIndexAllHandler : public IndexHandler {
-DISALLOW_COPY_AND_ASSIGN(PersonIndexAllHandler)
+ DISALLOW_COPY_AND_ASSIGN(PersonIndexAllHandler)
 
-public:
-    PersonIndexAllHandler();
+ public:
+  PersonIndexAllHandler();
 
-    virtual ~PersonIndexAllHandler();
+  virtual ~PersonIndexAllHandler();
 
-private:
+ private:
 
 };
 

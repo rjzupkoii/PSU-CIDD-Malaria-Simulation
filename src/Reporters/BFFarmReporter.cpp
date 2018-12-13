@@ -11,7 +11,6 @@
 
 BFFarmReporter::BFFarmReporter() {
 
-
 }
 
 BFFarmReporter::~BFFarmReporter() {
@@ -43,11 +42,9 @@ void BFFarmReporter::after_run() {
 //    }
 //    std::cout << std::endl;
 
-    outout_parameters();
+  outout_parameters();
 
-
-    std::cout << std::endl;
-
+  std::cout << std::endl;
 
 }
 

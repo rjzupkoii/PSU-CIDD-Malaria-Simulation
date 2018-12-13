@@ -16,23 +16,23 @@ class Scheduler;
 class Person;
 
 class SwitchImmuneComponentEvent : public Event {
-OBJECTPOOL(SwitchImmuneComponentEvent)
+ OBJECTPOOL(SwitchImmuneComponentEvent)
 
-public:
-    SwitchImmuneComponentEvent();
+ public:
+  SwitchImmuneComponentEvent();
 
-    SwitchImmuneComponentEvent(const SwitchImmuneComponentEvent& orig);
+  SwitchImmuneComponentEvent(const SwitchImmuneComponentEvent &orig);
 
-    virtual ~SwitchImmuneComponentEvent();
+  virtual ~SwitchImmuneComponentEvent();
 
-    static void schedule_for_switch_immune_component_event(Scheduler* scheduler, Person* p, const int& time);
+  static void schedule_for_switch_immune_component_event(Scheduler *scheduler, Person *p, const int &time);
 
-    virtual std::string name() {
-        return "SwitchImmuneComponentEvent";
-    }
+  virtual std::string name() {
+    return "SwitchImmuneComponentEvent";
+  }
 
-private:
-    virtual void execute();
+ private:
+  virtual void execute();
 };
 
 #endif    /* SWITCHIMMUNECOMPONENTEVENT_H */

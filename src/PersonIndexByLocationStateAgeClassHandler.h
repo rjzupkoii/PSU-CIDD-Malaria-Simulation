@@ -12,15 +12,15 @@
 #include "IndexHandler.h"
 
 class PersonIndexByLocationStateAgeClassHandler : public IndexHandler {
-DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationStateAgeClassHandler)
+ DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationStateAgeClassHandler)
 
-public:
-    PersonIndexByLocationStateAgeClassHandler();
+ public:
+  PersonIndexByLocationStateAgeClassHandler();
 
 //    PersonIndexByLocationStateAgeClassHandler(const PersonIndexByLocationStateAgeClassHandler& orig);
-    virtual ~PersonIndexByLocationStateAgeClassHandler();
+  virtual ~PersonIndexByLocationStateAgeClassHandler();
 
-private:
+ private:
 
 };
 

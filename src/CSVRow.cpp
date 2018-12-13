@@ -7,10 +7,9 @@
 
 #include "CSVRow.h"
 
-
 CSVRow::CSVRow() = default;
 
-CSVRow::CSVRow(const CSVRow& orig) {
+CSVRow::CSVRow(const CSVRow &orig) {
 }
 
 CSVRow::~CSVRow() = default;

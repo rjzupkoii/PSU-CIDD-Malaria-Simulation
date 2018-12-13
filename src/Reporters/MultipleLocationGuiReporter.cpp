@@ -15,15 +15,15 @@ MultipleLocationGuiReporter::MultipleLocationGuiReporter() = default;
 MultipleLocationGuiReporter::~MultipleLocationGuiReporter() = default;
 
 void MultipleLocationGuiReporter::initialize() {
-    GuiReporter::initialize();
+  GuiReporter::initialize();
 }
 
 void MultipleLocationGuiReporter::before_run() {
-    std::cout << "version" << SEPARATOR << "3.0" << std::endl;
-    std::cout << "time" << SEPARATOR << Model::CONFIG->total_time() << SEPARATOR << Model::CONFIG->update_frequency()
-              << std::endl;
+  std::cout << "version" << SEPARATOR << "3.0" << std::endl;
+  std::cout << "time" << SEPARATOR << Model::CONFIG->total_time() << SEPARATOR << Model::CONFIG->update_frequency()
+            << std::endl;
 
-    // TODO: rewrite using fmt
+  // TODO: rewrite using fmt
 //    for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
 //        //create first line chart
 //        CreateNewChart("LineChart", boost::str(boost::format("%1%%2%") % prevalanceChart % location),
@@ -74,16 +74,16 @@ void MultipleLocationGuiReporter::begin_time_step() {
 
 void MultipleLocationGuiReporter::monthly_report() {
 
-    if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
-        for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-            send_tme_chart_data(location);
-            send_mono_resistance_chart_data(location);
-        }
+  if (Model::SCHEDULER->current_time()%Model::CONFIG->report_frequency()==0) {
+    for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+      send_tme_chart_data(location);
+      send_mono_resistance_chart_data(location);
     }
+  }
 }
 
-void MultipleLocationGuiReporter::send_tme_chart_data(const int& location) {
-    // TODO: rewrite using fmt
+void MultipleLocationGuiReporter::send_tme_chart_data(const int &location) {
+  // TODO: rewrite using fmt
 //  std::string chart_name = boost::str(boost::format("%1%%2%") % prevalanceChart % location);
 //
 //  double qPCR = (Model::DATA_COLLECTOR->popsize_by_location_hoststate()[location][Person::ASYMPTOMATIC] +

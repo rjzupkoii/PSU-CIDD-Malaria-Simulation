@@ -8,11 +8,11 @@
 using namespace fakeit;
 
 struct SomeInterface {
-    virtual ~SomeInterface() = default;
+  virtual ~SomeInterface() = default;
 
-    virtual int foo(int) = 0;
+  virtual int foo(int) = 0;
 
-    virtual int bar(std::string) = 0;
+  virtual int bar(std::string) = 0;
 };
 
 TEST_CASE("FAKEIT test", "[fakeit]") {
@@ -23,7 +23,7 @@ Mock<SomeInterface> mock;
 When(Method(mock, foo)).Return(1); // Method mock.foo will return 1 once.
 
 // Fetch the mock instance.
-auto& i = mock.get();
+auto &i = mock.get();
 
 // Will print "1".
 std::cout << i.foo(0);

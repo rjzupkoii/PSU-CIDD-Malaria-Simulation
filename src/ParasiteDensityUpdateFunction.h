@@ -13,17 +13,17 @@
 class ClonalParasitePopulation;
 
 class ParasiteDensityUpdateFunction {
-DISALLOW_COPY_AND_ASSIGN(ParasiteDensityUpdateFunction)
+ DISALLOW_COPY_AND_ASSIGN(ParasiteDensityUpdateFunction)
 
-public:
-    ParasiteDensityUpdateFunction();
+ public:
+  ParasiteDensityUpdateFunction();
 
-    //    ParasiteUpdateFunction(const ParasiteUpdateFunction& orig);
-    virtual ~ParasiteDensityUpdateFunction();
+  //    ParasiteUpdateFunction(const ParasiteUpdateFunction& orig);
+  virtual ~ParasiteDensityUpdateFunction();
 
-    virtual double get_current_parasite_density(ClonalParasitePopulation* parasite, int duration) = 0;
+  virtual double get_current_parasite_density(ClonalParasitePopulation *parasite, int duration) = 0;
 
-private:
+ private:
 
 };
 

@@ -6,8 +6,8 @@
 #include "ITreatmentCoverageModel.h"
 
 class SteadyTCM : public ITreatmentCoverageModel {
-public:
-    void monthly_update() override;
+ public:
+  void monthly_update() override;
 };
 
 #endif // STEADYICM_H

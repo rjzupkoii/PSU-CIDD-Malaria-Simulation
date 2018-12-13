@@ -10,33 +10,33 @@
 #include "MultinomialDistributionGenerator.h"
 
 // TODO: writing test
-int MultinomialDistributionGenerator::draw_random_level(Random* random) {
-    if (data.empty()) {
-        allocate(random);
-    }
+int MultinomialDistributionGenerator::draw_random_level(Random *random) {
+  if (data.empty()) {
+    allocate(random);
+  }
 
-    const int temp = data.back();
-    data.pop_back();
-    return temp;
+  const int temp = data.back();
+  data.pop_back();
+  return temp;
 }
 
-void MultinomialDistributionGenerator::allocate(Random* random) {
-    const auto chunk_size = 100000;
+void MultinomialDistributionGenerator::allocate(Random *random) {
+  const auto chunk_size = 100000;
 
-    const int size = level_density.size();
-    UIntVector n(size);
-    random->random_multinomial(size, chunk_size, &level_density.at(0), &n[0]);
-    //
-    //    for(int i :  n){
-    //        std::cout << i << "\t";
-    //    }
-    //    std::cout<< std::endl;
-    data.clear();
-    for (auto i = 0; i < size; i++) {
-        for (auto j = 0u; j < n[i]; j++) {
-            data.push_back(i);
-        }
+  const int size = level_density.size();
+  UIntVector n(size);
+  random->random_multinomial(size, chunk_size, &level_density.at(0), &n[0]);
+  //
+  //    for(int i :  n){
+  //        std::cout << i << "\t";
+  //    }
+  //    std::cout<< std::endl;
+  data.clear();
+  for (auto i = 0; i < size; i++) {
+    for (auto j = 0u; j < n[i]; j++) {
+      data.push_back(i);
     }
-    assert(data_.size() == chunkSize);
-    random->random_shuffle(&data[0], data.size(), sizeof(int));
+  }
+  assert(data_.size()==chunkSize);
+  random->random_shuffle(&data[0], data.size(), sizeof(int));
 }

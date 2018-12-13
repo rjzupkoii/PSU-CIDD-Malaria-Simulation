@@ -13,27 +13,26 @@
 #include "Core/TypeDef.h"
 
 class PersonIndexAll : public PersonIndex {
-DISALLOW_COPY_AND_ASSIGN(PersonIndexAll)
+ DISALLOW_COPY_AND_ASSIGN(PersonIndexAll)
 
-PROPERTY_REF(PersonPtrVector, vPerson)
+ PROPERTY_REF(PersonPtrVector, vPerson)
 
-public:
-    PersonIndexAll();
+ public:
+  PersonIndexAll();
 
-    virtual ~PersonIndexAll();
+  virtual ~PersonIndexAll();
 
-    virtual void add(Person* p);
+  virtual void add(Person *p);
 
-    virtual void remove(Person* p);
+  virtual void remove(Person *p);
 
-    virtual int size() const;
+  virtual int size() const;
 
-    virtual void update();
+  virtual void update();
 
-    virtual void notify_change(Person* p, const Person::Property& property, const void* oldValue, const void* newValue);
+  virtual void notify_change(Person *p, const Person::Property &property, const void *oldValue, const void *newValue);
 
-
-private:
+ private:
 
 };
 

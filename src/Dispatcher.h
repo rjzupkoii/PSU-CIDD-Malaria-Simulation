@@ -14,25 +14,25 @@
 class Event;
 
 class Dispatcher {
-DISALLOW_COPY_AND_ASSIGN(Dispatcher)
+ DISALLOW_COPY_AND_ASSIGN(Dispatcher)
 
-POINTER_PROPERTY(EventPtrVector, events)
+ POINTER_PROPERTY(EventPtrVector, events)
 
-public:
-    Dispatcher();
+ public:
+  Dispatcher();
 
-    //    Dispatcher(const Dispatcher& orig);
-    virtual ~Dispatcher();
+  //    Dispatcher(const Dispatcher& orig);
+  virtual ~Dispatcher();
 
-    virtual void init();
+  virtual void init();
 
-    virtual void add(Event* event);
+  virtual void add(Event *event);
 
-    virtual void remove(Event* event);
+  virtual void remove(Event *event);
 
-    virtual void clear_events();
+  virtual void clear_events();
 
-    virtual void update();
+  virtual void update();
 
 };
 

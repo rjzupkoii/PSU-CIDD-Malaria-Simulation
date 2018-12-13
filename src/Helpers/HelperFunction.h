@@ -8,6 +8,5 @@
 #ifndef HELPERFUNCTION_H
 #define    HELPERFUNCTION_H
 
-
 #endif    /* HELPERFUNCTION_H */
 

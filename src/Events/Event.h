@@ -17,28 +17,27 @@ class Dispatcher;
 class Scheduler;
 
 class Event : public IndexHandler {
-DISALLOW_COPY_AND_ASSIGN(Event)
+ DISALLOW_COPY_AND_ASSIGN(Event)
 
-DISALLOW_MOVE(Event)
+ DISALLOW_MOVE(Event)
 
-public:
-    Scheduler* scheduler{nullptr};
-    Dispatcher* dispatcher{nullptr};
-    bool executable{false};
-    int time{-1};
+ public:
+  Scheduler *scheduler{nullptr};
+  Dispatcher *dispatcher{nullptr};
+  bool executable{false};
+  int time{-1};
 
-    Event();
+  Event();
 
-    //    Event(const Event& orig);
-    virtual ~Event();
+  //    Event(const Event& orig);
+  virtual ~Event();
 
-    void perform_execute();
+  void perform_execute();
 
-    virtual std::string name() = 0;
+  virtual std::string name() = 0;
 
-private:
-    virtual void execute() = 0;
-
+ private:
+  virtual void execute() = 0;
 
 };
 

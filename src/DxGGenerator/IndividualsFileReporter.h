@@ -14,30 +14,30 @@
 #include "Reporters/Reporter.h"
 
 class IndividualsFileReporter : public Reporter {
-DISALLOW_COPY_AND_ASSIGN(IndividualsFileReporter)
+ DISALLOW_COPY_AND_ASSIGN(IndividualsFileReporter)
 
-    std::fstream fs_;
-    std::string file_name_;
+  std::fstream fs_;
+  std::string file_name_;
 
-public:
-    IndividualsFileReporter(const std::string& file_name);
+ public:
+  IndividualsFileReporter(const std::string &file_name);
 
-    //    IndividualsFileReporter(const IndividualsFileReporter& orig);
-    virtual ~IndividualsFileReporter();
+  //    IndividualsFileReporter(const IndividualsFileReporter& orig);
+  virtual ~IndividualsFileReporter();
 
-private:
-    void initialize() override;
+ private:
+  void initialize() override;
 
-    void before_run() override;
+  void before_run() override;
 
-    void after_run() override;
+  void after_run() override;
 
-    void begin_time_step() override;
+  void begin_time_step() override;
 
-    virtual void after_time_step();
+  virtual void after_time_step();
 
-public:
-    void monthly_report() override;
+ public:
+  void monthly_report() override;
 };
 
 #endif    /* INDIVIDUALSFILEREPORTER_H */

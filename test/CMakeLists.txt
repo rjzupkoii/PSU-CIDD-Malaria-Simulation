@@ -13,32 +13,11 @@ set(TEST_SRC_FILES
     Core/Config/ConfigTest.cpp
     )
 
-file(GLOB SRC_FILES
-    ${PROJECT_SOURCE_DIR}/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Reporters/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/MDC/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Spatial/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Core/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Core/Config/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Core/Index/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Helpers/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Therapies/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Strategies/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Parasites/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Events/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Events/Population/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/Malaria/*.cpp)
-
-set(SRC_FILES ${SRC_FILES}
-    ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h
-    ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc)
-
-list(REMOVE_ITEM SRC_FILES ${PROJECT_SOURCE_DIR}/src/main.cpp)
-
-add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} ${SRC_FILES})
-add_dependencies(${PROJECT_TEST_NAME} date)
+add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
+add_dependencies(${PROJECT_TEST_NAME} MaSimCore date)
 
 target_link_libraries(${PROJECT_TEST_NAME}
+    MaSimCore
     yaml-cpp
     fmt::fmt fmt::fmt-header-only
     GSL::gsl GSL::gslcblas

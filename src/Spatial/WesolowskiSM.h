@@ -11,26 +11,26 @@
 
 namespace Spatial {
 
-    class WesolowskiSM : public SpatialModel {
-    DISALLOW_COPY_AND_ASSIGN(WesolowskiSM)
+class WesolowskiSM : public SpatialModel {
+ DISALLOW_COPY_AND_ASSIGN(WesolowskiSM)
 
-    VIRTUAL_PROPERTY_REF(double, kappa)
+ VIRTUAL_PROPERTY_REF(double, kappa)
 
-    VIRTUAL_PROPERTY_REF(double, alpha)
+ VIRTUAL_PROPERTY_REF(double, alpha)
 
-    VIRTUAL_PROPERTY_REF(double, beta)
+ VIRTUAL_PROPERTY_REF(double, beta)
 
-    VIRTUAL_PROPERTY_REF(double, gamma)
+ VIRTUAL_PROPERTY_REF(double, gamma)
 
-    public:
-        WesolowskiSM(const YAML::Node& node);
+ public:
+  WesolowskiSM(const YAML::Node &node);
 
-        virtual ~WesolowskiSM();
+  virtual ~WesolowskiSM();
 
-        DoubleVector get_v_relative_outmovement_to_destination(const int& from_location, const int& number_of_locations,
-                                                               const DoubleVector& relative_distance_vector,
-                                                               const IntVector& v_number_of_residents_by_location) const override;
-    };
+  DoubleVector get_v_relative_outmovement_to_destination(const int &from_location, const int &number_of_locations,
+                                                         const DoubleVector &relative_distance_vector,
+                                                         const IntVector &v_number_of_residents_by_location) const override;
+};
 }
 
 #endif //SPATIAL_WESOLOWSKISM_H

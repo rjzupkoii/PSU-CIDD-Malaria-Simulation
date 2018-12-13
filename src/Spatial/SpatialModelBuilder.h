@@ -10,17 +10,17 @@
 #include "yaml-cpp/yaml.h"
 
 namespace Spatial {
-    class SpatialModelBuilder {
-    DISALLOW_COPY_AND_ASSIGN(SpatialModelBuilder)
+class SpatialModelBuilder {
+ DISALLOW_COPY_AND_ASSIGN(SpatialModelBuilder)
 
-    public:
-        SpatialModelBuilder();
+ public:
+  SpatialModelBuilder();
 
-        virtual ~SpatialModelBuilder();
+  virtual ~SpatialModelBuilder();
 
-        static SpatialModel* Build(const std::string& name, const YAML::Node& node);
+  static SpatialModel *Build(const std::string &name, const YAML::Node &node);
 
-    };
+};
 }
 
 #endif //SPATIAL_SPATIALMODELBUILDER_H

@@ -10,25 +10,25 @@
 #include "yaml-cpp/yaml.h"
 
 namespace Spatial {
-    class BarabasiSM : public SpatialModel {
-    DISALLOW_COPY_AND_ASSIGN(BarabasiSM)
+class BarabasiSM : public SpatialModel {
+ DISALLOW_COPY_AND_ASSIGN(BarabasiSM)
 
-    VIRTUAL_PROPERTY_REF(double, r_g_0)
+ VIRTUAL_PROPERTY_REF(double, r_g_0)
 
-    VIRTUAL_PROPERTY_REF(double, beta_r)
+ VIRTUAL_PROPERTY_REF(double, beta_r)
 
-    VIRTUAL_PROPERTY_REF(double, kappa)
+ VIRTUAL_PROPERTY_REF(double, kappa)
 
-    public:
-        BarabasiSM(const YAML::Node& node);
+ public:
+  BarabasiSM(const YAML::Node &node);
 
-        virtual ~ BarabasiSM();
+  virtual ~ BarabasiSM();
 
-        DoubleVector get_v_relative_outmovement_to_destination(const int& from_location, const int& number_of_locations,
-                                                               const DoubleVector& relative_distance_vector,
-                                                               const IntVector& v_number_of_residents_by_location) const override;
+  DoubleVector get_v_relative_outmovement_to_destination(const int &from_location, const int &number_of_locations,
+                                                         const DoubleVector &relative_distance_vector,
+                                                         const IntVector &v_number_of_residents_by_location) const override;
 
-    };
+};
 }
 
 #endif //SPATIAL_BARABASISM_H

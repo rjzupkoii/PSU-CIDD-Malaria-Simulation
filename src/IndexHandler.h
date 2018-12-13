@@ -11,14 +11,14 @@
 #include "Core/PropertyMacro.h"
 
 class IndexHandler {
-DISALLOW_COPY_AND_ASSIGN(IndexHandler)
+ DISALLOW_COPY_AND_ASSIGN(IndexHandler)
 
-PROPERTY_REF(int, index)
+ PROPERTY_REF(int, index)
 
-public:
-    IndexHandler();
+ public:
+  IndexHandler();
 
-    virtual ~IndexHandler();
+  virtual ~IndexHandler();
 
 };
 

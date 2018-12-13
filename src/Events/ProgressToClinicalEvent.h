@@ -20,30 +20,30 @@ class Scheduler;
 class ClonalParasitePopulation;
 
 class ProgressToClinicalEvent : public Event {
-OBJECTPOOL(ProgressToClinicalEvent)
+ OBJECTPOOL(ProgressToClinicalEvent)
 
-DISALLOW_COPY_AND_ASSIGN(ProgressToClinicalEvent)
+ DISALLOW_COPY_AND_ASSIGN(ProgressToClinicalEvent)
 
-DISALLOW_MOVE(ProgressToClinicalEvent)
+ DISALLOW_MOVE(ProgressToClinicalEvent)
 
-POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
+ POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
 
-public:
-    ProgressToClinicalEvent();
+ public:
+  ProgressToClinicalEvent();
 
-    virtual ~ProgressToClinicalEvent();
+  virtual ~ProgressToClinicalEvent();
 
-    static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite,
-                               const int& time);
+  static void schedule_event(Scheduler *scheduler, Person *p, ClonalParasitePopulation *clinical_caused_parasite,
+                             const int &time);
 
-    static void receive_no_treatment_routine(Person* p);
+  static void receive_no_treatment_routine(Person *p);
 
-    std::string name() override {
-        return "ProgressToClinicalEvent";
-    }
+  std::string name() override {
+    return "ProgressToClinicalEvent";
+  }
 
-private:
-    void execute() override;
+ private:
+  void execute() override;
 };
 
 #endif    /* PROGRESSTOCLINICALEVENT_H */

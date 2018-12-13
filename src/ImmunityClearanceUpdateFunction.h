@@ -14,17 +14,17 @@
 class Model;
 
 class ImmunityClearanceUpdateFunction : public ParasiteDensityUpdateFunction {
-DISALLOW_COPY_AND_ASSIGN(ImmunityClearanceUpdateFunction)
+ DISALLOW_COPY_AND_ASSIGN(ImmunityClearanceUpdateFunction)
 
-POINTER_PROPERTY(Model, model)
+ POINTER_PROPERTY(Model, model)
 
-public:
-    explicit ImmunityClearanceUpdateFunction(Model* model = nullptr);
+ public:
+  explicit ImmunityClearanceUpdateFunction(Model *model = nullptr);
 
-    //    ImmunityClearanceUpdateFunction(const ImmunityClearanceUpdateFunction& orig);
-    virtual ~ImmunityClearanceUpdateFunction();
+  //    ImmunityClearanceUpdateFunction(const ImmunityClearanceUpdateFunction& orig);
+  virtual ~ImmunityClearanceUpdateFunction();
 
-    double get_current_parasite_density(ClonalParasitePopulation* parasite, int duration) override;
+  double get_current_parasite_density(ClonalParasitePopulation *parasite, int duration) override;
 
 };
 

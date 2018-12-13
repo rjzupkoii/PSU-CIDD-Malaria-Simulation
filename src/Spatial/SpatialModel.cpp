@@ -5,11 +5,11 @@
 #include "SpatialModel.h"
 
 namespace Spatial {
-    SpatialModel::SpatialModel() {
+SpatialModel::SpatialModel() {
 
-    }
+}
 
-    SpatialModel::~SpatialModel() {
+SpatialModel::~SpatialModel() {
 
-    }
+}
 }

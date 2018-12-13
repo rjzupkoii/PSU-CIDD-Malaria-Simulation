@@ -19,30 +19,30 @@ class Scheduler;
 class Person;
 
 class TestTreatmentFailureEvent : public Event {
-DISALLOW_COPY_AND_ASSIGN(TestTreatmentFailureEvent)
+ DISALLOW_COPY_AND_ASSIGN(TestTreatmentFailureEvent)
 
-OBJECTPOOL(TestTreatmentFailureEvent)
+ OBJECTPOOL(TestTreatmentFailureEvent)
 
-POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
-    //    PROPERTY_REF(bool, isResistance);
-PROPERTY_REF(int, therapyId)
+ POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
+  //    PROPERTY_REF(bool, isResistance);
+ PROPERTY_REF(int, therapyId)
 
-public:
-    TestTreatmentFailureEvent();
+ public:
+  TestTreatmentFailureEvent();
 
-    //    TestTreatmentFailureEvent(const TestTreatmentFailureEvent& orig);
-    virtual ~TestTreatmentFailureEvent();
+  //    TestTreatmentFailureEvent(const TestTreatmentFailureEvent& orig);
+  virtual ~TestTreatmentFailureEvent();
 
-    static void
-    schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite, const int& time,
-                   const int& t_id = 0);
+  static void
+  schedule_event(Scheduler *scheduler, Person *p, ClonalParasitePopulation *clinical_caused_parasite, const int &time,
+                 const int &t_id = 0);
 
-    std::string name() override {
-        return "TestTreatmentFailureEvent";
-    }
+  std::string name() override {
+    return "TestTreatmentFailureEvent";
+  }
 
-private:
-    void execute() override;
+ private:
+  void execute() override;
 
 };
 

@@ -14,26 +14,26 @@
 class DrugType;
 
 class Therapy {
-DISALLOW_COPY_AND_ASSIGN(Therapy)
+ DISALLOW_COPY_AND_ASSIGN(Therapy)
 
-VIRTUAL_PROPERTY_REF(int, id)
+ VIRTUAL_PROPERTY_REF(int, id)
 
-VIRTUAL_PROPERTY_REF(int, testing_day)
+ VIRTUAL_PROPERTY_REF(int, testing_day)
 
-VIRTUAL_PROPERTY_REF(std::vector<int>, drug_ids);
+ VIRTUAL_PROPERTY_REF(std::vector<int>, drug_ids);
 
-public:
-    Therapy();
+ public:
+  Therapy();
 
-    //    Therapy(const Therapy& orig);
-    virtual ~Therapy();
+  //    Therapy(const Therapy& orig);
+  virtual ~Therapy();
 
-    void add_drug(int drug_id);
+  void add_drug(int drug_id);
 
 
 //    int get_therapy_duration(int dosing_day);
 
-private:
+ private:
 
 };
 

@@ -13,12 +13,12 @@ public:\
   }
 
 class Constants {
-MY_CONSTANT(int, DAYS_IN_YEAR, 365)
+ MY_CONSTANT(int, DAYS_IN_YEAR, 365)
 
-    //  static std::chrono::hours const &ONE_DAY() {
-    //    static std::chrono::hours one_day_{24};
-    //    return one_day_;
-    //  }
+  //  static std::chrono::hours const &ONE_DAY() {
+  //    static std::chrono::hours one_day_{24};
+  //    return one_day_;
+  //  }
 };
 
 #endif //PCMS_CONSTANTS_H

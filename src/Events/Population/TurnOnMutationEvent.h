@@ -6,21 +6,21 @@
 #include <string>
 
 class TurnOnMutationEvent : public Event {
-DISALLOW_COPY_AND_ASSIGN(TurnOnMutationEvent)
+ DISALLOW_COPY_AND_ASSIGN(TurnOnMutationEvent)
 
-DISALLOW_MOVE(TurnOnMutationEvent)
+ DISALLOW_MOVE(TurnOnMutationEvent)
 
-public:
-    explicit TurnOnMutationEvent(const int& at_time);
+ public:
+  explicit TurnOnMutationEvent(const int &at_time);
 
-    virtual ~TurnOnMutationEvent() = default;
+  virtual ~TurnOnMutationEvent() = default;
 
-    std::string name() override {
-        return "TurnOnMutationEvent";
-    }
+  std::string name() override {
+    return "TurnOnMutationEvent";
+  }
 
-private:
-    void execute() override;
+ private:
+  void execute() override;
 };
 
 #endif // TURNONMUTATIONEVENT_H

@@ -19,28 +19,27 @@ class Scheduler;
 class Person;
 
 class EndClinicalDueToDrugResistanceEvent : public Event {
-DISALLOW_COPY_AND_ASSIGN(EndClinicalDueToDrugResistanceEvent)
+ DISALLOW_COPY_AND_ASSIGN(EndClinicalDueToDrugResistanceEvent)
 
-OBJECTPOOL(EndClinicalDueToDrugResistanceEvent)
+ OBJECTPOOL(EndClinicalDueToDrugResistanceEvent)
 
-POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
+ POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
 
-public:
-    EndClinicalDueToDrugResistanceEvent();
+ public:
+  EndClinicalDueToDrugResistanceEvent();
 
-    //    EndClinicalDueToDrugResistanceEvent(const EndClinicalDueToDrugResistanceEvent& orig);
-    virtual ~EndClinicalDueToDrugResistanceEvent();
+  //    EndClinicalDueToDrugResistanceEvent(const EndClinicalDueToDrugResistanceEvent& orig);
+  virtual ~EndClinicalDueToDrugResistanceEvent();
 
-    static void schedule_event(Scheduler* scheduler, Person* p, ClonalParasitePopulation* clinical_caused_parasite,
-                               const int& time);
+  static void schedule_event(Scheduler *scheduler, Person *p, ClonalParasitePopulation *clinical_caused_parasite,
+                             const int &time);
 
-    std::string name() override {
-        return "EndClinicalDueToDrugResistanceEvent";
-    }
+  std::string name() override {
+    return "EndClinicalDueToDrugResistanceEvent";
+  }
 
-private:
-    void execute() override;
-
+ private:
+  void execute() override;
 
 };
 

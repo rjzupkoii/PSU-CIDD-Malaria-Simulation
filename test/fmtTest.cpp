@@ -3,6 +3,6 @@
 //
 #include <fmt/printf.h>
 
-int main(int, char* []) {
-    fmt::printf("Hello, %s!", "world");
+int main(int, char *[]) {
+  fmt::printf("Hello, %s!", "world");
 }
