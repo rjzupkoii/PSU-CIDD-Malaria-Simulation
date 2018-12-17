@@ -9,9 +9,10 @@ set(SRC_FILES ${SRC_FILES}
     ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc)
 
 add_library(MaSimCore ${SRC_FILES})
+add_dependencies(MaSimCore date args)
+
 
 add_executable(MaSim MaSim/main.cpp)
-
 add_dependencies(MaSim MaSimCore date args)
 
 target_link_libraries(MaSim

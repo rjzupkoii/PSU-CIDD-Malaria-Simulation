@@ -1,6 +1,10 @@
 TODO:
   - Clean up reporter
-  
+
+  - Count # new infections every day / month.
+  -
+
+
 Someday/maybe
   - report to binary file to save space
 
@@ -8,7 +12,6 @@ Someday/maybe
   
   - remove affecting allele
   - Remove resist_to function ???
-  - build Core library
   - Rework on Model Data Collector
 
   - New Indexer
