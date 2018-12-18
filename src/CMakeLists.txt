@@ -8,7 +8,7 @@ set(SRC_FILES ${SRC_FILES}
     ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h
     ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc)
 
-add_library(MaSimCore ${SRC_FILES})
+add_library(MaSimCore STATIC ${SRC_FILES})
 add_dependencies(MaSimCore date args)
 
 
