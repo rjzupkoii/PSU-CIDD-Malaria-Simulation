@@ -14,6 +14,9 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS_DEBUG "-DNOMINMAX ${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif ()
 
+#if(UNIX)
+#    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+#endif()
 
 set(EXT_PROJECTS_DIR ${PROJECT_SOURCE_DIR}/ext)
 
@@ -22,14 +25,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 #${COMMON_INCLUDES}
 #include dependent libs
-
 find_package(GSL REQUIRED)
-if (GSL_FOUND)
-    #MESSAGE(${GSL_LIBRARIES})
-    include_directories(${GSL_INCLUDE_DIRS})
-endif ()
-
-set(YAMLCPP_STATIC_LIBRARY TRUE)
 find_package(yaml-cpp CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
