@@ -26,6 +26,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 #${COMMON_INCLUDES}
 #include dependent libs
 find_package(GSL REQUIRED)
+set(YAMLCPP_STATIC_LIBRARY TRUE)
 find_package(yaml-cpp CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
