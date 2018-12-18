@@ -415,7 +415,7 @@ strategy_db::~strategy_db() {
 IStrategy *read_strategy(const YAML::Node &n, const int &strategy_id, Config *config) {
   const auto s_id = NumberHelpers::number_to_string<int>(strategy_id);
   auto *result = StrategyBuilder::build(n[s_id], strategy_id, config);
-  //    std::cout << result->to_string() << std::endl;
+      std::cout << result->to_string() << std::endl;
   return result;
 }
 
