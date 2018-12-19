@@ -603,7 +603,7 @@ void Population::perform_circulation_event() {
     if (number_of_circulating_from_this_location==0) continue;
 
     DoubleVector v_relative_outmovement_to_destination(Model::CONFIG->number_of_locations(), 0);
-    v_relative_outmovement_to_destination = Model::CONFIG->spatial_model()->get_v_relative_outmovement_to_destination(
+    v_relative_outmovement_to_destination = Model::CONFIG->spatial_model()->get_v_relative_out_movement_to_destination(
         from_location, Model::CONFIG->number_of_locations(),
         Model::CONFIG->spatial_distance_matrix()[from_location],
         v_number_of_residents_by_location);

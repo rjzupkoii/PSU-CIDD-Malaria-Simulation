@@ -56,7 +56,7 @@ class seasonal_info : public IConfigItem {
 
  DISALLOW_MOVE(seasonal_info)
 
- protected:
+ public:
   SeasonalInfo value_{};
  public:
   //constructor
@@ -86,7 +86,7 @@ class spatial_model : public IConfigItem {
 
  DISALLOW_MOVE(spatial_model)
 
- protected:
+ public:
   Spatial::SpatialModel *value_{nullptr};
  public:
   //constructor
@@ -109,7 +109,7 @@ class immune_system_information : public IConfigItem {
 
  DISALLOW_MOVE(immune_system_information)
 
- protected:
+ public:
   ImmuneSystemInformation value_;
  public:
   //constructor
@@ -133,7 +133,7 @@ class genotype_db : public IConfigItem {
 
  DISALLOW_MOVE(genotype_db)
 
- protected:
+ public:
   GenotypeDatabase *value_;
  public:
   //constructor
@@ -164,7 +164,7 @@ class drug_db : public IConfigItem {
 
  DISALLOW_MOVE(drug_db)
 
- protected:
+ public:
   DrugDatabase *value_;
  public:
   //constructor
@@ -188,7 +188,7 @@ class EC50_power_n_table : public IConfigItem {
 
  DISALLOW_MOVE(EC50_power_n_table)
 
- protected:
+ public:
   DoubleVector2 value_;
  public:
   //constructor
@@ -213,7 +213,7 @@ class circulation_info : public IConfigItem {
 
  DISALLOW_MOVE(circulation_info)
 
- protected:
+ public:
   RelativeMovingInformation value_;
  public:
   //constructor
@@ -237,7 +237,7 @@ class relative_bitting_info : public IConfigItem {
 
  DISALLOW_MOVE(relative_bitting_info)
 
- protected:
+ public:
   RelativeBittingInformation value_;
  public:
   //constructor
@@ -261,7 +261,7 @@ class therapy_db : public IConfigItem {
 
  DISALLOW_MOVE(therapy_db)
 
- protected:
+ public:
   TherapyPtrVector value_;
  public:
   //constructor
@@ -286,7 +286,7 @@ class strategy_db : public IConfigItem {
 
  DISALLOW_MOVE(strategy_db)
 
- protected:
+ public:
   StrategyPtrVector value_;
  public:
   //constructor
@@ -311,7 +311,7 @@ class initial_parasite_info : public IConfigItem {
 
  DISALLOW_MOVE(initial_parasite_info)
 
- protected:
+ public:
   std::vector<InitialParasiteInfo> value_;
  public:
   //constructor
@@ -335,7 +335,7 @@ class bitting_level_generator : public IConfigItem {
 
  DISALLOW_MOVE(bitting_level_generator)
 
- protected:
+ public:
   MultinomialDistributionGenerator value_;
  public:
   //constructor
@@ -358,7 +358,7 @@ class moving_level_generator : public IConfigItem {
 
  DISALLOW_MOVE(moving_level_generator)
 
- protected:
+ public:
   MultinomialDistributionGenerator value_;
  public:
   //constructor
@@ -381,7 +381,7 @@ class preconfig_population_events : public IConfigItem {
 
  DISALLOW_MOVE(preconfig_population_events)
 
- protected:
+ public:
   std::vector<Event *> value_;
  public:
   //constructor
@@ -417,7 +417,7 @@ class prob_individual_present_at_mda_distribution : public IConfigItem {
 
  DISALLOW_MOVE(prob_individual_present_at_mda_distribution)
 
- protected:
+ public:
   std::vector<beta_distribution_params> value_;
  public:
   //constructor

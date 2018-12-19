@@ -52,7 +52,7 @@ class Model {
 
  PROPERTY_REF(std::vector<Reporter *>, reporters)
 
- PROPERTY_REF(long, initial_seed_number)
+ PROPERTY_REF(unsigned long, initial_seed_number)
 
  PROPERTY_REF(std::string, config_filename)
 

@@ -154,12 +154,6 @@ class Config {
 
   void read_from_file(const std::string &config_file_name = "config.yml");
 
-  //TODO: override the config node yaml inside read_from_file function
-
-  void override_parameters(const std::string &override_file, const int &pos);
-
-  void override_1_parameter(const std::string &parameter_name, const std::string &parameter_value);
-
 };
 
 #endif /* CONFIG_H */

@@ -139,13 +139,6 @@ void Model::initialize() {
   //Read input file
   config_->read_from_file(config_filename_);
 
-  // modify parameters
-  //modify parameters && update config
-  LOG_IF(override_parameter_line_number_!=-1, INFO) << fmt::format("Override parameter from {} at line {}",
-                                                                   override_parameter_filename_,
-                                                                   override_parameter_line_number_);
-  config_->override_parameters(override_parameter_filename_, override_parameter_line_number_);
-
   //add reporter here
   if (reporter_type_.empty()) {
     add_reporter(Reporter::MakeReport(Reporter::BFREPORTER));
