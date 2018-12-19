@@ -7,6 +7,7 @@
 #include "Core/TypeDef.h"
 #include <cmath>
 
+
 namespace YAML {
 template<>
 struct convert<date::sys_days> {
@@ -31,7 +32,7 @@ template<>
 struct convert<date::year_month_day> {
   static Node encode(const date::year_month_day &rhs) {
     Node node;
-    node.push_back(format("%Y/%m/%d", rhs));
+    node.push_back(date::format("%Y/%m/%d", rhs));
     return node;
   }
 

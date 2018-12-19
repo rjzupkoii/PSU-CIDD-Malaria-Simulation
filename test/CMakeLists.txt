@@ -14,7 +14,7 @@ set(TEST_SRC_FILES
     )
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
-add_dependencies(${PROJECT_TEST_NAME} MaSimCore date)
+add_dependencies(${PROJECT_TEST_NAME} MaSimCore date args)
 
 target_link_libraries(${PROJECT_TEST_NAME}
     MaSimCore
