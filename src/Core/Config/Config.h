@@ -18,8 +18,6 @@
 #include <vector>
 #include <date/date.h>
 
-class IConfigItem;
-
 class Model;
 
 class Config {

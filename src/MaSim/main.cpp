@@ -9,7 +9,7 @@
 #include <fmt/format.h>
 #include "Model.h"
 #include "easylogging++.h"
-#include "args.hxx"
+#include <args.hxx>
 #include "Helpers/OSHelpers.h"
 
 int job_number = 0;

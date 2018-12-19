@@ -22,8 +22,7 @@ int MultinomialDistributionGenerator::draw_random_level(Random *random) {
 
 void MultinomialDistributionGenerator::allocate(Random *random) {
   const auto chunk_size = 100000;
-
-  const int size = level_density.size();
+  const auto size = level_density.size();
   UIntVector n(size);
   random->random_multinomial(size, chunk_size, &level_density.at(0), &n[0]);
   //
@@ -32,7 +31,7 @@ void MultinomialDistributionGenerator::allocate(Random *random) {
   //    }
   //    std::cout<< std::endl;
   data.clear();
-  for (auto i = 0; i < size; i++) {
+  for (auto i = 0u; i < size; i++) {
     for (auto j = 0u; j < n[i]; j++) {
       data.push_back(i);
     }

@@ -188,28 +188,6 @@ struct InitialParasiteInfo {
 
 };
 
-struct ImportationParasiteInfo {
-  int location;
-  int time;
-  int parasite_type_id;
-  int number;
-
-  ImportationParasiteInfo() : location(-1), time(0), parasite_type_id(-1), number(0) {};
-
-  ImportationParasiteInfo(const int loc, const int p_type, const int dur, const int num) : location(loc), time(dur),
-                                                                                           parasite_type_id(p_type),
-                                                                                           number(num) {};
-
-};
-
-struct ImportationParasitePeriodicallyInfo {
-  int location{-1};
-  int duration{0};
-  int parasite_type_id{-1};
-  int number{0};
-  int start_day{0};
-};
-
 struct RelativeInfectivity {
   double sigma;
   double ro_star;

@@ -30,7 +30,7 @@ struct MultidimensionalVector {
 
   static type create(std::initializer_list<int>::iterator it) {
     type object;
-    object.assign(*it, MultidimensionalVector<T, Dimension - 1>::create(it + 1));
+    object.assign(static_cast<unsigned long>(*it), MultidimensionalVector<T, Dimension - 1>::create(it + 1));
     return object;
   }
 
@@ -54,7 +54,7 @@ struct MultidimensionalVector<T, 2> {
 
   static type create(std::initializer_list<int>::iterator it) {
     type object;
-    object.assign(*it, value_type());
+    object.assign(static_cast<unsigned long>(*it), value_type());
     return object;
   }
 

@@ -21,15 +21,15 @@ void total_time::set_value(const YAML::Node &node) {
 }
 
 void number_of_age_classes::set_value(const YAML::Node &node) {
-  value_ = config_->age_structure().size();
+  value_ = static_cast<int>(config_->age_structure().size());
 }
 
 void number_of_locations::set_value(const YAML::Node &node) {
-  value_ = config_->location_db().size();
+  value_ = static_cast<int>(config_->location_db().size());
 }
 
 void spatial_distance_matrix::set_value(const YAML::Node &node) {
-  value_.resize(config_->number_of_locations());
+  value_.resize(static_cast<unsigned long>(config_->number_of_locations()));
   for (auto from_location = 0; from_location < config_->number_of_locations(); from_location++) {
     value_[from_location].resize(static_cast<unsigned long long int>(config_->number_of_locations()));
     for (auto to_location = 0; to_location < config_->number_of_locations(); to_location++) {
@@ -161,7 +161,7 @@ void genotype_db::set_value(const YAML::Node &node) {
   value_->weight().assign(config_->genotype_info().loci_vector.size(), 1);
 
   auto temp = 1;
-  for (int i = value_->weight().size() - 2; i > -1; i--) {
+  for (auto i = value_->weight().size() - 2; i > -1; i--) {
     temp *= config_->genotype_info().loci_vector[i + 1].alleles.size();
     value_->weight()[i] = temp;
   }
@@ -193,7 +193,7 @@ void drug_db::set_value(const YAML::Node &node) {
   ObjectHelpers::delete_pointer<DrugDatabase>(value_);
   value_ = new DrugDatabase();
 
-  for (std::size_t drug_id = 0; drug_id < node[name_].size(); drug_id++) {
+  for (auto drug_id = 0; drug_id < node[name_].size(); drug_id++) {
     auto *dt = new DrugType();
     dt->set_id(drug_id);
 
@@ -251,15 +251,15 @@ void EC50_power_n_table::set_value(const YAML::Node &node) {
   value_.clear();
   value_.assign(config_->genotype_db()->size(), std::vector<double>());
 
-  for (std::size_t g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-    for (std::size_t i = 0; i < config_->drug_db()->size(); i++) {
+  for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
+    for (auto i = 0; i < config_->drug_db()->size(); i++) {
       value_[g_id].push_back(config_->drug_db()->get(i)->infer_ec50(config_->genotype_db()->at(g_id)));
     }
   }
   //    std::cout << "ok " << std::endl;
 
-  for (std::size_t g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-    for (std::size_t i = 0; i < config_->drug_db()->size(); i++) {
+  for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
+    for (auto i = 0; i < config_->drug_db()->size(); i++) {
       value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->get(i)->n());
     }
   }
@@ -327,6 +327,8 @@ void circulation_info::set_value(const YAML::Node &node) {
   const auto k = stay_variance/length_of_stay_mean; //k
   const auto theta = length_of_stay_mean/k; //theta
 
+  value_.length_of_stay_mean = length_of_stay_mean;
+  value_.length_of_stay_sd = length_of_stay_sd;
   value_.length_of_stay_theta = theta;
   value_.length_of_stay_k = k;
 }

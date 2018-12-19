@@ -15,7 +15,7 @@
 #include "Helpers/NumberHelpers.h"
 #include "easylogging++.h"
 
-Random::Random(gsl_rng *g_rng) : seed_(0ul), G_RNG(g_rng) {}
+Random::Random(gsl_rng* g_rng) : seed_(0ul), G_RNG(g_rng) {}
 
 Random::~Random() {
   release();
@@ -26,8 +26,9 @@ void Random::initialize(const unsigned long &seed) {
   G_RNG = gsl_rng_alloc(tt);
 
   // seed the RNG
-  const std::hash<std::thread::id> hasher;
-  seed_ = seed==0 ? NumberHelpers::good_seed(clock(), std::time(nullptr), hasher(std::this_thread::get_id()))
+  const auto c = std::hash<std::thread::id>{}(std::this_thread::get_id());
+  seed_ = seed==0 ? NumberHelpers::good_seed(static_cast<unsigned long>(clock()), static_cast<unsigned long>
+  (std::time(nullptr)), c)
                   : seed;
   LOG(INFO) << fmt::format("Random initializing with seed: {}", seed);
   gsl_rng_set(G_RNG, seed_);
@@ -124,7 +125,7 @@ void Random::random_multinomial(const size_t &K, const unsigned &N, double p[], 
   gsl_ran_multinomial(G_RNG, K, N, p, n);
 }
 
-void Random::random_shuffle(void *base, size_t base_length, size_t size_of_type) {
+void Random::random_shuffle(void* base, size_t base_length, size_t size_of_type) {
   gsl_ran_shuffle(G_RNG, base, base_length, size_of_type);
 }
 
@@ -136,6 +137,6 @@ int Random::random_binomial(const double &p, const unsigned int &n) {
   return gsl_ran_binomial(G_RNG, p, n);
 }
 
-void Random::shuffle(void *base, const size_t &n, const size_t &size) {
+void Random::shuffle(void* base, const size_t &n, const size_t &size) {
   gsl_ran_shuffle(G_RNG, base, n, size);
 }

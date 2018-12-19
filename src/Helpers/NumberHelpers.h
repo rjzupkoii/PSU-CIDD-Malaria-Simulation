@@ -35,10 +35,10 @@ class NumberHelpers {
     if (file.is_open()) {
       //for unix
       const int size = sizeof(int);
-      auto *memblock = new char[size];
+      auto* memblock = new char[size];
       file.read(memblock, size);
       file.close();
-      const unsigned int random_seed_a = *reinterpret_cast<int *>(memblock);
+      const unsigned int random_seed_a = *reinterpret_cast<int*>(memblock);
       delete[] memblock;
       return random_seed_a ^ b;
     }
