@@ -40,7 +40,7 @@ PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML
   std::vector<Event*> events;
 
   for (std::size_t i = 0; i < node.size(); i++) {
-    const auto location = node[i]["location"].as<int>();
+    const auto location = node[i]["location"].as<unsigned long>();
     const auto location_from = location==-1 ? 0 : location;
     const auto location_to =
         location==-1 ? config->number_of_locations() : std::min(location + 1, config->number_of_locations());
@@ -51,20 +51,20 @@ PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML
         //            ipi.location = location;
         const auto genotype_id = -1;
 
-        std::vector<std::vector<double>>
-            genotype_distribution(static_cast<unsigned long>(Model::CONFIG->number_of_parasite_types()),
-                                  std::vector<double>());
+          // TODO: implement this later
+//        std::vector<std::vector<double>>
+//            allele_distribution(static_cast<unsigned long>(Model::CONFIG->number_of_parasite_types()),
+//                                  std::vector<double>());
+//
+//        for (int ii = 0; ii < node[i]["parasite_info"][j]["allele_distributions"].size(); ++ii) {
+//          int allele_position = node[i]["parasite_info"][j]["allele_distributions"][ii]["position"].as<int>();
+//          for (int jj = 0; jj < node[i]["parasite_info"][j]["allele_distributions"][ii]["distribution"].size(); ++jj) {
+//            auto value = node[i]["parasite_info"][j]["allele_distributions"][ii]["distribution"][jj].as<double>();
+//            allele_distribution[allele_position].push_back(value);
+//          }
+//        }
 
-        for (int ii = 0; ii < node[i]["parasite_info"][j]["allele_distributions"].size(); ++ii) {
-          int allele_position = node[i]["parasite_info"][j]["allele_distributions"][ii]["position"].as<int>();
-          std::cout << allele_position << std::endl;
-          for (int jj = 0; jj < node[i]["parasite_info"][j]["allele_distributions"][ii]["distribution"].size(); ++jj) {
-            auto value = node[i]["parasite_info"][j]["allele_distributions"][ii]["distribution"][jj].as<double>();
-            std::cout << allele_position << "-" << value << std::endl;
-            genotype_distribution[allele_position].push_back(value);
-          }
-
-        }
+//        std::vector<double>
 
         const auto dur = node[i]["parasite_info"][j]["duration"].as<int>();
         const auto num = node[i]["parasite_info"][j]["number_of_cases"].as<int>();

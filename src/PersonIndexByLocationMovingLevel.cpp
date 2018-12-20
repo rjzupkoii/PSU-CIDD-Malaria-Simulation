@@ -50,7 +50,7 @@ void PersonIndexByLocationMovingLevel::notify_change(Person *p, const Person::Pr
   }
 }
 
-int PersonIndexByLocationMovingLevel::size() const {
+std::size_t PersonIndexByLocationMovingLevel::size() const {
   return 0;
 }
 

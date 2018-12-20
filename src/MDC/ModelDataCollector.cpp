@@ -20,7 +20,7 @@
 #include "ClonalParasitePopulation.h"
 #include "Constants.h"
 
-ModelDataCollector::ModelDataCollector(Model *model) : model_(model), current_utl_duration_(0),
+ModelDataCollector::ModelDataCollector(Model* model) : model_(model), current_utl_duration_(0),
                                                        AMU_per_parasite_pop_(0),
                                                        AMU_per_person_(0), AMU_for_clinical_caused_parasite_(0),
                                                        AFU_(0), discounted_AMU_per_parasite_pop_(0),
@@ -131,7 +131,7 @@ void ModelDataCollector::initialize() {
                                                     IntVector(number_of_reported_MOI, 0));
 
     current_EIR_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
-    last_update_total_number_of_bites_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    last_update_total_number_of_bites_by_location_ = LongVector(Model::CONFIG->number_of_locations(), 0);
 
     resistance_tracker_.initialize();
 
@@ -251,7 +251,7 @@ void ModelDataCollector::perform_population_statistic() {
     }
   }
 
-  auto *pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+  auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
   long long sum_moi = 0;
 
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
@@ -264,7 +264,7 @@ void ModelDataCollector::perform_population_statistic() {
         popsize_by_location_age_class_[loc][ac] += size;
 
         for (int i = 0; i < size; i++) {
-          Person *p = pi->vPerson()[loc][hs][ac][i];
+          Person* p = pi->vPerson()[loc][hs][ac][i];
           popsize_residence_by_location_[p->residence_location()]++;
 
           //                    assert(p->has_birthday_event());
@@ -364,7 +364,7 @@ void ModelDataCollector::perform_population_statistic() {
               10] = (number_of_blood_slide_positive==0)
                     ? 0
                     : number_of_clinical_by_location_age_group_by_5_[loc][ac]/
-              static_cast<double>(number_of_blood_slide_positive);
+              number_of_blood_slide_positive;
       blood_slide_prevalence_by_location_age_group_[loc][ac] =
           blood_slide_number_by_location_age_group_[loc][ac]/
               static_cast<double>(popsize_by_location_age_class_[loc][ac]);
@@ -635,7 +635,7 @@ void ModelDataCollector::record_1_treatment(const int &location, const int &age,
   }
 }
 
-void ModelDataCollector::record_1_mutation(const int &location, Genotype *from, Genotype *to) {
+void ModelDataCollector::record_1_mutation(const int &location, Genotype* from, Genotype* to) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     cumulative_mutants_by_location_[location] += 1;
   }
@@ -703,16 +703,10 @@ void ModelDataCollector::update_after_run() {
   }
 }
 
-void ModelDataCollector::record_1_RITF(const int &location) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
-    today_RITF_by_location_[location] += 1;
-  }
-}
-
-void ModelDataCollector::record_AMU_AFU(Person *person, Therapy *therapy,
-                                        ClonalParasitePopulation *clinical_caused_parasite) {
+void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy,
+                                        ClonalParasitePopulation* clinical_caused_parasite) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
-    auto sc_therapy = dynamic_cast<SCTherapy *>(therapy);
+    auto sc_therapy = dynamic_cast<SCTherapy*>(therapy);
     if (sc_therapy!=nullptr) {
       const auto art_id = sc_therapy->get_arteminsinin_id();
       if (art_id!=-1 && sc_therapy->drug_ids().size() > 1) {
@@ -731,9 +725,8 @@ void ModelDataCollector::record_AMU_AFU(Person *person, Therapy *therapy,
 
             auto found_amu = false;
             auto found_afu = false;
-            for (auto j = 0; j < parasite_population_size; j++) {
-              ClonalParasitePopulation *bp = person->all_clonal_parasite_populations()->parasites()->at(
-                  j);
+            for (auto j = 0ul; j < parasite_population_size; j++) {
+              ClonalParasitePopulation* bp = person->all_clonal_parasite_populations()->parasites()->at(j);
               if (bp->resist_to(drug_id) && !bp->resist_to(art_id)) {
                 found_amu = true;
                 AMU_per_parasite_pop_ +=
@@ -812,7 +805,7 @@ void ModelDataCollector::monthly_update() {
   }
 }
 
-void ModelDataCollector::record_1_migration(Person *pPerson, const int &from, const int &to) {
+void ModelDataCollector::record_1_migration(Person* pPerson, const int &from, const int &to) {
   for (auto clonal : *(pPerson->all_clonal_parasite_populations()->parasites())) {
     resistance_tracker_.change_location(clonal->genotype()->genotype_id(), from, to);
   }

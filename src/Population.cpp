@@ -94,7 +94,7 @@ void Population::notify_change(Person *p, const Person::Property &property, cons
   }
 }
 
-int Population::size(const int &location, const int &age_class) {
+std::size_t Population::size(const int &location, const int &age_class) {
   if (location==-1) {
     return all_persons_->size();
   }
@@ -119,16 +119,16 @@ int Population::size(const int &location, const int &age_class) {
   return temp;
 }
 
-int Population::size(const int &location, const Person::HostStates &hs, const int &age_class) {
+std::size_t Population::size(const int &location, const Person::HostStates &hs, const int &age_class) {
   if (location==-1) {
     return all_persons_->size();
   }
   auto pi_lsa = get_person_index<PersonIndexByLocationStateAgeClass>();
-  return static_cast<int>(pi_lsa->vPerson()[location][hs][age_class].size());
+  return (pi_lsa->vPerson()[location][hs][age_class].size());
 }
 
 //new
-int Population::size_residents_only(const int &location) {
+std::size_t Population::size_residents_only(const int &location) {
   if (location==-1) {
     return all_persons_->size();
   }
@@ -138,7 +138,7 @@ int Population::size_residents_only(const int &location) {
   if (pi_lsa==nullptr) {
     return 0;
   }
-  auto temp = 0;
+  auto temp = 0ul;
   for (auto state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
     for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
       for (auto i = 0; i < pi_lsa->vPerson()[location][state][ac].size(); i++) {

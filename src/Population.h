@@ -81,9 +81,9 @@ class Population : public Dispatcher {
    * If the input location is -1, return total size
    * @param location
    */
-  virtual int size(const int &location = -1, const int &age_class = -1);
+  virtual std::size_t size(const int &location = -1, const int &age_class = -1);
 
-  virtual int size(const int &location, const Person::HostStates &hs, const int &age_class);
+  virtual std::size_t size(const int &location, const Person::HostStates &hs, const int &age_class);
 
   virtual void perform_infection_event();
 
@@ -125,7 +125,7 @@ class Population : public Dispatcher {
 
   void perform_interupted_feeding_recombination();
 
-  int size_residents_only(const int &location);
+  std::size_t size_residents_only(const int &location);
 };
 
 template<typename T>

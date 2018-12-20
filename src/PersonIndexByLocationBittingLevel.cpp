@@ -51,7 +51,7 @@ void PersonIndexByLocationBittingLevel::notify_change(Person *p, const Person::P
   }
 }
 
-int PersonIndexByLocationBittingLevel::size() const {
+std::size_t PersonIndexByLocationBittingLevel::size() const {
   return 0;
 }
 

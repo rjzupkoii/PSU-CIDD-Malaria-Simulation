@@ -30,7 +30,7 @@ void PersonIndexAll::remove(Person *p) {
   //    p = nullptr;
 }
 
-int PersonIndexAll::size() const {
+std::size_t PersonIndexAll::size() const {
   return vPerson_.size();
 }
 

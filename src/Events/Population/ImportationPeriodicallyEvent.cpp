@@ -75,13 +75,16 @@ void ImportationPeriodicallyEvent::execute() {
     p->immune_system()->set_increase(true);
     p->set_host_state(Person::ASYMPTOMATIC);
 
-    //check and draw random Genotype 
-    // fix allele 580Y, other alleles will be drawn randomly
+    //check and draw random Genotype
     Genotype* imported_genotype = nullptr;
     if (genotype_id_==-1) {
-      ul random_id = Model::RANDOM->random_uniform_int(0, 128);
-      if ((random_id/4)%2==0) {
-        random_id += 4;
+      ul random_id = Model::RANDOM->random_uniform_int(0,
+                                                       static_cast<const unsigned long &>(Model::CONFIG
+                                                           ->number_of_parasite_types()));
+
+//      new genotype will have 50% change of 580Y and 50% plasmepsin-2 copy, last allele will always be x
+      if (random_id%2==1) {
+        random_id -= 1;
       }
       imported_genotype = Model::CONFIG->genotype_db()->at(random_id);
     } else {

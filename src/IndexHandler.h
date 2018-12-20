@@ -13,7 +13,7 @@
 class IndexHandler {
  DISALLOW_COPY_AND_ASSIGN(IndexHandler)
 
- PROPERTY_REF(int, index)
+ PROPERTY_REF(std::size_t, index)
 
  public:
   IndexHandler();

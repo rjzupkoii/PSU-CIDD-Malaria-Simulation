@@ -162,8 +162,7 @@ void genotype_db::set_value(const YAML::Node &node) {
 
   std::cout << value_->weight().size()-2<< std::endl;
   auto temp = 1;
-  for (int i = static_cast<int>(value_->weight().size() - 2); i > -1; i--) {
-//    std::cout << i << std::endl;
+  for (int i = static_cast<int>(value_->weight().size() - 2); i >= 0; i--) {
     temp *= config_->genotype_info().loci_vector[i + 1].alleles.size();
     value_->weight()[i] = temp;
   }
@@ -435,7 +434,7 @@ void initial_parasite_info::set_value(const YAML::Node &node) {
   const auto &info_node = node[name_];
 
   for (size_t index = 0; index < info_node.size(); index++) {
-    const auto location = info_node[index]["location_id"].as<int>();
+    const auto location = info_node[index]["location_id"].as<unsigned long>();
     const auto location_from = location==-1 ? 0 : location;
     const auto location_to = location==-1 ? config_->number_of_locations() : std::min(location + 1,
                                                                                       config_->number_of_locations());

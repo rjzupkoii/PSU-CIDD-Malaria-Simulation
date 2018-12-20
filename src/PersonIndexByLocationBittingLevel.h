@@ -29,7 +29,7 @@ class PersonIndexByLocationBittingLevel : public PersonIndex {
 
   virtual void remove(Person *p);
 
-  virtual int size() const;
+  virtual std::size_t size() const;
 
   virtual void update();
 

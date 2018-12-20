@@ -125,7 +125,7 @@ class ModelDataCollector {
 
  PROPERTY_REF(DoubleVector, current_EIR_by_location)
 
- PROPERTY_REF(IntVector, last_update_total_number_of_bites_by_location)
+ PROPERTY_REF(LongVector, last_update_total_number_of_bites_by_location)
 
  READ_ONLY_PROPERTY_REF(ResistanceTracker, resistance_tracker)
 
@@ -254,7 +254,6 @@ class ModelDataCollector {
 
   void update_after_run();
 
-  void record_1_RITF(const int &location);
 
   void record_AMU_AFU(Person *person, Therapy *therapy, ClonalParasitePopulation *clinical_caused_parasite);
 

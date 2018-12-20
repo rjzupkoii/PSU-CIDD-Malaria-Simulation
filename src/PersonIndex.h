@@ -23,7 +23,7 @@ class PersonIndex {
 
   virtual void remove(Person *p) = 0;
 
-  virtual int size() const = 0;
+  virtual std::size_t size() const = 0;
 
   virtual void update() = 0;
 

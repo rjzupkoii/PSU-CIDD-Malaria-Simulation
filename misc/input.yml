@@ -870,12 +870,17 @@ events:
       - location: 0
         parasite_info:
           - duration: 10
-            # other position not listed below will be drawn uniformly
-            allele_distributions:
-              - position: 4
-                distribution: [1.0,0.0]
+            genotype_id: -1
             number_of_cases: 1
             start_day: 1990/6/2
+
+#            # TODO: other position not listed below will be drawn uniformly
+#            allele_distributions:
+#              - position: 4
+#                distribution: [1.0,0.0]
+
+            #special genotype
+
   - name: change_treatment_coverage
     info:
       - type: SteadyTCM

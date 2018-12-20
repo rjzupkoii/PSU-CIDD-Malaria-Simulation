@@ -65,7 +65,7 @@ void PersonIndexByLocationStateAgeClass::remove_without_set_index(Person *p) {
   vPerson_[p->location()][p->host_state()][p->age_class()].pop_back();
 }
 
-int PersonIndexByLocationStateAgeClass::size() const {
+std::size_t PersonIndexByLocationStateAgeClass::size() const {
   return 0;
 }
 

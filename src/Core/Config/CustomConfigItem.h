@@ -22,18 +22,18 @@ class total_time : public ConfigItem<int> {
   void set_value(const YAML::Node &node) override;
 };
 
-class number_of_age_classes : public ConfigItem<int> {
+class number_of_age_classes : public ConfigItem<unsigned long> {
  public:
-  number_of_age_classes(const std::string &name, const int &default_value, Config *config) : ConfigItem<int>(name,
+  number_of_age_classes(const std::string &name, const unsigned long &default_value, Config *config) : ConfigItem<unsigned long>(name,
                                                                                                              default_value,
                                                                                                              config) {}
 
   void set_value(const YAML::Node &node) override;
 };
 
-class number_of_locations : public ConfigItem<int> {
+class number_of_locations : public ConfigItem<unsigned long> {
  public:
-  number_of_locations(const std::string &name, const int &default_value, Config *config) : ConfigItem<int>(name,
+  number_of_locations(const std::string &name, const unsigned long &default_value, Config *config) : ConfigItem<unsigned long>(name,
                                                                                                            default_value,
                                                                                                            config) {}
 
@@ -151,10 +151,10 @@ class genotype_db : public IConfigItem {
   void set_value(const YAML::Node &node) override;
 };
 
-class number_of_parasite_types : public ConfigItem<int> {
+class number_of_parasite_types : public ConfigItem<unsigned long> {
  public:
-  number_of_parasite_types(const std::string &name, const int &default_value,
-                           Config *config) : ConfigItem<int>(name, default_value, config) {}
+  number_of_parasite_types(const std::string &name, const unsigned long &default_value,
+                           Config *config) : ConfigItem<unsigned long>(name, default_value, config) {}
 
   void set_value(const YAML::Node &node) override;
 };
