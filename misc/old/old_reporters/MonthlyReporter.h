@@ -5,20 +5,21 @@
  */
 
 /* 
- * File:   BurninMonthlyReporter.h
+ * File:   MonthlyReporter.h
  * Author: Merlin
  *
- * Created on April 11, 2017, 12:05 PM
+ * Created on May 10, 2016, 2:16 PM
  */
 
-#ifndef BURNINMONTHLYREPORTER_H
-#define BURNINMONTHLYREPORTER_H
+#ifndef MONTHLYREPORTER_H
+#define MONTHLYREPORTER_H
 
-#include "Reporter.h"
+#include "Reporters/Reporter.h"
+#include <fstream>
 #include <string>
 
-class BurninMonthlyReporter : public Reporter {
- DISALLOW_COPY_AND_ASSIGN(BurninMonthlyReporter)
+class MonthlyReporter : public Reporter {
+ DISALLOW_COPY_AND_ASSIGN(MonthlyReporter)
 
  VIRTUAL_PROPERTY_REF(double, last_reported_NTF)
 
@@ -26,11 +27,14 @@ class BurninMonthlyReporter : public Reporter {
 
  VIRTUAL_PROPERTY_REF(int, last_reported_mutants)
 
+  std::fstream fs_;
+  std::string file_name_;
+
  public:
-  BurninMonthlyReporter();
+  MonthlyReporter(const std::string &file_name);
 
   //    MonthlyReporter(const MonthlyReporter& orig);
-  virtual ~BurninMonthlyReporter();
+  virtual ~MonthlyReporter();
 
   virtual void initialize();
 
@@ -46,5 +50,5 @@ class BurninMonthlyReporter : public Reporter {
 
 };
 
-#endif /* BURNINMONTHLYREPORTER_H */
+#endif /* MONTHLYREPORTER_H */
 

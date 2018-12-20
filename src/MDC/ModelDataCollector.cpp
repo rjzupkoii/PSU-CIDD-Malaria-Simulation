@@ -775,7 +775,7 @@ double ModelDataCollector::get_blood_slide_prevalence(const int &location, const
 
   if (age_from < 10) {
     if (age_to <= 10) {
-      for (int ac = age_from; ac < age_to; ac++) {
+      for (int ac = age_from; ac <= age_to; ac++) {
         blood_slide_numbers += blood_slide_number_by_location_age_group_[location][ac];
         popsize += popsize_by_location_age_class_[location][ac];
       }

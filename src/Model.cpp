@@ -38,14 +38,14 @@
 #include "Constants.h"
 #include "Helpers/TimeHelpers.h"
 
-Model *Model::MODEL = nullptr;
-Config *Model::CONFIG = nullptr;
-Random *Model::RANDOM = nullptr;
-Scheduler *Model::SCHEDULER = nullptr;
-ModelDataCollector *Model::DATA_COLLECTOR = nullptr;
-Population *Model::POPULATION = nullptr;
-IStrategy *Model::TREATMENT_STRATEGY = nullptr;
-ITreatmentCoverageModel *Model::TREATMENT_COVERAGE = nullptr;
+Model* Model::MODEL = nullptr;
+Config* Model::CONFIG = nullptr;
+Random* Model::RANDOM = nullptr;
+Scheduler* Model::SCHEDULER = nullptr;
+ModelDataCollector* Model::DATA_COLLECTOR = nullptr;
+Population* Model::POPULATION = nullptr;
+IStrategy* Model::TREATMENT_STRATEGY = nullptr;
+ITreatmentCoverageModel* Model::TREATMENT_COVERAGE = nullptr;
 // std::shared_ptr<spdlog::logger> LOGGER;
 
 
@@ -71,7 +71,7 @@ Model::Model(const int &object_pool_size) {
   having_drug_update_function_ = new ImmunityClearanceUpdateFunction(this);
   clinical_update_function_ = new ImmunityClearanceUpdateFunction(this);
 
-  reporters_ = std::vector<Reporter *>();
+  reporters_ = std::vector<Reporter*>();
 
   initial_seed_number_ = 0;
   config_filename_ = "config.yml";
@@ -105,7 +105,7 @@ void Model::set_treatment_strategy(const int &strategy_id) {
   // }
 }
 
-void Model::set_treatment_coverage(ITreatmentCoverageModel *tcm) {
+void Model::set_treatment_coverage(ITreatmentCoverageModel* tcm) {
   if (treatment_coverage_!=tcm) {
     if (tcm->p_treatment_less_than_5.empty() || tcm->p_treatment_more_than_5.empty()) {
       //copy current value
@@ -120,7 +120,7 @@ void Model::set_treatment_coverage(ITreatmentCoverageModel *tcm) {
 }
 
 void Model::build_initial_treatment_coverage() {
-  auto *tcm = new SteadyTCM();
+  auto* tcm = new SteadyTCM();
   for (auto &location : config_->location_db()) {
     tcm->p_treatment_less_than_5.push_back(location.p_treatment_less_than_5);
     tcm->p_treatment_more_than_5.push_back(location.p_treatment_more_than_5);
@@ -141,7 +141,7 @@ void Model::initialize() {
 
   //add reporter here
   if (reporter_type_.empty()) {
-    add_reporter(Reporter::MakeReport(Reporter::BFREPORTER));
+    add_reporter(Reporter::MakeReport(Reporter::MONTHLY_REPORTER));
   } else {
     if (Reporter::ReportTypeMap.find(reporter_type_)!=Reporter::ReportTypeMap.end()) {
       add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));
@@ -150,7 +150,7 @@ void Model::initialize() {
 
   LOG(INFO) << "Initialing reports";
   //initialize reporters
-  for (auto *reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->initialize();
   }
 
@@ -182,7 +182,7 @@ void Model::initialize() {
   //    external_population_->initialize();
 
   LOG(INFO) << "Schedule for population event";
-  for (auto *event : config_->preconfig_population_events()) {
+  for (auto* event : config_->preconfig_population_events()) {
     scheduler_->schedule_population_event(event);
     // LOG(INFO) << scheduler_->population_events_list_[event->time()].size();
   }
@@ -264,7 +264,7 @@ void Model::run() {
 
 void Model::before_run() {
   LOG(INFO) << "Perform before run events";
-  for (auto *reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->before_run();
   }
 }
@@ -274,7 +274,7 @@ void Model::after_run() {
 
   data_collector_->update_after_run();
 
-  for (auto *reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->after_run();
   }
 }
@@ -344,7 +344,7 @@ void Model::release() {
   ObjectHelpers::delete_pointer<Config>(config_);
   ObjectHelpers::delete_pointer<Random>(random_);
 
-  for (Reporter *reporter : reporters_) {
+  for (Reporter* reporter : reporters_) {
     ObjectHelpers::delete_pointer<Reporter>(reporter);
   }
   reporters_.clear();
@@ -362,19 +362,19 @@ void Model::release() {
 void Model::monthly_report() {
   data_collector_->perform_population_statistic();
 
-  for (auto *reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->monthly_report();
   }
 
 }
 
 void Model::report_begin_of_time_step() {
-  for (auto *reporter : reporters_) {
+  for (auto* reporter : reporters_) {
     reporter->begin_time_step();
   }
 }
 
-void Model::add_reporter(Reporter *reporter) {
+void Model::add_reporter(Reporter* reporter) {
   reporters_.push_back(reporter);
   reporter->set_model(this);
 }

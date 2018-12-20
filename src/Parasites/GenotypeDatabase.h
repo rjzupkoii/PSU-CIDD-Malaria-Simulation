@@ -15,7 +15,7 @@
 
 class Genotype;
 
-typedef std::map<int, Genotype *> GenotypePtrMap;
+typedef std::map<ul, Genotype*> GenotypePtrMap;
 typedef std::vector<std::vector<std::vector<double>>> MatingMatrix;
 
 class GenotypeDatabase : public GenotypePtrMap {
@@ -32,7 +32,7 @@ class GenotypeDatabase : public GenotypePtrMap {
 
   virtual ~GenotypeDatabase();
 
-  void add(Genotype *genotype);
+  void add(Genotype* genotype);
 
   int get_id(const IntVector &gene);
 

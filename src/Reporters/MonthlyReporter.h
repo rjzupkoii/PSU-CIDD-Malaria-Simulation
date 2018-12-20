@@ -1,54 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//
+// Created by Nguyen Tran on 3/5/2018.
+//
 
-/* 
- * File:   MonthlyReporter.h
- * Author: Merlin
- *
- * Created on May 10, 2016, 2:16 PM
- */
-
-#ifndef MONTHLYREPORTER_H
-#define MONTHLYREPORTER_H
+#ifndef POMS_BFREPORTER_H
+#define POMS_BFREPORTER_H
 
 #include "Reporter.h"
-#include <fstream>
-#include <string>
+#include <sstream>
 
 class MonthlyReporter : public Reporter {
  DISALLOW_COPY_AND_ASSIGN(MonthlyReporter)
 
- VIRTUAL_PROPERTY_REF(double, last_reported_NTF)
-
- VIRTUAL_PROPERTY_REF(int, last_reported_clinical_episodes)
-
- VIRTUAL_PROPERTY_REF(int, last_reported_mutants)
-
-  std::fstream fs_;
-  std::string file_name_;
+ DISALLOW_MOVE(MonthlyReporter)
 
  public:
-  MonthlyReporter(const std::string &file_name);
+  std::stringstream ss;
+  const std::string group_sep = "-1111\t";
+  const std::string sep = "\t";
 
-  //    MonthlyReporter(const MonthlyReporter& orig);
+  MonthlyReporter();
+
   virtual ~MonthlyReporter();
 
-  virtual void initialize();
+  void initialize() override;
 
-  virtual void before_run();
+  void before_run() override;
 
-  virtual void after_run();
+  void after_run() override;
 
-  virtual void begin_time_step();
+  void begin_time_step() override;
 
-  virtual void monthly_report();
+  void monthly_report() override;
 
- private:
+  void print_EIR_PfPR_by_location();
 
+  void print_monthly_incidence_by_location();
 };
 
-#endif /* MONTHLYREPORTER_H */
-
+#endif //POMS_BFREPORTER_H

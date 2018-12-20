@@ -32,11 +32,11 @@ ImportationPeriodicallyEvent::ImportationPeriodicallyEvent(const int &location, 
 
 ImportationPeriodicallyEvent::~ImportationPeriodicallyEvent() = default;
 
-void ImportationPeriodicallyEvent::schedule_event(Scheduler *scheduler, const int &location, const int &duration,
+void ImportationPeriodicallyEvent::schedule_event(Scheduler* scheduler, const int &location, const int &duration,
                                                   const int &genotype_id,
                                                   const int &number_of_cases, const int &start_day) {
   if (scheduler!=nullptr) {
-    auto *e = new ImportationPeriodicallyEvent(location, duration, genotype_id, number_of_cases, start_day);
+    auto* e = new ImportationPeriodicallyEvent(location, duration, genotype_id, number_of_cases, start_day);
     e->dispatcher = nullptr;
     e->time = start_day;
     scheduler->schedule_population_event(e);
@@ -57,29 +57,29 @@ void ImportationPeriodicallyEvent::execute() {
   }
 
   //    std::cout << number_of_cases_ << std::endl;
-  auto *pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+  auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
   VLOG_IF(number_of_importation_cases > 0, 2) << "Day: " << Model::SCHEDULER->current_time() << " - Importing "
                                               << number_of_importation_cases
                                               << " at location " << location_
                                               << " with genotype " << genotype_id_;
   for (auto i = 0; i < number_of_importation_cases; i++) {
 
-    const int ind_ac = Model::RANDOM->random_uniform(pi->vPerson()[location_][0].size());
+    ul ind_ac = Model::RANDOM->random_uniform(pi->vPerson()[location_][0].size());
     if (pi->vPerson()[location_][0][ind_ac].empty()) {
       continue;
     }
 
-    const int index = Model::RANDOM->random_uniform(pi->vPerson()[location_][0][ind_ac].size());
-    auto *p = pi->vPerson()[location_][0][ind_ac][index];
+    ul index = Model::RANDOM->random_uniform(pi->vPerson()[location_][0][ind_ac].size());
+    auto* p = pi->vPerson()[location_][0][ind_ac][index];
 
     p->immune_system()->set_increase(true);
     p->set_host_state(Person::ASYMPTOMATIC);
 
     //check and draw random Genotype 
     // fix allele 580Y, other alleles will be drawn randomly
-    Genotype *imported_genotype = nullptr;
+    Genotype* imported_genotype = nullptr;
     if (genotype_id_==-1) {
-      int random_id = Model::RANDOM->random_uniform_int(0, 128);
+      ul random_id = Model::RANDOM->random_uniform_int(0, 128);
       if ((random_id/4)%2==0) {
         random_id += 4;
       }
@@ -88,7 +88,7 @@ void ImportationPeriodicallyEvent::execute() {
       imported_genotype = Model::CONFIG->genotype_db()->at(genotype_id_);
     }
 
-    auto *blood_parasite = p->add_new_parasite_to_blood(imported_genotype);
+    auto* blood_parasite = p->add_new_parasite_to_blood(imported_genotype);
     //    std::cout << "hello"<< std::endl;
 
     auto size = Model::CONFIG->parasite_density_level().log_parasite_density_asymptomatic;

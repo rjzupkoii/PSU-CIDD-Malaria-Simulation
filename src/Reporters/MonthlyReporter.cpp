@@ -1,115 +1,119 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   MonthlyReporter.cpp
- * Author: Merlin
- * 
- * Created on May 10, 2016, 2:16 PM
- */
+//
+// Created by Nguyen Tran on 3/5/2018.
+//
 
 #include "MonthlyReporter.h"
 #include "Model.h"
-#include "MDC/ModelDataCollector.h"
 #include "Core/Config/Config.h"
+#include "MDC/ModelDataCollector.h"
+#include "Core/Random.h"
+#include "Strategies/IStrategy.h"
+#include "Helpers/TimeHelpers.h"
+#include "Constants.h"
+#include "easylogging++.h"
+#include "date/date.h"
+#include "Population.h"
+#include "Strategies/NestedMFTMultiLocationStrategy.h"
+#include "Strategies/NestedMFTStrategy.h"
 
-MonthlyReporter::MonthlyReporter(const std::string &file_name) : file_name_(file_name) {
+MonthlyReporter::MonthlyReporter() = default;
 
-}
+MonthlyReporter::~MonthlyReporter() = default;
 
-MonthlyReporter::~MonthlyReporter() {
-}
+void MonthlyReporter::initialize() {}
 
-void MonthlyReporter::initialize() {
-  last_reported_NTF_ = 0;
-  last_reported_mutants_ = 0;
-  last_reported_clinical_episodes_ = 0;
-}
+void MonthlyReporter::before_run() {}
 
-void MonthlyReporter::before_run() {
-  fs_.open(file_name_.c_str(), std::fstream::out);
-}
-
-void MonthlyReporter::begin_time_step() {
-
-}
+void MonthlyReporter::begin_time_step() {}
 
 void MonthlyReporter::monthly_report() {
-  if (Model::SCHEDULER->current_time()%Model::CONFIG->report_frequency()==0) {
-    fs_ << Model::SCHEDULER->current_time() << "\t";
-    fs_ << Model::DATA_COLLECTOR->AMU_per_parasite_pop() << "\t";
-    //        fs_ << std::setw(COLUMN_WIDTH) << Model::STATISTIC->AFU() << "\t";
+  ss << Model::SCHEDULER->current_time() << sep;
+  ss << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << sep;
+  ss << date::format("%Y\t%m\t%d", Model::SCHEDULER->calendar_date) << sep;
+  ss << Model::MODEL->get_seasonal_factor(Model::SCHEDULER->calendar_date, 0) << sep;
+  ss << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 1) << sep;
+  ss << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 10) << sep;
+  ss << Model::POPULATION->size() << sep;
+  ss << group_sep;
 
-    //        double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / (double) Constants::DAYS_IN_YEAR();
-    for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-      double location_discounted_NTF = Model::DATA_COLLECTOR->cumulative_discounted_NTF_by_location()[location];
-      double NTF = Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
-      double change_in_NTF =
-          Model::DATA_COLLECTOR->cumulative_discounted_NTF_by_location()[location] - last_reported_NTF_;
-      int change_in_clinical_episodes =
-          Model::DATA_COLLECTOR->cumulative_clinical_episodes_by_location()[location] -
-              last_reported_clinical_episodes_;
-      int change_in_mutants =
-          Model::DATA_COLLECTOR->cumulative_mutants_by_location()[location] - last_reported_mutants_;
-
-      last_reported_mutants_ = Model::DATA_COLLECTOR->cumulative_mutants_by_location()[location];
-      last_reported_clinical_episodes_ = Model::DATA_COLLECTOR->cumulative_clinical_episodes_by_location()[location];
-      last_reported_NTF_ = Model::DATA_COLLECTOR->cumulative_discounted_NTF_by_location()[location];
-
-      //            location_discounted_NTF /= total_time_in_years;
-
-      fs_ << location_discounted_NTF << "\t";
-      fs_ << NTF << "\t";
-      fs_ << change_in_NTF << "\t";
-
-      //            fs_ << Model::STATISTIC->cumulative_clinical_episodes_by_location()[location] << "\t";
-      fs_ << change_in_clinical_episodes << "\t";
-
-      //            fs_ << Model::STATISTIC->cumulative_mutants_by_location()[location] << "\t";
-      fs_ << change_in_mutants << "\t";
-      fs_ << Model::DATA_COLLECTOR->current_TF_by_location()[location] << "\t";
-    }
-
-    fs_ << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
-        Model::DATA_COLLECTOR->resistance_tracker().single_resistance_ids()) << "\t";
-    fs_ << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
-        Model::DATA_COLLECTOR->resistance_tracker().double_resistance_ids()) << "\t";
-    fs_ << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
-        Model::DATA_COLLECTOR->resistance_tracker().tripple_resistance_ids()) << "\t";
-    fs_ << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
-        Model::DATA_COLLECTOR->resistance_tracker().quadruple_resistance_ids()) << "\t";
-    fs_ << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
-        Model::DATA_COLLECTOR->resistance_tracker().quintuple_resistance_ids()) << "\t";
-    fs_ << Model::DATA_COLLECTOR->resistance_tracker().sum_fraction_resistance(
-        Model::DATA_COLLECTOR->resistance_tracker().artemisinin_ids()) << "\t";
-    fs_ << Model::DATA_COLLECTOR->resistance_tracker().total_resistance_frequency() << "\t";
-
-    for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-      fs_ << "-1111\t";
-      //            report_number_by_state(location, pi);
-      fs_ << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location]*100 << "\t";
-      fs_ << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10)*100 << "\t";
-      fs_ << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 10, 15)*100 << "\t";
-      fs_ << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 15, 45)*100 << "\t";
-      if (Model::DATA_COLLECTOR->EIR_by_location_year()[location].empty()) {
-        fs_ << 0 << "\t";
-      } else {
-        fs_ << Model::DATA_COLLECTOR->EIR_by_location_year()[location].back() << "\t";
-      }
-
-    }
-
-    fs_ << Model::DATA_COLLECTOR->mean_moi() << "\t";
-
-    fs_ << std::endl;
+  print_EIR_PfPR_by_location();
+  ss << group_sep;
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << sep;
   }
+  ss << group_sep;
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
+  }
+  ss << group_sep;
+  for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
+    ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[i] << sep;
+  }
+  ss << group_sep;
+
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
+      ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count_by_location()[loc][i] << sep;
+    }
+  }
+
+  CLOG(INFO, "monthly_reporter") << ss.str();
+  ss.str("");
 }
 
 void MonthlyReporter::after_run() {
+  ss.str("");
+  ss << Model::RANDOM->seed() << sep << Model::CONFIG->number_of_locations() << sep;
+  ss << Model::CONFIG->location_db()[0].beta << sep;
+  ss << Model::CONFIG->location_db()[0].population_size << sep;
+  print_EIR_PfPR_by_location();
 
-  fs_.close();
+  ss << group_sep;
+  //output last strategy information
+  ss << Model::TREATMENT_STRATEGY->id << sep;
+
+  //output NTF
+  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period())/
+      static_cast<double>(Constants::DAYS_IN_YEAR());
+
+  auto sum_ntf = 0.0;
+  ul pop_size = 0;
+  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+    sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
+    pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
+  }
+
+  ss << (sum_ntf*100/pop_size)/total_time_in_years << sep;
+
+  CLOG(INFO, "summary_reporter") << ss.str();
+  ss.str("");
 }
 
+void MonthlyReporter::print_EIR_PfPR_by_location() {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+    //
+    // EIR
+    if (Model::DATA_COLLECTOR->EIR_by_location_year()[loc].empty()) {
+      ss << 0 << sep;
+    } else {
+      ss << Model::DATA_COLLECTOR->EIR_by_location_year()[loc].back() << sep;
+    }
+    ss << group_sep;
+    //pfpr <5 , 2-10 and all
+    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 2, 10)*100 << sep;
+    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 0, 5)*100 << sep;
+    ss << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc]*100 << sep;
+  }
+}
+
+void MonthlyReporter::print_monthly_incidence_by_location() {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << sep;
+  }
+
+  ss << group_sep;
+
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
+  }
+}

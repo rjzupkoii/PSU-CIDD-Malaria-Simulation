@@ -8,7 +8,7 @@
 #ifndef MULTIPLELOCATIONGUIREPORTER_H
 #define    MULTIPLELOCATIONGUIREPORTER_H
 
-#include "GuiReporter.h"
+#include "Reporters/GuiReporter.h"
 #include "Core/PropertyMacro.h"
 
 class MultipleLocationGuiReporter : public GuiReporter {

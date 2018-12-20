@@ -38,7 +38,7 @@ class NumberHelpers {
       auto* memblock = new char[size];
       file.read(memblock, size);
       file.close();
-      const unsigned int random_seed_a = *reinterpret_cast<int*>(memblock);
+      const unsigned int random_seed_a = static_cast<const unsigned int>(*reinterpret_cast<int*>(memblock));
       delete[] memblock;
       return random_seed_a ^ b;
     }

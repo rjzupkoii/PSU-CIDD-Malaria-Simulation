@@ -14,7 +14,7 @@
 #ifndef BURINFARMREPORTER_H
 #define BURINFARMREPORTER_H
 
-#include "Reporter.h"
+#include "Reporters/Reporter.h"
 #include "Core/PropertyMacro.h"
 
 class BurninFarmReporter : public Reporter {

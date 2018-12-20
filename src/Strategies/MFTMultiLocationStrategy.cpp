@@ -40,7 +40,7 @@ std::string MFTMultiLocationStrategy::to_string() const {
   sstm << IStrategy::id << "-" << IStrategy::name << "-";
 
   for (auto i = 0; i < therapy_list.size() - 1; i++) {
-    std::cout << "hello" << therapy_list[i]->id() << std::endl;
+    sstm << therapy_list[i]->id() <<  "::";
   }
   sstm << therapy_list[therapy_list.size() - 1]->id() << "-" << std::endl;;
 

@@ -1,24 +1,26 @@
 /* 
- * File:   FarmReporter.h
+ * File:   AMUReporter.h
  * Author: Merlin
  *
- * Created on August 17, 2013, 4:45 PM
+ * Created on January 20, 2014, 2:31 PM
  */
 
-#ifndef FARMREPORTER_H
-#define    FARMREPORTER_H
+#ifndef AMUREPORTER_H
+#define    AMUREPORTER_H
 
-#include "Reporter.h"
-#include "Core/PropertyMacro.h"
+#include "Reporters/Reporter.h"
 
-class FarmReporter : public Reporter {
- DISALLOW_COPY_AND_ASSIGN(FarmReporter)
+class AMUReporter : public Reporter {
+ DISALLOW_COPY_AND_ASSIGN(AMUReporter)
+
+ VIRTUAL_PROPERTY_REF(double, last_reported_NTF)
 
  public:
-  FarmReporter();
 
-  //    FarmReporter(const FarmReporter& orig);
-  virtual ~FarmReporter();
+  AMUReporter();
+
+  //    AMUReporter(const AMUReporter& orig);
+  virtual ~AMUReporter();
 
   virtual void initialize();
 
@@ -74,9 +76,11 @@ class FarmReporter : public Reporter {
 
   void print_moi_distribution();
 
+  void print_popsize_by_age_class();
+
  private:
 
 };
 
-#endif    /* FARMREPORTER_H */
+#endif    /* AMUREPORTER_H */
 

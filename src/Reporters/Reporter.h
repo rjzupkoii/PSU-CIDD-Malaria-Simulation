@@ -23,16 +23,7 @@ class Reporter {
   enum ReportType {
     CONSOLE,
     GUI,
-    AMU,
-    FARM,
-    MULTIPLE_LOCATION,
-    AGE_GROUP_2_TO_10,
-    YEARLY_REPORTER_V1,
     MONTHLY_REPORTER,
-    BURNIN_MONTHLY_REPORTER,
-    BURNIN_FARM_REPORTER,
-    BFREPORTER,
-    BFFARM_REPORTER,
     MMC_REPORTER
   };
  public:

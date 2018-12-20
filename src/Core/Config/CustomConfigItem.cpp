@@ -160,8 +160,10 @@ void genotype_db::set_value(const YAML::Node &node) {
   value_->weight().clear();
   value_->weight().assign(config_->genotype_info().loci_vector.size(), 1);
 
+  std::cout << value_->weight().size()-2<< std::endl;
   auto temp = 1;
-  for (auto i = value_->weight().size() - 2; i > -1; i--) {
+  for (int i = static_cast<int>(value_->weight().size() - 2); i > -1; i--) {
+//    std::cout << i << std::endl;
     temp *= config_->genotype_info().loci_vector[i + 1].alleles.size();
     value_->weight()[i] = temp;
   }
@@ -172,8 +174,8 @@ void genotype_db::set_value(const YAML::Node &node) {
   }
 
   for (auto i = 0; i < number_of_genotypes; i++) {
-    auto *int_genotype = new Genotype(i, config_->genotype_info(), value_->weight());
-    //        std::cout << *int_genotype << std::endl;
+    auto* int_genotype = new Genotype(i, config_->genotype_info(), value_->weight());
+//    std::cout << *int_genotype << std::endl;
     value_->add(int_genotype);
   }
 
@@ -194,7 +196,7 @@ void drug_db::set_value(const YAML::Node &node) {
   value_ = new DrugDatabase();
 
   for (auto drug_id = 0; drug_id < node[name_].size(); drug_id++) {
-    auto *dt = new DrugType();
+    auto* dt = new DrugType();
     dt->set_id(drug_id);
 
     const auto i_s = NumberHelpers::number_to_string<int>(drug_id);
@@ -393,16 +395,16 @@ therapy_db::~therapy_db() {
   value_.clear();
 }
 
-Therapy *read_therapy(const YAML::Node &n, const int &therapy_id) {
+Therapy* read_therapy(const YAML::Node &n, const int &therapy_id) {
   const auto t_id = NumberHelpers::number_to_string<int>(therapy_id);
-  auto *t = TherapyBuilder::build(n[t_id], therapy_id);
+  auto* t = TherapyBuilder::build(n[t_id], therapy_id);
   return t;
 }
 
 void therapy_db::set_value(const YAML::Node &node) {
   //    read_all_therapy
   for (std::size_t i = 0; i < node[name_].size(); i++) {
-    auto *t = read_therapy(node[name_], i);
+    auto* t = read_therapy(node[name_], i);
     value_.push_back(t);
   }
 }
@@ -414,16 +416,16 @@ strategy_db::~strategy_db() {
   value_.clear();
 }
 
-IStrategy *read_strategy(const YAML::Node &n, const int &strategy_id, Config *config) {
+IStrategy* read_strategy(const YAML::Node &n, const int &strategy_id, Config* config) {
   const auto s_id = NumberHelpers::number_to_string<int>(strategy_id);
-  auto *result = StrategyBuilder::build(n[s_id], strategy_id, config);
-      std::cout << result->to_string() << std::endl;
+  auto* result = StrategyBuilder::build(n[s_id], strategy_id, config);
+  std::cout << result->to_string() << std::endl;
   return result;
 }
 
 void strategy_db::set_value(const YAML::Node &node) {
   for (std::size_t i = 0; i < node[name_].size(); i++) {
-    auto *s = read_strategy(node[name_], i, config_);
+    auto* s = read_strategy(node[name_], i, config_);
     value_.push_back(s);
   }
 }

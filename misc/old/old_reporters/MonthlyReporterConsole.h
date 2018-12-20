@@ -8,7 +8,7 @@
 #ifndef MONTHLYREPORTERCONSOLE_H
 #define    MONTHLYREPORTERCONSOLE_H
 
-#include "Reporter.h"
+#include "Reporters/Reporter.h"
 #include <string>
 
 class MonthlyReporterConsole : public Reporter {

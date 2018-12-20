@@ -5,7 +5,7 @@
 #ifndef POMS_BFFARMREPORTER_H
 #define POMS_BFFARMREPORTER_H
 
-#include "Reporter.h"
+#include "Reporters/Reporter.h"
 
 class BFFarmReporter : public Reporter {
  DISALLOW_COPY_AND_ASSIGN(BFFarmReporter)

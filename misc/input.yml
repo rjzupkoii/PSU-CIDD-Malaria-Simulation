@@ -870,8 +870,10 @@ events:
       - location: 0
         parasite_info:
           - duration: 10
-            # genotype_id -1: fix allele 580Y and x of the last loci, other alleles will be drawed randomly
-            genotype_id: -1
+            # other position not listed below will be drawn uniformly
+            allele_distributions:
+              - position: 4
+                distribution: [1.0,0.0]
             number_of_cases: 1
             start_day: 1990/6/2
   - name: change_treatment_coverage

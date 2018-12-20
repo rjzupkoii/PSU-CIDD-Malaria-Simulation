@@ -21,7 +21,7 @@ class ImportationPeriodicallyEvent : public Event {
 
  VIRTUAL_PROPERTY_REF(int, duration)
 
- VIRTUAL_PROPERTY_REF(int, genotype_id)
+ VIRTUAL_PROPERTY_REF(unsigned long, genotype_id)
 
  VIRTUAL_PROPERTY_REF(int, number_of_cases)
 
