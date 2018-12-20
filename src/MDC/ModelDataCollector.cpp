@@ -191,6 +191,7 @@ void ModelDataCollector::initialize() {
     today_number_of_treatments_by_therapy_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
 
     monthly_number_of_treatment_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    monthly_number_of_new_infections_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
     monthly_number_of_clinical_episode_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
   }
 }
@@ -800,6 +801,7 @@ void ModelDataCollector::monthly_update() {
   if (Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) {
     for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
       monthly_number_of_treatment_by_location_[loc] = 0;
+      monthly_number_of_new_infections_by_location_[loc] = 0;
       monthly_number_of_clinical_episode_by_location_[loc] = 0;
     }
   }

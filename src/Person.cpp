@@ -579,7 +579,7 @@ void Person::randomly_choose_parasite() {
   if (today_infections_->size()==1) {
     infected_by(today_infections_->at(0));
   } else {
-    const int index_random_parasite = Model::RANDOM->random_uniform(today_infections_->size());
+    const std::size_t index_random_parasite = Model::RANDOM->random_uniform(today_infections_->size());
     infected_by(today_infections_->at(index_random_parasite));
   }
 

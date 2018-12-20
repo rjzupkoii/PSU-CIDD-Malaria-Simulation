@@ -29,7 +29,7 @@
 #include <cmath>
 #include <cfloat>
 
-Population::Population(Model *model) : model_(model) {
+Population::Population(Model* model) : model_(model) {
   person_index_list_ = new PersonIndexPtrList();
   all_persons_ = new PersonIndexAll();
 
@@ -50,7 +50,7 @@ Population::~Population() {
 
   if (person_index_list_!=nullptr) {
 
-    for (PersonIndex *person_index : *person_index_list_) {
+    for (PersonIndex* person_index : *person_index_list_) {
       ObjectHelpers::delete_pointer<PersonIndex>(person_index);
     }
 
@@ -59,9 +59,9 @@ Population::~Population() {
   }
 }
 
-void Population::add_person(Person *person) {
+void Population::add_person(Person* person) {
 
-  for (PersonIndex *person_index : *person_index_list_) {
+  for (PersonIndex* person_index : *person_index_list_) {
     person_index->add(person);
   }
   person->set_population(this);
@@ -71,25 +71,25 @@ void Population::add_person(Person *person) {
   }
 }
 
-void Population::remove_person(Person *person) {
+void Population::remove_person(Person* person) {
   if (person->host_state()!=Person::DEAD) {
     person->all_clonal_parasite_populations()->remove_all_infection_force();
   }
 
-  for (PersonIndex *person_index : *person_index_list_) {
+  for (PersonIndex* person_index : *person_index_list_) {
     person_index->remove(person);
   }
 }
 
-void Population::remove_dead_person(Person *person) {
+void Population::remove_dead_person(Person* person) {
   remove_person(person);
   ObjectHelpers::delete_pointer<Person>(person);
 }
 
-void Population::notify_change(Person *p, const Person::Property &property, const void *oldValue,
-                               const void *newValue) {
+void Population::notify_change(Person* p, const Person::Property &property, const void* oldValue,
+                               const void* newValue) {
 
-  for (PersonIndex *person_index : *person_index_list_) {
+  for (PersonIndex* person_index : *person_index_list_) {
     person_index->notify_change(p, property, oldValue, newValue);
   }
 }
@@ -200,7 +200,7 @@ void Population::perform_infection_event() {
         for (auto j = 0u; j < v_int_number_of_bites[bitting_level]; j++) {
           //select 1 random person from level i
           const auto index = model_->random()->random_uniform(size);
-          auto *person = pi->vPerson()[loc][bitting_level][index];
+          auto* person = pi->vPerson()[loc][bitting_level][index];
 
           assert(p->host_state()!=Person::DEAD);
           person->increase_number_of_times_bitten();
@@ -229,7 +229,10 @@ void Population::perform_infection_event() {
   //solve Multiple infections
   if (today_infections.empty()) return;
 
-  for (auto *p : today_infections) {
+  for (auto* p : today_infections) {
+    if (!p->today_infections()->empty()) {
+      Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[p->location()] += 1;
+    }
     p->randomly_choose_parasite();
   }
 
@@ -362,7 +365,7 @@ void Population::introduce_initial_cases() {
           std::round(size(p_info.location)*p_info.prevalence));
       num_of_infections = num_of_infections <= 0 ? 1 : num_of_infections;
 
-      auto *genotype = Model::CONFIG->genotype_db()->at(p_info.parasite_type_id);
+      auto* genotype = Model::CONFIG->genotype_db()->at(p_info.parasite_type_id);
       LOG(INFO) << "Introducing genotype " << p_info.parasite_type_id << " with prevalence: " << p_info.prevalence
                 << " : "
                 << num_of_infections << " infections at location " << p_info.location;
@@ -381,7 +384,7 @@ void Population::introduce_initial_cases() {
   }
 }
 
-void Population::introduce_parasite(const int &location, Genotype *parasite_type, const int &num_of_infections) {
+void Population::introduce_parasite(const int &location, Genotype* parasite_type, const int &num_of_infections) {
 
   if (model_!=nullptr) {
 
@@ -406,7 +409,7 @@ void Population::introduce_parasite(const int &location, Genotype *parasite_type
         //                std::cout << vIntNumberOfBites[bitting_level] << "-" << j << std::endl;
         //select 1 random person from level i
         const int index = model_->random()->random_uniform(size);
-        auto *p = pi->vPerson()[location][biting_level][index];
+        auto* p = pi->vPerson()[location][biting_level][index];
 
         initial_infection(p, parasite_type);
       }
@@ -414,12 +417,12 @@ void Population::introduce_parasite(const int &location, Genotype *parasite_type
   }
 }
 
-void Population::initial_infection(Person *person, Genotype *parasite_type) const {
+void Population::initial_infection(Person* person, Genotype* parasite_type) const {
 
   person->immune_system()->set_increase(true);
   person->set_host_state(Person::ASYMPTOMATIC);
 
-  auto *blood_parasite = person->add_new_parasite_to_blood(parasite_type);
+  auto* blood_parasite = person->add_new_parasite_to_blood(parasite_type);
   //    std::cout << "hello"<< std::endl;
 
   const auto size = model_->random()->random_flat(
@@ -551,7 +554,7 @@ void Population::perform_death_event() {
           //change state to Death;
           const int index = Model::RANDOM->random_uniform(size);
           //                    std::cout << index << "-" << pi->vPerson()[loc][hs][ac].size() << std::endl;
-          auto *p = pi->vPerson()[loc][hs][ac][index];
+          auto* p = pi->vPerson()[loc][hs][ac][index];
           p->cancel_all_events_except(nullptr);
           p->set_host_state(Person::DEAD);
         }
@@ -576,7 +579,7 @@ void Population::clear_all_dead_state_individual() {
     }
   }
 
-  for (Person *p : removePersons) {
+  for (Person* p : removePersons) {
     remove_dead_person(p);
   }
 }
@@ -628,7 +631,7 @@ void Population::perform_circulation_event() {
 
   }
 
-  for (auto *p : today_circulations) {
+  for (auto* p : today_circulations) {
     p->randomly_choose_target_location();
   }
 
@@ -638,7 +641,7 @@ void Population::perform_circulation_event() {
 
 void Population::perform_circulation_for_1_location(const int &from_location, const int &target_location,
                                                     const int &number_of_circulation,
-                                                    std::vector<Person *> &today_circulations) {
+                                                    std::vector<Person*> &today_circulations) {
   DoubleVector vLevelDensity;
   auto pi = get_person_index<PersonIndexByLocationMovingLevel>();
 
@@ -662,7 +665,7 @@ void Population::perform_circulation_for_1_location(const int &from_location, co
 
       //select 1 random person from level i
       int index = model_->random()->random_uniform(size);
-      Person *p = pi->vPerson()[from_location][moving_level][index];
+      Person* p = pi->vPerson()[from_location][moving_level][index];
       assert(p->host_state()!=Person::DEAD);
 
       p->today_target_locations()->push_back(target_location);
