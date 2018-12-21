@@ -39,6 +39,10 @@ void MonthlyReporter::monthly_report() {
   print_EIR_PfPR_by_location();
   ss << group_sep;
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[loc] << sep;
+  }
+  ss << group_sep;
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << sep;
   }
   ss << group_sep;
