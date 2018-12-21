@@ -19,7 +19,7 @@
 OBJECTPOOL_IMPL(ImportationPeriodicallyEvent)
 
 ImportationPeriodicallyEvent::ImportationPeriodicallyEvent(const int &location, const int &duration,
-                                                           const int &genotype_id,
+                                                           unsigned int genotype_id,
                                                            const int &number_of_cases, const int &start_day)
     : location_(location),
       duration_(duration),
@@ -33,7 +33,7 @@ ImportationPeriodicallyEvent::ImportationPeriodicallyEvent(const int &location, 
 ImportationPeriodicallyEvent::~ImportationPeriodicallyEvent() = default;
 
 void ImportationPeriodicallyEvent::schedule_event(Scheduler* scheduler, const int &location, const int &duration,
-                                                  const int &genotype_id,
+                                                  unsigned int genotype_id,
                                                   const int &number_of_cases, const int &start_day) {
   if (scheduler!=nullptr) {
     auto* e = new ImportationPeriodicallyEvent(location, duration, genotype_id, number_of_cases, start_day);
@@ -64,12 +64,12 @@ void ImportationPeriodicallyEvent::execute() {
                                               << " with genotype " << genotype_id_;
   for (auto i = 0; i < number_of_importation_cases; i++) {
 
-    ul ind_ac = Model::RANDOM->random_uniform(pi->vPerson()[location_][0].size());
+    std::size_t ind_ac = Model::RANDOM->random_uniform(static_cast<unsigned long>(pi->vPerson()[location_][0].size()));
     if (pi->vPerson()[location_][0][ind_ac].empty()) {
       continue;
     }
 
-    ul index = Model::RANDOM->random_uniform(pi->vPerson()[location_][0][ind_ac].size());
+    std::size_t index = Model::RANDOM->random_uniform(pi->vPerson()[location_][0][ind_ac].size());
     auto* p = pi->vPerson()[location_][0][ind_ac][index];
 
     p->immune_system()->set_increase(true);

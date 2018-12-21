@@ -28,7 +28,7 @@ void Random::initialize(const unsigned long &seed) {
   // seed the RNG
   const auto c = std::hash<std::thread::id>{}(std::this_thread::get_id());
   seed_ = seed==0 ? NumberHelpers::good_seed(static_cast<unsigned long>(clock()), static_cast<unsigned long>
-  (std::time(nullptr)), c)
+  (std::time(nullptr)), (unsigned long) c)
                   : seed;
   LOG(INFO) << fmt::format("Random initializing with seed: {}", seed);
   gsl_rng_set(G_RNG, seed_);

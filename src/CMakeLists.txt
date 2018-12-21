@@ -13,7 +13,7 @@ add_dependencies(MaSimCore date args)
 
 
 add_executable(MaSim MaSim/main.cpp)
-add_dependencies(MaSim MaSimCore date args)
+add_dependencies(MaSim MaSimCore)
 
 target_link_libraries(MaSim
     MaSimCore
@@ -31,7 +31,7 @@ install(FILES ${PROJECT_SOURCE_DIR}/misc/input_dev.yml DESTINATION ${PROJECT_SOU
 file(GLOB DXG_SRC_FILES DxGGenerator/*.cpp DxGGenerator/*.h)
 
 add_executable(DxGGenerator ${DXG_SRC_FILES})
-add_dependencies(DxGGenerator MaSimCore date args)
+add_dependencies(DxGGenerator MaSimCore)
 
 target_link_libraries(DxGGenerator
     MaSimCore

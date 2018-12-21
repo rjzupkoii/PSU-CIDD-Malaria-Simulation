@@ -30,9 +30,9 @@ void number_of_locations::set_value(const YAML::Node &node) {
 
 void spatial_distance_matrix::set_value(const YAML::Node &node) {
   value_.resize(static_cast<unsigned long>(config_->number_of_locations()));
-  for (auto from_location = 0; from_location < config_->number_of_locations(); from_location++) {
+  for (auto from_location = 0ul; from_location < config_->number_of_locations(); from_location++) {
     value_[from_location].resize(static_cast<unsigned long long int>(config_->number_of_locations()));
-    for (auto to_location = 0; to_location < config_->number_of_locations(); to_location++) {
+    for (auto to_location = 0ul; to_location < config_->number_of_locations(); to_location++) {
       value_[from_location][to_location] = Spatial::Coordinate::calculate_distance_in_km(
           *config_->location_db()[from_location].coordinate,
           *config_->location_db()[to_location].coordinate);
@@ -53,7 +53,7 @@ void seasonal_info::set_value(const YAML::Node &node) {
   value_.min_value.clear();
   value_.enable = seasonal_info_node["enable"].as<bool>();
 
-  for (auto i = 0; i < config_->number_of_locations(); i++) {
+  for (auto i = 0ul; i < config_->number_of_locations(); i++) {
     auto input_loc = seasonal_info_node["a"].size() < config_->number_of_locations() ? 0 : i;
     value_.A.push_back(seasonal_info_node["a"][input_loc].as<double>());
 
@@ -163,13 +163,13 @@ void genotype_db::set_value(const YAML::Node &node) {
   std::cout << value_->weight().size()-2<< std::endl;
   auto temp = 1;
   for (int i = static_cast<int>(value_->weight().size() - 2); i >= 0; i--) {
-    temp *= config_->genotype_info().loci_vector[i + 1].alleles.size();
+    temp *= (int)config_->genotype_info().loci_vector[i + 1].alleles.size();
     value_->weight()[i] = temp;
   }
   auto number_of_genotypes = 1;
   // std::cout << config_->genotype_info().loci_vector.size() << std::endl;
   for (auto &locus : config_->genotype_info().loci_vector) {
-    number_of_genotypes *= locus.alleles.size();
+    number_of_genotypes *= (int)locus.alleles.size();
   }
 
   for (auto i = 0; i < number_of_genotypes; i++) {
@@ -403,7 +403,7 @@ Therapy* read_therapy(const YAML::Node &n, const int &therapy_id) {
 void therapy_db::set_value(const YAML::Node &node) {
   //    read_all_therapy
   for (std::size_t i = 0; i < node[name_].size(); i++) {
-    auto* t = read_therapy(node[name_], i);
+    auto* t = read_therapy(node[name_], (int)i);
     value_.push_back(t);
   }
 }
@@ -424,7 +424,7 @@ IStrategy* read_strategy(const YAML::Node &n, const int &strategy_id, Config* co
 
 void strategy_db::set_value(const YAML::Node &node) {
   for (std::size_t i = 0; i < node[name_].size(); i++) {
-    auto* s = read_strategy(node[name_], i, config_);
+    auto* s = read_strategy(node[name_], (int)i, config_);
     value_.push_back(s);
   }
 }

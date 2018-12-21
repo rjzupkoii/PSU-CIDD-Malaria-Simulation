@@ -51,7 +51,7 @@ class DrugsInBlood {
 
   Drug *get_drug(const int &type_id) const;
 
-  int size() const;
+  std::size_t size() const;
 
   void clear() const;
 

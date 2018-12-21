@@ -90,7 +90,7 @@ Drug *DrugsInBlood::get_drug(const int &type_id) const {
   return drugs_->at(type_id);
 }
 
-int DrugsInBlood::size() const {
+std::size_t DrugsInBlood::size() const {
   return drugs_->size();
 }
 

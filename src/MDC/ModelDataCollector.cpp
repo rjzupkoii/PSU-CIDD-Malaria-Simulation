@@ -216,7 +216,7 @@ void ModelDataCollector::perform_population_statistic() {
   //    total_immune_by_location_age_class_.assign(Model::CONFIG->number_of_locations(), DoubleVector(Model::CONFIG->number_of_age_classes(), 0.0));
 
 
-  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+  for (auto location = 0ul; location < Model::CONFIG->number_of_locations(); location++) {
     popsize_by_location_[location] = 0;
     popsize_residence_by_location_[location] = 0;
     blood_slide_prevalence_by_location_[location] = 0.0;
@@ -229,7 +229,7 @@ void ModelDataCollector::perform_population_statistic() {
       popsize_by_location_hoststate_[location][i] = 0;
     }
 
-    for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+    for (auto ac = 0ul; ac < Model::CONFIG->number_of_age_classes(); ac++) {
       total_immune_by_location_age_class_[location][ac] = 0.0;
       total_parasite_population_by_location_age_group_[location][ac] = 0;
       number_of_positive_by_location_age_group_[location][ac] = 0;
@@ -255,12 +255,12 @@ void ModelDataCollector::perform_population_statistic() {
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
   long long sum_moi = 0;
 
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (auto loc = 0ul; loc < Model::CONFIG->number_of_locations(); loc++) {
     auto pop_sum_location = 0;
     for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
-      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+      for (auto ac = 0ul; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         std::size_t size = pi->vPerson()[loc][hs][ac].size();
-        popsize_by_location_hoststate_[loc][hs] += size;
+        popsize_by_location_hoststate_[loc][hs] += (int)size;
         pop_sum_location += size;
         popsize_by_location_age_class_[loc][ac] += size;
 

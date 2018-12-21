@@ -21,18 +21,18 @@ class ImportationPeriodicallyEvent : public Event {
 
  VIRTUAL_PROPERTY_REF(int, duration)
 
- VIRTUAL_PROPERTY_REF(unsigned long, genotype_id)
+ VIRTUAL_PROPERTY_REF(unsigned int, genotype_id)
 
  VIRTUAL_PROPERTY_REF(int, number_of_cases)
 
  public:
-  ImportationPeriodicallyEvent(const int &location = -1, const int &duration = -1, const int &genotype_id = -1,
+  ImportationPeriodicallyEvent(const int &location = -1, const int &duration = -1, unsigned int genotype_id = -1,
                                const int &number_of_cases = -1, const int &start_day = -1);
 
   //    ImportationEvent(const ImportationEvent& orig);
   virtual ~ImportationPeriodicallyEvent();
 
-  static void schedule_event(Scheduler *scheduler, const int &location, const int &duration, const int &genotype_id,
+  static void schedule_event(Scheduler *scheduler, const int &location, const int &duration, unsigned int genotype_id,
                              const int &number_of_cases, const int &start_day);
 
   std::string name() override {
