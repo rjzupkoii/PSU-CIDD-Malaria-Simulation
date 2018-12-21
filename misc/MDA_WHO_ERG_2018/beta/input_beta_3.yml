@@ -285,10 +285,6 @@ initial_parasite_info:
   parasite_info:
   - {parasite_type_id: 64, prevalence: 0.05}
   - {parasite_type_id: 72, prevalence: 0.05}
-- location_id: 10
-  parasite_info:
-  - {parasite_type_id: 15, prevalence: 0.05}
-  - {parasite_type_id: 20, prevalence: 0.1}
 initial_strategy_id: 3
 location_db:
   age_distribution_by_location:
@@ -351,7 +347,7 @@ strategy_db:
   2: {name: ASAQ-SFTStrategy, therapy_id: 7, type: SFT}
   3:
     name: BaseLineStrategy
-    peak_after: 12410
+    peak_after: 12418
     peak_distribution:
     - [0.8, 0.2]
     start_distribution:

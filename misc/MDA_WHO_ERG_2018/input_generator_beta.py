@@ -8,9 +8,10 @@ Created on Tue Aug  7 14:23:33 2018
 import yaml;
 import numpy as np;
 from math import log ;
-import inflect;
-p = inflect.engine();
+#import inflect;
+#p = inflect.engine();
 
+#%%
 def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
@@ -41,6 +42,9 @@ for index,event in enumerate(data['events']):
 
 
 betas = np.logspace(log(0.05,10), log(0.5,10), num= 100)
+
+
+#%%
 
 for index,beta in enumerate(betas):
     data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()

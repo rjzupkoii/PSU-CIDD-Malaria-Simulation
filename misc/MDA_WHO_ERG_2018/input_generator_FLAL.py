@@ -10,8 +10,8 @@ import numpy as np;
 from math import log;
 import copy;
 
-import inflect;
-p = inflect.engine();
+#import inflect;
+#p = inflect.engine();
 
 def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
