@@ -32,7 +32,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-data['location_db']['population_size_by_location'] = [300000];       
+data['location_db']['population_size_by_location'] = [1000000];       
 
 #3RMDA
 number_MDA_round = 0;
@@ -41,7 +41,7 @@ for index,event in enumerate(data['events']):
         data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
 
 
-betas = np.logspace(log(0.05,10), log(0.5,10), num= 100)
+betas = np.logspace(log(0.04,10), log(0.5,10), num= 100)
 
 
 #%%

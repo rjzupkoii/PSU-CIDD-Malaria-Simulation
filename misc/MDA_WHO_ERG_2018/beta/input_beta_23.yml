@@ -291,12 +291,12 @@ location_db:
   - [0.0334, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
     0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
     0.0387]
-  beta_by_location: [0.08536763237353455]
+  beta_by_location: [0.07192794807149372]
   location_info:
   - [0, 0, 0]
   p_treatment_for_less_than_5_by_location: [0.6]
   p_treatment_for_more_than_5_by_location: [0.5]
-  population_size_by_location: [300000]
+  population_size_by_location: [1000000]
 lumefantrine_drug_id: 2
 mda_therapy_id: 8
 mean_prob_individual_present_at_mda: [0.85, 0.75, 0.85]
