@@ -283,10 +283,6 @@ initial_parasite_info:
   parasite_info:
   - {parasite_type_id: 64, prevalence: 0.05}
   - {parasite_type_id: 72, prevalence: 0.05}
-- location_id: 10
-  parasite_info:
-  - {parasite_type_id: 15, prevalence: 0.05}
-  - {parasite_type_id: 20, prevalence: 0.1}
 initial_strategy_id: 3
 location_db:
   age_distribution_by_location:
