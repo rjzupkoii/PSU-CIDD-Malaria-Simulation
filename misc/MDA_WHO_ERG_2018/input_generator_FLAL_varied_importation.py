@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 40000
+popsize = 300000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
@@ -78,7 +78,7 @@ for mda_round in number_MDA_round:
             for index,event in enumerate(data['events']):
                 if event['name'] == 'introduce_parasites_periodically':
                     new_data['events'][index]['info'][0]['parasite_info'][0]['duration'] = 1000    
-                    new_data['events'][index]['info'][0]['parasite_info'][0]['number_of_cases'] = importation*1000    
+                    new_data['events'][index]['info'][0]['parasite_info'][0]['number_of_cases'] = round(importation*1000)
             
             importation_str = importation_strs[importation]
             output_filename = 'FLAL_varied_importation/%s/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL_importation_%s.yml'%(kFormatter(popsize), kFormatter(popsize),mda_round,pfpr_str,importation_str);
