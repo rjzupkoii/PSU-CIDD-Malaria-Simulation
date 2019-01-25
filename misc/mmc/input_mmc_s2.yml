@@ -493,7 +493,7 @@ drug_db:
     maximum_parasite_killing_rate: 0.95
     n: 19
     age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
-    mutation_probability: 0.0005
+    mutation_probability: 0.005
     affecting_loci: [0,1]
     selecting_alleles: [[1],[1,3,5,7]]
     k: 4
