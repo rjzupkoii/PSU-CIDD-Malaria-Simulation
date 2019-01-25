@@ -318,12 +318,6 @@ initial_parasite_info:
         prevalence: 0.05
       - parasite_type_id: 72
         prevalence: 0.05
-  - location_id: 10
-    parasite_info:
-      - parasite_type_id: 15
-        prevalence: 0.05
-      - parasite_type_id: 20
-        prevalence: 0.1  
 #      - parasite_type_id: 2
 #        prevalence: 0.1
 #      - parasite_type_id: 4
@@ -772,7 +766,7 @@ events:
     - location: 0
       parasite_info:
         - duration: 10
-          # genotype_id -1: fix allele 580Y and x of the last loci, other alleles will be drawed randomly
+          # genotype_id -1: all random
           genotype_id: -1
           number_of_cases: 1
           start_day: 2006/2/1

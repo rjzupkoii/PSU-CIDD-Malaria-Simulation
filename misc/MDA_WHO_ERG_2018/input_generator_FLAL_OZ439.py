@@ -49,13 +49,14 @@ data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 #        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
 
 
-betas = [0.18, 0.078, 0.065, 0.058,0.055]
 
-pfpr = {0.18: 'PFPR15',        
-        0.078: 'PFPR5',
-        0.065: 'PFPR3',
+betas = [0.184865, 0.0776493, 0.0649498, 0.058,0.053]
+
+pfpr = {0.184865: 'PFPR15',        
+        0.0776493: 'PFPR5',
+        0.0649498: 'PFPR3',
         0.058: 'PFPR2',
-        0.055: 'PFPR1'}
+        0.053: 'PFPR1'}
 
 improved_tc = {True: '_itc' , 
                False: ''}
@@ -80,22 +81,3 @@ for mda_round in number_MDA_round:
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 
             output_stream.close();
-
-#for index,beta in enumerate(betas):
-#    data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
-#    output_filename = 'beta/input_beta_%d.yml'%index;
-#    output_stream = open(output_filename, 'w');
-#    yaml.dump(data, output_stream);
-#    output_stream.close();
-
-#
-#
-#print(kFormatter(9000));
-#print(p.number_to_words( number_of_locations, threshold=10));
-
-#output_filename = 'ONELOC_300K_3RMDA_PFPR15_OPPUNIFORM_FLAL.yml';
-#
-#output_filename = 'input_test.yml';
-#
-#output_stream = open(output_filename, 'w');
-#yaml.dump(data, output_stream);

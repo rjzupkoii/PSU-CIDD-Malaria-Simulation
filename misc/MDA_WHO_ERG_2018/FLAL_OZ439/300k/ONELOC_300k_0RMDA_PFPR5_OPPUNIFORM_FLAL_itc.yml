@@ -298,17 +298,13 @@ initial_parasite_info:
   parasite_info:
   - {parasite_type_id: 64, prevalence: 0.05}
   - {parasite_type_id: 72, prevalence: 0.05}
-- location_id: 10
-  parasite_info:
-  - {parasite_type_id: 15, prevalence: 0.05}
-  - {parasite_type_id: 20, prevalence: 0.1}
 initial_strategy_id: 3
 location_db:
   age_distribution_by_location:
   - [0.0334, 0.03, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.031, 0.0285, 0.0256,
     0.0298, 0.0212, 0.0321, 0.0228, 0.023, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344,
     0.0387]
-  beta_by_location: [0.078]
+  beta_by_location: [0.0776493]
   location_info:
   - [0, 0, 0]
   p_treatment_for_less_than_5_by_location: [0.6]
