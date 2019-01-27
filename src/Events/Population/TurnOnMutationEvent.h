@@ -10,10 +10,12 @@ class TurnOnMutationEvent : public Event {
 
  DISALLOW_MOVE(TurnOnMutationEvent)
 
- public:
-  explicit TurnOnMutationEvent(const int &at_time);
+ double mutation_probability=0.0;
 
-  virtual ~TurnOnMutationEvent() = default;
+ public:
+  explicit TurnOnMutationEvent(const int &at_time, const double &mutation_probability);
+
+  ~TurnOnMutationEvent() override = default;
 
   std::string name() override {
     return "TurnOnMutationEvent";
