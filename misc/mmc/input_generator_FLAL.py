@@ -37,9 +37,9 @@ data['location_db']['location_info']= location_info;
 popsize = 100000
 data['location_db']['population_size_by_location'] = [popsize];       
 
-mutation_rates = [0.01, 0.0025, 0.00125];
+mutation_rates = [0.016, 0.019, 0.022];
 
-mutation_rates_str = ['0p01','0p0025','0p00125'];
+mutation_rates_str = ['0p016','0p019','0p022'];
 #%%
 for i,mutation_rate in enumerate(mutation_rates):
     new_data = copy.deepcopy(data)
