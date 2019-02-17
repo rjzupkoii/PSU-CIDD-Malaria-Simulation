@@ -17,7 +17,7 @@ def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
 
-stream = open('input_mmc_s1.2.yml', 'r');
+stream = open('input_mmc_s2.yml', 'r');
 data = yaml.load(stream);
 stream.close();
 
@@ -37,16 +37,16 @@ data['location_db']['location_info']= location_info;
 popsize = 100000
 data['location_db']['population_size_by_location'] = [popsize];       
 
-mutation_rates = [0.016, 0.019, 0.022];
+mutation_rates = [0.0016, 0.0019, 0.0022];
 
-mutation_rates_str = ['0p016','0p019','0p022'];
+mutation_rates_str = ['0p0016','0p0019','0p0022'];
 #%%
 for i,mutation_rate in enumerate(mutation_rates):
     new_data = copy.deepcopy(data)
     for drug_id,drug in enumerate(data['drug_db']):
         print(mutation_rate)
         new_data['drug_db'][drug_id]['mutation_probability'] = mutation_rate
-        output_filename = 'input_mmc_s1.2_mu_%s.yml'%(mutation_rates_str[i]);
+        output_filename = 'input_mmc_s2_mu_%s.yml'%(mutation_rates_str[i]);
         output_stream = open(output_filename, 'w');
         yaml.dump(new_data, output_stream); 
         output_stream.close();
