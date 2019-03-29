@@ -36,6 +36,6 @@ void MultinomialDistributionGenerator::allocate(Random *random) {
       data.push_back(i);
     }
   }
-  assert(data_.size()==chunkSize);
+  assert(data.size()==chunk_size);
   random->random_shuffle(&data[0], data.size(), sizeof(int));
 }

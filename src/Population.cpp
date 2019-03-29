@@ -202,7 +202,7 @@ void Population::perform_infection_event() {
           const auto index = model_->random()->random_uniform(size);
           auto* person = pi->vPerson()[loc][bitting_level][index];
 
-          assert(p->host_state()!=Person::DEAD);
+          assert(person->host_state()!=Person::DEAD);
           person->increase_number_of_times_bitten();
 
           const auto p_infectious = Model::RANDOM->random_flat(0.0, 1.0);
@@ -545,7 +545,7 @@ void Population::perform_death_event() {
         if (size==0) continue;
         auto poisson_means = size*Model::CONFIG->death_rate_by_age_class()[ac]/Constants::DAYS_IN_YEAR();
 
-        assert(Model::CONFIG->death_rate_by_age().size()==Model::CONFIG->number_of_age_classes());
+        assert(Model::CONFIG->death_rate_by_age_class().size()==Model::CONFIG->number_of_age_classes());
         const auto number_of_deaths = Model::RANDOM->random_poisson(poisson_means);
         if (number_of_deaths==0) continue;
 

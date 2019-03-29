@@ -365,7 +365,7 @@ void Person::receive_therapy(Therapy *therapy, ClonalParasitePopulation *clinica
   } else {
     //else if therapy is MACTherapy
     auto *mac_therapy = dynamic_cast<MACTherapy *>(therapy);
-    assert(macTherapy!=nullptr);
+    assert(mac_therapy!=nullptr);
     for (auto i = 0; i < mac_therapy->therapy_ids().size(); i++) {
       const auto therapy_id = mac_therapy->therapy_ids()[i];
       const auto start_day = mac_therapy->start_at_days()[i];
