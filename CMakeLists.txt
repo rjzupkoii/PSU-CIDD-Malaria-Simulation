@@ -14,6 +14,13 @@ if (WIN32)
   set(CMAKE_CXX_FLAGS_DEBUG "-DNOMINMAX ${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif ()
 
+IF(APPLE)
+  # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
+  LINK_DIRECTORIES(/usr/local/lib)
+  INCLUDE_DIRECTORIES(/usr/local/include)
+ENDIF()
+
+
 #if(UNIX)
 #    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 #endif()
@@ -40,7 +47,8 @@ add_subdirectory(src)
 #Setup test project
 option(BUILD_TESTS "Build all tests." OFF) # Makes boolean 'test' available.
 if (BUILD_TESTS)
-  find_package(Catch2 CONFIG REQUIRED)
+#  find_package(Catch2 CONFIG REQUIRED)
+  add_subdirectory(${EXT_PROJECTS_DIR}/catch)
 
   set(PROJECT_TEST_NAME masim_test)
   add_subdirectory(test)

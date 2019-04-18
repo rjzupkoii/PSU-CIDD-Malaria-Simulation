@@ -1,4 +1,4 @@
-include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
+include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4 ${CATCH_INCLUDE_DIR})
 
 set(TEST_SRC_FILES
     main.cpp
@@ -14,14 +14,13 @@ set(TEST_SRC_FILES
     )
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} )
-add_dependencies(${PROJECT_TEST_NAME} MaSimCore date args)
+add_dependencies(${PROJECT_TEST_NAME} MaSimCore date args catch)
 
 target_link_libraries(${PROJECT_TEST_NAME}
     MaSimCore
     yaml-cpp
     fmt::fmt fmt::fmt-header-only
     GSL::gsl GSL::gslcblas
-    Catch2::Catch2
     )
 
 target_compile_features(${PROJECT_TEST_NAME} PRIVATE cxx_range_for)

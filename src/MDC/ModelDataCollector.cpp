@@ -133,8 +133,6 @@ void ModelDataCollector::initialize() {
     current_EIR_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
     last_update_total_number_of_bites_by_location_ = LongVector(Model::CONFIG->number_of_locations(), 0);
 
-    resistance_tracker_.initialize();
-
     last_10_blood_slide_prevalence_by_location_ = DoubleVector2(Model::CONFIG->number_of_locations(),
                                                                 DoubleVector(10, 0.0));
     last_10_fraction_positive_that_are_clinical_by_location_ = DoubleVector2(Model::CONFIG->number_of_locations(),
@@ -610,7 +608,7 @@ void ModelDataCollector::end_of_time_step() {
     }
   }
 
-  resistance_tracker_.update_resistance_tracker();
+
 }
 
 void ModelDataCollector::record_1_treatment(const int &location, const int &age, const int &therapy_id) {
@@ -640,8 +638,6 @@ void ModelDataCollector::record_1_mutation(const int &location, Genotype* from, 
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     cumulative_mutants_by_location_[location] += 1;
   }
-
-  resistance_tracker_.change(from->genotype_id(), to->genotype_id(), location);
 }
 
 void ModelDataCollector::update_UTL_vector() {
@@ -808,7 +804,5 @@ void ModelDataCollector::monthly_update() {
 }
 
 void ModelDataCollector::record_1_migration(Person* pPerson, const int &from, const int &to) {
-  for (auto clonal : *(pPerson->all_clonal_parasite_populations()->parasites())) {
-    resistance_tracker_.change_location(clonal->genotype()->genotype_id(), from, to);
-  }
+
 }

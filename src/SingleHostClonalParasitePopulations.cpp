@@ -53,10 +53,6 @@ void SingleHostClonalParasitePopulations::clear() {
   remove_all_infection_force();
 
   for (auto &parasite : *parasites_) {
-    if (Model::DATA_COLLECTOR!=nullptr) {
-      Model::DATA_COLLECTOR->resistance_tracker().decrease(parasite->genotype()->genotype_id(),
-                                                           person_->location());
-    }
     delete parasite;
   }
   parasites_->clear();
@@ -69,11 +65,6 @@ void SingleHostClonalParasitePopulations::add(ClonalParasitePopulation *blood_pa
   parasites_->push_back(blood_parasite);
   blood_parasite->set_index(parasites_->size() - 1);
   assert(parasites_->at(blood_parasite->index())==blood_parasite);
-
-  if (Model::DATA_COLLECTOR!=nullptr) {
-    Model::DATA_COLLECTOR->resistance_tracker().increase(blood_parasite->genotype()->genotype_id(),
-                                                         person_->location());
-  }
 }
 
 void SingleHostClonalParasitePopulations::remove(ClonalParasitePopulation *blood_parasite) {
@@ -115,9 +106,6 @@ void SingleHostClonalParasitePopulations::remove(const int &index) {
   //        assert(false);
   //    }
   //    std::cout << parasites_.size() << std::endl;
-  if (Model::DATA_COLLECTOR!=nullptr) {
-    Model::DATA_COLLECTOR->resistance_tracker().decrease(bp->genotype()->genotype_id(), person_->location());
-  }
 
   delete bp;
   bp = nullptr;

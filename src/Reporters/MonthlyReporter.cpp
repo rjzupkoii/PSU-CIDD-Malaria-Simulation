@@ -50,16 +50,7 @@ void MonthlyReporter::monthly_report() {
     ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
   }
   ss << group_sep;
-  for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
-    ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count()[i] << sep;
-  }
-  ss << group_sep;
-
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
-      ss << Model::DATA_COLLECTOR->resistance_tracker().parasite_population_count_by_location()[loc][i] << sep;
-    }
-  }
+// TODO: report genotype frequency heres
 
   CLOG(INFO, "monthly_reporter") << ss.str();
   ss.str("");

@@ -25,7 +25,7 @@ class MFTMultiLocationStrategy : public IStrategy {
   MFTMultiLocationStrategy();
 
   //    MFTStrategy(const MFTStrategy& orig);
-  virtual ~MFTMultiLocationStrategy();
+  ~MFTMultiLocationStrategy() override;
 
   void add_therapy(Therapy *therapy) override;
 
@@ -39,7 +39,6 @@ class MFTMultiLocationStrategy : public IStrategy {
 
   void monthly_update() override;
 
-  void adjust_distribution(const int &time);
 };
 
 #endif //POMS_MFTDIFFERENTDISTRIBUTIONBYLOCATIONSTRATEGY_H

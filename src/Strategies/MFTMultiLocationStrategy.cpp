@@ -44,7 +44,7 @@ std::string MFTMultiLocationStrategy::to_string() const {
   }
   sstm << therapy_list[therapy_list.size() - 1]->id() << "-" << std::endl;;
 
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (auto loc = 0; loc < distribution[loc].size(); loc++) {
     sstm << "[";
     for (auto i = 0; i < distribution[loc].size() - 1; i++) {
       sstm << distribution[loc][i] << ",";

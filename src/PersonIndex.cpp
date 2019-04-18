@@ -7,9 +7,7 @@
 
 #include "PersonIndex.h"
 
-PersonIndex::PersonIndex() {
-}
+PersonIndex::PersonIndex() = default;
 
-PersonIndex::~PersonIndex() {
-}
+PersonIndex::~PersonIndex() = default;
 

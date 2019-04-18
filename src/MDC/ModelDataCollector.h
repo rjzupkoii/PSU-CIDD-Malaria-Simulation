@@ -10,7 +10,6 @@
 
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
-#include "ResistanceTracker.h"
 
 class Model;
 
@@ -127,7 +126,6 @@ class ModelDataCollector {
 
  PROPERTY_REF(LongVector, last_update_total_number_of_bites_by_location)
 
- READ_ONLY_PROPERTY_REF(ResistanceTracker, resistance_tracker)
 
  PROPERTY_REF(DoubleVector2, last_10_blood_slide_prevalence_by_location)
 

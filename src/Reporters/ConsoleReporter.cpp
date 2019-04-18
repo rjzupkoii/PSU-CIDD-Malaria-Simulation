@@ -30,15 +30,15 @@ void ConsoleReporter::before_run() {
 
 }
 
-void report_number_by_state(const int &location, PersonIndexByLocationStateAgeClass *pi) {
+void report_number_by_state(const int &location, PersonIndexByLocationStateAgeClass* pi) {
   //    std::cout << std::setw(10) << std::setprecision(3);
   for (int hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
     //        int sum = 0;
     //        for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
     //            sum += pi->vPerson()[location][hs][ac].size();
     //        }
-    double v = Model::DATA_COLLECTOR->popsize_by_location_hoststate()[location][hs]*100/
-        (double) Model::DATA_COLLECTOR->popsize_by_location()[location];
+    double v = Model::DATA_COLLECTOR->popsize_by_location_hoststate()[location][hs] * 100 /
+               (double) Model::DATA_COLLECTOR->popsize_by_location()[location];
     //        double v = sum;
 
     fmt::printf("%.3f\t", v);
@@ -51,8 +51,8 @@ void ConsoleReporter::after_run() {
   std::cout << "==========================================================================" << std::endl;
 
   //total time
-  double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day())/
-      (double) Constants::DAYS_IN_YEAR();
+  double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) /
+                               (double) Constants::DAYS_IN_YEAR();
   std::cout << "Total time (from equilibrium) : " << total_time_in_years << " years" << std::endl;
 
   //report EIR
@@ -77,14 +77,14 @@ void ConsoleReporter::after_run() {
 
   std::cout << "Percentage of bites on top 20% bitten" << std::endl;
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-    std::cout << Model::DATA_COLLECTOR->percentage_bites_on_top_20_by_location()[location]*100 << "%" << "\t";
+    std::cout << Model::DATA_COLLECTOR->percentage_bites_on_top_20_by_location()[location] * 100 << "%" << "\t";
   }
   std::cout << std::endl;
 
   std::cout << "NTF by location: " << std::endl;
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-    double location_NTF = Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location]*100/
-        (double) Model::DATA_COLLECTOR->popsize_by_location()[location];
+    double location_NTF = Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location] * 100 /
+                          (double) Model::DATA_COLLECTOR->popsize_by_location()[location];
     location_NTF /= total_time_in_years;
 
     std::cout << location_NTF << "\t";
@@ -102,7 +102,7 @@ void ConsoleReporter::after_run() {
     int nTreaments = Model::DATA_COLLECTOR->number_of_treatments_with_therapy_ID()[t_id];
     int nSuccess = Model::DATA_COLLECTOR->number_of_treatments_success_with_therapy_ID()[t_id];
     int nFail = Model::DATA_COLLECTOR->number_of_treatments_fail_with_therapy_ID()[t_id];
-    double pSuccess = (nTreaments==0) ? 0 : nSuccess*100.0/nTreaments;
+    double pSuccess = (nTreaments == 0) ? 0 : nSuccess * 100.0 / nTreaments;
 
     std::cout << "Number of patients (with non-resistant parasite) treated with therapy " << t_id
               << " (% success) = "
@@ -119,24 +119,7 @@ void ConsoleReporter::after_run() {
             << Model::DATA_COLLECTOR->AMU_for_clinical_caused_parasite()
             << std::endl;
 
-  for (int i = 0; i < Model::DATA_COLLECTOR->resistance_tracker().tracking_values().size(); i++) {
-    std::cout << "Time until any double resistance reaches "
-              << Model::DATA_COLLECTOR->resistance_tracker().tracking_values()[i]*100 << "%: "
-              << Model::DATA_COLLECTOR->resistance_tracker().any_double_tracking_time()[i] << std::endl;
-    std::cout << "Time until all double resistance reaches "
-              << Model::DATA_COLLECTOR->resistance_tracker().tracking_values()[i]*100 << "%: "
-              << Model::DATA_COLLECTOR->resistance_tracker().all_double_tracking_time()[i] << std::endl;
-    std::cout << "Time until any triple resistance reaches "
-              << Model::DATA_COLLECTOR->resistance_tracker().tracking_values()[i]*100 << "%: "
-              << Model::DATA_COLLECTOR->resistance_tracker().any_triple_tracking_time()[i] << std::endl;
-    std::cout << "Time until all triple resistance reaches "
-              << Model::DATA_COLLECTOR->resistance_tracker().tracking_values()[i]*100 << "%: "
-              << Model::DATA_COLLECTOR->resistance_tracker().all_triple_tracking_time()[i] << std::endl;
-    std::cout << "Time until total resistance reaches "
-              << Model::DATA_COLLECTOR->resistance_tracker().tracking_values()[i]*100 << "%: "
-              << Model::DATA_COLLECTOR->resistance_tracker().total_tracking_time()[i] << std::endl;
-
-  }
+  // TODO:: add resistance output
 
 }
 
@@ -145,18 +128,18 @@ void ConsoleReporter::begin_time_step() {
 
 void ConsoleReporter::monthly_report() {
 
-  if (Model::SCHEDULER->current_time()%Model::CONFIG->report_frequency()==0) {
+  if (Model::SCHEDULER->current_time() % Model::CONFIG->report_frequency() == 0) {
 //        Model::DATA_COLLECTOR->perform_population_statistic();
 
     std::cout << Model::SCHEDULER->current_time() << "\t";
 
-    PersonIndexByLocationStateAgeClass *pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+    auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
     for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
       std::cout << "||\t";
       report_number_by_state(location, pi);
-      std::cout << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location]*100 << "\t";
-      std::cout << Model::DATA_COLLECTOR->total_immune_by_location()[location]/Model::POPULATION->size(location)
+      std::cout << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100 << "\t";
+      std::cout << Model::DATA_COLLECTOR->total_immune_by_location()[location] / Model::POPULATION->size(location)
                 << "\t";
       std::cout << Model::DATA_COLLECTOR->current_RITF_by_location()[location] << "-"
                 << Model::DATA_COLLECTOR->current_TF_by_location()[location] << "\t";

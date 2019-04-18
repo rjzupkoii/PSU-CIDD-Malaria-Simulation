@@ -42,12 +42,12 @@ std::string NestedMFTMultiLocationStrategy::to_string() const {
   std::stringstream sstm;
   sstm << id << "-" << name << std::endl;
 
-  for (auto i : distribution[Model::CONFIG->number_of_locations() - 1]) {
+  for (auto i : distribution[0]) {
     sstm << i << ",";
   }
   sstm << std::endl;
 
-  for (auto i : start_distribution[Model::CONFIG->number_of_locations() - 1]) {
+  for (auto i : start_distribution[0]) {
     sstm << i << ",";
   }
   sstm << std::endl;
