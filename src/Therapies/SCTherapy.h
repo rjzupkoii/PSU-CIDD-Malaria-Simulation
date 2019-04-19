@@ -19,7 +19,7 @@ DISALLOW_COPY_AND_ASSIGN(SCTherapy)
 
 public:
   int artemisinin_id;
-  int dosing_day;
+  std::vector<int> dosing_day;
 
 public:
   SCTherapy();
@@ -31,6 +31,7 @@ public:
 
   int get_arteminsinin_id() const;
 
+  int get_max_dosing_day() const;
   //    int get_therapy_duration(int dosing_day);
 
 private:

@@ -15,6 +15,7 @@
 #include "PersonIndexByLocationStateAgeClass.h"
 #include "MDC/ModelDataCollector.h"
 #include "Constants.h"
+#include "ReporterUtils.h"
 
 ConsoleReporter::ConsoleReporter() {
 }
@@ -118,8 +119,6 @@ void ConsoleReporter::after_run() {
   std::cout << "EAMU count only clinical caused parasite: "
             << Model::DATA_COLLECTOR->AMU_for_clinical_caused_parasite()
             << std::endl;
-
-  // TODO:: add resistance output
 
 }
 

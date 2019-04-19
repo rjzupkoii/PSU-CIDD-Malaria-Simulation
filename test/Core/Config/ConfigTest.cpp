@@ -136,8 +136,8 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.number_of_parasite_types() == 128);
     //
     REQUIRE(c.drug_db()->size() == 7);
-    REQUIRE(c.drug_db()->get(0)->n() == 25);
-    REQUIRE(c.drug_db()->get(6)->n() == 19);
+    REQUIRE(c.drug_db()->at(0)->n() == 25);
+    REQUIRE(c.drug_db()->at(6)->n() == 19);
 
     //
     REQUIRE(c.EC50_power_n_table().size() == 128);
@@ -148,13 +148,13 @@ TEST_CASE("ConfigTest", "[Core]") {
     REQUIRE(c.relative_bitting_info().max_relative_biting_value == 35);
 
     REQUIRE(c.therapy_db().size() == 13);
-    REQUIRE(c.therapy_db()[0]->drug_ids().size() == 1);
-    REQUIRE(c.therapy_db()[0]->drug_ids() == IntVector{0});
-    REQUIRE(((SCTherapy*) c.therapy_db()[0])->dosing_day() == 3);
+    REQUIRE(c.therapy_db()[0]->drug_ids.size() == 1);
+    REQUIRE(c.therapy_db()[0]->drug_ids == IntVector{0});
+    REQUIRE(((SCTherapy*) c.therapy_db()[0])->dosing_day[0] == 3);
 
-    REQUIRE(c.therapy_db()[11]->drug_ids().size() == 3);
-    REQUIRE(c.therapy_db()[11]->drug_ids() == IntVector{0, 1, 2});
-    REQUIRE(((SCTherapy*) c.therapy_db()[11])->dosing_day() == 3);
+    REQUIRE(c.therapy_db()[11]->drug_ids.size() == 3);
+    REQUIRE(c.therapy_db()[11]->drug_ids == IntVector{0, 1, 2});
+    REQUIRE(((SCTherapy*) c.therapy_db()[11])->dosing_day[0] == 3);
 
     REQUIRE(c.strategy_db().size() == 15);
     REQUIRE(c.strategy_db()[0]->name == "SP-AQ-CQ-AL-MFTStrategy");

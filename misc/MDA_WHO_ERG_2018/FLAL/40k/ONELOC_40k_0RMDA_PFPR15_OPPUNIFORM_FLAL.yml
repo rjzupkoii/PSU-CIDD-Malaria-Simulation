@@ -354,43 +354,43 @@ tf_testing_day: 28
 tf_window_size: 60
 therapy_db:
   0:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [0]
   1:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [1]
   2:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [2]
   3:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [3]
   4:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [4]
   5:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [5]
   6:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [0, 1]
   7:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [0, 2]
   8:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [0, 3]
   9:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [0, 4]
   10:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [0, 3, 4]
   11:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [0, 1, 2]
   12:
-    dosing_days: 3
+    dosing_days: [3]
     drug_id: [6]
 update_frequency: 7
 using_age_dependent_bitting_level: false

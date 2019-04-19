@@ -657,7 +657,6 @@ void ModelDataCollector::record_1_TF(const int &location, const bool &by_drug) {
     }
   }
 
-  //TODO: start_intervention_day should have another proper name
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
     const auto current_discounted_tf = exp(
       log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) /
@@ -727,14 +726,14 @@ void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy,
               if (bp->resist_to(drug_id) && !bp->resist_to(art_id)) {
                 found_amu = true;
                 AMU_per_parasite_pop_ +=
-                  sc_therapy->dosing_day / static_cast<double>(parasite_population_size);
+                  sc_therapy->get_max_dosing_day() / static_cast<double>(parasite_population_size);
                 discounted_AMU_per_parasite_pop_ +=
-                  discounted_fraction * sc_therapy->dosing_day /
+                  discounted_fraction * sc_therapy->get_max_dosing_day() /
                   static_cast<double>(parasite_population_size);
                 if (bp == clinical_caused_parasite) {
-                  AMU_for_clinical_caused_parasite_ += sc_therapy->dosing_day;
+                  AMU_for_clinical_caused_parasite_ += sc_therapy->get_max_dosing_day();
                   discounted_AMU_for_clinical_caused_parasite_ +=
-                    discounted_fraction * sc_therapy->dosing_day;
+                    discounted_fraction * sc_therapy->get_max_dosing_day();
                 }
               }
 
@@ -743,13 +742,13 @@ void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy,
               }
             }
             if (found_amu) {
-              AMU_per_person_ += sc_therapy->dosing_day;
-              discounted_AMU_per_person_ += discounted_fraction * sc_therapy->dosing_day;
+              AMU_per_person_ += sc_therapy->get_max_dosing_day();
+              discounted_AMU_per_person_ += discounted_fraction * sc_therapy->get_max_dosing_day();
             }
 
             if (found_afu) {
-              AFU_ += sc_therapy->dosing_day;
-              discounted_AFU_ += discounted_fraction * sc_therapy->dosing_day;
+              AFU_ += sc_therapy->get_max_dosing_day();
+              discounted_AFU_ += discounted_fraction * sc_therapy->get_max_dosing_day();
             }
           }
         }

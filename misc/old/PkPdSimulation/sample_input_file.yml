@@ -353,31 +353,31 @@ tf_testing_day: 28
 TherapyInfo:
   0:    
     drug_id: [0,1]
-    dosing_days: 3
+    dosing_days: [3]
   1:
     drug_id: [0,2]
-    dosing_days:  3
+    dosing_days: [3]
   2:
     drug_id: [0,3]
-    dosing_days: 3
+    dosing_days: [3]
   3:
     drug_id: [0,4]
-    dosing_days: 3
+    dosing_days: [3]
   4:
     drug_id: [0]
-    dosing_days: 3
+    dosing_days: [3]
   5:
     drug_id: [1]
-    dosing_days: 3
+    dosing_days: [3]
   6:
     drug_id: [2]
-    dosing_days: 3
+    dosing_days: [3]
   7:
     drug_id: [3]
-    dosing_days: 3
+    dosing_days: [3]
   8:
     drug_id: [4]
-    dosing_days: 3
+    dosing_days: [3]
   9:
     #this is a MAC Therapy
     therapy_ids: [0,0]

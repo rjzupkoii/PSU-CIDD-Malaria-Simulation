@@ -9,7 +9,7 @@
 #include "Core/Config/Config.h"
 #include "Model.h"
 
-SCTherapy::SCTherapy() : Therapy(), dosing_day{-1}, artemisinin_id{-1} {}
+SCTherapy::SCTherapy() : Therapy(), dosing_day{}, artemisinin_id{-1} {}
 
 SCTherapy::~SCTherapy() = default;
 
@@ -22,6 +22,11 @@ void SCTherapy::add_drug(int drug_id) {
 
 int SCTherapy::get_arteminsinin_id() const {
   return artemisinin_id;
+}
+
+int SCTherapy::get_max_dosing_day() const {
+  // TODO: implement here
+  return 3;
 }
 
 

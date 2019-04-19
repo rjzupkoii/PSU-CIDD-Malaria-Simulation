@@ -56,7 +56,7 @@ bool Genotype::resist_to(Therapy* therapy) {
   auto* sc_therapy = dynamic_cast<SCTherapy*> (therapy);
   if (sc_therapy!=nullptr) {
     for (auto drug_id : sc_therapy->drug_ids) {
-      if (resist_to(Model::CONFIG->drug_db()->get(drug_id))) {
+      if (resist_to(Model::CONFIG->drug_db()->at(drug_id))) {
         return true;
       }
     }

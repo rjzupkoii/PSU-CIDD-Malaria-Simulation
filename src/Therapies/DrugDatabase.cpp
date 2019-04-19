@@ -22,7 +22,3 @@ void DrugDatabase::add(DrugType *dt) {
   (*this)[dt->id()] = dt;
 }
 
-//TODO: remove it
-DrugType *DrugDatabase::get(const int &id) {
-  return (*this).at(id);
-}

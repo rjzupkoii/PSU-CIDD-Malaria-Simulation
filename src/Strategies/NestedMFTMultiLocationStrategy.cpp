@@ -11,7 +11,7 @@
 #include "Scheduler.h"
 #include "Therapies/Therapy.h"
 
-// TODO: check if it match with the calendar day
+
 
 NestedMFTMultiLocationStrategy::NestedMFTMultiLocationStrategy() : IStrategy(
     "NestedMFTMultiLocationStrategy", NestedMFTMultiLocation) {}

@@ -570,55 +570,55 @@ therapy_db:
   #mono as
   0:
     drug_id: [0]
-    dosing_days: 3
+    dosing_days: [3]
   #mono Lumefaltrine
   1:
     drug_id: [1]
-    dosing_days:  3
+    dosing_days: [3]
   #mono AQ
   2:
     drug_id: [2]
-    dosing_days: 3
+    dosing_days: [3]
   #mono PPQ
   3:
     drug_id: [3]
-    dosing_days: 3
+    dosing_days: [3]
   #mono MQ
   4:
     drug_id: [4]
-    dosing_days: 3
+    dosing_days: [3]
   #mono SP
   5:
     drug_id: [5]
-    dosing_days: 3
+    dosing_days: [3]
   #AL
   6:
     drug_id: [0,1]
-    dosing_days: 3
+    dosing_days: [3]
   #AS-AQ
   7:
     drug_id: [0,2]
-    dosing_days: 3
+    dosing_days: [3]
   # DHA-PPQ
   8:
     drug_id: [0,3]
-    dosing_days: 3
+    dosing_days: [3]
   #AS-MQ
   9:
     drug_id: [0,4]
-    dosing_days: 3
+    dosing_days: [3]
   #TACT DHA-PPQ-MQ
   10:
     drug_id: [0,3,4]
-    dosing_days: 3
+    dosing_days: [3]
   #TACT AL-AQ
   11:
     drug_id: [0,1,2]
-    dosing_days: 3
+    dosing_days: [3]
   #CQ
   12:
     drug_id: [6]
-    dosing_days: 3
+    dosing_days: [3]
 
 # drug-deployment strategy - simply uncomment below to turn on a particular strategy
 strategy_db:
@@ -850,7 +850,7 @@ fraction_mosquitoes_interrupted_feeding: 0.0
 
 inflation_factor: 1.01
 
-#//TODO: change time-> calendar date
+
 
 events:
   - name: introduce_parasites

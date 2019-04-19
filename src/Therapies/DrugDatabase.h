@@ -26,7 +26,6 @@ class DrugDatabase : public DrugTypePtrMap {
 
   void add(DrugType *dt);
 
-  DrugType *get(const int &id);
 
  private:
 

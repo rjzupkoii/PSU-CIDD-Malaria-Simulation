@@ -174,6 +174,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   void schedule_progress_to_clinical_event_by(ClonalParasitePopulation *blood_parasite);
 
+  [[deprecated]]
   void schedule_end_clinical_due_to_drug_resistance_event(ClonalParasitePopulation *blood_parasite);
 
   void schedule_test_treatment_failure_event(ClonalParasitePopulation *blood_parasite, const int &testing_day,
