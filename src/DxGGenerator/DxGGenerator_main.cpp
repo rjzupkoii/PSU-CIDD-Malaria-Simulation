@@ -36,12 +36,16 @@ INITIALIZE_EASYLOGGINGPP
 
 using namespace std;
 
-double getEfficacyForTherapy(Genotype* g, int therapy_id, Model* m);
+typedef std::vector<double> EF50Key;
+
+typedef std::map<EF50Key, double> efficacy_map;
+
+double getEfficacyForTherapy(Genotype* g, int therapy_id, Model* p_model);
 
 void create_cli_option(CLI::App &app);
 
-typedef std::tuple<int, int, int, double, double, double> EF50Key;
-typedef std::map<EF50Key, double> efficacy_map;
+EF50Key get_EC50_key(SCTherapy* p_therapy, Genotype* p_genotype);
+
 
 efficacy_map efficacies;
 
@@ -49,6 +53,12 @@ std::vector<int> therapies;
 std::vector<int> genotypes;
 
 std::string input_file = "input_DxG.yml";
+
+
+inline double round(double val) {
+  if (val < 0) return ceil(val - 0.5);
+  return floor(val + 0.5);
+}
 
 /*
  * 
@@ -66,9 +76,9 @@ int main(int argc, char** argv) {
   el::Loggers::reconfigureLogger("default", default_conf);
   START_EASYLOGGINGPP(argc, argv);
 
-  auto* m = new Model();
-  m->set_config_filename(input_file);
-  m->initialize();
+  auto* p_model = new Model();
+  p_model->set_config_filename(input_file);
+  p_model->initialize();
 
 
   // initialEC50Table
@@ -108,37 +118,50 @@ int main(int argc, char** argv) {
 
   std::cout << std::endl;
 
-  for (auto genotype_id = min_genotype_id; genotype_id <= max_genotype_id; genotype_id++) {
+  for (auto genotype_id = min_genotype_id; genotype_id < max_genotype_id; genotype_id++) {
 
     std::stringstream ss;
-    auto g = (*Model::CONFIG->genotype_db())[genotype_id];
-    ss << *g << "\t";
+    auto p_genotype = (*Model::CONFIG->genotype_db())[genotype_id];
+    ss << *p_genotype << "\t";
 
     for (auto therapy_id = min_therapy_id; therapy_id <= max_therapy_id; therapy_id++) {
 
       auto* therapy = dynamic_cast<SCTherapy*>(Model::CONFIG->therapy_db()[therapy_id]);
 
-      // print out efficacy
-      EF50Key key;
 
+      EF50Key key = get_EC50_key(therapy, p_genotype);
       auto search = efficacies.find(key);
-      //
-      // if (search != efficacies.end()) {
-      //   //                std::cout << search->second << std::endl;
-      //   std::cout << search->second << "\t";
-      // }
-      // else {
-      //not exist then calculate
-      double efficacy = getEfficacyForTherapy(g, therapy_id, m);
-      ss << efficacy << "\t";
+      if (search == efficacies.end()) {
+        double efficacy = getEfficacyForTherapy(p_genotype, therapy_id, p_model);
+        ss << efficacy << "\t";
+        efficacies.insert(std::make_pair(key, efficacy));
+      } else {
+        ss << search->second << "\t";
+      }
 
-      efficacies.insert(std::make_pair(key, efficacy));
-      // }
+//      double efficacy = getEfficacyForTherapy(p_genotype, therapy_id, p_model);
+//      ss << efficacy << "\t";
+
     }
     std::cout << ss.str() << std::endl;
   }
-  delete m;
+  delete p_model;
   return 0;
+}
+
+EF50Key get_EC50_key(SCTherapy* p_therapy, Genotype* p_genotype) {
+  EF50Key result;
+
+  for (int j = 0; j < p_therapy->drug_ids.size(); ++j) {
+//    drug_type->ec50_map()
+    auto ec50 = Model::CONFIG->EC50_power_n_table()[p_genotype->genotype_id()][p_therapy->drug_ids[j]];
+    ec50 = round(ec50 * 1000.0) / 1000.0;
+//    std::cout << ec50 << std::endl;
+    result.push_back(ec50);
+  }
+
+
+  return result;
 }
 
 void create_cli_option(CLI::App &app) {
@@ -152,21 +175,21 @@ void create_cli_option(CLI::App &app) {
   app.add_option("-i,--input", input_file, "Output filename for PPQ");
 }
 
-double getEfficacyForTherapy(Genotype* g, int therapy_id, Model* m) {
+double getEfficacyForTherapy(Genotype* g, int therapy_id, Model* p_model) {
 
   auto* scTherapy = dynamic_cast<SCTherapy*>(Model::CONFIG->therapy_db()[therapy_id]);
   dynamic_cast<SFTStrategy*>(Model::TREATMENT_STRATEGY)->get_therapy_list().clear();
   dynamic_cast<SFTStrategy*>(Model::TREATMENT_STRATEGY)->add_therapy(scTherapy);
 
   //reset reporter
-  for (auto reporter : m->reporters()) {
+  for (auto reporter : p_model->reporters()) {
     delete reporter;
   }
 
-  m->reporters().clear();
+  p_model->reporters().clear();
 
-  m->add_reporter(new PkPdReporter());
-  // m->add_reporter(new IndividualsFileReporter("out.txt"));
+  p_model->add_reporter(new PkPdReporter());
+  // p_model->add_reporter(new IndividualsFileReporter("out.txt"));
 
   auto* genotype = Model::CONFIG->genotype_db()->at(g->genotype_id());
 
@@ -184,19 +207,19 @@ double getEfficacyForTherapy(Genotype* g, int therapy_id, Model* m) {
     ProgressToClinicalEvent::schedule_event(Model::SCHEDULER, person, blood_parasite, 1);
   }
 
-  m->run();
+  p_model->run();
   const auto result = 1 - Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[0];
 
 
   delete Model::POPULATION;
   delete Model::SCHEDULER;
-  m->set_population(new Population(m));
-  Model::POPULATION = m->population();
-  m->set_scheduler(new Scheduler(m));
-  Model::SCHEDULER = m->scheduler();
+  p_model->set_population(new Population(p_model));
+  Model::POPULATION = p_model->population();
+  p_model->set_scheduler(new Scheduler(p_model));
+  Model::SCHEDULER = p_model->scheduler();
 
-  m->scheduler()->initialize(Model::CONFIG->starting_date(), Model::CONFIG->total_time());
-  m->population()->initialize();
+  p_model->scheduler()->initialize(Model::CONFIG->starting_date(), Model::CONFIG->total_time());
+  p_model->population()->initialize();
 
 
   return result;

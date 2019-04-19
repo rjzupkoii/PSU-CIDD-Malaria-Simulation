@@ -42,7 +42,7 @@ void DrugType::reset(int length) {
 
 double DrugType::get_parasite_killing_rate_by_concentration(const double &concentration, const double &EC50_power_n) {
   const auto con_power_n = pow(concentration, n_);
-  return maximum_parasite_killing_rate_*con_power_n/(con_power_n + EC50_power_n);
+  return maximum_parasite_killing_rate_ * con_power_n / (con_power_n + EC50_power_n);
 }
 
 double DrugType::n() {
@@ -67,7 +67,7 @@ void DrugType::set_n(const double &n) {
 int DrugType::get_total_duration_of_drug_activity(const int &dosing_days) const {
   //CutOffPercent is 10
   //log2(100.0 / 10.0) = 3.32192809489
-  return dosing_days + ceil(drug_half_life_*LOG2_10);
+  return dosing_days + ceil(drug_half_life_ * LOG2_10);
 }
 
 int DrugType::select_mutation_locus() {
@@ -77,20 +77,20 @@ int DrugType::select_mutation_locus() {
   return affecting_loci_[pos];
 }
 
-double DrugType::infer_ec50(Genotype *genotype) {
+double DrugType::infer_ec50(Genotype* genotype) {
   //compare genotype.short_name with Ccnfig to get EC50
   for (auto &item : ec50_map_) {
     auto key = item.first;
     auto i = 0;
     for (i = 0; i < genotype->gene_expression().size(); i++) {
-      if (key[i]=='.')
+      if (key[i] == '.')
         continue;
-      if ((key[i] - '0')==genotype->gene_expression()[i])
+      if ((key[i] - '0') == genotype->gene_expression()[i])
         continue;
       break;
     }
 
-    if (i==genotype->gene_expression().size()) {
+    if (i == genotype->gene_expression().size()) {
       ///found match
       return item.second;
     }

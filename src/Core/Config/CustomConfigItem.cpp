@@ -258,7 +258,7 @@ void EC50_power_n_table::set_value(const YAML::Node &node) {
       value_[g_id].push_back(config_->drug_db()->at(i)->infer_ec50(config_->genotype_db()->at(g_id)));
     }
   }
-  //    std::cout << "ok " << std::endl;
+
 
   for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
     for (auto i = 0; i < config_->drug_db()->size(); i++) {
