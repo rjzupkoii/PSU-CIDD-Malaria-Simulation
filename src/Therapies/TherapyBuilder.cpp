@@ -32,7 +32,7 @@ Therapy *TherapyBuilder::build(const YAML::Node &ns, const int &t_id) {
     }
 
     const auto dosing_days = ns["dosing_days"].as<int>();
-    dynamic_cast<SCTherapy *>(t)->set_dosing_day(dosing_days);
+    dynamic_cast<SCTherapy *>(t)->dosing_day = dosing_days;
   } else {
     if (ns["therapy_ids"]) {
       t = new MACTherapy();

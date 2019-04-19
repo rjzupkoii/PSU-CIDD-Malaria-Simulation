@@ -174,7 +174,7 @@ class drug_db : public IConfigItem {
                                                                                                          default_value} {}
 
   // destructor
-  virtual ~drug_db();
+  ~drug_db() override;
 
   virtual DrugDatabase *operator()() {
     return value_;

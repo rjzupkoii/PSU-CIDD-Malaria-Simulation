@@ -597,7 +597,7 @@ therapy_db:
 # drug-deployment strategy - simply uncomment below to turn on a particular strategy
 strategy_db:
    0:
-      name: AL-SFTStrategy
+      name: SFTStrategy
       type: SFT
       therapy_id: 5
 

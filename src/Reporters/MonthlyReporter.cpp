@@ -16,6 +16,8 @@
 #include "Strategies/NestedMFTMultiLocationStrategy.h"
 #include "Strategies/NestedMFTStrategy.h"
 #include "ReporterUtils.h"
+#include "PersonIndexByLocationStateAgeClass.h"
+
 
 MonthlyReporter::MonthlyReporter() = default;
 

@@ -15,15 +15,13 @@
 class DrugType;
 
 class SCTherapy : public Therapy {
- DISALLOW_COPY_AND_ASSIGN(SCTherapy)
+DISALLOW_COPY_AND_ASSIGN(SCTherapy)
 
- VIRTUAL_PROPERTY_REF(int, artemisinin_id)
+public:
+  int artemisinin_id;
+  int dosing_day;
 
- VIRTUAL_PROPERTY_REF(int, dosing_day)
-
- VIRTUAL_PROPERTY_REF(std::vector<int>, drug_ids);
-
- public:
+public:
   SCTherapy();
 
   //    Therapy(const Therapy& orig);
@@ -35,7 +33,7 @@ class SCTherapy : public Therapy {
 
   //    int get_therapy_duration(int dosing_day);
 
- private:
+private:
 
 };
 

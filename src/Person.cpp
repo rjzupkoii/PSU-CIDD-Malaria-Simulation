@@ -356,9 +356,9 @@ void Person::receive_therapy(Therapy *therapy, ClonalParasitePopulation *clinica
   //if therapy is SCTherapy
   auto *sc_therapy = dynamic_cast<SCTherapy *>(therapy);
   if (sc_therapy!=nullptr) {
-    const auto dosing_days = complied_dosing_days(sc_therapy->dosing_day());
+    const auto dosing_days = complied_dosing_days(sc_therapy->dosing_day);
 
-    for (auto drug_id : sc_therapy->drug_ids()) {
+    for (auto drug_id : sc_therapy->drug_ids) {
       //        std::cout << drug_id << std::endl;
       add_drug_to_blood(Model::CONFIG->drug_db()->get(drug_id), dosing_days);
     }

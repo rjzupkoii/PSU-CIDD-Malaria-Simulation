@@ -9,19 +9,19 @@
 #include "Core/Config/Config.h"
 #include "Model.h"
 
-SCTherapy::SCTherapy() : drug_ids_(), dosing_day_(-1), artemisinin_id_(-1) {}
+SCTherapy::SCTherapy() : Therapy(), dosing_day{-1}, artemisinin_id{-1} {}
 
-SCTherapy::~SCTherapy() {}
+SCTherapy::~SCTherapy() = default;
 
 void SCTherapy::add_drug(int drug_id) {
-  drug_ids_.push_back(drug_id);
+  Therapy::add_drug(drug_id);
   if (drug_id==0) {
-    artemisinin_id_ = drug_id;
+    artemisinin_id = drug_id;
   }
 }
 
 int SCTherapy::get_arteminsinin_id() const {
-  return artemisinin_id_;
+  return artemisinin_id;
 }
 
 

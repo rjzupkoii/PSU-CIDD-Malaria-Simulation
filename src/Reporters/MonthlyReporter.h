@@ -20,7 +20,7 @@ class MonthlyReporter : public Reporter {
 
   MonthlyReporter();
 
-  virtual ~MonthlyReporter();
+  ~MonthlyReporter() override;
 
   void initialize() override;
 
@@ -34,7 +34,7 @@ class MonthlyReporter : public Reporter {
 
   void print_EIR_PfPR_by_location();
 
-  void print_monthly_incidence_by_location();
+//  void print_monthly_incidence_by_location();
 };
 
 #endif //POMS_BFREPORTER_H

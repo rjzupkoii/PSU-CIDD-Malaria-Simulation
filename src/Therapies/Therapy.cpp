@@ -5,17 +5,29 @@
  * Created on June 3, 2013, 7:50 PM
  */
 
+#include <Model.h>
 #include "Therapy.h"
+#include "DrugDatabase.h"
 #include "Core/Config/Config.h"
+#include "DrugType.h"
 
-Therapy::Therapy() : id_(-1), testing_day_(-1) {
+Therapy::Therapy() : id_{-1}, testing_day_{-1}, drug_ids{} {
 }
 
-Therapy::~Therapy() {
-}
+Therapy::~Therapy() = default;
 
 void Therapy::add_drug(int drug_id) {
-  drug_ids_.push_back(drug_id);
+  drug_ids.push_back(drug_id);
+}
+
+std::ostream &operator<<(std::ostream &os, const Therapy &therapy) {
+
+  os << Model::CONFIG->drug_db()->get(therapy.drug_ids[0])->name();
+  for (int i = 1; i < therapy.drug_ids.size(); ++i) {
+    os << "+" << Model::CONFIG->drug_db()->get(therapy.drug_ids[i])->name();
+  }
+
+  return os;
 }
 
 

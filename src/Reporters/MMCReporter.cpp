@@ -138,15 +138,15 @@ void MMCReporter::print_EIR_PfPR_by_location() {
     ss << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc] * 100 << sep;
   }
 }
-
-void MMCReporter::print_monthly_incidence_by_location() {
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
-    ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << sep;
-  }
-
-  ss << group_sep;
-
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
-    ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
-  }
-}
+//
+//void MMCReporter::print_monthly_incidence_by_location() {
+//  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+//    ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << sep;
+//  }
+//
+//  ss << group_sep;
+//
+//  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+//    ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
+//  }
+//}

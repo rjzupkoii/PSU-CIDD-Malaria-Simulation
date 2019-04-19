@@ -38,7 +38,7 @@ find_package(fmt CONFIG REQUIRED)
 add_subdirectory(${EXT_PROJECTS_DIR}/date)
 add_subdirectory(${EXT_PROJECTS_DIR}/args)
 
-include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${ARGS_INCLUDE_DIR})
+include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${ARGS_INCLUDE_DIR} ${EXT_PROJECTS_DIR}/CLI11)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 

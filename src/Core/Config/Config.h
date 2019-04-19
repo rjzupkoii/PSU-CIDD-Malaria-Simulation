@@ -40,8 +40,8 @@ class Config {
   CONFIG_ITEM(number_of_tracking_days, int, 0)
   CONFIG_ITEM(p_infection_from_an_infectious_bite, double, 0.0)
 
-  CONFIG_ITEM(age_structure, std::vector<int>, std::vector<int>{(1, 2, 3, 4, 5)})
-  CONFIG_ITEM(initial_age_structure, std::vector<int>, std::vector<int>{(1, 2, 3, 4, 5)})
+  CONFIG_ITEM(age_structure, std::vector<int>, std::vector<int>{})
+  CONFIG_ITEM(initial_age_structure, std::vector<int>, std::vector<int>{})
 
   CONFIG_ITEM(tf_testing_day, int, 28)
 
