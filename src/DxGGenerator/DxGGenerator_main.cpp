@@ -157,6 +157,7 @@ EF50Key get_EC50_key(SCTherapy* p_therapy, Genotype* p_genotype) {
     auto ec50 = Model::CONFIG->EC50_power_n_table()[p_genotype->genotype_id()][p_therapy->drug_ids[j]];
     ec50 = round(ec50 * 1000.0) / 1000.0;
 //    std::cout << ec50 << std::endl;
+    result.push_back(p_therapy->drug_ids[j]);
     result.push_back(ec50);
   }
 

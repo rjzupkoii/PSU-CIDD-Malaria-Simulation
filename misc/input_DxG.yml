@@ -342,7 +342,7 @@ initial_parasite_info:
 #
 drug_db:
   0:
-    name: "artmisinin"
+    name: "AS"
     half_life: 0.0
     maximum_parasite_killing_rate: 0.999
     n: 25
@@ -355,7 +355,7 @@ drug_db:
        ..0.. : 0.75
        ..1.. : 1.2
   1:
-    name: "lumefantrine"
+    name: "LM"
     half_life: 4.5
     maximum_parasite_killing_rate: 0.99
     n: 20
@@ -398,7 +398,7 @@ drug_db:
        #TYFYF
        17... : 0.95
   2: 
-    name: "amodiaquine"
+    name: "AQ"
     half_life: 9.0
     maximum_parasite_killing_rate: 0.95
     n: 19
@@ -441,7 +441,7 @@ drug_db:
        #TYFYF
        17... : 0.82
   3: 
-    name: "piperaquine"
+    name: "PPQ"
     half_life: 28.0
     maximum_parasite_killing_rate: 0.9
     n: 15
@@ -456,7 +456,7 @@ drug_db:
        ...1. : 1.4
   #MQ
   4: 
-    name: "Mefloquine"
+    name: "MQ"
     half_life: 21.0
     maximum_parasite_killing_rate: 0.9
     n: 15

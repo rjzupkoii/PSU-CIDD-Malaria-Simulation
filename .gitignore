@@ -8,4 +8,6 @@ Testing
 cmake-*
 monthly_data\.txt
 
+.DS_Store
+
 reporter\.txt
