@@ -15,6 +15,7 @@
 #include "Population.h"
 #include "Strategies/NestedMFTMultiLocationStrategy.h"
 #include "Strategies/NestedMFTStrategy.h"
+#include "ReporterUtils.h"
 
 MonthlyReporter::MonthlyReporter() = default;
 
@@ -50,8 +51,9 @@ void MonthlyReporter::monthly_report() {
     ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
   }
   ss << group_sep;
-// TODO: report genotype frequency heres
 
+  ReporterUtils::output_genotype_frequency3(ss, Model::CONFIG->number_of_parasite_types(),
+                                            Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>());
   CLOG(INFO, "monthly_reporter") << ss.str();
   ss.str("");
 }
@@ -68,8 +70,8 @@ void MonthlyReporter::after_run() {
   ss << Model::TREATMENT_STRATEGY->id << sep;
 
   //output NTF
-  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period())/
-      static_cast<double>(Constants::DAYS_IN_YEAR());
+  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
+                                   static_cast<double>(Constants::DAYS_IN_YEAR());
 
   auto sum_ntf = 0.0;
   ul pop_size = 0;
@@ -78,7 +80,7 @@ void MonthlyReporter::after_run() {
     pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
   }
 
-  ss << (sum_ntf*100/pop_size)/total_time_in_years << sep;
+  ss << (sum_ntf * 100 / pop_size) / total_time_in_years << sep;
 
   CLOG(INFO, "summary_reporter") << ss.str();
   ss.str("");
@@ -95,20 +97,8 @@ void MonthlyReporter::print_EIR_PfPR_by_location() {
     }
     ss << group_sep;
     //pfpr <5 , 2-10 and all
-    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 2, 10)*100 << sep;
-    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 0, 5)*100 << sep;
-    ss << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc]*100 << sep;
-  }
-}
-
-void MonthlyReporter::print_monthly_incidence_by_location() {
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
-    ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << sep;
-  }
-
-  ss << group_sep;
-
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
-    ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
+    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 2, 10) * 100 << sep;
+    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 0, 5) * 100 << sep;
+    ss << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc] * 100 << sep;
   }
 }

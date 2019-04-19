@@ -6,18 +6,18 @@
 #include <sstream>
 
 class MMCReporter : public Reporter {
- DISALLOW_COPY_AND_ASSIGN(MMCReporter)
+DISALLOW_COPY_AND_ASSIGN(MMCReporter)
 
- DISALLOW_MOVE(MMCReporter)
+DISALLOW_MOVE(MMCReporter)
 
- public:
+public:
   std::stringstream ss;
   const std::string group_sep = "-1111\t";
   const std::string sep = "\t";
 
   MMCReporter();
 
-  virtual ~MMCReporter() = default;
+  ~MMCReporter() override = default;
 
   void initialize() override;
 
@@ -36,8 +36,6 @@ class MMCReporter : public Reporter {
   void monthly_report() override;
 
   void print_EIR_PfPR_by_location();
-
-  void print_monthly_incidence_by_location();
 };
 
 #endif // MMCREPORTER_H

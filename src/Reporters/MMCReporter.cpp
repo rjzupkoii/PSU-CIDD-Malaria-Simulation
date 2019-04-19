@@ -15,6 +15,7 @@
 #include "Population.h"
 #include "PersonIndexByLocationStateAgeClass.h"
 #include "SingleHostClonalParasitePopulations.h"
+#include "ReporterUtils.h"
 // #include "Parasites/GenotypeDatabase.h"
 
 MMCReporter::MMCReporter() = default;
@@ -32,94 +33,17 @@ void MMCReporter::before_run() {
 void MMCReporter::begin_time_step() {}
 
 void MMCReporter::print_genotype_frequency() {
-  // (a) number of parasite-positive individuals carrying genotype X / total number of parasite-positive
+  // (1) number of parasite-positive individuals carrying genotype X / total number of parasite-positive
   // individuals
-  // (b) number of clonal parasite populations carrying genotype X / total number of clonal parasite
+  // (2) number of clonal parasite populations carrying genotype X / total number of clonal parasite
   // populations
-  // (c) weighted number of parasite-positive individuals carrying genotype X / total number of
+  // (3) weighted number of parasite-positive individuals carrying genotype X / total number of
   // parasite-positive individuals (the weights for each person describe the fraction of their clonal
   // populations carrying genotype X; e.g. an individual host with five clonal infections two of which
   // carry genotype X would be given a weight of 2/5).
 
-  auto *pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
-  auto sum1_all = 0.0;
-  std::vector<double> result3_all(Model::CONFIG->genotype_db()->size(), 0.0);
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    // std::vector<double> result1(Model::CONFIG->genotype_db()->size(), 0.0);
-    // std::vector<double> result2(Model::CONFIG->genotype_db()->size(), 0.0);
-    std::vector<double> result3(Model::CONFIG->genotype_db()->size(), 0.0);
-
-    // auto sum2 = 0.0;
-    auto sum1 = 0.0;
-
-    for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
-      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-        const auto size = pi->vPerson()[loc][hs][ac].size();
-        for (auto i = 0ull; i < size; i++) {
-          auto *person = pi->vPerson()[loc][hs][ac][i];
-
-          if (!person->all_clonal_parasite_populations()->parasites()->empty()) {
-            sum1 += 1;
-            sum1_all += 1;
-          }
-          // sum2 += person->all_clonal_parasite_populations()->parasites()->size();
-          std::map<int, int> individual_genotype_map;
-
-          for (auto *parasite_population : *(person->all_clonal_parasite_populations()->parasites())) {
-            const auto g_id = parasite_population->genotype()->genotype_id();
-            // result2[g_id] += 1;
-            if (individual_genotype_map.find(g_id)==individual_genotype_map.end()) {
-              individual_genotype_map[parasite_population->genotype()->genotype_id()] = 1;
-            } else {
-              individual_genotype_map[parasite_population->genotype()->genotype_id()] += 1;
-            }
-          }
-
-          for (const auto genotype : individual_genotype_map) {
-            // result1[genotype.first] += 1;
-            result3[genotype.first] += genotype.second/
-                static_cast<double>(person->all_clonal_parasite_populations()->parasites()->size()
-                );
-            result3_all[genotype.first] += genotype.second/static_cast<double>(person
-                ->all_clonal_parasite_populations()->parasites()->size());
-          }
-        }
-      }
-    }
-
-    // for (auto& i : result1) {
-    //   i /= sum1;
-    // }
-    //
-    // for (auto& i : result2) {
-    //   i /= sum2;
-    // }
-
-    for (auto &i : result3) {
-      i /= sum1;
-    }
-
-    // for (auto& i : result1) {
-    //   ss << i << sep;
-    // }
-    // ss << group_sep;
-    //
-    // for (auto& i : result2) {
-    //   ss << i << sep;
-    // }
-    // ss << group_sep;
-
-    for (auto &i : result3) {
-      ss << i << sep;
-    }
-  }
-  ss << group_sep;
-  for (auto &i : result3_all) {
-    i /= sum1_all;
-  }
-  for (auto &i : result3_all) {
-    ss << i << sep;
-  }
+  ReporterUtils::output_genotype_frequency3(ss, Model::CONFIG->number_of_parasite_types(),
+                                            Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>());
 
 }
 
@@ -137,7 +61,7 @@ void MMCReporter::print_ntf_by_location() {
     pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
   }
 
-  ss << (sum_ntf*100/pop_size) << sep;
+  ss << (sum_ntf * 100 / pop_size) << sep;
 }
 
 void MMCReporter::monthly_report() {
@@ -182,8 +106,8 @@ void MMCReporter::after_run() {
   ss << Model::TREATMENT_STRATEGY->id << sep;
 
   //output NTF
-  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period())/
-      static_cast<double>(Constants::DAYS_IN_YEAR());
+  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
+                                   static_cast<double>(Constants::DAYS_IN_YEAR());
 
   auto sum_ntf = 0.0;
   ul pop_size = 0;
@@ -192,7 +116,7 @@ void MMCReporter::after_run() {
     pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
   }
 
-  ss << (sum_ntf*100/pop_size)/total_time_in_years << sep;
+  ss << (sum_ntf * 100 / pop_size) / total_time_in_years << sep;
 
   CLOG(INFO, "summary_reporter") << ss.str();
   ss.str("");
@@ -209,9 +133,9 @@ void MMCReporter::print_EIR_PfPR_by_location() {
     }
 
     //pfpr <5 and all
-    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 0, 5)*100 << sep;
-    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 2, 10)*100 << sep;
-    ss << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc]*100 << sep;
+    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 0, 5) * 100 << sep;
+    ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 2, 10) * 100 << sep;
+    ss << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc] * 100 << sep;
   }
 }
 

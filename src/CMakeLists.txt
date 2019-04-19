@@ -6,7 +6,9 @@ file(GLOB SRC_FILES *.cpp Spatial/*.cpp Reporters/*.cpp Strategies/*.cpp
 
 set(SRC_FILES ${SRC_FILES}
     ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h
-    ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc)
+    ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc
+        Reporters/ReporterUtils.cpp
+        Reporters/ReporterUtils.h)
 
 add_library(MaSimCore STATIC ${SRC_FILES})
 add_dependencies(MaSimCore date args)
