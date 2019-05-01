@@ -32,8 +32,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 #include dependent libs
 find_package(GSL REQUIRED)
-find_package(yaml-cpp CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED)
+find_package(yaml-cpp REQUIRED)
+find_package(fmt REQUIRED)
+
+message(${YAML_CPP_LIBRARIES})
 
 add_subdirectory(${EXT_PROJECTS_DIR}/date)
 add_subdirectory(${EXT_PROJECTS_DIR}/args)

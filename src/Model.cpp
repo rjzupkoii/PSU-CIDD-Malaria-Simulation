@@ -91,7 +91,7 @@ Model::~Model() {
 }
 
 void Model::set_treatment_strategy(const int &strategy_id) {
-  treatment_strategy_ = strategy_id==-1 ? nullptr : config_->strategy_db()[strategy_id];
+  treatment_strategy_ = strategy_id == -1 ? nullptr : config_->strategy_db()[strategy_id];
   TREATMENT_STRATEGY = treatment_strategy_;
 
   treatment_strategy_->adjust_started_time_point(Model::SCHEDULER->current_time());
@@ -106,7 +106,7 @@ void Model::set_treatment_strategy(const int &strategy_id) {
 }
 
 void Model::set_treatment_coverage(ITreatmentCoverageModel* tcm) {
-  if (treatment_coverage_!=tcm) {
+  if (treatment_coverage_ != tcm) {
     if (tcm->p_treatment_less_than_5.empty() || tcm->p_treatment_more_than_5.empty()) {
       //copy current value
       tcm->p_treatment_less_than_5 = treatment_coverage_->p_treatment_less_than_5;
@@ -143,7 +143,7 @@ void Model::initialize() {
   if (reporter_type_.empty()) {
     add_reporter(Reporter::MakeReport(Reporter::MONTHLY_REPORTER));
   } else {
-    if (Reporter::ReportTypeMap.find(reporter_type_)!=Reporter::ReportTypeMap.end()) {
+    if (Reporter::ReportTypeMap.find(reporter_type_) != Reporter::ReportTypeMap.end()) {
       add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));
     }
   }
@@ -184,7 +184,7 @@ void Model::initialize() {
   LOG(INFO) << "Schedule for population event";
   for (auto* event : config_->preconfig_population_events()) {
     scheduler_->schedule_population_event(event);
-    // LOG(INFO) << scheduler_->population_events_list_[event->time()].size();
+//    LOG(INFO) << scheduler_->population_events_list_[event->time].size();
   }
   //
   // for(auto it = CONFIG->genotype_db()->begin(); it != CONFIG->genotype_db()->end(); ++it) {
@@ -384,18 +384,18 @@ double Model::get_seasonal_factor(const date::sys_days &today, const int &locati
     return 1;
   }
   const auto day_of_year = TimeHelpers::day_of_year(today);
-  const auto is_rainy_period = Model::CONFIG->seasonal_info().phi[location] < Constants::DAYS_IN_YEAR()/2.0
+  const auto is_rainy_period = Model::CONFIG->seasonal_info().phi[location] < Constants::DAYS_IN_YEAR() / 2.0
                                ? day_of_year >= Model::CONFIG->seasonal_info().phi[location]
-                                   && day_of_year <=
-                                       Model::CONFIG->seasonal_info().phi[location] + Constants::DAYS_IN_YEAR()/2.0
+                                 && day_of_year <=
+                                    Model::CONFIG->seasonal_info().phi[location] + Constants::DAYS_IN_YEAR() / 2.0
                                : day_of_year >= Model::CONFIG->seasonal_info().phi[location]
-                                   || day_of_year <=
-                                       Model::CONFIG->seasonal_info().phi[location] - Constants::DAYS_IN_YEAR()/2.0;
+                                 || day_of_year <=
+                                    Model::CONFIG->seasonal_info().phi[location] - Constants::DAYS_IN_YEAR() / 2.0;
 
   return (is_rainy_period)
-         ? (Model::CONFIG->seasonal_info().A[location] - Model::CONFIG->seasonal_info().min_value[location])*
-          sin(Model::CONFIG->seasonal_info().B[location]*day_of_year +
-              Model::CONFIG->seasonal_info().C[location]) +
-          Model::CONFIG->seasonal_info().min_value[location]
+         ? (Model::CONFIG->seasonal_info().A[location] - Model::CONFIG->seasonal_info().min_value[location]) *
+           sin(Model::CONFIG->seasonal_info().B[location] * day_of_year +
+               Model::CONFIG->seasonal_info().C[location]) +
+           Model::CONFIG->seasonal_info().min_value[location]
          : Model::CONFIG->seasonal_info().min_value[location];
 }

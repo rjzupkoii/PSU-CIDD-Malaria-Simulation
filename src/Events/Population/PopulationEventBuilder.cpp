@@ -14,6 +14,7 @@
 #include "ModifyNestedMFTEvent.h"
 #include "TurnOnMutationEvent.h"
 #include "TurnOffMutationEvent.h"
+#include "IntroducePlas2CopyParasiteEvent.h"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node &node, Config* config) {
   std::vector<Event*> events;
@@ -41,9 +42,9 @@ PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML
 
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto location = node[i]["location"].as<unsigned long>();
-    const auto location_from = location==-1 ? 0 : location;
+    const auto location_from = location == -1 ? 0 : location;
     const auto location_to =
-        location==-1 ? config->number_of_locations() : std::min(location + 1, config->number_of_locations());
+      location == -1 ? config->number_of_locations() : std::min(location + 1, config->number_of_locations());
 
     for (auto loc = location_from; loc < location_to; ++loc) {
       for (std::size_t j = 0; j < node[i]["parasite_info"].size(); j++) {
@@ -151,36 +152,58 @@ std::vector<Event*> PopulationEventBuilder::build_turn_off_mutation_event(const 
   return events;
 }
 
+std::vector<Event*>
+PopulationEventBuilder::build_introduce_plas2_parasite_events(const YAML::Node &node, Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {
+    auto location = node[i]["location"].as<int>();
+    if (location < config->number_of_locations()) {
+      auto fraction = node[i]["fraction"].as<double>();
+
+      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+
+      auto* event = new IntroducePlas2CopyParasiteEvent(location, time, fraction);
+      events.push_back(event);
+    }
+  }
+  return events;
+}
+
 std::vector<Event*> PopulationEventBuilder::build(const YAML::Node &node, Config* config) {
   std::vector<Event*> events;
   const auto name = node["name"].as<std::string>();
   // std::cout << name << std::endl;
-  if (name=="introduce_parasites") {
+  if (name == "introduce_plas2_parasites") {
+    events = build_introduce_plas2_parasite_events(node["info"], config);
+  }
+  if (name == "introduce_parasites") {
     events = build_introduce_parasite_events(node["info"], config);
   }
-  if (name=="introduce_parasites_periodically") {
+  if (name == "introduce_parasites_periodically") {
     events = build_introduce_parasites_periodically_events(node["info"], config);
   }
-  if (name=="change_treatment_coverage") {
+  if (name == "change_treatment_coverage") {
     events = build_change_treatment_coverage_event(node["info"], config);
   }
 
-  if (name=="change_treatment_strategy") {
+  if (name == "change_treatment_strategy") {
     events = build_change_treatment_strategy_event(node["info"], config);
   }
 
-  if (name=="single_round_MDA") {
+  if (name == "single_round_MDA") {
     events = build_single_round_mda_event(node["info"], config);
   }
 
-  if (name=="modify_nested_mft_strategy") {
+  if (name == "modify_nested_mft_strategy") {
     events = build_modify_nested_mft_strategy_event(node["info"], config);
   }
-  if (name=="turn_on_mutation") {
+  if (name == "turn_on_mutation") {
     events = build_turn_on_mutation_event(node["info"], config);
   }
-  if (name=="turn_off_mutation") {
+  if (name == "turn_off_mutation") {
     events = build_turn_off_mutation_event(node["info"], config);
   }
   return events;
 }
+
