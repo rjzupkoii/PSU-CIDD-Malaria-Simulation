@@ -483,7 +483,10 @@ void Person::determine_clinical_or_not(ClonalParasitePopulation* clinical_caused
     const auto p = Model::RANDOM->random_flat(0.0, 1.0);
 
     //        if (P <= Model::CONFIG->p_relapse()) {
-
+//    if (Model::SCHEDULER->current_time() >= 2000 && Model::SCHEDULER->current_time() <= 2010)
+//      std::cout << this->age() << "\t" << this->immune_system()->get_current_value() << "\t"
+//                << get_probability_progress_to_clinical()
+//                << std::endl;
     if (p <= get_probability_progress_to_clinical()) {
       //progress to clinical after several days
       clinical_caused_parasite->set_update_function(Model::MODEL->progress_to_clinical_update_function());

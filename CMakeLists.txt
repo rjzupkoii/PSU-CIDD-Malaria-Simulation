@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(PCMS)
+project(POMS)
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 option(USING_ZAPCC "Use ZAPCC compiler." OFF)
