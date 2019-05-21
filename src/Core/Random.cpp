@@ -25,12 +25,11 @@ void Random::initialize(const unsigned long &seed) {
   const auto tt = gsl_rng_mt19937;
   G_RNG = gsl_rng_alloc(tt);
 
-  // seed the RNG
-  const auto c = std::hash<std::thread::id>{}(std::this_thread::get_id());
-  seed_ = seed==0 ? NumberHelpers::good_seed(static_cast<unsigned long>(clock()), static_cast<unsigned long>
-  (std::time(nullptr)), (unsigned long) c)
-                  : seed;
-  LOG(INFO) << fmt::format("Random initializing with seed: {}", seed);
+  auto now = std::chrono::high_resolution_clock::now();
+  auto milliseconds = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch());
+  seed_ = seed == 0 ? static_cast<unsigned long>(milliseconds.count()) : seed;
+
+  LOG(INFO) << fmt::format("Random initializing with seed: {}", seed_);
   gsl_rng_set(G_RNG, seed_);
 
 }
@@ -67,7 +66,7 @@ double Random::random_normal(const double &mean, const double &sd) {
 
 double Random::random_normal_truncated(const double &mean, const double &sd) {
   double value = gsl_ran_gaussian(G_RNG, sd);
-  while (value > 3*sd || value < -3*sd) {
+  while (value > 3 * sd || value < -3 * sd) {
     value = gsl_ran_gaussian(G_RNG, sd);
   }
 
@@ -80,7 +79,7 @@ int Random::random_normal(const int &mean, const int &sd) {
 
 int Random::random_normal_truncated(const int &mean, const int &sd) {
   double value = gsl_ran_gaussian(G_RNG, sd);
-  while (value > 3*sd || value < -3*sd) {
+  while (value > 3 * sd || value < -3 * sd) {
     value = gsl_ran_gaussian(G_RNG, sd);
   }
 
