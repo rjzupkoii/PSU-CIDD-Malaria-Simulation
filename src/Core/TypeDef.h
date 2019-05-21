@@ -34,11 +34,11 @@ typedef std::vector<double> DoubleVector;
 typedef std::vector<DoubleVector> DoubleVector2;
 typedef std::vector<DoubleVector2> DoubleVector3;
 typedef std::vector<int> IntVector;
-typedef std::vector<int> *IntVectorPtr;
+typedef std::vector<int>* IntVectorPtr;
 typedef std::vector<IntVector> IntVector2;
 typedef std::vector<IntVector2> IntVector3;
-typedef std::vector<IntVector *> IntVectorPtrVector;
-typedef std::vector<IntVector> *IntVector2Ptr;
+typedef std::vector<IntVector*> IntVectorPtrVector;
+typedef std::vector<IntVector>* IntVector2Ptr;
 typedef std::vector<unsigned int> UIntVector;
 
 typedef std::vector<ul> LongVector;
@@ -49,24 +49,24 @@ typedef std::vector<StringVector> StringVector2;
 
 typedef std::map<int, int> IntIntMap;
 
-typedef std::vector<Person *> PersonPtrVector;
+typedef std::vector<Person*> PersonPtrVector;
 typedef PersonPtrVector::iterator PersonPtrVectorIterator;
 
 typedef std::vector<PersonPtrVector> PersonPtrVector2;
 typedef std::vector<PersonPtrVector2> PersonPtrVector3;
 typedef std::vector<PersonPtrVector3> PersonPtrVector4;
 
-typedef std::vector<Event *> EventPtrVector;
+typedef std::vector<Event*> EventPtrVector;
 typedef std::vector<EventPtrVector> EventPtrVector2;
 
-typedef std::vector<Reporter *> ReporterPtrVector;
+typedef std::vector<Reporter*> ReporterPtrVector;
 
-typedef std::list<PersonIndex *> PersonIndexPtrList;
+typedef std::list<PersonIndex*> PersonIndexPtrList;
 
-typedef std::map<int, Drug *> DrugPtrMap;
+typedef std::map<int, Drug*> DrugPtrMap;
 
-typedef std::vector<Therapy *> TherapyPtrVector;
-typedef std::vector<IStrategy *> StrategyPtrVector;
+typedef std::vector<Therapy*> TherapyPtrVector;
+typedef std::vector<IStrategy*> StrategyPtrVector;
 
 struct SeasonalInfo {
   bool enable{false};
@@ -120,6 +120,7 @@ struct ParasiteDensityLevel {
   double log_parasite_density_clinical_from;
   double log_parasite_density_clinical_to;
   double log_parasite_density_detectable;
+  double log_parasite_density_detectable_pfpr;
   double log_parasite_density_pyrogenic;
 
   friend std::ostream &operator<<(std::ostream &os, const ParasiteDensityLevel &pdl) {
@@ -131,6 +132,7 @@ struct ParasiteDensityLevel {
        << pdl.log_parasite_density_clinical_from << ","
        << pdl.log_parasite_density_clinical_to << ","
        << pdl.log_parasite_density_detectable << ","
+       << pdl.log_parasite_density_detectable_pfpr << ","
        << pdl.log_parasite_density_pyrogenic
        << "]";
     return os;

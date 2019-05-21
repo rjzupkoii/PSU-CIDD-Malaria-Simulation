@@ -29,7 +29,7 @@ drug_db:
     half_life: 0.0
     k: 4
     maximum_parasite_killing_rate: 0.999
-    mutation_probability: 0.0019
+    mutation_probability: 0.019
     n: 25
     name: artmisinin
     selecting_alleles:
@@ -44,7 +44,7 @@ drug_db:
     half_life: 4.5
     k: 4
     maximum_parasite_killing_rate: 0.99
-    mutation_probability: 0.0019
+    mutation_probability: 0.019
     n: 20
     name: lumefantrine
     selecting_alleles:
@@ -60,7 +60,7 @@ drug_db:
     half_life: 9.0
     k: 4
     maximum_parasite_killing_rate: 0.95
-    mutation_probability: 0.0019
+    mutation_probability: 0.019
     n: 19
     name: amodiaquine
     selecting_alleles:
@@ -74,7 +74,7 @@ drug_db:
     half_life: 28.0
     k: 4
     maximum_parasite_killing_rate: 0.9
-    mutation_probability: 0.0019
+    mutation_probability: 0.019
     n: 15
     name: piperaquine
     resistant_factor:
@@ -90,7 +90,7 @@ drug_db:
     half_life: 21.0
     k: 4
     maximum_parasite_killing_rate: 0.9
-    mutation_probability: 0.0019
+    mutation_probability: 0.019
     n: 15
     name: Mefloquine
     selecting_alleles:
@@ -103,7 +103,7 @@ drug_db:
     half_life: 6.5
     k: 4
     maximum_parasite_killing_rate: 0.9
-    mutation_probability: 0.0019
+    mutation_probability: 0.019
     n: 15
     name: SP
     selecting_alleles: []
@@ -117,7 +117,7 @@ drug_db:
     half_life: 10
     k: 4
     maximum_parasite_killing_rate: 0.95
-    mutation_probability: 0.0019
+    mutation_probability: 0.019
     n: 19
     name: CQ
     selecting_alleles:
@@ -264,7 +264,7 @@ genotype_info:
     position: 4
 immune_system_information: {age_mature_immunity: 10, b1: 0.00125, b2: 0.0025, duration_for_fully_immune: 60,
   duration_for_naive: 300, factor_effect_age_mature_immunity: 1, immune_effect_on_progression_to_clinical: 4,
-  immune_inflation_rate: 0.01, max_clinical_probability: 0.99, mean_initial_condition: 0.1,
+  immune_inflation_rate: 0.01, max_clinical_probability: 0.8, mean_initial_condition: 0.1,
   min_clinical_probability: 0.05, sd_initial_condition: 0.1}
 inflation_factor: 0.01
 initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35,

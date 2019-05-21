@@ -672,13 +672,12 @@ ModelDataCollector::record_1_treatment_failure_by_therapy(const int &location, c
   number_of_treatments_fail_with_therapy_ID_[therapy_id] += 1;
   today_tf_by_therapy_[therapy_id] += 1;
 
-  if (therapy_id < 3) {
-    if (age < 79) {
-      number_of_treatment_failures_by_location_age_therapy_year_[location][age][therapy_id] += 1;
-    } else {
-      number_of_treatment_failures_by_location_age_therapy_year_[location][79][therapy_id] += 1;
-    }
+  if (age < 79) {
+    number_of_treatment_failures_by_location_age_therapy_year_[location][age][therapy_id] += 1;
+  } else {
+    number_of_treatment_failures_by_location_age_therapy_year_[location][79][therapy_id] += 1;
   }
+
 }
 
 void ModelDataCollector::record_1_treatment_success_by_therapy(const int &therapy_id) {

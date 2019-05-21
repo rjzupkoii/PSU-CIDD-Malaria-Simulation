@@ -116,6 +116,7 @@ parasite_density_level:
   log_parasite_density_clinical_from:     3.301    # corresponds to 2000 parasites per microliter of blood (total 10^10)
   log_parasite_density_clinical_to:     5.301    # corresponds to 200,000 parasites per microliter of blood (total 10^12)
   log_parasite_density_detectable:   1.000    # corresponds to 10 parasites per microliter of blood
+  log_parasite_density_detectable_pfpr: 2.000 # corresponds to 100 parasites per microliter of blood
   log_parasite_density_pyrogenic:    3.398    # corresponds to 2500 parasites per microliter of blood
 
 
@@ -141,7 +142,7 @@ immune_system_information:
   # mix and max probabilities of experiencing symptoms as a result of a new infection
   # the actual probability will depend on the host's immunity
   min_clinical_probability: 0.05
-  max_clinical_probability: 0.99
+  max_clinical_probability: 0.8
 
   # slope of sigmoidal prob-v-immunity function (parameter z in supplement of 2015 LGH paper) 
   immune_effect_on_progression_to_clinical: 4

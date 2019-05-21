@@ -132,6 +132,7 @@ parasite_density_level:
   log_parasite_density_clinical_from:     3.301    # corresponds to 2000 parasites per microliter of blood (total 10^10)
   log_parasite_density_clinical_to:     5.301    # corresponds to 200,000 parasites per microliter of blood (total 10^12)
   log_parasite_density_detectable:   1.000    # corresponds to 10 parasites per microliter of blood
+  log_parasite_density_detectable_pfpr: 2.000 # corresponds to 100 parasites per microliter of blood
   log_parasite_density_pyrogenic:    3.398    # corresponds to 2500 parasites per microliter of blood
 
 
