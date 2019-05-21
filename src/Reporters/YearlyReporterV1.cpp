@@ -48,11 +48,7 @@ void YearlyReporterV1::monthly_report() {
       fs_ << Model::DATA_COLLECTOR->number_of_malaria_deaths_by_location_age_year()[0][age] << "\t";
       fs_ << Model::DATA_COLLECTOR->number_of_untreated_cases_by_location_age_year()[0][age] << "\t";
       //            fs << Model::STATISTIC->number_of_treatments_by_location_age_year()[0][age] << "\t";
-      for (int t_id = 0; t_id < 3; t_id++) {
-        fs_ << Model::DATA_COLLECTOR->number_of_treatments_by_location_age_therapy_year()[0][age][t_id] << "\t";
-        fs_ << Model::DATA_COLLECTOR->number_of_treatment_failures_by_location_age_therapy_year()[0][age][t_id]
-            << "\t";
-      }
+
     }
     fs_ << std::endl;
   }

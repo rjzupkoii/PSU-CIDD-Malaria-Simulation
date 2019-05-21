@@ -79,6 +79,7 @@ void Population::remove_person(Person* person) {
   for (PersonIndex* person_index : *person_index_list_) {
     person_index->remove(person);
   }
+  person->set_population(nullptr);
 }
 
 void Population::remove_dead_person(Person* person) {
@@ -581,6 +582,7 @@ void Population::clear_all_dead_state_individual() {
 
   for (Person* p : removePersons) {
     remove_dead_person(p);
+//    assert(p== nullptr);
   }
 }
 

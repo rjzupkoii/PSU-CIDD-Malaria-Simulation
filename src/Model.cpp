@@ -289,13 +289,12 @@ void Model::perform_population_events_daily() const {
   // TODO: turn on and off time for art mutation in the input file
   population_->perform_infection_event();
   population_->perform_birth_event();
-  //for safety remove all dead by calling perform_death_event
-  population_->perform_death_event();
   population_->perform_circulation_event();
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
 void Model::daily_update(const int &current_time) {
+  //for safety remove all dead by calling perform_death_event
+  population_->perform_death_event();
 
   //update / calculate daily UTL
   data_collector_->end_of_time_step();

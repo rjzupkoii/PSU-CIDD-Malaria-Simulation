@@ -17,7 +17,7 @@ starting_date: 2006/1/1
 # ending time point of the simulation (in yyyy/m/d format) 
 ending_date: 2040/1/1
 
-# the day at which the simulation's reporting functionality begins collecting data for 
+# the day at which the simulation's reporting functionality begins collecting data for
 # EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
 # for monthly data display
 start_collect_data_day: 365
@@ -67,6 +67,7 @@ location_db:
 
   #if the number of values less than number of locations, the first value will be applied for all locations
   population_size_by_location: [62500]
+
   #spatial_model could be Gravity, Barabasi, or Wesolowski
 
 # seasonality parameters for all location

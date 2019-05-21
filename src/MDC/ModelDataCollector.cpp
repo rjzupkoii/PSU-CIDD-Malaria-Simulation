@@ -165,10 +165,7 @@ void ModelDataCollector::initialize() {
     number_of_deaths_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(80, 0));
     number_of_malaria_deaths_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(),
                                                                 IntVector(80, 0));
-    number_of_treatments_by_location_age_therapy_year_ = IntVector3(Model::CONFIG->number_of_locations(),
-                                                                    IntVector2(80, IntVector(3, 0)));
-    number_of_treatment_failures_by_location_age_therapy_year_ = IntVector3(Model::CONFIG->number_of_locations(),
-                                                                            IntVector2(80, IntVector(3, 0)));
+
     popsize_by_location_age_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(80, 0));
 
     tf_at_15_ = 0;
@@ -406,10 +403,7 @@ void ModelDataCollector::perform_yearly_update() {
         number_of_treatments_by_location_age_year_[loc][age] = 0;
         number_of_deaths_by_location_age_year_[loc][age] = 0;
         number_of_malaria_deaths_by_location_age_year_[loc][age] = 0;
-        for (auto therapy_id = 0; therapy_id < 3; therapy_id++) {
-          number_of_treatments_by_location_age_therapy_year_[loc][age][therapy_id] = 0;
-          number_of_treatment_failures_by_location_age_therapy_year_[loc][age][therapy_id] = 0;
-        }
+
       }
     }
   }
@@ -622,14 +616,8 @@ void ModelDataCollector::record_1_treatment(const int &location, const int &age,
 
     if (age <= 79) {
       number_of_treatments_by_location_age_year_[location][age] += 1;
-      if (therapy_id < 3) {
-        number_of_treatments_by_location_age_therapy_year_[location][age][therapy_id] += 1;
-      }
     } else {
       number_of_treatments_by_location_age_year_[location][79] += 1;
-      if (therapy_id < 3) {
-        number_of_treatments_by_location_age_therapy_year_[location][79][therapy_id] += 1;
-      }
     }
   }
 }
@@ -671,13 +659,6 @@ void
 ModelDataCollector::record_1_treatment_failure_by_therapy(const int &location, const int &age, const int &therapy_id) {
   number_of_treatments_fail_with_therapy_ID_[therapy_id] += 1;
   today_tf_by_therapy_[therapy_id] += 1;
-
-  if (age < 79) {
-    number_of_treatment_failures_by_location_age_therapy_year_[location][age][therapy_id] += 1;
-  } else {
-    number_of_treatment_failures_by_location_age_therapy_year_[location][79][therapy_id] += 1;
-  }
-
 }
 
 void ModelDataCollector::record_1_treatment_success_by_therapy(const int &therapy_id) {
