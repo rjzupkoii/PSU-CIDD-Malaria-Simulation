@@ -113,7 +113,10 @@ namespace YAML {
       parasite_density_level.log_parasite_density_clinical_from = node["log_parasite_density_clinical_from"].as<double>();
       parasite_density_level.log_parasite_density_clinical_to = node["log_parasite_density_clinical_to"].as<double>();
       parasite_density_level.log_parasite_density_detectable = node["log_parasite_density_detectable"].as<double>();
-      parasite_density_level.log_parasite_density_detectable_pfpr = node["log_parasite_density_detectable_pfpr"].as<double>();
+
+      parasite_density_level.log_parasite_density_detectable_pfpr = node["log_parasite_density_detectable_pfpr"]
+                                                                    ? node["log_parasite_density_detectable_pfpr"].as<double>()
+                                                                    : node["log_parasite_density_detectable"].as<double>();
       parasite_density_level.log_parasite_density_pyrogenic = node["log_parasite_density_pyrogenic"].as<double>();
 
       return true;

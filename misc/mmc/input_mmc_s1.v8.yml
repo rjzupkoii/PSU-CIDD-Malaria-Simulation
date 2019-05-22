@@ -63,7 +63,7 @@ location_db:
 
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
-  beta_by_location: [0.22]
+  beta_by_location: [0.19]
 
   #if the number of values less than number of locations, the first value will be applied for all locations
   population_size_by_location: [70000]
@@ -143,7 +143,7 @@ immune_system_information:
   # mix and max probabilities of experiencing symptoms as a result of a new infection
   # the actual probability will depend on the host's immunity
   min_clinical_probability: 0.05
-  max_clinical_probability: 0.8
+  max_clinical_probability: 0.99
 
   # slope of sigmoidal prob-v-immunity function (parameter z in supplement of 2015 LGH paper) 
   immune_effect_on_progression_to_clinical: 4
