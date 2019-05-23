@@ -118,6 +118,11 @@ void MMCReporter::after_run() {
 
   ss << (sum_ntf * 100 / pop_size) / total_time_in_years << sep;
 
+  ss << group_sep;
+  for (int i = 0; i < 5; ++i) {
+    //print # mutation events of first 5 years
+    ss << Model::DATA_COLLECTOR->number_of_mutation_events_by_year()[i] << sep;
+  }
   CLOG(INFO, "summary_reporter") << ss.str();
   ss.str("");
 }
@@ -136,8 +141,8 @@ void MMCReporter::print_EIR_PfPR_by_location() {
     ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 0, 5) * 100 << sep;
     ss << Model::DATA_COLLECTOR->get_blood_slide_prevalence(loc, 2, 10) * 100 << sep;
     ss << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc] * 100 << sep;
-    std::cout << Model::POPULATION->size() << "\t"
-              << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc] * 100 << std::endl;
+//    std::cout << Model::POPULATION->size() << "\t"
+//              << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc] * 100 << std::endl;
   }
 }
 //

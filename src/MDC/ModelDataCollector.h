@@ -22,183 +22,187 @@ class Therapy;
 class ClonalParasitePopulation;
 
 class ModelDataCollector {
- DISALLOW_COPY_AND_ASSIGN(ModelDataCollector)
+DISALLOW_COPY_AND_ASSIGN(ModelDataCollector)
 
- POINTER_PROPERTY(Model, model)
+POINTER_PROPERTY(Model, model)
 
- PROPERTY_REF(DoubleVector, total_immune_by_location)
+PROPERTY_REF(DoubleVector, total_immune_by_location)
 
- PROPERTY_REF(DoubleVector2, total_immune_by_location_age_class)
+PROPERTY_REF(DoubleVector2, total_immune_by_location_age_class)
 
- PROPERTY_REF(IntVector, popsize_by_location)
+PROPERTY_REF(IntVector, popsize_by_location)
 
- PROPERTY_REF(IntVector, popsize_residence_by_location)
+PROPERTY_REF(IntVector, popsize_residence_by_location)
 
- PROPERTY_REF(IntVector2, popsize_by_location_age_class)
+PROPERTY_REF(IntVector2, popsize_by_location_age_class)
 
- PROPERTY_REF(IntVector2, popsize_by_location_age_class_by_5)
+PROPERTY_REF(IntVector2, popsize_by_location_age_class_by_5)
 
- PROPERTY_REF(IntVector2, popsize_by_location_hoststate)
+PROPERTY_REF(IntVector2, popsize_by_location_hoststate)
 
- PROPERTY_REF(DoubleVector, blood_slide_prevalence_by_location)
+PROPERTY_REF(DoubleVector, blood_slide_prevalence_by_location)
 
- PROPERTY_REF(DoubleVector2, blood_slide_number_by_location_age_group)
+PROPERTY_REF(DoubleVector2, blood_slide_number_by_location_age_group)
 
- PROPERTY_REF(DoubleVector2, blood_slide_prevalence_by_location_age_group)
+PROPERTY_REF(DoubleVector2, blood_slide_prevalence_by_location_age_group)
 
- PROPERTY_REF(DoubleVector2, blood_slide_number_by_location_age_group_by_5)
+PROPERTY_REF(DoubleVector2, blood_slide_number_by_location_age_group_by_5)
 
- PROPERTY_REF(DoubleVector2, blood_slide_prevalence_by_location_age_group_by_5)
+PROPERTY_REF(DoubleVector2, blood_slide_prevalence_by_location_age_group_by_5)
 
- PROPERTY_REF(DoubleVector, fraction_of_positive_that_are_clinical_by_location)
+PROPERTY_REF(DoubleVector, fraction_of_positive_that_are_clinical_by_location)
 
- PROPERTY_REF(LongVector, total_number_of_bites_by_location)
+PROPERTY_REF(LongVector, total_number_of_bites_by_location)
 
- PROPERTY_REF(LongVector, total_number_of_bites_by_location_year)
+PROPERTY_REF(LongVector, total_number_of_bites_by_location_year)
 
- PROPERTY_REF(LongVector, person_days_by_location_year)
+PROPERTY_REF(LongVector, person_days_by_location_year)
 
- PROPERTY_REF(DoubleVector2, EIR_by_location_year)
+PROPERTY_REF(DoubleVector2, EIR_by_location_year)
 
- PROPERTY_REF(DoubleVector, EIR_by_location)
+PROPERTY_REF(DoubleVector, EIR_by_location)
 
- PROPERTY_REF(LongVector, cumulative_clinical_episodes_by_location)
+PROPERTY_REF(LongVector, cumulative_clinical_episodes_by_location)
 
- PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age)
+PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age)
 
- PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age_group)
+PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age_group)
 
- PROPERTY_REF(DoubleVector2, average_number_biten_by_location_person)
+PROPERTY_REF(DoubleVector2, average_number_biten_by_location_person)
 
- PROPERTY_REF(DoubleVector, percentage_bites_on_top_20_by_location)
+PROPERTY_REF(DoubleVector, percentage_bites_on_top_20_by_location)
 
- PROPERTY_REF(DoubleVector, cumulative_discounted_NTF_by_location)
+PROPERTY_REF(DoubleVector, cumulative_discounted_NTF_by_location)
 
- PROPERTY_REF(DoubleVector, cumulative_NTF_by_location)
+PROPERTY_REF(DoubleVector, cumulative_NTF_by_location)
 
- PROPERTY_REF(IntVector, today_TF_by_location)
+PROPERTY_REF(IntVector, today_TF_by_location)
 
- PROPERTY_REF(IntVector, today_number_of_treatments_by_location)
+PROPERTY_REF(IntVector, today_number_of_treatments_by_location)
 
- PROPERTY_REF(IntVector, today_RITF_by_location)
+PROPERTY_REF(IntVector, today_RITF_by_location)
 
- PROPERTY_REF(IntVector2, total_number_of_treatments_60_by_location)
+PROPERTY_REF(IntVector2, total_number_of_treatments_60_by_location)
 
- PROPERTY_REF(IntVector2, total_RITF_60_by_location)
+PROPERTY_REF(IntVector2, total_RITF_60_by_location)
 
- PROPERTY_REF(IntVector2, total_TF_60_by_location)
+PROPERTY_REF(IntVector2, total_TF_60_by_location)
 
- PROPERTY_REF(DoubleVector, current_RITF_by_location)
+PROPERTY_REF(DoubleVector, current_RITF_by_location)
 
- PROPERTY_REF(DoubleVector, current_TF_by_location)
+PROPERTY_REF(DoubleVector, current_TF_by_location)
 
- PROPERTY_REF(IntVector, cumulative_mutants_by_location)
+PROPERTY_REF(IntVector, cumulative_mutants_by_location)
 
- PROPERTY_REF(int, current_utl_duration)
+PROPERTY_REF(int, current_utl_duration)
 
- PROPERTY_REF(IntVector, UTL_duration)
+PROPERTY_REF(IntVector, UTL_duration)
 
- PROPERTY_REF(IntVector, number_of_treatments_with_therapy_ID)
+PROPERTY_REF(IntVector, number_of_treatments_with_therapy_ID)
 
- PROPERTY_REF(IntVector, number_of_treatments_success_with_therapy_ID)
+PROPERTY_REF(IntVector, number_of_treatments_success_with_therapy_ID)
 
- PROPERTY_REF(IntVector, number_of_treatments_fail_with_therapy_ID)
+PROPERTY_REF(IntVector, number_of_treatments_fail_with_therapy_ID)
 
- PROPERTY_REF(double, AMU_per_parasite_pop)
+PROPERTY_REF(double, AMU_per_parasite_pop)
 
- PROPERTY_REF(double, AMU_per_person)
+PROPERTY_REF(double, AMU_per_person)
 
- PROPERTY_REF(double, AMU_for_clinical_caused_parasite)
+PROPERTY_REF(double, AMU_for_clinical_caused_parasite)
 
- PROPERTY_REF(double, AFU)
+PROPERTY_REF(double, AFU)
 
- PROPERTY_REF(double, discounted_AMU_per_parasite_pop)
+PROPERTY_REF(double, discounted_AMU_per_parasite_pop)
 
- PROPERTY_REF(double, discounted_AMU_per_person)
+PROPERTY_REF(double, discounted_AMU_per_person)
 
- PROPERTY_REF(double, discounted_AMU_for_clinical_caused_parasite)
+PROPERTY_REF(double, discounted_AMU_for_clinical_caused_parasite)
 
- PROPERTY_REF(double, discounted_AFU)
+PROPERTY_REF(double, discounted_AFU)
 
- PROPERTY_REF(IntVector2, multiple_of_infection_by_location)
+PROPERTY_REF(IntVector2, multiple_of_infection_by_location)
 
- PROPERTY_REF(DoubleVector, current_EIR_by_location)
+PROPERTY_REF(DoubleVector, current_EIR_by_location)
 
- PROPERTY_REF(LongVector, last_update_total_number_of_bites_by_location)
+PROPERTY_REF(LongVector, last_update_total_number_of_bites_by_location)
 
 
- PROPERTY_REF(DoubleVector2, last_10_blood_slide_prevalence_by_location)
+PROPERTY_REF(DoubleVector2, last_10_blood_slide_prevalence_by_location)
 
- PROPERTY_REF(DoubleVector2, last_10_blood_slide_prevalence_by_location_age_class)
+PROPERTY_REF(DoubleVector2, last_10_blood_slide_prevalence_by_location_age_class)
 
- PROPERTY_REF(DoubleVector2, last_10_fraction_positive_that_are_clinical_by_location)
+PROPERTY_REF(DoubleVector2, last_10_fraction_positive_that_are_clinical_by_location)
 
- PROPERTY_REF(DoubleVector3, last_10_fraction_positive_that_are_clinical_by_location_age_class)
+PROPERTY_REF(DoubleVector3, last_10_fraction_positive_that_are_clinical_by_location_age_class)
 
- PROPERTY_REF(DoubleVector3, last_10_fraction_positive_that_are_clinical_by_location_age_class_by_5)
+PROPERTY_REF(DoubleVector3, last_10_fraction_positive_that_are_clinical_by_location_age_class_by_5)
 
- PROPERTY_REF(IntVector, total_parasite_population_by_location)
+PROPERTY_REF(IntVector, total_parasite_population_by_location)
 
- PROPERTY_REF(IntVector, number_of_positive_by_location)
+PROPERTY_REF(IntVector, number_of_positive_by_location)
 
- PROPERTY_REF(IntVector2, total_parasite_population_by_location_age_group)
+PROPERTY_REF(IntVector2, total_parasite_population_by_location_age_group)
 
- PROPERTY_REF(IntVector2, number_of_positive_by_location_age_group)
+PROPERTY_REF(IntVector2, number_of_positive_by_location_age_group)
 
- PROPERTY_REF(IntVector2, number_of_clinical_by_location_age_group)
+PROPERTY_REF(IntVector2, number_of_clinical_by_location_age_group)
 
- PROPERTY_REF(IntVector2, number_of_clinical_by_location_age_group_by_5)
+PROPERTY_REF(IntVector2, number_of_clinical_by_location_age_group_by_5)
 
- PROPERTY_REF(IntVector2, number_of_death_by_location_age_group)
+PROPERTY_REF(IntVector2, number_of_death_by_location_age_group)
 
- PROPERTY_REF(IntVector2, number_of_untreated_cases_by_location_age_year)
+PROPERTY_REF(IntVector2, number_of_untreated_cases_by_location_age_year)
 
- PROPERTY_REF(IntVector2, number_of_treatments_by_location_age_year)
+PROPERTY_REF(IntVector2, number_of_treatments_by_location_age_year)
 
- PROPERTY_REF(IntVector2, number_of_deaths_by_location_age_year)
+PROPERTY_REF(IntVector2, number_of_deaths_by_location_age_year)
 
- PROPERTY_REF(IntVector2, number_of_malaria_deaths_by_location_age_year)
+PROPERTY_REF(IntVector2, number_of_malaria_deaths_by_location_age_year)
 
- PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
+PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
- PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
+PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
 
- PROPERTY_REF(IntVector, monthly_number_of_clinical_episode_by_location);
+PROPERTY_REF(IntVector, monthly_number_of_clinical_episode_by_location);
 
- PROPERTY_REF(IntVector2, popsize_by_location_age)
+PROPERTY_REF(IntVector2, popsize_by_location_age)
 
- PROPERTY_REF(double, tf_at_15)
+PROPERTY_REF(double, tf_at_15)
 
- PROPERTY_REF(double, single_resistance_frequency_at_15)
+PROPERTY_REF(double, single_resistance_frequency_at_15)
 
- PROPERTY_REF(double, double_resistance_frequency_at_15)
+PROPERTY_REF(double, double_resistance_frequency_at_15)
 
- PROPERTY_REF(double, triple_resistance_frequency_at_15)
+PROPERTY_REF(double, triple_resistance_frequency_at_15)
 
- PROPERTY_REF(double, quadruple_resistance_frequency_at_15)
+PROPERTY_REF(double, quadruple_resistance_frequency_at_15)
 
- PROPERTY_REF(double, quintuple_resistance_frequency_at_15)
+PROPERTY_REF(double, quintuple_resistance_frequency_at_15)
 
- PROPERTY_REF(double, art_resistance_frequency_at_15)
+PROPERTY_REF(double, art_resistance_frequency_at_15)
 
- PROPERTY_REF(double, total_resistance_frequency_at_15)
+PROPERTY_REF(double, total_resistance_frequency_at_15)
 
- PROPERTY_REF(IntVector, today_tf_by_therapy)
+PROPERTY_REF(IntVector, today_tf_by_therapy)
 
- PROPERTY_REF(IntVector, today_number_of_treatments_by_therapy)
+PROPERTY_REF(IntVector, today_number_of_treatments_by_therapy)
 
- PROPERTY_REF(DoubleVector, current_tf_by_therapy)
+PROPERTY_REF(DoubleVector, current_tf_by_therapy)
 
- PROPERTY_REF(IntVector2, total_number_of_treatments_60_by_therapy)
+PROPERTY_REF(IntVector2, total_number_of_treatments_60_by_therapy)
 
- PROPERTY_REF(IntVector2, total_tf_60_by_therapy)
+PROPERTY_REF(IntVector2, total_tf_60_by_therapy)
 
- PROPERTY_REF(double, mean_moi)
+PROPERTY_REF(double, mean_moi)
+
+PROPERTY_REF(LongVector, number_of_mutation_events_by_year)
+PROPERTY_REF(long, current_number_of_mutation_events)
+
 
   static const int number_of_reported_MOI = 8;
 
- public:
-  explicit ModelDataCollector(Model *model = nullptr);
+public:
+  explicit ModelDataCollector(Model* model = nullptr);
 
   //    Statistic(const Statistic& orig);
   virtual ~ModelDataCollector();
@@ -233,9 +237,9 @@ class ModelDataCollector {
 
   void record_1_non_treated_case(const int &location, const int &age);
 
-  void record_1_mutation(const int &location, Genotype *from, Genotype *to);
+  void record_1_mutation(const int &location, Genotype* from, Genotype* to);
 
-  void record_1_migration(Person *pPerson, const int &from, const int &to);
+  void record_1_migration(Person* pPerson, const int &from, const int &to);
 
   void begin_time_step();
 
@@ -251,11 +255,11 @@ class ModelDataCollector {
   void update_after_run();
 
 
-  void record_AMU_AFU(Person *person, Therapy *therapy, ClonalParasitePopulation *clinical_caused_parasite);
+  void record_AMU_AFU(Person* person, Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite);
 
   double get_blood_slide_prevalence(const int &location, const int &age_from, const int &age_to);
 
- private:
+private:
   void update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten);
 
 };

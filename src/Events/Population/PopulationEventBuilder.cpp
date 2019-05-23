@@ -133,7 +133,10 @@ std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const Y
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto starting_date = node[i]["day"].as<date::year_month_day>();
     auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
-    auto* e = new TurnOnMutationEvent(time, Model::CONFIG->drug_db()->at(0)->p_mutation());
+    double mutation_probability = node[i]["mutation_probability"] ? node[i]["mutation_probability"].as<double>()
+                                                                  : Model::CONFIG->drug_db()->at(0)->p_mutation();
+
+    auto* e = new TurnOnMutationEvent(time, mutation_probability);
     events.push_back(e);
   }
 

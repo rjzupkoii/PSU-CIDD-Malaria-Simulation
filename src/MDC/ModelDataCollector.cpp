@@ -188,6 +188,9 @@ void ModelDataCollector::initialize() {
     monthly_number_of_treatment_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
     monthly_number_of_new_infections_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
     monthly_number_of_clinical_episode_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+
+    current_number_of_mutation_events_ = 0;
+    number_of_mutation_events_by_year_ = LongVector();
   }
 }
 
@@ -406,6 +409,9 @@ void ModelDataCollector::perform_yearly_update() {
 
       }
     }
+
+    number_of_mutation_events_by_year_.push_back(current_number_of_mutation_events_);
+    current_number_of_mutation_events_ = 0;
   }
 }
 
@@ -625,6 +631,9 @@ void ModelDataCollector::record_1_treatment(const int &location, const int &age,
 void ModelDataCollector::record_1_mutation(const int &location, Genotype* from, Genotype* to) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     cumulative_mutants_by_location_[location] += 1;
+  }
+  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
+    current_number_of_mutation_events_ += 1;
   }
 }
 
