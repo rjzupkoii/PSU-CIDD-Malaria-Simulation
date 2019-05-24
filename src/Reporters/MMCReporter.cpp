@@ -119,8 +119,10 @@ void MMCReporter::after_run() {
   ss << (sum_ntf * 100 / pop_size) / total_time_in_years << sep;
 
   ss << group_sep;
-  for (int i = 0; i < 5; ++i) {
-    //print # mutation events of first 5 years
+  //print # mutation events of first 10 years
+  int number_of_years = Model::DATA_COLLECTOR->number_of_mutation_events_by_year().size() >= 11 ? 11 :
+                        Model::DATA_COLLECTOR->number_of_mutation_events_by_year().size();
+  for (int i = 0; i < number_of_years; ++i) {
     ss << Model::DATA_COLLECTOR->number_of_mutation_events_by_year()[i] << sep;
   }
   CLOG(INFO, "summary_reporter") << ss.str();

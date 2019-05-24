@@ -409,9 +409,10 @@ void ModelDataCollector::perform_yearly_update() {
 
       }
     }
-
-    number_of_mutation_events_by_year_.push_back(current_number_of_mutation_events_);
-    current_number_of_mutation_events_ = 0;
+    if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
+      number_of_mutation_events_by_year_.push_back(current_number_of_mutation_events_);
+      current_number_of_mutation_events_ = 0;
+    }
   }
 }
 
