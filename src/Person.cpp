@@ -94,7 +94,7 @@ int Person::location() const {
 
 void Person::set_location(const int &value) {
   if (location_ != value) {
-    all_clonal_parasite_populations_->remove_all_infection_force();
+
     if (Model::DATA_COLLECTOR != nullptr) {
       const auto day_diff = (Constants::DAYS_IN_YEAR() - Model::SCHEDULER->current_day_in_year());
       if (location_ != -1) {
@@ -108,7 +108,6 @@ void Person::set_location(const int &value) {
     NotifyChange(LOCATION, &location_, &value);
 
     location_ = value;
-    all_clonal_parasite_populations_->add_all_infection_force();
   }
 }
 
@@ -185,11 +184,8 @@ void Person::set_bitting_level(const int &value) {
     new_value = Model::CONFIG->relative_bitting_info().number_of_biting_levels - 1;
   }
   if (bitting_level_ != new_value) {
-    all_clonal_parasite_populations_->remove_all_infection_force();
-
     NotifyChange(BITTING_LEVEL, &bitting_level_, &new_value);
     bitting_level_ = new_value;
-    all_clonal_parasite_populations_->add_all_infection_force();
   }
 }
 
@@ -228,23 +224,6 @@ ClonalParasitePopulation* Person::add_new_parasite_to_blood(Genotype* parasite_t
     Model::CONFIG->parasite_density_level().log_parasite_density_from_liver);
 
   return blood_parasite;
-}
-
-void Person::notify_change_in_force_of_infection(const double &sign, const int &parasite_type_id,
-                                                 const double &blood_parasite_log_relative_density,
-                                                 const double &log_total_relative_parasite_density) {
-  if (blood_parasite_log_relative_density == 0.0) {
-
-    return;
-  }
-
-  //    double weight = pow(10, blood_parasite_log_relative_density - log_total_relative_parasite_density);
-  //    assert(weight <=1 && weight >=0);
-  const auto relative_force_of_infection =
-    sign * get_biting_level_value() * relative_infectivity(log_total_relative_parasite_density) *
-    blood_parasite_log_relative_density;
-
-  population_->notify_change_in_force_of_infection(location_, parasite_type_id, relative_force_of_infection);
 }
 
 double Person::get_biting_level_value() {
@@ -533,6 +512,8 @@ void Person::update() {
   //    std::cout << "imm"<< std::endl;
   immune_system_->update();
 
+  all_clonal_parasite_populations_->update_relative_effective_parasite_density();
+
   //    std::cout << "csu"<< std::endl;
   update_current_state();
 
@@ -541,6 +522,7 @@ void Person::update() {
   //update bitting level only less than 1 to save performance
   // the other will be update in birthday event
   update_bitting_level();
+
 
   latest_update_time_ = Model::SCHEDULER->current_time();
   //    std::cout << "End Person Update"<< std::endl;

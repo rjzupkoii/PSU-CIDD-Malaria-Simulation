@@ -50,11 +50,6 @@ class SingleHostClonalParasitePopulations {
 
   virtual void remove(const int &index);
 
-  virtual void add_all_infection_force();
-
-  virtual void remove_all_infection_force();
-
-  virtual void change_all_infection_force(const double &sign);
 
   virtual double get_log10_total_relative_density();
 
@@ -83,8 +78,7 @@ class SingleHostClonalParasitePopulations {
 
   bool is_gametocytaemic() const;
 
- private:
-
+  void update_relative_effective_parasite_density();
 };
 
 #endif    /* SINGLEHOSTCLONALPARASITEPOPULATIONS_H */

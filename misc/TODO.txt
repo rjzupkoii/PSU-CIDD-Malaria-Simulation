@@ -1,12 +1,11 @@
 TODO:
+  - remove update by k days events
   - Clean up reporter
 
   - Count # new infections every day / month.
-  -
-
 
 Someday/maybe
-  - report to binary file to save space
+  - report to binary file to save space????
 
   - bring back object pool
   

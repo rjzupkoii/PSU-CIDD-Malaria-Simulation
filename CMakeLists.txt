@@ -1,6 +1,8 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.12)
 project(POMS)
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 option(USING_ZAPCC "Use ZAPCC compiler." OFF)
 if (USING_ZAPCC)
@@ -15,9 +17,9 @@ if (WIN32)
 endif ()
 
 IF(APPLE)
-  # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
-  LINK_DIRECTORIES(/usr/local/lib)
-  INCLUDE_DIRECTORIES(/usr/local/include)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -fno-omit-frame-pointer")
+  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -O0 -fno-omit-frame-pointer")
+  include_directories(/usr/local/include/)
 ENDIF()
 
 
@@ -34,8 +36,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 find_package(GSL REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(fmt REQUIRED)
-
-message(${YAML_CPP_LIBRARIES})
+find_package(OpenMP REQUIRED)
 
 add_subdirectory(${EXT_PROJECTS_DIR}/date)
 add_subdirectory(${EXT_PROJECTS_DIR}/args)

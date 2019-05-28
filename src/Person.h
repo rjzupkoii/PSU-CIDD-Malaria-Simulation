@@ -144,9 +144,6 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
   //    BloodParasite* add_new_parasite_to_blood(Genotype* parasite_type);
   ClonalParasitePopulation *add_new_parasite_to_blood(Genotype *parasite_type) const;
 
-  virtual void notify_change_in_force_of_infection(const double &sign, const int &parasite_type_id,
-                                                   const double &blood_parasite_log_relative_density,
-                                                   const double &log_total_relative_parasite_density);
 
   virtual double get_biting_level_value();
 

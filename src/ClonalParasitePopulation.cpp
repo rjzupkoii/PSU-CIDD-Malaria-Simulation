@@ -60,9 +60,7 @@ double ClonalParasitePopulation::last_update_log10_parasite_density() const {
 
 void ClonalParasitePopulation::set_last_update_log10_parasite_density(const double &value) {
   if (NumberHelpers::is_enot_qual(last_update_log10_parasite_density_, value)) {
-    parasite_population_->remove_all_infection_force();
     last_update_log10_parasite_density_ = value;
-    parasite_population_->add_all_infection_force();
   }
 }
 
@@ -72,9 +70,7 @@ double ClonalParasitePopulation::gametocyte_level() const {
 
 void ClonalParasitePopulation::set_gametocyte_level(const double &value) {
   if (NumberHelpers::is_enot_qual(gametocyte_level_, value)) {
-    parasite_population_->remove_all_infection_force();
     gametocyte_level_ = value;
-    parasite_population_->add_all_infection_force();
   }
 }
 
@@ -85,9 +81,7 @@ Genotype *ClonalParasitePopulation::genotype() const {
 
 void ClonalParasitePopulation::set_genotype(Genotype *value) {
   if (genotype_!=value) {
-    parasite_population_->remove_all_infection_force();
     genotype_ = value;
-    parasite_population_->add_all_infection_force();
   }
 }
 

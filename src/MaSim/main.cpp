@@ -10,6 +10,7 @@
 #include "Model.h"
 #include "easylogging++.h"
 #include <args.hxx>
+#include <omp.h>
 #include "Helpers/OSHelpers.h"
 
 int job_number = 0;
@@ -114,6 +115,9 @@ void handle_cli(Model *model, int argc, char **argv) {
                                           "The config file (YAML format). \nEx: MaSim -i input.yml",
                                           {'i', 'c', "input", "config"});
 
+  args::ValueFlag<int> number_of_threads(parser, "int",
+                                          "Number of threads. \nEx: MaSim -n 1",
+                                          {'n'});
   args::ValueFlag<int> cluster_job_number(parser, "int",
                                           "Cluster job number. \nEx: MaSim -j 1",
                                           {'j'});
@@ -154,5 +158,14 @@ void handle_cli(Model *model, int argc, char **argv) {
 
   const auto reporter_type = reporter ? args::get(reporter) : "";
   model->set_reporter_type(reporter_type);
+
+  auto n_threads = number_of_threads ? args::get(number_of_threads) : 0;
+
+  if(n_threads > 0 ){
+    omp_set_dynamic(0);     // Explicitly disable dynamic teams
+    omp_set_num_threads(n_threads);
+  }
+
+  omp_set_num_threads(4);
 
 }

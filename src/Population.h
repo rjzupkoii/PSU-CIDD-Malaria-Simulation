@@ -41,10 +41,11 @@ class Population : public Dispatcher {
  POINTER_PROPERTY(PersonIndexPtrList, person_index_list);
  POINTER_PROPERTY(PersonIndexAll, all_persons);
 
- PROPERTY_REF(std::vector<std::vector<double> >, current_force_of_infection_by_location_parasite_type);
+// PROPERTY_REF(std::vector<std::vector<double> >, current_force_of_infection_by_location_parasite_type);
  PROPERTY_REF(std::vector<std::vector<double> >, interupted_feeding_force_of_infection_by_location_parasite_type);
  PROPERTY_REF(std::vector<std::vector<std::vector<double> > >, force_of_infection_for7days_by_location_parasite_type);
 
+ PROPERTY_REF(std::vector<std::vector<double> >, current_force_of_infection_by_location_parasite_type_v2);
  public:
   Population(Model *model = nullptr);
 
@@ -126,6 +127,9 @@ class Population : public Dispatcher {
   void perform_interupted_feeding_recombination();
 
   std::size_t size_residents_only(const int &location);
+
+  void update_population_force_of_infections();
+
 };
 
 template<typename T>

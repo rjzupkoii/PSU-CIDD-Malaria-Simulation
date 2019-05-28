@@ -1,21 +1,22 @@
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
 file(GLOB SRC_FILES *.cpp Spatial/*.cpp Reporters/*.cpp Strategies/*.cpp
-        MDC/*.cpp Helpers/*.cpp Core/*.cpp Core/Config/*.cpp Core/Index/*.cpp Therapies/*.cpp
-        Parasites/*.cpp Events/*.cpp Events/Population/*.cpp Malaria/*.cpp)
+    MDC/*.cpp Helpers/*.cpp Core/*.cpp Core/Config/*.cpp Core/Index/*.cpp Therapies/*.cpp
+    Parasites/*.cpp Events/*.cpp Events/Population/*.cpp Malaria/*.cpp)
 
 set(SRC_FILES ${SRC_FILES}
-        ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h
-        ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc
-       )
+    ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h
+    ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc
+    )
 
 add_library(MaSimCore STATIC ${SRC_FILES})
 add_dependencies(MaSimCore date args)
 target_link_libraries(MaSimCore PUBLIC
-        yaml-cpp
-        GSL::gsl GSL::gslcblas
-        fmt::fmt
-        )
+    yaml-cpp
+    GSL::gsl GSL::gslcblas
+    fmt::fmt
+    OpenMP::OpenMP_CXX
+    )
 
 add_executable(MaSim MaSim/main.cpp)
 add_dependencies(MaSim MaSimCore)
@@ -30,7 +31,7 @@ install(FILES ${PROJECT_SOURCE_DIR}/misc/input_dev.yml DESTINATION ${PROJECT_SOU
 file(GLOB DXG_SRC_FILES DxGGenerator/*.cpp DxGGenerator/*.h)
 
 add_executable(DxGGenerator ${DXG_SRC_FILES})
-add_dependencies(DxGGenerator  MaSimCore)
+add_dependencies(DxGGenerator MaSimCore)
 target_link_libraries(DxGGenerator PRIVATE MaSimCore)
 target_compile_features(DxGGenerator PRIVATE cxx_range_for)
 
