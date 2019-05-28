@@ -11,7 +11,7 @@ set(SRC_FILES ${SRC_FILES}
 
 add_library(MaSimCore STATIC ${SRC_FILES})
 add_dependencies(MaSimCore date args)
-target_link_libraries(MaSimCore
+target_link_libraries(MaSimCore PUBLIC
         yaml-cpp
         GSL::gsl GSL::gslcblas
         fmt::fmt
@@ -20,8 +20,7 @@ target_link_libraries(MaSimCore
 add_executable(MaSim MaSim/main.cpp)
 add_dependencies(MaSim MaSimCore)
 
-target_link_libraries(MaSim MaSimCore)
-
+target_link_libraries(MaSim PRIVATE MaSimCore)
 target_compile_features(MaSim PRIVATE cxx_range_for)
 
 install(TARGETS MaSim DESTINATION ${PROJECT_SOURCE_DIR}/bin)
@@ -31,10 +30,8 @@ install(FILES ${PROJECT_SOURCE_DIR}/misc/input_dev.yml DESTINATION ${PROJECT_SOU
 file(GLOB DXG_SRC_FILES DxGGenerator/*.cpp DxGGenerator/*.h)
 
 add_executable(DxGGenerator ${DXG_SRC_FILES})
-add_dependencies(DxGGenerator MaSimCore)
-
-target_link_libraries(DxGGenerator MaSimCore)
-
+add_dependencies(DxGGenerator  MaSimCore)
+target_link_libraries(DxGGenerator PRIVATE MaSimCore)
 target_compile_features(DxGGenerator PRIVATE cxx_range_for)
 
 #install(TARGETS DxGGenerator DESTINATION ${PROJECT_SOURCE_DIR}/bin)
