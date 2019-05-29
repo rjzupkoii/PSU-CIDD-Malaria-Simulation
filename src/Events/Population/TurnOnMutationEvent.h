@@ -6,14 +6,15 @@
 #include <string>
 
 class TurnOnMutationEvent : public Event {
- DISALLOW_COPY_AND_ASSIGN(TurnOnMutationEvent)
+DISALLOW_COPY_AND_ASSIGN(TurnOnMutationEvent)
 
- DISALLOW_MOVE(TurnOnMutationEvent)
+DISALLOW_MOVE(TurnOnMutationEvent)
 
- double mutation_probability=0.0;
+  double mutation_probability = 0.0;
+  int drug_id = -1;
 
- public:
-  explicit TurnOnMutationEvent(const int &at_time, const double &mutation_probability);
+public:
+  explicit TurnOnMutationEvent(const int &at_time, const double &mutation_probability, const int& drug_id);
 
   ~TurnOnMutationEvent() override = default;
 
@@ -21,7 +22,7 @@ class TurnOnMutationEvent : public Event {
     return "TurnOnMutationEvent";
   }
 
- private:
+private:
   void execute() override;
 };
 

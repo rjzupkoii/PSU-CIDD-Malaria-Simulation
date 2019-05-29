@@ -12,18 +12,18 @@
 # starting time point of the simulation (in yyyy/m/d format) 
 # which is day 0 in the simulation
 # including the burn-in period which we normally set to 4000# days;
-starting_date: 1990/1/1
+starting_date: 2006/1/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 1991/1/1
+ending_date: 2060/1/1
 
-# the day at which the simulation's reporting functionality begins collecting data for 
+# the day at which the simulation's reporting functionality begins collecting data for
 # EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
 # for monthly data display
 start_collect_data_day: 365
 
 # the day at which the MDC will begin collecting NTF, AMU, UTL
-start_of_comparison_period: 2019/12/1
+start_of_comparison_period: 2020/1/1
 
 # number of days to keep track total number of parasites in population
 # in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
@@ -49,45 +49,30 @@ artificial_rescaling_of_population_size: 1.0
 location_db:
   #id, latitude, longitude
   location_info: [
-  [0, 0, 0],
-  [1, 0, 1],
-  [2, 0, 2],
-  [3, 1, 0],
-  [4, 1, 1],
-  [5, 1, 2],
-  [6, 2, 0],
-  [7, 2, 1],
-  [8, 2, 2]
+  [0, 0, 0]
   ]
   #if the number of values less than number of locations, the first value will be applied for all locations
   age_distribution_by_location: [
-  [0.0334, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0334, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0335, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0335, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0336, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0336, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0337, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0337, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0338, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387]
+  [0.0334, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387]
   ]
   # probability that a symptomatic and infected individual seeks and receives antimalarial treatment
   #if the number of values less than number of locations, the first value will be applied for all locations
   # this is the initial value, the modification values can be change by setting in events node
-  p_treatment_for_less_than_5_by_location: [0.600000]
-  p_treatment_for_more_than_5_by_location: [0.500000]
+  p_treatment_for_less_than_5_by_location: [0.400000]
+  p_treatment_for_more_than_5_by_location: [0.400000]
 
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
-  beta_by_location: [0.05]
+  beta_by_location: [0.19]
 
   #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [1000, 10020, 10030, 10040, 10050, 10060, 10070, 10080, 10090 ]
+  population_size_by_location: [70000]
+
   #spatial_model could be Gravity, Barabasi, or Wesolowski
 
 # seasonality parameters for all location
 seasonal_info:
-  enable: true
+  enable: false
   a: [1]
   phi: [250]
   min_value: [0.1]
@@ -132,7 +117,7 @@ parasite_density_level:
   log_parasite_density_clinical_from:     3.301    # corresponds to 2000 parasites per microliter of blood (total 10^10)
   log_parasite_density_clinical_to:     5.301    # corresponds to 200,000 parasites per microliter of blood (total 10^12)
   log_parasite_density_detectable:   1.000    # corresponds to 10 parasites per microliter of blood
-  log_parasite_density_detectable_pfpr: 1.000 # corresponds to 100 parasites per microliter of blood
+  log_parasite_density_detectable_pfpr: 2.000 # corresponds to 100 parasites per microliter of blood
   log_parasite_density_pyrogenic:    3.398    # corresponds to 2500 parasites per microliter of blood
 
 
@@ -187,8 +172,6 @@ circulation_info:
   length_of_stay:
     mean: 5
     sd: 10
-
-
 
 genotype_info:
   loci:
@@ -328,21 +311,17 @@ genotype_info:
 #
 #1. loc 2. id (this is the resistance type of the parasite) 3. prevalence unweighted by biting rate
 initial_parasite_info:
+
   #if location id is -1 all location will have the same initial parasites
   - location_id: -1
     parasite_info:
       #TNY__C1x
-      - parasite_type_id: 64
-        prevalence: 0.05
-      - parasite_type_id: 72
-        prevalence: 0.05
-#      - parasite_type_id: 2
-#        prevalence: 0.1
-#      - parasite_type_id: 4
-#        prevalence: 0.1
+      - {parasite_type_id: 0, prevalence: 0.025}
+      - {parasite_type_id: 8, prevalence: 0.025}
+      - {parasite_type_id: 64, prevalence: 0.025}
+      - {parasite_type_id: 72, prevalence: 0.025}
 
-
-# drug information below
+      # drug information below
 #
 # maximum_parasite_killing_rate: 
 #       e.g. 0.999 means the drug can kill 99.9% of parasites in 1 day if a person has 
@@ -620,121 +599,30 @@ therapy_db:
 # drug-deployment strategy - simply uncomment below to turn on a particular strategy
 strategy_db:
   0:
-    name: SP-AQ-CQ-AL-MFTStrategy
+    name: SP-AQ-CQ-MFTStrategy
     type: MFT
-    therapy_ids: [5,2,12,6]
-    distribution: [0.3,0.3,0.3,0.1]
+    therapy_ids: [5,2,12]
+    distribution: [0.333333,0.333333,0.333334]
   1:
-    name: AL-SFTStrategy
+    name: DPQ-SFTStrategy
     type: SFT
-    therapy_id: 6
+    therapy_id: 8
   2:
-    name: ASAQ-SFTStrategy
-    type: SFT
-    therapy_id: 7
-  3:
-    name: CyclingStrategy
-    type: Cycling
-    therapy_ids: [8,7,6]
-    cycling_time: 1825
-  4:
-    name: AdaptiveCyclingStrategy
-    type: AdaptiveCycling
-    therapy_ids: [8,7,6]
-    trigger_value: 0.1
-    delay_until_actual_trigger: 365
-    turn_off_days: 365
-  5:
-    name: MFTStrategy
-    type: MFT
-    therapy_ids: [8,7,6]
-    distribution: [0.333333,0.333333,0.333334]
-  6:
-    name: AL-ASAQ-DP-MFTRebalancingStrategy1
-    type: MFTRebalancing
-    therapy_ids: [8,7,6]
-    distribution: [0.333333,0.333333,0.333334]
-    delay_until_actual_trigger: 365
-    update_duration_after_rebalancing: 365
-  7:
-    name: AL-ASAQ-DP-MFTRebalancingStrategy2
-    type: MFTRebalancing
-    therapy_ids: [8,7,6]
-    distribution: [0.333333,0.333333,0.333334]
-    delay_until_actual_trigger: 365
-    update_duration_after_rebalancing: 730
-  8:
-    name: AL-ASAQ-DP-MFTRebalancingStrategy4
-    type: MFTRebalancing
-    therapy_ids: [8,7,6]
-    distribution: [0.333333,0.333333,0.333334]
-    delay_until_actual_trigger: 365
-    update_duration_after_rebalancing: 1460
-  9:
-    name: DPM-SFTStrategy
-    type: SFT
-    therapy_id: 10
-  10:
-    name: AL-AQ-SFTStrategy
-    type: SFT
-    therapy_id: 11
-  11:
-    name: AL-BaseLineStrategy
+    name: MainStrategy
+    #Nested Strategy
     type: NestedMFT
     strategy_ids: [1,0]
-    start_distribution: [0.05, 0.95]
-    peak_distribution: [0.8,0.2]
-    peak_after: 3650
-  12:
-    name: ASAQ-BaseLineStrategy
-    type: NestedMFT
-    strategy_ids: [2,0]
-    start_distribution: [0.05, 0.95]
-    peak_distribution: [0.8,0.2]
-    peak_after: 3650
-  13:
-    name: MFTMultiLocation
-    type: MFTMultiLocation
-    therapy_ids: [6,8,10,7,9]
-    start_distribution: [
-    [0.84,0.06,0.05,0.03,0.02]
-      #    [0.84,0.06,0.05,0.03,0.03],
-      #    [0.84,0.06,0.05,0.03,0.04],
-      #    [0.84,0.06,0.05,0.03,0.05],
-      #    [0.84,0.06,0.05,0.03,0.06],
-      #    [0.84,0.06,0.05,0.03,0.07],
-      #    [0.84,0.06,0.05,0.03,0.08],
-      #    [0.84,0.06,0.05,0.03,0.09],
-      #    [0.84,0.06,0.05,0.03,0.10]
-    ]
-    peak_distribution: [
-    [0.84,0.06,0.05,0.03,0.02]
-      #    [0.84,0.06,0.05,0.03,0.03],
-      #    [0.84,0.06,0.05,0.03,0.04],
-      #    [0.84,0.06,0.05,0.03,0.05],
-      #    [0.84,0.06,0.05,0.03,0.06],
-      #    [0.84,0.06,0.05,0.03,0.07],
-      #    [0.84,0.06,0.05,0.03,0.08],
-      #    [0.84,0.06,0.05,0.03,0.09],
-      #    [0.84,0.06,0.05,0.03,0.10]
-    ]
-    peak_after: 365
-  14:
-    name: BaseLineStrategy
-    type: NestedMFTMultiLocation
-    strategy_ids: [0,1]
-    start_distribution: [[0.05, 0.95]]
-    peak_distribution: [[0.8,0.2]]
-    peak_after: 3650
+    start_distribution: [0.4,0.6]
+    peak_distribution: [0.4,0.6]
+    peak_after: 1
 
-initial_strategy_id: 5
+initial_strategy_id: 1
 
 
 
 # this number use to detemine whether a therapy is "useful" or not and it is used to calculate 
 # the useful therapeutic duration of a therapy
 tf_rate: 0.1
-
 
 # days from end of liver-stage infection to appearance of symptoms
 days_to_clinical_under_five: 4
@@ -848,89 +736,16 @@ fraction_mosquitoes_interrupted_feeding: 0.0
 inflation_factor: 0.01
 
 events:
-  - name: introduce_plas2_parasites
+  - name: turn_off_mutation
     info:
-      - location: 0
-        day: 1990/3/20
-        fraction: 0.01
-
-  - name: introduce_parasites
-    info:
-      - location: 0
-        parasite_info:
-          - day: 1990/3/20
-            genotype_id: 1
-            number_of_cases: 5
-          - day: 1990/4/15
-            genotype_id: 2
-            number_of_cases: 5
-      - location: 1
-        parasite_info:
-          - day: 1990/8/25
-            genotype_id: 4
-            number_of_cases: 5
-          - day: 1990/10/20
-            genotype_id: 8
-            number_of_cases: 5
-  - name: introduce_parasites_periodically
-    info:
-      - location: 0
-        parasite_info:
-          - duration: 10
-            genotype_id: -1
-            number_of_cases: 1
-            start_day: 1990/6/2
-
-            #            # TODO: other position not listed below will be drawn uniformly
-            #            allele_distributions:
-            #              - position: 4
-            #                distribution: [1.0,0.0]
-
-            #special genotype
-
-  - name: change_treatment_coverage
-    info:
-      - type: SteadyTCM
-        day: 1990/2/1
-        p_treatment_for_less_than_5_by_location: [0.600000]
-        p_treatment_for_more_than_5_by_location: [0.550000]
-      - type: InflatedTCM
-        day: 1990/3/1
-        annual_inflation_rate: 0.01
-        #p_treatment_for_less_than_5_by_location: [0.700000]
-        #p_treatment_for_more_than_5_by_location: [0.800000]
-      - type: LinearTCM
-        from_day: 1990/6/1
-        to_day: 1990/12/1
-        #p_treatment_for_less_than_5_by_location_from: [0.600000]
-        #p_treatment_for_more_than_5_by_location_from: [0.500000]
-        p_treatment_for_less_than_5_by_location_to: [0.900000]
-        p_treatment_for_more_than_5_by_location_to: [0.90000]
-  - name: change_treatment_strategy
-    info:
-      - day: 1990/3/2
-        strategy_id: 2
-      - day: 1990/6/2
-        strategy_id: 3
-      - day: 1990/9/2
-        strategy_id: 4
-  - name: single_round_MDA
+      - day: 2006/1/1
+  - name: turn_on_mutation
     info:
       - day: 2020/1/1
-        fraction_population_targeted: [1.0]
-        days_to_complete_all_treatments: 14
-      - day: 2020/2/8
-        fraction_population_targeted: [0.03333333]
-        days_to_complete_all_treatments: 14
-      - day: 2020/3/14
-        fraction_population_targeted: [0.7]
-        days_to_complete_all_treatments: 14
-
+        mutation_probability: 0.0022
+        drug_id: 0
 
 mda_therapy_id: 8
-
 age_bracket_prob_individual_present_at_mda: [10, 40]
-
 mean_prob_individual_present_at_mda: [0.85, 0.75, 0.85]
-
-sd_prob_individual_present_at_mda: [0.3, 0.3, 0.3]
+sd_prob_individual_present_at_mda: [0.03, 0.03, 0.03]

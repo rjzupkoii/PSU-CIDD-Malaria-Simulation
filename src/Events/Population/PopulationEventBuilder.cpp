@@ -136,7 +136,9 @@ std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const Y
     double mutation_probability = node[i]["mutation_probability"] ? node[i]["mutation_probability"].as<double>()
                                                                   : Model::CONFIG->drug_db()->at(0)->p_mutation();
 
-    auto* e = new TurnOnMutationEvent(time, mutation_probability);
+    int drug_id = node[i]["drug_id"] ? node[i]["drug_id"].as<int>() : -1;
+
+    auto* e = new TurnOnMutationEvent(time, mutation_probability, drug_id);
     events.push_back(e);
   }
 
