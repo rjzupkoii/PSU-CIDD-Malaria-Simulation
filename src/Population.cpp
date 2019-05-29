@@ -377,7 +377,7 @@ void Population::introduce_initial_cases() {
       introduce_parasite(p_info.location, genotype, num_of_infections);
     }
 
-
+    update_population_force_of_infections();
 
     //update force of infection for 7 days
     for (auto d = 0; d < Model::CONFIG->number_of_tracking_days(); d++) {
@@ -845,23 +845,23 @@ void Population::perform_interupted_feeding_recombination() {
 void Population::update_population_force_of_infections() {
   auto pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
-#pragma omp for collapse(3)
+//#pragma omp for
+//  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+//    for (int hs = Person::ASYMPTOMATIC; hs <= Person::CLINICAL; hs++) {
+//      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+//        for (auto pid = 0; pid < pi->vPerson()[loc][hs][ac].size(); pid++) {
+//          pi->vPerson()[loc][hs][ac][pid]->update();
+//        }
+//      }
+//    }
+//  }
+
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     for (int hs = Person::ASYMPTOMATIC; hs <= Person::CLINICAL; hs++) {
       for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         for (auto p : pi->vPerson()[loc][hs][ac]) {
           p->update();
-
-        }
-      }
-    }
-  }
-
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (int hs = Person::ASYMPTOMATIC; hs <= Person::CLINICAL; hs++) {
-      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-        for (auto p : pi->vPerson()[loc][hs][ac]) {
-#pragma omp parallel for
+//#pragma omp parallel for
           for (auto p_id = 0; p_id < Model::CONFIG->number_of_parasite_types(); p_id++) {
             current_force_of_infection_by_location_parasite_type_v2_[loc][p_id] +=
               p->get_biting_level_value() *

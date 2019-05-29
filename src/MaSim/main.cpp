@@ -165,7 +165,4 @@ void handle_cli(Model *model, int argc, char **argv) {
     omp_set_dynamic(0);     // Explicitly disable dynamic teams
     omp_set_num_threads(n_threads);
   }
-
-  omp_set_num_threads(4);
-
 }
