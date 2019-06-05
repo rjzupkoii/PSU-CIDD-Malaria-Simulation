@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.2)
 project(POMS)
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
@@ -33,12 +33,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 #include dependent libs
 find_package(GSL REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(fmt REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 message(${YAML_CPP_LIBRARIES})
 
 add_subdirectory(${EXT_PROJECTS_DIR}/date)
 add_subdirectory(${EXT_PROJECTS_DIR}/args)
+#add_subdirectory(${EXT_PROJECTS_DIR}/fmt)
 
 include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${ARGS_INCLUDE_DIR} ${EXT_PROJECTS_DIR}/CLI11)
 

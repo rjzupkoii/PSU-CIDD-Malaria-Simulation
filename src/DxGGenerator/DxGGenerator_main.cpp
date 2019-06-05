@@ -172,7 +172,7 @@ void create_cli_option(CLI::App &app) {
   app.add_option("-g",
                  genotypes,
                  "Get efficacies for range genotypes [from to]");
-  app.add_option("-i,--input", input_file, "Output filename for PPQ");
+  app.add_option("-i,--input", input_file, "Input filename for DxG");
 }
 
 double getEfficacyForTherapy(Genotype* g, int therapy_id, Model* p_model) {

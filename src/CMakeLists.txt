@@ -14,7 +14,7 @@ add_dependencies(MaSimCore date args)
 target_link_libraries(MaSimCore PUBLIC
         yaml-cpp
         GSL::gsl GSL::gslcblas
-        fmt::fmt
+        fmt::fmt fmt::fmt-header-only
         )
 
 add_executable(MaSim MaSim/main.cpp)
