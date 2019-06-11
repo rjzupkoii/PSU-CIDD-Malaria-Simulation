@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 40000
+popsize = 300000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
@@ -49,9 +49,9 @@ data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 #        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
 
 
-betas = [0.053]
+betas = [0.0538]
 
-pfpr = { 0.053: 'PFP1'}
+pfpr = { 0.0538: 'PFPR1'}
 
 mus = [0.001, 0.005, 0.01, 0.02 ]
 mu_strs = {

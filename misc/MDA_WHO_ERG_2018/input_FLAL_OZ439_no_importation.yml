@@ -318,12 +318,7 @@ initial_parasite_info:
         prevalence: 0.05
       - parasite_type_id: 72
         prevalence: 0.05
-  - location_id: 10
-    parasite_info:
-      - parasite_type_id: 15
-        prevalence: 0.05
-      - parasite_type_id: 20
-        prevalence: 0.1  
+
 #      - parasite_type_id: 2
 #        prevalence: 0.1
 #      - parasite_type_id: 4

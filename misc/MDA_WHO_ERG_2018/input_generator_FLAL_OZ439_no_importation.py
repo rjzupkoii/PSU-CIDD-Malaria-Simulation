@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 300000
+popsize = 40000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
@@ -48,14 +48,13 @@ data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 #    if event['name'] == 'single_round_MDA':
 #        data['events'][index]['info'] = data['events'][index]['info'][0:number_MDA_round]
 
+betas = [0.1849, 0.077, 0.06413, 0.0585,0.0538]
 
-betas = [0.18, 0.078, 0.065, 0.058,0.055]
-
-pfpr = {0.18: 'PFPR15',        
-        0.078: 'PFPR5',
-        0.065: 'PFPR3',
-        0.058: 'PFPR2',
-        0.055: 'PFPR1'}
+pfpr = {0.1849: 'PFPR15',        
+        0.077: 'PFPR5',
+        0.06413: 'PFPR3',
+        0.0585: 'PFPR2',
+        0.0538: 'PFPR1'}
 
 improved_tc = {True: '_itc' , 
                False: ''}
