@@ -23,13 +23,20 @@ MonthlyReporter::MonthlyReporter() = default;
 
 MonthlyReporter::~MonthlyReporter() = default;
 
-void MonthlyReporter::initialize() {}
+void MonthlyReporter::initialize()
+{
+}
 
-void MonthlyReporter::before_run() {}
+void MonthlyReporter::before_run()
+{
+}
 
-void MonthlyReporter::begin_time_step() {}
+void MonthlyReporter::begin_time_step()
+{
+}
 
-void MonthlyReporter::monthly_report() {
+void MonthlyReporter::monthly_report()
+{
   ss << Model::SCHEDULER->current_time() << sep;
   ss << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << sep;
   ss << date::format("%Y\t%m\t%d", Model::SCHEDULER->calendar_date) << sep;
@@ -41,26 +48,32 @@ void MonthlyReporter::monthly_report() {
 
   print_EIR_PfPR_by_location();
   ss << group_sep;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++)
+  {
     ss << Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[loc] << sep;
   }
   ss << group_sep;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++)
+  {
     ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << sep;
   }
   ss << group_sep;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++)
+  {
     ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
   }
   ss << group_sep;
 
   ReporterUtils::output_genotype_frequency3(ss, Model::CONFIG->number_of_parasite_types(),
                                             Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>());
+
+
   CLOG(INFO, "monthly_reporter") << ss.str();
   ss.str("");
 }
 
-void MonthlyReporter::after_run() {
+void MonthlyReporter::after_run()
+{
   ss.str("");
   ss << Model::RANDOM->seed() << sep << Model::CONFIG->number_of_locations() << sep;
   ss << Model::CONFIG->location_db()[0].beta << sep;
@@ -73,11 +86,12 @@ void MonthlyReporter::after_run() {
 
   //output NTF
   const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
-                                   static_cast<double>(Constants::DAYS_IN_YEAR());
+    static_cast<double>(Constants::DAYS_IN_YEAR());
 
   auto sum_ntf = 0.0;
   ul pop_size = 0;
-  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++)
+  {
     sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
     pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
   }
@@ -88,13 +102,18 @@ void MonthlyReporter::after_run() {
   ss.str("");
 }
 
-void MonthlyReporter::print_EIR_PfPR_by_location() {
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+void MonthlyReporter::print_EIR_PfPR_by_location()
+{
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc)
+  {
     //
     // EIR
-    if (Model::DATA_COLLECTOR->EIR_by_location_year()[loc].empty()) {
+    if (Model::DATA_COLLECTOR->EIR_by_location_year()[loc].empty())
+    {
       ss << 0 << sep;
-    } else {
+    }
+    else
+    {
       ss << Model::DATA_COLLECTOR->EIR_by_location_year()[loc].back() << sep;
     }
     ss << group_sep;
