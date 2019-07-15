@@ -12,6 +12,7 @@
 #include "Scheduler.h"
 #include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
+#include "Person.h"
 #include <cmath>
 
 OBJECTPOOL_IMPL(ClonalParasitePopulation)
@@ -108,6 +109,8 @@ void ClonalParasitePopulation::update() {
 }
 
 void ClonalParasitePopulation::perform_drug_action(const double &percent_parasite_remove) {
+
+
   double newSize = last_update_log10_parasite_density_;
   if (percent_parasite_remove > 1) {
     newSize = Model::CONFIG->parasite_density_level().log_parasite_density_cured;
@@ -118,5 +121,7 @@ void ClonalParasitePopulation::perform_drug_action(const double &percent_parasit
   if (newSize < Model::CONFIG->parasite_density_level().log_parasite_density_cured) {
     newSize = Model::CONFIG->parasite_density_level().log_parasite_density_cured;
   }
+
+//    std::cout << Model::SCHEDULER->current_time() << "\t" <<parasite_population()->person() << "\t"  << percent_parasite_remove << "\t"<<last_update_log10_parasite_density_ << "\t" <<newSize << std::endl;
   set_last_update_log10_parasite_density(newSize);
 }
