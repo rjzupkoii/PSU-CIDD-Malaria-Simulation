@@ -654,7 +654,7 @@ relative_infectivity:
   blood_meal_volume: 3
 
 # probability to relapse after no treatment, or a treatment failure due to drug resistance
-p_relapse: 0.01
+p_relapse: 0.0
 
 # number of days before a relapse can occur
 relapse_duration: 30

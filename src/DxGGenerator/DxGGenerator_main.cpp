@@ -12,6 +12,7 @@
  */
 #include <iomanip>
 #include <CLI11.hpp>
+#include <math.h>  // log10
 
 #include <cstdlib>
 #include <iostream>
@@ -52,6 +53,10 @@ efficacy_map efficacies;
 std::vector<int> therapies;
 std::vector<int> genotypes;
 
+double as_iov = -1.0;
+double as_iiv = -1.0;
+double as_ec50 = -1.0;
+
 std::string input_file = "input_DxG.yml";
 
 
@@ -80,6 +85,19 @@ int main(int argc, char** argv) {
   p_model->set_config_filename(input_file);
   p_model->initialize();
 
+  if(as_iov != -1) {
+      p_model->CONFIG->as_iov() = as_iov;
+  } 
+
+  if(as_iiv != -1) {
+      for (auto &sd :p_model->CONFIG->drug_db()->at(0)->age_group_specific_drug_concentration_sd()) {
+          sd = as_iiv;
+      }
+  } 
+
+  if(as_ec50 != -1) {
+      p_model->CONFIG->EC50_power_n_table()[0][0] = pow(as_ec50, p_model->CONFIG->drug_db()->at(0)->n());
+  } 
 
   // initialEC50Table
   std::vector<std::vector<double>> EC50_table(Model::CONFIG->genotype_db()->size(),
@@ -115,14 +133,14 @@ int main(int argc, char** argv) {
   for (auto therapy_id = min_therapy_id; therapy_id <= max_therapy_id; therapy_id++) {
     std::cout << "\t" << *Model::CONFIG->therapy_db()[therapy_id];
   }
-
   std::cout << std::endl;
+
 
   for (auto genotype_id = min_genotype_id; genotype_id < max_genotype_id; genotype_id++) {
 
     std::stringstream ss;
     auto p_genotype = (*Model::CONFIG->genotype_db())[genotype_id];
-    ss << *p_genotype << "\t";
+   ss << *p_genotype << "\t";
 
     for (auto therapy_id = min_therapy_id; therapy_id <= max_therapy_id; therapy_id++) {
 
@@ -145,7 +163,12 @@ int main(int argc, char** argv) {
     }
     std::cout << ss.str() << std::endl;
   }
+
+
+//    std::cout << p_model->CONFIG->drug_db()->at(0)->age_group_specific_drug_concentration_sd()[0] << std::endl;
   delete p_model;
+
+
   return 0;
 }
 
@@ -172,6 +195,17 @@ void create_cli_option(CLI::App &app) {
   app.add_option("-g",
                  genotypes,
                  "Get efficacies for range genotypes [from to]");
+
+  app.add_option("--iov",
+                 as_iov,
+                   "AS inter-occasion-variability");
+  app.add_option("--iiv",
+                   as_iiv,
+                   "AS inter-individual-variability");
+  app.add_option("--ec50",
+                  as_ec50,
+                  "EC50 for AS on C580 only");
+
   app.add_option("-i,--input", input_file, "Input filename for DxG");
 }
 

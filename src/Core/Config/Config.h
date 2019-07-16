@@ -77,6 +77,8 @@ class Config {
 
   CONFIG_ITEM(birth_rate, double, 0)
 
+  CONFIG_ITEM(as_iov, double, 0.2)
+
   CONFIG_ITEM(death_rate_by_age_class, DoubleVector, DoubleVector())
 
   CONFIG_ITEM(mortality_when_treatment_fail_by_age_class, DoubleVector, DoubleVector())
