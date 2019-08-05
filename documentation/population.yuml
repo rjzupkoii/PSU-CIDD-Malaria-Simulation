@@ -1,0 +1,11 @@
+// population.yuml
+//
+// Structure of population aspect of the simulation, note that
+// some of this is preliminary design.
+
+// {type:class}
+
+[Population]<>1-person 1..*>[Person]
+[Person]-[note: offspring are attached to person]
+[Person]^[Male]
+[Person]^[Female]
