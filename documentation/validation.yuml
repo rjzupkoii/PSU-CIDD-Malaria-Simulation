@@ -1,0 +1,18 @@
+// {type:activity}
+
+(start)->(Start)->|a|
+
+// Step zero, launch script ... somewhere
+|a|->(ssh)->|b|
+
+// First major process is running the simulation on the cluser
+
+|b|->(Map)
+(Map)->(Simulation 1)->(Reduce)
+(Map)->(Simulation 2)->(Reduce)
+(Map)->(Simulation ...)->(Reduce)
+(Map)->(Simulation N)->(Reduce)
+(Reduce)->(Data Aggregation)->|c|
+
+// Second major process is running the validation pipeline
+|c|->(Generate Plots)->(Signal Run Complete)->(end)
