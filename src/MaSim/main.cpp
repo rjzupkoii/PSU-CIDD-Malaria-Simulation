@@ -86,6 +86,13 @@ void config_logger() {
 }
 
 int main(const int argc, char **argv) {
+
+  // Bypass startup if nothing is supplied on the CLI
+  if (argc <= 1) {
+    cout << "No argument supplied, -h or --help for help." << endl;
+    return 1;
+  }
+
   try {
 
     auto *m = new Model();

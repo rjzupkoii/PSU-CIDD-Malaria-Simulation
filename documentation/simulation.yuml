@@ -1,0 +1,8 @@
+// {type:activity}
+
+(start)[Start]->(Load Configuration)
+(Load Configuration)->(Launch Simulation)
+(Launch Simulation)->(Scheduler)
+(Scheduler)->(Event)
+(Event)->(Scheduler)
+(Scheduler)[End]->(end)
