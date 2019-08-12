@@ -377,7 +377,7 @@ strategy_db:
     start_distribution:
     - [0.05, 0.95]
     strategy_ids: [1, 0]
-    type: NestedMFT
+    type: NestedMFTMultiLocation
   4: {name: OZ439_FQ-SFTStrategy, therapy_id: 13, type: SFT}
 tf_rate: 0.1
 tf_testing_day: 28
