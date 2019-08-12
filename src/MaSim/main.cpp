@@ -10,7 +10,7 @@
 #include "Model.h"
 #include "easylogging++.h"
 #include <args.hxx>
-#include "Helpers/OSHelpers.h"
+#include <Helpers/OSHelpers.h>
 
 int job_number = 0;
 
@@ -144,7 +144,7 @@ void handle_cli(Model *model, int argc, char **argv) {
     LOG(INFO) << fmt::format("Used default input file: {0}", input);
   }
 
-  if (!OSHelpers::file_exists(input)) {
+  if (!OsHelpers::file_exists(input)) {
     LOG(FATAL) << fmt::format("File {0} is not exists", input);
   }
   model->set_config_filename(input);
