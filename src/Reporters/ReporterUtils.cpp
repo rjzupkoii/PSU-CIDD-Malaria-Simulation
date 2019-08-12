@@ -18,8 +18,8 @@ void ReporterUtils::output_genotype_frequency1(std::stringstream &ss, const int 
   auto sum1_all = 0.0;
   std::vector<double> result1_all(number_of_genotypes, 0.0);
 
-  auto number_of_locations = pi->vPerson().size();
-  auto number_of_age_classes = pi->vPerson()[0][0].size();
+  const auto number_of_locations = pi->vPerson().size();
+  const auto number_of_age_classes = pi->vPerson()[0][0].size();
 
   for (auto loc = 0; loc < number_of_locations; loc++) {
     std::vector<double> result1(number_of_genotypes, 0.0);
@@ -77,8 +77,8 @@ void ReporterUtils::output_genotype_frequency2(std::stringstream &ss, const int 
                                                PersonIndexByLocationStateAgeClass* pi) {
   auto sum2_all = 0.0;
   std::vector<double> result2_all(number_of_genotypes, 0.0);
-  auto number_of_locations = pi->vPerson().size();
-  auto number_of_age_classes = pi->vPerson()[0][0].size();
+  const auto number_of_locations = pi->vPerson().size();
+  const auto number_of_age_classes = pi->vPerson()[0][0].size();
 
   for (auto loc = 0; loc < number_of_locations; loc++) {
     std::vector<double> result2(number_of_genotypes, 0.0);
@@ -127,8 +127,8 @@ void ReporterUtils::output_genotype_frequency3(std::stringstream &ss, const int 
                                                PersonIndexByLocationStateAgeClass* pi) {
   auto sum1_all = 0.0;
   std::vector<double> result3_all(number_of_genotypes, 0.0);
-  auto number_of_locations = pi->vPerson().size();
-  auto number_of_age_classes = pi->vPerson()[0][0].size();
+  const auto number_of_locations = pi->vPerson().size();
+  const auto number_of_age_classes = pi->vPerson()[0][0].size();
 
   for (auto loc = 0; loc < number_of_locations; loc++) {
     std::vector<double> result3(number_of_genotypes, 0.0);
@@ -197,8 +197,8 @@ void ReporterUtils::output_3_genotype_frequency(std::stringstream &ss, const int
   std::vector<double> result2_all(number_of_genotypes, 0.0);
   std::vector<double> result3_all(number_of_genotypes, 0.0);
 
-  auto number_of_locations = pi->vPerson().size();
-  auto number_of_age_classes = pi->vPerson()[0][0].size();
+  const auto number_of_locations = pi->vPerson().size();
+  const auto number_of_age_classes = pi->vPerson()[0][0].size();
 
   for (auto loc = 0; loc < number_of_locations; loc++) {
     std::vector<double> result1(number_of_genotypes, 0.0);
@@ -258,7 +258,7 @@ void ReporterUtils::output_3_genotype_frequency(std::stringstream &ss, const int
       i /= sum1;
     }
 
-    for (int j = 0; j < number_of_genotypes; ++j) {
+    for (auto j = 0; j < number_of_genotypes; ++j) {
       ss << result1[j] << sep;
       ss << result2[j] << sep;
       ss << result3[j] << sep;
@@ -269,7 +269,7 @@ void ReporterUtils::output_3_genotype_frequency(std::stringstream &ss, const int
 
   //this is for all locations
   ss << group_sep;
-  for (int j = 0; j < number_of_genotypes; ++j) {
+  for (auto j = 0; j < number_of_genotypes; ++j) {
     result1_all[j] /= sum1_all;
     result2_all[j] /= sum2_all;
     result3_all[j] /= sum1_all;
