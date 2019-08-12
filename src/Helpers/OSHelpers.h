@@ -3,10 +3,10 @@
 
 #include <fstream>
 
-class OSHelpers {
+class OsHelpers {
  public:
   static bool file_exists(const std::string &name) {
-    std::ifstream f(name.c_str());
+    const std::ifstream f(name.c_str());
     return f.good();
   }
 };
