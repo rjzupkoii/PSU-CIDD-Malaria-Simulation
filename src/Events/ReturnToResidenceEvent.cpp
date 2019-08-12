@@ -9,7 +9,7 @@
 
 #include "ReturnToResidenceEvent.h"
 #include "Person.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 
 OBJECTPOOL_IMPL(ReturnToResidenceEvent)
 

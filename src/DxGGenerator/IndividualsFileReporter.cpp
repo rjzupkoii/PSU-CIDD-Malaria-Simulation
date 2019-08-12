@@ -11,7 +11,7 @@
 #include "Person.h"
 #include "Population.h"
 #include "Core/Config/Config.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "ClonalParasitePopulation.h"
 #include "SingleHostClonalParasitePopulations.h"
 

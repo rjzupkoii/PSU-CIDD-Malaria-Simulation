@@ -8,7 +8,7 @@
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "Person.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "Therapies/Therapy.h"
 
 

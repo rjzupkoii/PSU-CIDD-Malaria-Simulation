@@ -9,7 +9,7 @@
 #define    NONINFANTIMMUNECOMPONENT
 
 #include "ImmuneComponent.h"
-#include "ObjectPool.h"
+#include "Core/ObjectPool.h"
 
 class NonInfantImmuneComponent : public ImmuneComponent {
  DISALLOW_COPY_AND_ASSIGN(NonInfantImmuneComponent)

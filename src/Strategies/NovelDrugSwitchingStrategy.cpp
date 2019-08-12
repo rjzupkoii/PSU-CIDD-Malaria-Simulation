@@ -5,7 +5,7 @@
 #include "MDC/ModelDataCollector.h"
 #include "Core/Config/Config.h"
 #include "Helpers/TimeHelpers.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 
 NovelDrugSwitchingStrategy::NovelDrugSwitchingStrategy() : IStrategy("NovelDrugSwitchingStrategy",
                                                                      NovelDrugSwitching) {}

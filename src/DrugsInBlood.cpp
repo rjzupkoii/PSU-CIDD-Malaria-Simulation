@@ -6,7 +6,7 @@
  */
 
 #include "DrugsInBlood.h"
-#include "Drug.h"
+#include "Therapies/Drug.h"
 #include "Events/Event.h"
 #include "Therapies/DrugType.h"
 #include "Person.h"

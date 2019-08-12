@@ -8,7 +8,7 @@
 #include "EndClinicalByNoTreatmentEvent.h"
 #include "Person.h"
 #include "ClonalParasitePopulation.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "ImmuneSystem.h"
 #include "SingleHostClonalParasitePopulations.h"
 #include "Model.h"

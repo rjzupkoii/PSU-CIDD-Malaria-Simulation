@@ -14,7 +14,7 @@
 #include "ClonalParasitePopulation.h"
 #include "DrugsInBlood.h"
 #include "SingleHostClonalParasitePopulations.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 
 OBJECTPOOL_IMPL(MoveParasiteToBloodEvent)
 

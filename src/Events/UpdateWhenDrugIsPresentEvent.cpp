@@ -9,7 +9,7 @@
 
 #include "Person.h"
 #include "ClonalParasitePopulation.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "DrugsInBlood.h"
 #include "SingleHostClonalParasitePopulations.h"
 #include "Core/Config/Config.h"

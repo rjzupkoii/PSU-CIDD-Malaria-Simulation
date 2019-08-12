@@ -7,7 +7,7 @@
 
 #include "SwitchImmuneComponentEvent.h"
 #include "Person.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "ImmuneSystem.h"
 #include "NonInfantImmuneComponent.h"
 #include <cassert>

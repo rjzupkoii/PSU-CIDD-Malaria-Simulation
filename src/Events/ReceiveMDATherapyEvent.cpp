@@ -6,7 +6,7 @@
  */
 #include "ReceiveMDATherapyEvent.h"
 #include "Person.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "Therapies/Therapy.h"
 #include "Model.h"
 

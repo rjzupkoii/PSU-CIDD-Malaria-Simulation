@@ -6,7 +6,7 @@
  */
 
 #include "EndClinicalDueToDrugResistanceEvent.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "Person.h"
 #include "ImmuneSystem.h"
 #include "SingleHostClonalParasitePopulations.h"

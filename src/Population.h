@@ -12,7 +12,7 @@
 #include "Core/TypeDef.h"
 #include "Person.h"
 #include "PersonIndex.h"
-#include "Dispatcher.h"
+#include "Core/Dispatcher.h"
 #include <vector>
 
 //#include "PersonIndexByLocationStateAgeClass.h"

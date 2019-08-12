@@ -8,7 +8,7 @@
 #include "MatureGametocyteEvent.h"
 #include "Person.h"
 #include "ClonalParasitePopulation.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "SingleHostClonalParasitePopulations.h"
 #include "Model.h"
 #include "Core/Config/Config.h"

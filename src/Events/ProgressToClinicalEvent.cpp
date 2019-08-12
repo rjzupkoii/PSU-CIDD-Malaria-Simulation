@@ -7,7 +7,7 @@
 
 #include "ProgressToClinicalEvent.h"
 #include "Person.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "SingleHostClonalParasitePopulations.h"
 #include "Population.h"
 #include "Model.h"

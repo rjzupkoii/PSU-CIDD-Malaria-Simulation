@@ -9,7 +9,7 @@
 
 #include "BirthdayEvent.h"
 #include "Person.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "Helpers/TimeHelpers.h"
 #include "easylogging++.h"
 

@@ -9,7 +9,7 @@
 #include "SingleHostClonalParasitePopulations.h"
 #include "Therapies/Therapy.h"
 #include "Model.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
 #include "Person.h"

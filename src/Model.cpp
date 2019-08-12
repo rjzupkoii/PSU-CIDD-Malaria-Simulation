@@ -18,7 +18,7 @@
 #include "Events/UpdateWhenDrugIsPresentEvent.h"
 #include "Events/EndClinicalByNoTreatmentEvent.h"
 #include "Events/EndClinicalEvent.h"
-#include "Drug.h"
+#include "Therapies/Drug.h"
 #include "ImmuneSystem.h"
 #include "SingleHostClonalParasitePopulations.h"
 #include "Events/MatureGametocyteEvent.h"

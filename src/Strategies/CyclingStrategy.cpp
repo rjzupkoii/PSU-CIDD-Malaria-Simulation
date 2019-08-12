@@ -7,7 +7,7 @@
 
 #include "CyclingStrategy.h"
 #include "Model.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "Core/Config/Config.h"
 #include "MDC/ModelDataCollector.h"
 #include <sstream>

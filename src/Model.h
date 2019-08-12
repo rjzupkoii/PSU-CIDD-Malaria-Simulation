@@ -10,7 +10,7 @@
 
 #include <vector>
 #include "Core/PropertyMacro.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "ClinicalUpdateFunction.h"
 #include "ImmunityClearanceUpdateFunction.h"
 #include "Malaria/ITreatmentCoverageModel.h"
