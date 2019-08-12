@@ -7,13 +7,13 @@
 
 #include "ImportationPeriodicallyEvent.h"
 #include "Model.h"
-#include "Population.h"
-#include "ImmuneSystem.h"
-#include "ClonalParasitePopulation.h"
+#include "Population/Population.h"
+#include "Population/ImmuneSystem.h"
+#include "Population/ClonalParasitePopulation.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
-#include "PersonIndexByLocationStateAgeClass.h"
+#include "Population/PersonIndexByLocationStateAgeClass.h"
 #include <easylogging++.h>
 
 OBJECTPOOL_IMPL(ImportationPeriodicallyEvent)

@@ -5,8 +5,8 @@
 #include "Model.h"
 #include "date/date.h"
 #include "Core/Config/Config.h"
-#include "Population.h"
-#include "PersonIndexByLocationStateAgeClass.h"
+#include "Population/Population.h"
+#include "Population/PersonIndexByLocationStateAgeClass.h"
 #include "Core/Random.h"
 #include "Events/ReceiveMDATherapyEvent.h"
 

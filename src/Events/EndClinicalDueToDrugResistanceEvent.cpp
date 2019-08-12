@@ -7,11 +7,11 @@
 
 #include "EndClinicalDueToDrugResistanceEvent.h"
 #include "Core/Scheduler.h"
-#include "Person.h"
-#include "ImmuneSystem.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Population/Person.h"
+#include "Population/ImmuneSystem.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Model.h"
-#include "ClonalParasitePopulation.h"
+#include "Population/ClonalParasitePopulation.h"
 #include "Core/Config/Config.h"
 
 OBJECTPOOL_IMPL(EndClinicalDueToDrugResistanceEvent)

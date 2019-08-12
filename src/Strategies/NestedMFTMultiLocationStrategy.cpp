@@ -7,7 +7,7 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
-#include "Person.h"
+#include "Population/Person.h"
 #include "Core/Scheduler.h"
 #include "Therapies/Therapy.h"
 

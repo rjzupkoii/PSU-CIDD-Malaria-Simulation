@@ -6,9 +6,9 @@
  */
 #include <fmt/format.h>
 #include "Model.h"
-#include "Population.h"
+#include "Population/Population.h"
 #include "Core/Config/Config.h"
-#include "Person.h"
+#include "Population/Person.h"
 #include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
 #include "Events/BirthdayEvent.h"
@@ -19,15 +19,15 @@
 #include "Events/EndClinicalByNoTreatmentEvent.h"
 #include "Events/EndClinicalEvent.h"
 #include "Therapies/Drug.h"
-#include "ImmuneSystem.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Population/ImmuneSystem.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Events/MatureGametocyteEvent.h"
 #include "Events/MoveParasiteToBloodEvent.h"
 #include "Events/UpdateEveryKDaysEvent.h"
 #include "Reporters/Reporter.h"
 #include "Events/CirculateToTargetLocationNextDayEvent.h"
 #include "Events/ReturnToResidenceEvent.h"
-#include "ClonalParasitePopulation.h"
+#include "Population/ClonalParasitePopulation.h"
 #include "Events/SwitchImmuneComponentEvent.h"
 #include "Events/Population/ImportationPeriodicallyEvent.h"
 #include "Events/Population/ImportationEvent.h"
@@ -47,7 +47,6 @@ Population* Model::POPULATION = nullptr;
 IStrategy* Model::TREATMENT_STRATEGY = nullptr;
 ITreatmentCoverageModel* Model::TREATMENT_COVERAGE = nullptr;
 // std::shared_ptr<spdlog::logger> LOGGER;
-
 
 Model::Model(const int &object_pool_size) {
   initialize_object_pool(object_pool_size);

@@ -6,7 +6,7 @@
  */
 
 #include "UpdateEveryKDaysEvent.h"
-#include "Person.h"
+#include "Population/Person.h"
 #include "Core/Scheduler.h"
 #include "Model.h"
 #include "Core/Config/Config.h"

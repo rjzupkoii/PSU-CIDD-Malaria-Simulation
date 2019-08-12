@@ -8,7 +8,7 @@
 #include <cassert>
 
 #include "BirthdayEvent.h"
-#include "Person.h"
+#include "Population/Person.h"
 #include "Core/Scheduler.h"
 #include "Helpers/TimeHelpers.h"
 #include "easylogging++.h"

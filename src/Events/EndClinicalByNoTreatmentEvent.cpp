@@ -6,11 +6,11 @@
  */
 
 #include "EndClinicalByNoTreatmentEvent.h"
-#include "Person.h"
-#include "ClonalParasitePopulation.h"
+#include "Population/Person.h"
+#include "Population/ClonalParasitePopulation.h"
 #include "Core/Scheduler.h"
-#include "ImmuneSystem.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Population/ImmuneSystem.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"

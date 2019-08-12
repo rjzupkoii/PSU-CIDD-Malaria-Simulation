@@ -31,7 +31,7 @@
 #include "Events/CirculateToTargetLocationNextDayEvent.h"
 #include "MDC/ModelDataCollector.h"
 #include "Events/BirthdayEvent.h"
-#include "MACTherapy.h"
+#include "Therapies/MACTherapy.h"
 #include "Events/ReceiveTherapyEvent.h"
 #include "Constants.h"
 #include <algorithm>

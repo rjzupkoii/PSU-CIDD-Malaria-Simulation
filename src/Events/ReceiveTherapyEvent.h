@@ -9,7 +9,7 @@
 #define    RECEIVETHERAPYEVENT_H
 
 #include "Event.h"
-#include "ClonalParasitePopulation.h"
+#include "Population/ClonalParasitePopulation.h"
 
 class Scheduler;
 

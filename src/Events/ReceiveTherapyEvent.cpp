@@ -6,10 +6,10 @@
  */
 
 #include "ReceiveTherapyEvent.h"
-#include "Person.h"
+#include "Population/Person.h"
 #include "Core/Scheduler.h"
 #include "Therapies/Therapy.h"
-#include "ClonalParasitePopulation.h"
+#include "Population/ClonalParasitePopulation.h"
 
 ReceiveTherapyEvent::ReceiveTherapyEvent() : received_therapy_(nullptr), clinical_caused_parasite_(nullptr) {}
 

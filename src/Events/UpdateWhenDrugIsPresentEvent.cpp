@@ -7,11 +7,11 @@
 
 #include "UpdateWhenDrugIsPresentEvent.h"
 
-#include "Person.h"
-#include "ClonalParasitePopulation.h"
+#include "Population/Person.h"
+#include "Population/ClonalParasitePopulation.h"
 #include "Core/Scheduler.h"
-#include "DrugsInBlood.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Population/DrugsInBlood.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Core/Config/Config.h"
 #include "Model.h"
 

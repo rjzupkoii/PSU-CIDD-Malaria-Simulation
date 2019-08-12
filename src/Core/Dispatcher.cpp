@@ -6,7 +6,7 @@
  */
 
 #include "Dispatcher.h"
-#include "IndexHandler.h"
+#include "Population/IndexHandler.h"
 #include "Events/Event.h"
 #include "Helpers/ObjectHelpers.h"
 

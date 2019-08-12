@@ -1,8 +1,21 @@
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
-file(GLOB SRC_FILES *.cpp Spatial/*.cpp Reporters/*.cpp Strategies/*.cpp
-        MDC/*.cpp Helpers/*.cpp Core/*.cpp Core/Config/*.cpp Core/Index/*.cpp Therapies/*.cpp
-        Parasites/*.cpp Events/*.cpp Events/Population/*.cpp Malaria/*.cpp)
+file(GLOB SRC_FILES *.cpp 
+        Core/*.cpp 
+        Core/Config/*.cpp 
+        Core/Index/*.cpp 
+        Events/*.cpp 
+        Events/Population/*.cpp 
+        Helpers/*.cpp 
+        Malaria/*.cpp
+        MDC/*.cpp 
+        Parasites/*.cpp 
+        Population/*.cpp
+        Reporters/*.cpp 
+        Spatial/*.cpp 
+        Strategies/*.cpp
+        Therapies/*.cpp       
+)
 
 set(SRC_FILES ${SRC_FILES}
         ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h

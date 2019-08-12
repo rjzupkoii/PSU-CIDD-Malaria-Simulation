@@ -6,14 +6,14 @@
  */
 
 #include "MoveParasiteToBloodEvent.h"
-#include "Person.h"
-#include "ImmuneSystem.h"
+#include "Population/Person.h"
+#include "Population/ImmuneSystem.h"
 #include "Model.h"
 #include "Core/Random.h"
 #include "Core/Config/Config.h"
-#include "ClonalParasitePopulation.h"
-#include "DrugsInBlood.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Population/ClonalParasitePopulation.h"
+#include "Population/DrugsInBlood.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Core/Scheduler.h"
 
 OBJECTPOOL_IMPL(MoveParasiteToBloodEvent)

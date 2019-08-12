@@ -5,9 +5,9 @@
 #include <vector>
 #include <Core/Config/Config.h>
 #include "ReporterUtils.h"
-#include "PersonIndexByLocationStateAgeClass.h"
-#include "SingleHostClonalParasitePopulations.h"
-#include "ClonalParasitePopulation.h"
+#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
+#include "Population/ClonalParasitePopulation.h"
 
 const std::string group_sep = "-1111\t";
 const std::string sep = "\t";

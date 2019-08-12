@@ -6,7 +6,7 @@
  */
 
 #include "CirculateToTargetLocationNextDayEvent.h"
-#include "Person.h"
+#include "Population/Person.h"
 #include "Model.h"
 #include "Core/Random.h"
 #include "Core/Config/Config.h"

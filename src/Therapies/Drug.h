@@ -10,7 +10,7 @@
 
 #include "Core/PropertyMacro.h"
 #include "Core/ObjectPool.h"
-#include "DrugsInBlood.h"
+#include "Population/DrugsInBlood.h"
 
 class Drug {
  OBJECTPOOL(Drug)

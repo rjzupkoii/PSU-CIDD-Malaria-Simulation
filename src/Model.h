@@ -11,8 +11,8 @@
 #include <vector>
 #include "Core/PropertyMacro.h"
 #include "Core/Scheduler.h"
-#include "ClinicalUpdateFunction.h"
-#include "ImmunityClearanceUpdateFunction.h"
+#include "Population/ClinicalUpdateFunction.h"
+#include "Population/ImmunityClearanceUpdateFunction.h"
 #include "Malaria/ITreatmentCoverageModel.h"
 
 class Scheduler;

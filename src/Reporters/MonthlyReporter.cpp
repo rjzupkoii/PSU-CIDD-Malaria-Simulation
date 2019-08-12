@@ -12,9 +12,9 @@
 #include "Constants.h"
 #include "easylogging++.h"
 #include <date/date.h>
-#include "Population.h"
+#include "Population/Population.h"
 #include "ReporterUtils.h"
-#include "PersonIndexByLocationStateAgeClass.h"
+#include "Population/PersonIndexByLocationStateAgeClass.h"
 
 
 MonthlyReporter::MonthlyReporter() = default;

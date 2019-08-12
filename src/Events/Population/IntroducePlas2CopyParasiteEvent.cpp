@@ -7,9 +7,9 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
-#include "Population.h"
-#include "PersonIndexByLocationStateAgeClass.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Population/Population.h"
+#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 
 IntroducePlas2CopyParasiteEvent::IntroducePlas2CopyParasiteEvent(const int &location, const int &execute_at,
                                                                  const double &fraction)
