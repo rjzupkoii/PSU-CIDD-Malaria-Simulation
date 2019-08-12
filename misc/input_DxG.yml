@@ -347,6 +347,7 @@ drug_db:
     maximum_parasite_killing_rate: 0.999
     n: 25
     age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    #age_specific_drug_concentration_sd: [0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2]
     mutation_probability: 0.005
     affecting_loci: [2]
     selecting_alleles: [[1]]
@@ -665,7 +666,7 @@ relapseRate: 4.4721
 
 # minimum update frequency for a host's attributes (esp. parasite density) is every 7 days, or
 # more frequently if other events are occurring at this time
-update_frequency: 7
+update_frequency: 1
 
 #report to GUI and console every 30 days
 report_frequency: 30

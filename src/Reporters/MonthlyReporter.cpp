@@ -11,10 +11,8 @@
 #include "Helpers/TimeHelpers.h"
 #include "Constants.h"
 #include "easylogging++.h"
-#include "date/date.h"
+#include <date/date.h>
 #include "Population.h"
-#include "Strategies/NestedMFTMultiLocationStrategy.h"
-#include "Strategies/NestedMFTStrategy.h"
 #include "ReporterUtils.h"
 #include "PersonIndexByLocationStateAgeClass.h"
 
@@ -64,6 +62,7 @@ void MonthlyReporter::monthly_report()
   }
   ss << group_sep;
 
+// including total number of positive individuals
   ReporterUtils::output_genotype_frequency3(ss, Model::CONFIG->number_of_parasite_types(),
                                             Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>());
 
