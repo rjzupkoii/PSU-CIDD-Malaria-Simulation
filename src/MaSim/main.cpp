@@ -87,12 +87,6 @@ void config_logger() {
 
 int main(const int argc, char **argv) {
 
-  // Bypass startup if nothing is supplied on the CLI
-  if (argc <= 1) {
-    cout << "No argument supplied, -h or --help for help." << endl;
-    return 1;
-  }
-
   try {
 
     auto *m = new Model();
@@ -151,8 +145,8 @@ void handle_cli(Model *model, int argc, char **argv) {
     LOG(INFO) << fmt::format("Used default input file: {0}", input);
   }
 
-  if (!OsHelpers::file_exists(input)) {
-    LOG(FATAL) << fmt::format("File {0} is not exists", input);
+  if (!OsHelpers::file_exists(input)) {    
+    LOG(FATAL) << fmt::format("File {0} is not exists. Rerun with -h or --help for help.", input);    
   }
   model->set_config_filename(input);
 
