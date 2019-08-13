@@ -169,7 +169,7 @@ events:
 - info: []
   name: single_round_MDA
 - info:
-  - {day: 2040/1/1, strategy_id: 4}
+  - {day: 2020/1/15, strategy_id: 4}
   name: modify_nested_mft_strategy
 external_population_circulation_information:
   circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01]
