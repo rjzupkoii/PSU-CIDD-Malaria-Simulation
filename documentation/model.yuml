@@ -1,0 +1,64 @@
+// model.yuml
+//
+// Comprehensive UML diagram for the classes in MaSim.
+
+// {type:class}
+
+// Things related to configuration
+[Config]-*>[ConfigItem]
+[ConfigItem]^[IConfigItem]
+[Config]-*>[CustomConfigItem]
+[CustomConfigItem]-[note: In practice these are several different classes implimenting ConfigItem]
+[CustomConfigItem]^[ConfigItem]
+
+// Core classes for managing the schedule and events
+[Event]^[IndexHandler]
+[Event]-.->[Dispatcher]
+[Scheduler]-*>[Event]
+
+// Individual level events
+[BirthdayEvent]^[Event]
+[CirculateToTargetLocationNextDayEvent]^[Event]
+[EndClinicalByNoTreatmentEvent]^[Event]
+[EndClinicalDueToDrugResistanceEvent]^[Event]
+[EndClinicalEvent]^[Event]
+[MatureGametocyteEvent]^[Event]
+[MoveParasiteToBloodEvent]^[Event]
+[ProgressToClinicalEvent]^[Event]
+[ReceiveMDATherapyEvent]^[Event]
+[ReceiveTherapyEvent]^[Event]
+[ReturnToResidenceEvent]^[Event]
+[SwitchImmuneComponentEvent]^[Event]
+[TestTreatmentFailureEvent]^[Event]
+[UpdateEveryKDaysEvent]^[Event]
+[UpdateWhenDrugIsPresentEvent]^[Event]
+
+// Population level events
+[ChangeStrategyEvent]^[Event]
+[ChangeTreatmentCoverageEvent]^[Event]
+[ImportationEvent]^[Event]
+[ImportationPeriodicallyEvent]^[Event]
+[IntroducePlas2CopyParasiteEvent]^[Event]
+[ModifyNestedMFTEvent]^[Event]
+
+// Things related to random numbers
+[Random]
+[MultinomialDistributionGenerator]
+
+// Treatment coverage models
+[InflatedTCM]^[ITreatmentCoverageModel]
+[LinearTCM]^[ITreatmentCoverageModel]
+[SteadyTCM]^[ITreatmentCoverageModel]
+
+// Things related to indexing
+[PersonIndexer]^[IObjectIndexer]
+
+// The core model classes
+[Model]
+[Person]
+[ClonalParasitePopulation]
+[Genotype]
+[Therapy]
+
+// Pure utility classes
+[ObjectPool]
