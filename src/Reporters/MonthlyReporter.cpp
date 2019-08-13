@@ -14,7 +14,7 @@
 #include <date/date.h>
 #include "Population/Population.h"
 #include "ReporterUtils.h"
-#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 
 
 MonthlyReporter::MonthlyReporter() = default;

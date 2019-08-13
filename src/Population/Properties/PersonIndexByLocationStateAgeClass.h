@@ -10,7 +10,7 @@
 
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
-#include "Person.h"
+#include "../Person.h"
 #include "PersonIndex.h"
 
 class PersonIndexByLocationStateAgeClass : public PersonIndex {

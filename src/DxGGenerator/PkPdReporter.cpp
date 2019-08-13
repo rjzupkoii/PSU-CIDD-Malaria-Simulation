@@ -11,7 +11,7 @@
 #include "MDC/ModelDataCollector.h"
 #include "Core/Config/Config.h"
 #include "Population/Population.h"
-#include "Population/PersonIndexAll.h"
+#include "Population/Properties/PersonIndexAll.h"
 #include "Population/Person.h"
 #include "Population/ClonalParasitePopulation.h"
 #include "Population/SingleHostClonalParasitePopulations.h"

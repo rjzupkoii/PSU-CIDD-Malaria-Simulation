@@ -7,7 +7,7 @@
 
 #include "IndividualsFileReporter.h"
 #include "Model.h"
-#include "Population/PersonIndexAll.h"
+#include "Population/Properties/PersonIndexAll.h"
 #include "Population/Person.h"
 #include "Population/Population.h"
 #include "Core/Config/Config.h"

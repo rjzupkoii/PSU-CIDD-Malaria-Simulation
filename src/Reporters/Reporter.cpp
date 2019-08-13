@@ -7,15 +7,12 @@
 
 #include "Reporter.h"
 #include "ConsoleReporter.h"
-#include "GuiReporter.h"
-#include "YearlyReporterV1.h"
 #include "Model.h"
 #include "MonthlyReporter.h"
 #include "MMCReporter.h"
 
 std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
     {"Console", CONSOLE},
-    {"GUI", GUI},
     {"MonthlyReporter", MONTHLY_REPORTER},
     {"MMC", MMC_REPORTER}
 };
@@ -28,7 +25,6 @@ Reporter::~Reporter() = default;
 Reporter *Reporter::MakeReport(ReportType report_type) {
   switch (report_type) {
     case CONSOLE:return new ConsoleReporter();
-    case GUI:return new GuiReporter();
     case MONTHLY_REPORTER:return new MonthlyReporter();
     case MMC_REPORTER:return new MMCReporter();
     default:return new MonthlyReporter();

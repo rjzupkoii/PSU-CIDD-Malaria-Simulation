@@ -6,7 +6,7 @@
 #include "date/date.h"
 #include "Core/Config/Config.h"
 #include "Population/Population.h"
-#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include "Core/Random.h"
 #include "Events/ReceiveMDATherapyEvent.h"
 

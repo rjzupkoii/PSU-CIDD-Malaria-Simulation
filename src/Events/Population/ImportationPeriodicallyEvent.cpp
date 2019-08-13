@@ -13,7 +13,7 @@
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
-#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include <easylogging++.h>
 
 OBJECTPOOL_IMPL(ImportationPeriodicallyEvent)

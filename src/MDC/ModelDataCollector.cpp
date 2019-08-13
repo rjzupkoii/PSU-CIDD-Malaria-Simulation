@@ -12,7 +12,7 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Population/Person.h"
-#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include "Population/Population.h"
 #include "Population/ImmuneSystem.h"
 #include "Population/SingleHostClonalParasitePopulations.h"

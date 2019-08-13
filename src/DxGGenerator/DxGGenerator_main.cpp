@@ -24,7 +24,7 @@
 #include "PkPdReporter.h"
 #include "IndividualsFileReporter.h"
 #include "Therapies//SCTherapy.h"
-#include "Population/PersonIndexAll.h"
+#include "Population/Properties/PersonIndexAll.h"
 #include "Strategies/IStrategy.h"
 #include "Strategies/SFTStrategy.h"
 #include "Population/ImmuneSystem.h"

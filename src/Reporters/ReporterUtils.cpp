@@ -5,7 +5,7 @@
 #include <vector>
 #include <Core/Config/Config.h>
 #include "ReporterUtils.h"
-#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include "Population/SingleHostClonalParasitePopulations.h"
 #include "Population/ClonalParasitePopulation.h"
 

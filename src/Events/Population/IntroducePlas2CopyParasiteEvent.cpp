@@ -8,7 +8,7 @@
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "Population/Population.h"
-#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include "Population/SingleHostClonalParasitePopulations.h"
 
 IntroducePlas2CopyParasiteEvent::IntroducePlas2CopyParasiteEvent(const int &location, const int &execute_at,

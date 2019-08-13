@@ -13,7 +13,7 @@
 #include "easylogging++.h"
 #include "date/date.h"
 #include "Population/Population.h"
-#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include "Population/SingleHostClonalParasitePopulations.h"
 #include "ReporterUtils.h"
 // #include "Parasites/GenotypeDatabase.h"

@@ -11,7 +11,7 @@
 #include "Population/ImmuneSystem.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
-#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 
 OBJECTPOOL_IMPL(ImportationEvent)
 

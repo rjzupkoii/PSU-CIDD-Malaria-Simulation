@@ -12,7 +12,7 @@
 #include "Core/Random.h"
 #include "Core/Config/Config.h"
 #include "Population/Population.h"
-#include "Population/PersonIndexByLocationStateAgeClass.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include "MDC/ModelDataCollector.h"
 #include "Constants.h"
 #include "ReporterUtils.h"

@@ -11,6 +11,7 @@ file(GLOB SRC_FILES *.cpp
         MDC/*.cpp 
         Parasites/*.cpp 
         Population/*.cpp
+        Population/Properties/*.cpp
         Reporters/*.cpp 
         Spatial/*.cpp 
         Strategies/*.cpp
