@@ -1,3 +1,6 @@
+# Set to ON if buildling on the Windows Subsystem for Linux (WSL)
+set(BUILD_WSL OFF)
+
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
 file(GLOB SRC_FILES *.cpp 
