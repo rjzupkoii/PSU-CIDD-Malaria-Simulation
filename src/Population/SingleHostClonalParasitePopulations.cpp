@@ -12,7 +12,7 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "DrugsInBlood.h"
-#include "Drug.h"
+#include "Therapies/Drug.h"
 #include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
 #include "Helpers/NumberHelpers.h"

@@ -9,8 +9,8 @@
 #define    DRUG_H
 
 #include "Core/PropertyMacro.h"
-#include "ObjectPool.h"
-#include "DrugsInBlood.h"
+#include "Core/ObjectPool.h"
+#include "Population/DrugsInBlood.h"
 
 class Drug {
  OBJECTPOOL(Drug)

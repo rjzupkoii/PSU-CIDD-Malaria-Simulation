@@ -5,8 +5,8 @@
  * Created on August 25, 2013, 10:20 PM
  */
 #include "ReceiveMDATherapyEvent.h"
-#include "Person.h"
-#include "Scheduler.h"
+#include "Population/Person.h"
+#include "Core/Scheduler.h"
 #include "Therapies/Therapy.h"
 #include "Model.h"
 

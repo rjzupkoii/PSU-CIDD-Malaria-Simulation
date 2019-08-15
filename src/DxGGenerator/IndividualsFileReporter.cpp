@@ -7,13 +7,13 @@
 
 #include "IndividualsFileReporter.h"
 #include "Model.h"
-#include "PersonIndexAll.h"
-#include "Person.h"
-#include "Population.h"
+#include "Population/Properties/PersonIndexAll.h"
+#include "Population/Person.h"
+#include "Population/Population.h"
 #include "Core/Config/Config.h"
-#include "Scheduler.h"
-#include "ClonalParasitePopulation.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Core/Scheduler.h"
+#include "Population/ClonalParasitePopulation.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 
 IndividualsFileReporter::IndividualsFileReporter(const std::string &file_name) : file_name_(file_name) {
 }

@@ -6,10 +6,10 @@
  */
 
 #include "MatureGametocyteEvent.h"
-#include "Person.h"
-#include "ClonalParasitePopulation.h"
-#include "Scheduler.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Population/Person.h"
+#include "Population/ClonalParasitePopulation.h"
+#include "Core/Scheduler.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 

@@ -6,10 +6,10 @@
  */
 
 #include "SwitchImmuneComponentEvent.h"
-#include "Person.h"
-#include "Scheduler.h"
-#include "ImmuneSystem.h"
-#include "NonInfantImmuneComponent.h"
+#include "Population/Person.h"
+#include "Core/Scheduler.h"
+#include "Population/ImmuneSystem.h"
+#include "Population/NonInfantImmuneComponent.h"
 #include <cassert>
 
 OBJECTPOOL_IMPL(SwitchImmuneComponentEvent)

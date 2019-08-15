@@ -6,11 +6,11 @@
  */
 
 #include "EndClinicalEvent.h"
-#include "Person.h"
-#include "ClonalParasitePopulation.h"
-#include "Scheduler.h"
-#include "ImmuneSystem.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Population/Person.h"
+#include "Population/ClonalParasitePopulation.h"
+#include "Core/Scheduler.h"
+#include "Population/ImmuneSystem.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 
 OBJECTPOOL_IMPL(EndClinicalEvent)
 

@@ -7,7 +7,7 @@
 #include "Therapies/Therapy.h"
 #include "Model.h"
 #include "Core/Random.h"
-#include "Person.h"
+#include "Population/Person.h"
 #include "Core/Config/Config.h"
 
 MFTMultiLocationStrategy::MFTMultiLocationStrategy() : IStrategy(

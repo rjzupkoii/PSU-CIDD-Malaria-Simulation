@@ -7,10 +7,10 @@
 
 #include "Drug.h"
 #include "Therapies/DrugType.h"
-#include "Person.h"
+#include "Population/Person.h"
 #include "Core/Random.h"
 #include "Model.h"
-#include "Scheduler.h"
+#include "Core/Scheduler.h"
 #include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
 #include <cmath>

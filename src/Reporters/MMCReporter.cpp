@@ -12,9 +12,9 @@
 #include "Constants.h"
 #include "easylogging++.h"
 #include "date/date.h"
-#include "Population.h"
-#include "PersonIndexByLocationStateAgeClass.h"
-#include "SingleHostClonalParasitePopulations.h"
+#include "Population/Population.h"
+#include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
+#include "Population/SingleHostClonalParasitePopulations.h"
 #include "ReporterUtils.h"
 // #include "Parasites/GenotypeDatabase.h"
 

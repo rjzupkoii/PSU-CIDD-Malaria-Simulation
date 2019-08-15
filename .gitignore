@@ -11,3 +11,6 @@ monthly_data\.txt
 .DS_Store
 
 reporter\.txt
+
+# Ignore the backup of the UML diagram
+documentation/MaSim.uml~

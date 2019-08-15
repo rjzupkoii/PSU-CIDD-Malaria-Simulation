@@ -10,9 +10,9 @@
 
 #include "Core/PropertyMacro.h"
 #include "ParasiteDensityUpdateFunction.h"
-#include "IndexHandler.h"
+#include "Properties/IndexHandler.h"
 #include "Therapies/DrugType.h"
-#include "ObjectPool.h"
+#include "Core/ObjectPool.h"
 
 class Therapy;
 

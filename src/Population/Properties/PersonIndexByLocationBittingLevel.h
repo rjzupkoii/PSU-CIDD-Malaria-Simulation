@@ -10,7 +10,7 @@
 
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
-#include "Person.h"
+#include "Population/Person.h"
 #include "PersonIndex.h"
 
 class PersonIndexByLocationBittingLevel : public PersonIndex {
