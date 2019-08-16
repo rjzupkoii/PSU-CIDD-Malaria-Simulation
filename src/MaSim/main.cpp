@@ -1,8 +1,7 @@
 /* 
  * File:   main.cpp
- * Author: Merlin
  *
- * Created on August 1, 2013, 8:51 AM
+ * Main entry point for the simulation, reads the CLI and starts the model.
  */
 
 #include <iostream>
@@ -13,6 +12,7 @@
 #include <Helpers/OSHelpers.h>
 
 int job_number = 0;
+std::string path = "";
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -52,7 +52,7 @@ void config_logger() {
 
   monthly_reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
   monthly_reporter_logger.setGlobally(el::ConfigurationType::Filename,
-                                      fmt::format("monthly_data_{}.txt", job_number));
+                                      fmt::format("{}monthly_data_{}.txt", path, job_number));
   monthly_reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
   monthly_reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
   // default logger uses default configurations
@@ -73,7 +73,7 @@ void config_logger() {
   summary_reporter_logger.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] [%logger] %msg");
 
   summary_reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
-  summary_reporter_logger.setGlobally(el::ConfigurationType::Filename, fmt::format("summary_{}.txt", job_number));
+  summary_reporter_logger.setGlobally(el::ConfigurationType::Filename, fmt::format("{}summary_{}.txt", path, job_number));
   summary_reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
   summary_reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
   // default logger uses default configurations
@@ -123,6 +123,9 @@ void handle_cli(Model *model, int argc, char **argv) {
                                         "Reporter Type. \nEx: MaSim -r mmc",
                                         {'r'});
 
+  // Allow the output location to be specificed
+  args::ValueFlag<std::string> input_path(parser, "string", "Path for output files. \nEx: MaSim -p out", {'o'});
+
   try {
     parser.ParseCLI(argc, argv);
   }
@@ -132,11 +135,14 @@ void handle_cli(Model *model, int argc, char **argv) {
   }
   catch (const args::ParseError &e) {
     LOG(FATAL) << fmt::format("{0} {1}", e.what(), parser);
+    exit(1);
   }
   catch (const args::ValidationError &e) {
     LOG(FATAL) << fmt::format("{0} {1}", e.what(), parser);
+    exit(1);
   }
 
+  // Check for the existance of the input file, exit if it doesn't exist.
   const auto input = input_file ? args::get(input_file) : "input.yml";
 
   if (input!="input.yml") {
@@ -146,9 +152,13 @@ void handle_cli(Model *model, int argc, char **argv) {
   }
 
   if (!OsHelpers::file_exists(input)) {    
-    LOG(FATAL) << fmt::format("File {0} is not exists. Rerun with -h or --help for help.", input);    
+    LOG(FATAL) << fmt::format("File {0} is not exists. Rerun with -h or --help for help.", input);
+    exit(1);
   }
   model->set_config_filename(input);
+
+  // Set the remaining values if givne
+  path = input_path ? args::get(input_path) : path;
 
   job_number = cluster_job_number ? args::get(cluster_job_number) : 0;
   model->set_cluster_job_number(job_number);
