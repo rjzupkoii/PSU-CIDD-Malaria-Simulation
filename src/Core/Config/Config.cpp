@@ -39,7 +39,7 @@ void Config::read_from_file(const std::string &config_file_name) {
   }
 
   for (auto &config_item : config_items) {
-    LOG(INFO) << "Reading config item: " << config_item->name();
+    VLOG(1) << "Reading config item: " << config_item->name();
     config_item->set_value(config);
   }
 }

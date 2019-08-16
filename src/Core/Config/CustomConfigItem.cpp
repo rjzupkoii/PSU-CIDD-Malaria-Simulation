@@ -36,9 +36,6 @@ void spatial_distance_matrix::set_value(const YAML::Node &node) {
       value_[from_location][to_location] = Spatial::Coordinate::calculate_distance_in_km(
         *config_->location_db()[from_location].coordinate,
         *config_->location_db()[to_location].coordinate);
-      //
-      //            std::cout << "distance[" << from_location << "," << to_location << "]: "
-      //                      << spatial_distance_matrix_[from_location][to_location] << std::endl;
     }
   }
 
@@ -81,7 +78,6 @@ spatial_model::~spatial_model() {
 void spatial_model::set_value(const YAML::Node &node) {
   //read spatial_model
   const auto sm_name = node[name_]["name"].as<std::string>();
-  // std::cout << sm_name << std::endl;
   value_ = Spatial::SpatialModelBuilder::Build(sm_name, node[name_][sm_name]);
 }
 
@@ -115,10 +111,6 @@ void immune_system_information::set_value(const YAML::Node &node) {
   value_.immune_effect_on_progression_to_clinical = is_node[
     "immune_effect_on_progression_to_clinical"].as<double>();
 
-  //    std::cout << value_.c_min << std::endl;
-  //    std::cout << value_.c_max << std::endl;
-
-
   value_.age_mature_immunity = is_node["age_mature_immunity"].as<double>();
   value_.factor_effect_age_mature_immunity = is_node["factor_effect_age_mature_immunity"].as<double>();
 
@@ -137,7 +129,6 @@ void immune_system_information::set_value(const YAML::Node &node) {
     value_.acquire_rate_by_age.push_back(factor * acR);
 
     acR *= (1 + value_.immune_inflation_rate);
-    //        std::cout << acR << std::endl;
   }
   assert(value_.acquire_rate_by_age.size() == 81);
 
@@ -160,21 +151,18 @@ void genotype_db::set_value(const YAML::Node &node) {
   value_->weight().clear();
   value_->weight().assign(config_->genotype_info().loci_vector.size(), 1);
 
-//  std::cout << value_->weight().size()-2<< std::endl;
   auto temp = 1;
   for (int i = static_cast<int>(value_->weight().size() - 2); i >= 0; i--) {
     temp *= (int) config_->genotype_info().loci_vector[i + 1].alleles.size();
     value_->weight()[i] = temp;
   }
   auto number_of_genotypes = 1;
-  // std::cout << config_->genotype_info().loci_vector.size() << std::endl;
   for (auto &locus : config_->genotype_info().loci_vector) {
     number_of_genotypes *= (int) locus.alleles.size();
   }
 
   for (auto i = 0; i < number_of_genotypes; i++) {
     auto* int_genotype = new Genotype(i, config_->genotype_info(), value_->weight());
-//    std::cout << *int_genotype << std::endl;
     value_->add(int_genotype);
   }
 
@@ -205,14 +193,11 @@ void drug_db::set_value(const YAML::Node &node) {
     dt->set_drug_half_life(dt_node["half_life"].as<double>());
     dt->set_maximum_parasite_killing_rate(dt_node["maximum_parasite_killing_rate"].as<double>());
     dt->set_n(dt_node["n"].as<double>());
-    //    dt->set_EC50(node["EC50"].as<double>());
 
-    //    std::cout <<dt->drug_half_life() << "-" << dt->maximum_parasite_killing_rate() << "-" << dt->n() << "-" << dt->EC50() << std::endl;
     for (std::size_t i = 0; i < dt_node["age_specific_drug_concentration_sd"].size(); i++) {
       dt->age_group_specific_drug_concentration_sd().push_back(
         dt_node["age_specific_drug_concentration_sd"][i].as<double>());
     }
-    //    assert(dt->age_group_specific_drug_concentration_sd().size() == 15);
 
     dt->set_p_mutation(dt_node["mutation_probability"].as<double>());
 
@@ -232,17 +217,8 @@ void drug_db::set_value(const YAML::Node &node) {
 
     dt->set_ec50_map(dt_node["EC50"].as<std::map<std::string, double>>());
 
-    //    auto ec50Node = node["EC50"];
-    //    for (YAML::const_iterator it = ec50Node.begin(); it != ec50Node.end(); it++) {
-    //        std::string key = it->first.as<std::string>();
-    //        double value = it->second.as<double>();
-    //        std::cout << key << ":::::" << value << std::endl;
-    //    }
-
     dt->set_k(dt_node["k"].as<double>());
 
-    // auto* dt = read_drugtype(config, i);
-    //        std::cout << i << std::endl;
     value_->add(dt);
 
   }
@@ -296,7 +272,6 @@ void circulation_info::set_value(const YAML::Node &node) {
   auto j = 0;
   double old_p = 0;
   double sum = 0;
-  //TODO: fix it
   for (double i = 0; i <= max + 0.0001; i += step) {
     const auto p = gsl_cdf_gamma_P(i + step, a, b);
     double value = 0;
@@ -419,7 +394,7 @@ strategy_db::~strategy_db() {
 IStrategy* read_strategy(const YAML::Node &n, const int &strategy_id, Config* config) {
   const auto s_id = NumberHelpers::number_to_string<int>(strategy_id);
   auto* result = StrategyBuilder::build(n[s_id], strategy_id, config);
-  LOG(INFO) << result->to_string();
+  VLOG(1) << fmt::format("Strategy: {0}", result->to_string());
   return result;
 }
 
@@ -443,8 +418,6 @@ void initial_parasite_info::set_value(const YAML::Node &node) {
     //apply for all location
     for (auto loc = location_from; loc < location_to; ++loc) {
       for (std::size_t j = 0; j < info_node[index]["parasite_info"].size(); j++) {
-        //            InitialParasiteInfo ipi;
-        //            ipi.location = location;
         auto parasite_type_id = info_node[index]["parasite_info"][j]["parasite_type_id"].as<int>();
         auto prevalence = info_node[index]["parasite_info"][j]["prevalence"].as<double>();
         value_.emplace_back(loc, parasite_type_id, prevalence);

@@ -1,8 +1,8 @@
 /* 
  * File:   Model.cpp
- * Author: nguyentran
  * 
- * Created on March 22, 2013, 2:26 PM
+ * Main class for the indivdually based model. Initalizes all of the relevent 
+ * objects, passes control to the scheduler, and manages the tear-down.
  */
 #include <fmt/format.h>
 #include "Model.h"
@@ -46,7 +46,6 @@ ModelDataCollector* Model::DATA_COLLECTOR = nullptr;
 Population* Model::POPULATION = nullptr;
 IStrategy* Model::TREATMENT_STRATEGY = nullptr;
 ITreatmentCoverageModel* Model::TREATMENT_COVERAGE = nullptr;
-// std::shared_ptr<spdlog::logger> LOGGER;
 
 Model::Model(const int &object_pool_size) {
   initialize_object_pool(object_pool_size);
@@ -62,8 +61,6 @@ Model::Model(const int &object_pool_size) {
   RANDOM = random_;
   DATA_COLLECTOR = data_collector_;
   POPULATION = population_;
-
-  // LOGGER = spdlog::stdout_logger_mt("console");
 
   progress_to_clinical_update_function_ = new ClinicalUpdateFunction(this);
   immunity_clearance_update_function_ = new ImmunityClearanceUpdateFunction(this);
@@ -94,14 +91,6 @@ void Model::set_treatment_strategy(const int &strategy_id) {
   TREATMENT_STRATEGY = treatment_strategy_;
 
   treatment_strategy_->adjust_started_time_point(Model::SCHEDULER->current_time());
-
-  //
-  // if (treatment_strategy_->get_type() == IStrategy::NestedSwitching) {
-  //   dynamic_cast<NestedSwitchingStrategy *>(treatment_strategy_)->initialize_update_time(config_);
-  // }
-  // if (treatment_strategy_->get_type() == IStrategy::NestedSwitchingDifferentDistributionByLocation) {
-  //   dynamic_cast<NestedMFTMultiLocationStrategy *>(treatment_strategy_)->initialize_update_time(config_);
-  // }
 }
 
 void Model::set_treatment_coverage(ITreatmentCoverageModel* tcm) {
@@ -130,13 +119,14 @@ void Model::build_initial_treatment_coverage() {
 void Model::initialize() {
   LOG(INFO) << "Model initilizing...";
 
-  LOG(INFO) << "Initialize Random";
-  //Initialize Random Seed
-  random_->initialize(initial_seed_number_);
-
+  // TODO Update the configuration to allow the seed to be set
   LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
   //Read input file
   config_->read_from_file(config_filename_);
+
+  VLOG(1) << "Initialize Random";
+  //Initialize Random Seed
+  random_->initialize(initial_seed_number_);
 
   //add reporter here
   if (reporter_type_.empty()) {
@@ -147,51 +137,47 @@ void Model::initialize() {
     }
   }
 
-  LOG(INFO) << "Initialing reports";
+  VLOG(1) << "Initialing reports";
   //initialize reporters
   for (auto* reporter : reporters_) {
     reporter->initialize();
   }
 
-  LOG(INFO) << "Initialzing scheduler";
+  VLOG(1) << "Initialzing scheduler";
   LOG(INFO) << "Starting day is " << CONFIG->starting_date();
   //initialize scheduler
   scheduler_->initialize(CONFIG->starting_date(), config_->total_time());
 
-  LOG(INFO) << "Initialing initial strategy";
+  VLOG(1) << "Initialing initial strategy";
   //set treatment strategy
   set_treatment_strategy(config_->initial_strategy_id());
 
-  LOG(INFO) << "Initialing initial treatment coverage model";
+  VLOG(1) << "Initialing initial treatment coverage model";
   build_initial_treatment_coverage();
 
-  LOG(INFO) << "Initializing data collector";
+  VLOG(1) << "Initializing data collector";
   //initialize data_collector
   data_collector_->initialize();
 
-  LOG(INFO) << "Initializing population";
+  VLOG(1) << "Initializing population";
   //initialize Population
   population_->initialize();
+  LOG(INFO) << fmt::format("Popuation size: {0}", population_->size());
 
-  LOG(INFO) << "Introducing initial cases";
+  VLOG(1) << "Introducing initial cases";
   //initialize infected_cases
   population_->introduce_initial_cases();
 
-  //initialize external population
-  //    external_population_->initialize();
-
-  LOG(INFO) << "Schedule for population event";
+  VLOG(1) << "Schedule for population event";
   for (auto* event : config_->preconfig_population_events()) {
     scheduler_->schedule_population_event(event);
-//    LOG(INFO) << scheduler_->population_events_list_[event->time].size();
   }
-  //
-  // for(auto it = CONFIG->genotype_db()->begin(); it != CONFIG->genotype_db()->end(); ++it) {
-  //   std::cout << it->first << " : " << it->second->daily_fitness_multiple_infection() << std::endl;
-  // }
 }
 
 void Model::initialize_object_pool(const int &size) {
+
+  VLOG(1) << "Initialize the object pool";
+
   BirthdayEvent::InitializeObjectPool(size);
   ProgressToClinicalEvent::InitializeObjectPool(size);
   EndClinicalDueToDrugResistanceEvent::InitializeObjectPool(size);
@@ -222,7 +208,9 @@ void Model::initialize_object_pool(const int &size) {
 }
 
 void Model::release_object_pool() {
-  //    std::cout << "Release object pool" << std::endl;
+
+  VLOG(1) << "Release the object pool";
+
   Person::ReleaseObjectPool();
   ImmuneSystem::ReleaseObjectPool();
 
@@ -256,9 +244,17 @@ void Model::release_object_pool() {
 void Model::run() {
   LOG(INFO) << "Model starting...";
   before_run();
+
+  auto start = std::chrono::system_clock::now();
   scheduler_->run();
+  auto end = std::chrono::system_clock::now();
+  
   after_run();
-  LOG(INFO) << "Model finished.";
+  LOG(INFO) << "Model finished!";
+
+  std::chrono::duration<double> elapsed_seconds = end-start;
+  std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+  LOG(INFO) << fmt::format("Elapsed time (s): {0}", elapsed_seconds.count());
 }
 
 void Model::before_run() {
