@@ -11,6 +11,7 @@
 #include <args.hxx>
 #include <Helpers/OSHelpers.h>
 
+// Settings read from the CLI
 int job_number = 0;
 std::string path = "";
 
@@ -157,7 +158,7 @@ void handle_cli(Model *model, int argc, char **argv) {
   }
   model->set_config_filename(input);
 
-  // Set the remaining values if givne
+  // Set the remaining values if given
   path = input_path ? args::get(input_path) : path;
 
   job_number = cluster_job_number ? args::get(cluster_job_number) : 0;
