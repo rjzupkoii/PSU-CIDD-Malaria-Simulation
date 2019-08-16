@@ -29,8 +29,6 @@ set(SRC_FILES ${SRC_FILES}
 add_library(MaSimCore STATIC ${SRC_FILES})
 add_dependencies(MaSimCore date args)
 
-option(BUILD_WSL "Build all tests." OFF) 
-
 if (BUILD_WSL)
 target_link_libraries(MaSimCore PUBLIC
         yaml-cpp
