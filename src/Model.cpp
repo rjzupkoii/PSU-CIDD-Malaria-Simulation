@@ -143,10 +143,11 @@ void Model::initialize() {
     reporter->initialize();
   }
 
+  // initialize scheduler
   VLOG(1) << "Initialzing scheduler";
   LOG(INFO) << "Starting day is " << CONFIG->starting_date();
-  //initialize scheduler
   scheduler_->initialize(CONFIG->starting_date(), config_->total_time());
+  scheduler_->set_days_between_notifications(config_->days_between_notifications());
 
   VLOG(1) << "Initialing initial strategy";
   //set treatment strategy

@@ -117,7 +117,7 @@ void Scheduler::run() {
   current_time_ = 0;
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
-    LOG_IF(current_time_%100==0, INFO) << "Day: " << current_time_;
+    LOG_IF(current_time_ % days_between_notifications_ == 0, INFO) << "Day: " << current_time_;
     begin_time_step();
     // population related events
     execute_events_list(population_events_list_[current_time_]);

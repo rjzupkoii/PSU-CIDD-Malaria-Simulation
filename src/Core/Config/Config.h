@@ -30,6 +30,8 @@ class Config {
 
   std::vector<IConfigItem *> config_items{};
 
+  CONFIG_ITEM(days_between_notifications, int, 100)
+
   CONFIG_ITEM(starting_date, date::year_month_day, date::year_month_day{date::year{1999}/1/1})
   CONFIG_ITEM(ending_date, date::year_month_day, date::year_month_day{date::year{1999}/1/2})
 

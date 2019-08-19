@@ -28,6 +28,9 @@ class Scheduler {
 
  PROPERTY_REF(bool, is_force_stop)
 
+ // Number of days to wait between updating the user
+ PROPERTY(int, days_between_notifications)
+
  public:
   date::sys_days calendar_date;
 
