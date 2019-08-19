@@ -252,6 +252,10 @@ void Model::run() {
   after_run();
   LOG(INFO) << "Model finished!";
 
+  // Note the final popuation of the model
+  LOG(INFO) << fmt::format("Final popuation: {0}", population_->size());
+
+  // Note the final run-time of the model
   std::chrono::duration<double> elapsed_seconds = end-start;
   std::time_t end_time = std::chrono::system_clock::to_time_t(end);
   LOG(INFO) << fmt::format("Elapsed time (s): {0}", elapsed_seconds.count());
