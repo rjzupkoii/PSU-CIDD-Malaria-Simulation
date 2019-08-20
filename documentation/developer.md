@@ -45,7 +45,6 @@ Several tab separated values (TSV) data files are generated depending upon the r
 
 <br />
 
----
 **monthly_reporter_*n*.txt** - Summary data for the model generated at the end of each simulated month.
 
 | Block | Column Number(s) | Description |
@@ -74,7 +73,6 @@ Several tab separated values (TSV) data files are generated depending upon the r
 
 <br/>
 
----
 **summary_reporter_*n*.txt** Summary that is generated after the model has completed execution.
 
 | Block | Column Number(s) | Description |
