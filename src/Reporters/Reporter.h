@@ -10,6 +10,7 @@
 
 #include "Core/PropertyMacro.h"
 #include <map>
+#include <sstream>
 
 class Model;
 
@@ -26,16 +27,21 @@ class Reporter {
     MONTHLY_REPORTER,
     MMC_REPORTER
   };
+
+protected:
+  std::stringstream ss;
+
  public:
+  const std::string group_sep = "-1111\t";
+  const std::string sep = "\t";
+
   static std::map<std::string, ReportType> ReportTypeMap;
 
- public:
   Reporter();
 
-  //    Reporter(const Reporter& orig);
   virtual ~Reporter();
 
-  virtual void initialize() = 0;
+  virtual void initialize(int job_number, std::string path) = 0;
 
   virtual void before_run() = 0;
 
@@ -46,8 +52,6 @@ class Reporter {
   virtual void monthly_report() = 0;
 
   static Reporter *MakeReport(ReportType report_type);
-
- private:
 
 };
 

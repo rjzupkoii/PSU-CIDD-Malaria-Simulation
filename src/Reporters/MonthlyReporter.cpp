@@ -21,16 +21,26 @@ MonthlyReporter::MonthlyReporter() = default;
 
 MonthlyReporter::~MonthlyReporter() = default;
 
-void MonthlyReporter::initialize()
-{
-}
+void MonthlyReporter::initialize(int job_number, std::string path) {
+  // Create the configuration for the monthly reporter
+  el::Configurations monthly_reporter_logger;
+  monthly_reporter_logger.setToDefault();
+  monthly_reporter_logger.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
+  monthly_reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
+  monthly_reporter_logger.setGlobally(el::ConfigurationType::Filename, fmt::format("{}monthly_data_{}.txt", path, job_number));
+  monthly_reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
+  monthly_reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
+  el::Loggers::reconfigureLogger("monthly_reporter", monthly_reporter_logger);
 
-void MonthlyReporter::before_run()
-{
-}
-
-void MonthlyReporter::begin_time_step()
-{
+  // Create the configuration for the summary reporter
+  el::Configurations summary_reporter_logger;
+  summary_reporter_logger.setToDefault();
+  summary_reporter_logger.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
+  summary_reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
+  summary_reporter_logger.setGlobally(el::ConfigurationType::Filename, fmt::format("{}summary_{}.txt", path, job_number));
+  summary_reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
+  summary_reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
+  el::Loggers::reconfigureLogger("summary_reporter", summary_reporter_logger);
 }
 
 void MonthlyReporter::monthly_report()

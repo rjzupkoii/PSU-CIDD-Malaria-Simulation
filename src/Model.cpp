@@ -116,8 +116,11 @@ void Model::build_initial_treatment_coverage() {
   set_treatment_coverage(tcm);
 }
 
-void Model::initialize() {
-  LOG(INFO) << "Model initilizing...";
+/**
+ * Prepare the model to be run.
+ */
+void Model::initialize(int job_number, std::string std) {
+  LOG(INFO) << "Model initializing...";
 
   // TODO Update the configuration to allow the seed to be set
   LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
@@ -140,7 +143,7 @@ void Model::initialize() {
   VLOG(1) << "Initialing reports";
   //initialize reporters
   for (auto* reporter : reporters_) {
-    reporter->initialize();
+    reporter->initialize(job_number, std);
   }
 
   // initialize scheduler

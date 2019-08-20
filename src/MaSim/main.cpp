@@ -39,38 +39,6 @@ void config_logger() {
   default_conf.setGlobally(el::ConfigurationType::ToStandardOutput, "true");
   default_conf.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
   el::Loggers::reconfigureLogger("default", default_conf);
-
-  // Create the configuration for the monthly reporter
-  el::Configurations monthly_reporter_logger;
-  monthly_reporter_logger.setToDefault();
-  monthly_reporter_logger.set(el::Level::Debug, el::ConfigurationType::Format, OUTPUT_FORMAT);
-  monthly_reporter_logger.set(el::Level::Error, el::ConfigurationType::Format, OUTPUT_FORMAT);
-  monthly_reporter_logger.set(el::Level::Fatal, el::ConfigurationType::Format, OUTPUT_FORMAT);
-  monthly_reporter_logger.set(el::Level::Trace, el::ConfigurationType::Format, OUTPUT_FORMAT);
-  monthly_reporter_logger.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
-  monthly_reporter_logger.set(el::Level::Warning, el::ConfigurationType::Format, "[%level] [%logger] %msg");
-  monthly_reporter_logger.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] [%logger] %msg");
-  monthly_reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
-  monthly_reporter_logger.setGlobally(el::ConfigurationType::Filename, fmt::format("{}monthly_data_{}.txt", path, job_number));
-  monthly_reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
-  monthly_reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
-  el::Loggers::reconfigureLogger("monthly_reporter", monthly_reporter_logger);
-
-  // Create the configuration for the summary reporter
-  el::Configurations summary_reporter_logger;
-  summary_reporter_logger.setToDefault();
-  summary_reporter_logger.set(el::Level::Debug, el::ConfigurationType::Format, OUTPUT_FORMAT);
-  summary_reporter_logger.set(el::Level::Error, el::ConfigurationType::Format, OUTPUT_FORMAT);
-  summary_reporter_logger.set(el::Level::Fatal, el::ConfigurationType::Format, OUTPUT_FORMAT);
-  summary_reporter_logger.set(el::Level::Trace, el::ConfigurationType::Format, OUTPUT_FORMAT);
-  summary_reporter_logger.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
-  summary_reporter_logger.set(el::Level::Warning, el::ConfigurationType::Format, "[%level] [%logger] %msg");
-  summary_reporter_logger.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] [%logger] %msg");
-  summary_reporter_logger.setGlobally(el::ConfigurationType::ToFile, "true");
-  summary_reporter_logger.setGlobally(el::ConfigurationType::Filename, fmt::format("{}summary_{}.txt", path, job_number));
-  summary_reporter_logger.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
-  summary_reporter_logger.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
-  el::Loggers::reconfigureLogger("summary_reporter", summary_reporter_logger);
 }
 
 int main(const int argc, char **argv) {
@@ -84,7 +52,7 @@ int main(const int argc, char **argv) {
     START_EASYLOGGINGPP(argc, argv);
     LOG(INFO) << fmt::format("MaSim version {0}", VERSION);
 
-    m->initialize();
+    m->initialize(job_number, path);
 
     m->run();
 
@@ -127,7 +95,7 @@ void handle_cli(Model *model, int argc, char **argv) {
     exit(1);
   }
 
-  // Check for the existance of the input file, exit if it doesn't exist.
+  // Check for the existence of the input file, exit if it doesn't exist.
   const auto input = input_file ? args::get(input_file) : "input.yml";
   if (!OsHelpers::file_exists(input)) {    
     LOG(FATAL) << fmt::format("File {0} is not exists. Rerun with -h or --help for help.", input);

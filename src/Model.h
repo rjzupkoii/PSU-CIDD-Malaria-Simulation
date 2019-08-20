@@ -91,7 +91,7 @@ class Model {
 
   void build_initial_treatment_coverage();
 
-  void initialize();
+  void initialize(int job_number, std::string std);
 
   static void initialize_object_pool(const int &size = 100000);
 

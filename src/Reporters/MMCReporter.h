@@ -11,15 +11,12 @@ DISALLOW_COPY_AND_ASSIGN(MMCReporter)
 DISALLOW_MOVE(MMCReporter)
 
 public:
-  std::stringstream ss;
-  const std::string group_sep = "-1111\t";
-  const std::string sep = "\t";
 
   MMCReporter();
 
   ~MMCReporter() override = default;
 
-  void initialize() override;
+  void initialize(int job_number, std::string path) override { }
 
   void before_run() override;
 

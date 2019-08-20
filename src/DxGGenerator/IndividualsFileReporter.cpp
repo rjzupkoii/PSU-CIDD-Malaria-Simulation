@@ -21,10 +21,6 @@ IndividualsFileReporter::IndividualsFileReporter(const std::string &file_name) :
 IndividualsFileReporter::~IndividualsFileReporter() {
 }
 
-void IndividualsFileReporter::initialize() {
-
-}
-
 void IndividualsFileReporter::before_run() {
   fs_.open(file_name_.c_str(), std::fstream::out);
 }

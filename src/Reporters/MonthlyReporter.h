@@ -14,21 +14,18 @@ class MonthlyReporter : public Reporter {
  DISALLOW_MOVE(MonthlyReporter)
 
  public:
-  std::stringstream ss;
-  const std::string group_sep = "-1111\t";
-  const std::string sep = "\t";
 
   MonthlyReporter();
 
   ~MonthlyReporter() override;
 
-  void initialize() override;
+  void before_run() override { }
 
-  void before_run() override;
+  void begin_time_step() override { }
+
+  void initialize(int job_number, std::string path) override;
 
   void after_run() override;
-
-  void begin_time_step() override;
 
   void monthly_report() override;
 

@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
 
   auto* p_model = new Model();
   p_model->set_config_filename(input_file);
-  p_model->initialize();
+  p_model->initialize(0, "");
 
   if(as_iov != -1) {
       p_model->CONFIG->as_iov() = as_iov;

@@ -23,9 +23,6 @@ ConsoleReporter::ConsoleReporter() {
 ConsoleReporter::~ConsoleReporter() {
 }
 
-void ConsoleReporter::initialize() {
-}
-
 void ConsoleReporter::before_run() {
   std::cout << "Seed:" << Model::RANDOM->seed() << std::endl;
 

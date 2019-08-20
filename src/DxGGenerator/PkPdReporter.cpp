@@ -20,7 +20,7 @@ PkPdReporter::PkPdReporter() {}
 
 PkPdReporter::~PkPdReporter() = default;
 
-void PkPdReporter::initialize() {
+void PkPdReporter::initialize(int job_number, std::string path) {
   yesterday_density_.clear();
 }
 
