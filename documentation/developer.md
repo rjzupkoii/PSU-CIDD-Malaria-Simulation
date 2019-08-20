@@ -44,6 +44,7 @@ cd /build/bin
 Several tab separated values (TSV) data files are generated depending upon the reporter that is selected for use. The files listed below are based upon the `MonthlyReporter` which generates two files. File(s) are organized with group separators indicated by the sentinel value `-1111` and *n* is a zero-indexed location id.
 
 <br />
+
 ---
 **monthly_reporter_*n*.txt** - Summary data for the model generated at the end of each simulated month.
 
@@ -72,6 +73,7 @@ Several tab separated values (TSV) data files are generated depending upon the r
 | | *...* | See genotype frequency discussion
 
 <br/>
+
 ---
 **summary_reporter_*n*.txt** Summary that is generated after the model has completed execution.
 
