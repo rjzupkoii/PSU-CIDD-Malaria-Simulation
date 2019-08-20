@@ -9,10 +9,15 @@
 #
 # ---------------------------------------------------------------
 
-# Administrative item, the number of model days between updates 
-# to the user
+# ---------------------------------------------------------------
+# Items control execution of the model
+# ---------------------------------------------------------------
+# The number of model days between updates to the user
 days_between_notifications: 500
 
+# ---------------------------------------------------------------
+# Items controlling the behavior of the model
+# ---------------------------------------------------------------
 # starting time point of the simulation (in yyyy/m/d format) 
 # which is day 0 in the simulation
 starting_date: 1990/1/1
