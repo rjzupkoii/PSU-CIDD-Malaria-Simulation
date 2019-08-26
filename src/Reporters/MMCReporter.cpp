@@ -103,18 +103,7 @@ void MMCReporter::after_run() {
   //output last strategy information
   ss << Model::TREATMENT_STRATEGY->id << sep;
 
-  //output NTF
-  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
-                                   static_cast<double>(Constants::DAYS_IN_YEAR());
-
-  auto sum_ntf = 0.0;
-  ul pop_size = 0;
-  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-    sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
-    pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
-  }
-
-  ss << (sum_ntf * 100 / pop_size) / total_time_in_years << sep;
+  ss << calculate_treatment_failures() << sep;
 
   ss << group_sep;
   //print # mutation events of first 10 years

@@ -7,6 +7,9 @@
 
 #include "Reporter.h"
 #include "ConsoleReporter.h"
+#include "Constants.h"
+#include "Core/Config/Config.h"
+#include "MDC/ModelDataCollector.h"
 #include "Model.h"
 #include "MonthlyReporter.h"
 #include "MMCReporter.h"
@@ -17,10 +20,21 @@ std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
     {"MMC", MMC_REPORTER}
 };
 
-Reporter::Reporter() : model_(nullptr) {
-}
+// Calculate the number of treatment failures (NTF) for the model
+double Reporter::calculate_treatment_failures() {
+  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
+    static_cast<double>(Constants::DAYS_IN_YEAR());
 
-Reporter::~Reporter() = default;
+  auto sum_ntf = 0.0;
+  ul pop_size = 0;
+  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++)
+  {
+    sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
+    pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
+  }
+
+  return (sum_ntf * 100 / pop_size) / total_time_in_years;
+}
 
 Reporter *Reporter::MakeReport(ReportType report_type) {
   switch (report_type) {

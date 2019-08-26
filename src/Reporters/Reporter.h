@@ -31,15 +31,17 @@ class Reporter {
 protected:
   std::stringstream ss;
 
+  double calculate_treatment_failures();
+
  public:
   const std::string group_sep = "-1111\t";
   const std::string sep = "\t";
 
   static std::map<std::string, ReportType> ReportTypeMap;
 
-  Reporter();
+  Reporter() : model_(nullptr) { }
 
-  virtual ~Reporter();
+  virtual ~Reporter() = default;
 
   virtual void initialize(int job_number, std::string path) = 0;
 
