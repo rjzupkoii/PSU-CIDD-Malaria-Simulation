@@ -7,6 +7,7 @@
 
 #include <chrono>
 #include <fmt/format.h>
+#include <iostream>
 
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
@@ -19,7 +20,15 @@ void SpatialReporter::initialize(int job_number, std::string path) {
     this->path = path;
 
     // Open up the monthly report writer, default buffer should be fine
-    this->monthly = std::ofstream(fmt::format("{}monthly_data_{}.txt", path, jobNumber));
+    if (mkdir(path.c_str(), 0777) == 0) {
+        LOG(INFO) << "Created output directory, " << path;
+    }
+    this->monthly = std::ofstream(fmt::format("{}monthly_data_{}.tsv", path, jobNumber));
+    if (!this->monthly.is_open()) {
+        LOG(WARNING) << "Monthly file stream not created!";
+    }
+
+    // Write relevent header information
     writeMonthlyHeader();
 }
 
@@ -36,7 +45,7 @@ void SpatialReporter::monthly_report() {
 
 void SpatialReporter::after_run() {
     // Open up the final report writer
-    std::ofstream annual = std::ofstream(fmt::format("{}summary_{}.txt", path, jobNumber));
+    std::ofstream annual = std::ofstream(fmt::format("{}summary_{}.tsv", path, jobNumber));
     
     // Write the header for the file
     annual << std::ctime(&this->time) << "\n";

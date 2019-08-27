@@ -25,7 +25,8 @@ class Reporter {
     CONSOLE,
     GUI,
     MONTHLY_REPORTER,
-    MMC_REPORTER
+    MMC_REPORTER,
+    SPATIAL_REPORTER
   };
 
 protected:
