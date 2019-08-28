@@ -38,8 +38,8 @@ class SpatialReporter : public Reporter {
     void after_run() override;
 
     // Report specific
-    void exportEirPfPR(std::ofstream out);
-    void writeMonthlyHeader();
+    void export_eir_pfpr(std::ofstream out);
+    void write_monthly_header();
 };
 
 #endif

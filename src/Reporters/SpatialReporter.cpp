@@ -71,13 +71,13 @@ void SpatialReporter::after_run() {
     monthly.close();
 }
 
-void SpatialReporter::exportEirPfPR(std::ofstream out) {
+void SpatialReporter::export_eir_pfpr(std::ofstream out) {
 
     // TODO Write this method!
     
 }
 
-void SpatialReporter::writeMonthlyHeader() {
+void SpatialReporter::write_monthly_header() {
     // Note the time stamp
     auto end = std::chrono::system_clock::now();
     this->time = std::chrono::system_clock::to_time_t(end);
