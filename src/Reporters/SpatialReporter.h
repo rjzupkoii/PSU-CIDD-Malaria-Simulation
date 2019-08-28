@@ -17,8 +17,9 @@ class SpatialReporter : public Reporter {
  DISALLOW_MOVE(SpatialReporter)
 
  private:
-    int jobNumber;
+    int job_number;
     std::ofstream monthly;
+    std::ofstream eir_pfpr;
     std::string path;
     std::time_t time;
 
@@ -38,7 +39,8 @@ class SpatialReporter : public Reporter {
     void after_run() override;
 
     // Report specific
-    void export_eir_pfpr(std::ofstream out);
+    void export_eir_pfpr_table(std::ofstream &out);
+    void write_eir_pfpr_header(std::ofstream &out);
     void write_monthly_header();
 };
 

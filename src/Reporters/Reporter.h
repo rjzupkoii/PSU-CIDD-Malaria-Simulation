@@ -37,6 +37,7 @@ protected:
  public:
   const std::string group_sep = "-1111\t";
   const std::string sep = "\t";
+  const std::string end_line = "\n";
 
   static std::map<std::string, ReportType> ReportTypeMap;
 
