@@ -30,14 +30,17 @@ class Reporter {
   };
 
 protected:
+
+  // Constants used when generating TSV files
+  const std::string group_sep = "-1111\t";
+  const std::string sep = "\t";
+  const std::string end_line = "\n";
+
   std::stringstream ss;
 
   double calculate_treatment_failures();
 
  public:
-  const std::string group_sep = "-1111\t";
-  const std::string sep = "\t";
-  const std::string end_line = "\n";
 
   static std::map<std::string, ReportType> ReportTypeMap;
 

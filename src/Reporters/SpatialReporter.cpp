@@ -114,6 +114,11 @@ void SpatialReporter::export_eir_pfpr_table(std::ofstream &out) {
         out << Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100 << sep;
         out << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100 << sep;
 
+        // Infection information
+        out << Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[location] << sep;
+        out << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[location] << sep;
+        out << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[location] << sep;
+
         // End line
         out << end_line;
     }
@@ -131,6 +136,9 @@ void SpatialReporter::write_eir_pfpr_header(std::ofstream &out) {
     out << "PfPR < 5" << sep;
     out << "PfPR 2 - 10" << sep;
     out << "PfPR all" << sep;
+    out << "New Infections" << sep;
+    out << "Treatments" << sep;
+    out << "Clinical Episodes" << sep;
     out << end_line;
 }
 

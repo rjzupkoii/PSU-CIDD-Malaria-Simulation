@@ -13,35 +13,35 @@
 
 class SpatialReporter : public Reporter {
 
- DISALLOW_COPY_AND_ASSIGN(SpatialReporter)
- DISALLOW_MOVE(SpatialReporter)
+   DISALLOW_COPY_AND_ASSIGN(SpatialReporter)
+   DISALLOW_MOVE(SpatialReporter)
 
- private:
-    int job_number;
-    std::ofstream monthly;
-    std::ofstream eir_pfpr;
-    std::string path;
-    std::time_t time;
+   private:
+      int job_number;
+      std::ofstream monthly;
+      std::ofstream eir_pfpr;
+      std::string path;
+      std::time_t time;
 
- public:
+   public:
 
-    // Default constructor and deconstructor
-    SpatialReporter() = default;
-    ~SpatialReporter() override = default;
+      // Default constructor and deconstructor
+      SpatialReporter() = default;
+      ~SpatialReporter() override = default;
 
-    // Basic declarations
-    void before_run() override {}
-    void begin_time_step() override {}
+      // Basic declarations
+      void before_run() override {}
+      void begin_time_step() override {}
 
-    // Overrides
-    void initialize(int job_number, std::string path) override;
-    void monthly_report() override;
-    void after_run() override;
+      // Overrides
+      void initialize(int job_number, std::string path) override;
+      void monthly_report() override;
+      void after_run() override;
 
-    // Report specific
-    void export_eir_pfpr_table(std::ofstream &out);
-    void write_eir_pfpr_header(std::ofstream &out);
-    void write_monthly_header();
+      // Report specific
+      void export_eir_pfpr_table(std::ofstream &out);
+      void write_eir_pfpr_header(std::ofstream &out);
+      void write_monthly_header();
 };
 
 #endif
