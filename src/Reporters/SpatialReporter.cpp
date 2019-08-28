@@ -29,7 +29,7 @@ void SpatialReporter::initialize(int job_number, std::string path) {
     }
 
     // Write relevent header information
-    writeMonthlyHeader();
+    write_monthly_header();
 }
 
 void SpatialReporter::monthly_report() {
