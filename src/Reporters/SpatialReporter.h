@@ -18,8 +18,9 @@ class SpatialReporter : public Reporter {
 
    private:
       int job_number;
-      std::ofstream monthly;
       std::ofstream eir_pfpr;
+      std::ofstream genotypes;
+      std::ofstream monthly;
       std::string path;
       std::time_t time;
 

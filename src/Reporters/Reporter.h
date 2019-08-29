@@ -14,6 +14,14 @@
 
 class Model;
 
+// Wrapper for TSV constants
+namespace Tsv {
+  // Constants used when generating TSV files
+  const std::string sep = "\t";
+  const std::string end_line = "\n";
+  const std::string extension = "tsv";
+}
+
 class Reporter {
  DISALLOW_COPY_AND_ASSIGN(Reporter)
 
@@ -33,8 +41,6 @@ protected:
 
   // Constants used when generating TSV files
   const std::string group_sep = "-1111\t";
-  const std::string sep = "\t";
-  const std::string end_line = "\n";
 
   std::stringstream ss;
 
