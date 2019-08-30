@@ -49,7 +49,7 @@ class Genotype {
 
   friend std::ostream &operator<<(std::ostream &os, const Genotype &e);
 
- private:
+  std::string to_string();
 
 };
 

@@ -12,6 +12,7 @@
 class GenotypeReporter {
     public:
         static void output_genotype_weighted(std::ofstream &out);
+        static void output_genotype_weighted_header(std::ofstream &out);
 };
 
 #endif

@@ -92,3 +92,27 @@ void GenotypeReporter::output_genotype_weighted(std::ofstream &out) {
     out << sum_all << Tsv::sep;
     out << Tsv::end_line;
 }
+
+void GenotypeReporter::output_genotype_weighted_header(std::ofstream &out) {
+
+    // Type by-line, we assume the timestamp has already been provided
+    out << "Genotype frequencies by the weighted number of parasite-positive individuals carrying genotype" << Tsv::end_line;
+
+    // Location and genotype
+    for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+        for (int type = 0; type < Model::CONFIG->number_of_parasite_types(); type++) {
+            auto genotype = (*Model::CONFIG->genotype_db())[type];
+            out << "Site " << location << " / " << genotype->to_string() << Tsv::sep;
+        }
+    }
+
+    // Total for all locations
+    for (int type = 0; type < Model::CONFIG->number_of_parasite_types(); type++) {
+        auto genotype = (*Model::CONFIG->genotype_db())[type];
+        out << genotype->to_string() << Tsv::sep;
+    }
+
+    // Total infected
+    out << "Total Infected" << Tsv::sep;
+    out << Tsv::end_line;
+}

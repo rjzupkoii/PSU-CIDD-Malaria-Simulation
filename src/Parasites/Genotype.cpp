@@ -113,3 +113,14 @@ std::ostream &operator<<(std::ostream &os, const Genotype &e) {
 //    os << "\t" << e.number_of_resistance_position_;
   return os;
 }
+
+// Get the string associated with this genotype.
+std::string Genotype::to_string() {
+  std::string result;
+  for (auto i = 0; i < gene_expression_.size(); i++) {
+    const auto v = gene_expression_[i];
+    const auto value = Model::CONFIG->genotype_info().loci_vector[i].alleles[v];
+    result.append(value.short_name);
+  }
+  return result;
+}

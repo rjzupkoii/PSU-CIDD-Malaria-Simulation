@@ -40,6 +40,7 @@ void SpatialReporter::initialize(int job_number, std::string path) {
     // Prepare the genotype stream, write the time
     genotypes = std::ofstream(fmt::format("{}genotype_data_{}.tsv", path, this->job_number));
     genotypes << std::ctime(&time) << Tsv::end_line;
+    GenotypeReporter::output_genotype_weighted_header(genotypes);
 
     // TODO Determine how to switch between TSV and GeoTIFF
     // TODO for now we are assuming TSV
