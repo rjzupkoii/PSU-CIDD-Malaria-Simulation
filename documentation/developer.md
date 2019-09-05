@@ -20,6 +20,20 @@ sudo apt install cmake
 sudo apt install libgsl-dev
 sudo apt install libyaml-cpp-dev
 sudo apt install libfmt-dev
+sudo apt upgrade
+```
+
+4. Install the PostgreSQL and libpqxx dependencies
+
+Note that this should be done from a directory that you are comfortable with git repositories being stored in.
+```bash
+sudo apt install postgresql-10
+sudo apt upgrade
+git clone https://github.com/jtv/libpqxx.git
+cd libpqxx
+./configure --disable-documentation
+make
+sudo make install
 ```
 
 # Building
