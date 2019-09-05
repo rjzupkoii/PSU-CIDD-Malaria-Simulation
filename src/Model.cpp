@@ -135,6 +135,7 @@ void Model::initialize(int job_number, std::string std) {
   if (reporter_type_.empty()) {
     //add_reporter(Reporter::MakeReport(Reporter::MONTHLY_REPORTER));
     add_reporter(Reporter::MakeReport(Reporter::SPATIAL_REPORTER));
+    add_reporter(Reporter::MakeReport(Reporter::DB_REPORTER));
   } else {
     if (Reporter::ReportTypeMap.find(reporter_type_) != Reporter::ReportTypeMap.end()) {
       add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));

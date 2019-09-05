@@ -1,4 +1,4 @@
-# Enable if buildling on the Windows Subsystem for Linux (WSL), via the command line use -DBUILD_WSL:BOOL=true
+# Enable if building on the Windows Subsystem for Linux (WSL), via the command line use -DBUILD_WSL:BOOL=true
 set(BUILD_WSL false CACHE BOOL "Enable for builds on WSL")
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
@@ -43,10 +43,16 @@ target_link_libraries(MaSimCore PUBLIC
         )
 endif()
 
+# Update the linker for Libpqxx
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
+set(PQXX /usr/local/include/pqxx)
+find_library(PQXX_LIB pqxx)
+find_library(PQ_LIB pq)
+
 add_executable(MaSim MaSim/main.cpp)
 add_dependencies(MaSim MaSimCore)
 
-target_link_libraries(MaSim PRIVATE MaSimCore)
+target_link_libraries(MaSim PRIVATE MaSimCore ${PQXX_LIB} ${PQ_LIB})
 target_compile_features(MaSim PRIVATE cxx_range_for)
 
 install(TARGETS MaSim DESTINATION ${PROJECT_SOURCE_DIR}/bin)
@@ -57,7 +63,7 @@ file(GLOB DXG_SRC_FILES DxGGenerator/*.cpp DxGGenerator/*.h)
 
 add_executable(DxGGenerator ${DXG_SRC_FILES})
 add_dependencies(DxGGenerator  MaSimCore)
-target_link_libraries(DxGGenerator PRIVATE MaSimCore)
+target_link_libraries(DxGGenerator PRIVATE MaSimCore ${PQXX_LIB} ${PQ_LIB})
 target_compile_features(DxGGenerator PRIVATE cxx_range_for)
 
 #install(TARGETS DxGGenerator DESTINATION ${PROJECT_SOURCE_DIR}/bin)

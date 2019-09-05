@@ -34,7 +34,8 @@ class Reporter {
     GUI,
     MONTHLY_REPORTER,
     MMC_REPORTER,
-    SPATIAL_REPORTER
+    SPATIAL_REPORTER,
+    DB_REPORTER
   };
 
 protected:
