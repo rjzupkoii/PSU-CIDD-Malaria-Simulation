@@ -12,8 +12,9 @@ monthly_data\.txt
 
 reporter\.txt
 
-# Ignore the backup of the UML diagram
-documentation/MaSim.uml~
+# Ignore the backups of diagrams
+documentation/*.uml~
+documentation/*.bak
 
 # Ingore the "default" output directory
 out
