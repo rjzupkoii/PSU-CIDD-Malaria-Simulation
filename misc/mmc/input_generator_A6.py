@@ -37,7 +37,7 @@ data['location_db']['location_info']= location_info;
 popsize = 100000
 data['location_db']['population_size_by_location'] = [popsize];       
 
-plas2_introductions = {
+lumefantrine_mutant_introductions = {
         0.05 : '0p05',
         0.1: '0p10',
         0.15: '0p15'        
@@ -76,7 +76,7 @@ compliance = {
         };
               
 #%%
-for plas2, plas2_str in plas2_introductions.items():    
+for lu, lu_str in lumefantrine_mutant_introductions.items():    
     for comp, comp_str in compliance.items():        
         for tc, tc_map in treatment_coverages.items():            
             for beta, pfpr in tc_map['beta_pfpr'].items():
@@ -86,8 +86,8 @@ for plas2, plas2_str in plas2_introductions.items():
                 
                 ##modify parameters
                 for index,event in enumerate(data['events']):
-                    if event['name'] == 'introduce_plas2_parasites':
-                        new_data['events'][index]['info'][0]['fraction'] = plas2
+                    if event['name'] == 'introduce_lumefantrine_mutant_parasites':
+                        new_data['events'][index]['info'][0]['fraction'] = lu
                 
                 new_data['p_compliance'] = comp                   
                 
@@ -97,7 +97,7 @@ for plas2, plas2_str in plas2_introductions.items():
                 new_data['location_db']['beta_by_location'][0] = beta
                 
                 ## save to file
-                output_filename = 'A6/input_mmc_A6_mu_0p0019_plas2_%s_comp_%s_tc_%s_pfpr_%s.yml'%( plas2_str, comp_str, tc_map['f'], pfpr);
+                output_filename = 'A6/input_mmc_A6_mu_0p0019_lumefantrine_mutant_%s_comp_%s_tc_%s_pfpr_%s.yml'%( lu_str, comp_str, tc_map['f'], pfpr);
                 output_stream = open(output_filename, 'w');
                 yaml.dump(new_data, output_stream); 
                 output_stream.close();

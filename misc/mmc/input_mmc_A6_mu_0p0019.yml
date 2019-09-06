@@ -743,7 +743,7 @@ events:
     info:
       - day: 2020/1/1
         mutation_probability: 0.0019
-  - name: introduce_plas2_parasites
+  - name: introduce_lumefantrine_mutant_parasites
     info:
       - location: 0
         day: 2020/1/1

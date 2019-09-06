@@ -37,7 +37,7 @@ data['location_db']['location_info']= location_info;
 popsize = 100000
 data['location_db']['population_size_by_location'] = [popsize];       
 
-plas2_introductions = {
+aq_mutant_introductions = {
         0.05 : '0p05',
         0.1: '0p10',
         0.15: '0p15'        
@@ -76,7 +76,7 @@ compliance = {
         };
               
 #%%
-for plas2, plas2_str in plas2_introductions.items():    
+for aq, aq_str in aq_mutant_introductions.items():    
     for comp, comp_str in compliance.items():        
         for tc, tc_map in treatment_coverages.items():            
             for beta, pfpr in tc_map['beta_pfpr'].items():
@@ -86,8 +86,8 @@ for plas2, plas2_str in plas2_introductions.items():
                 
                 ##modify parameters
                 for index,event in enumerate(data['events']):
-                    if event['name'] == 'introduce_plas2_parasites':
-                        new_data['events'][index]['info'][0]['fraction'] = plas2
+                    if event['name'] == 'introduce_aq_mutant_parasites':
+                        new_data['events'][index]['info'][0]['fraction'] = aq
                 
                 new_data['p_compliance'] = comp                   
                 
@@ -97,7 +97,7 @@ for plas2, plas2_str in plas2_introductions.items():
                 new_data['location_db']['beta_by_location'][0] = beta
                 
                 ## save to file
-                output_filename = 'A5/input_mmc_A5_mu_0p0019_plas2_%s_comp_%s_tc_%s_pfpr_%s.yml'%( plas2_str, comp_str, tc_map['f'], pfpr);
+                output_filename = 'A5/input_mmc_A5_mu_0p0019_aq_mutant_%s_comp_%s_tc_%s_pfpr_%s.yml'%( aq_str, comp_str, tc_map['f'], pfpr);
                 output_stream = open(output_filename, 'w');
                 yaml.dump(new_data, output_stream); 
                 output_stream.close();
