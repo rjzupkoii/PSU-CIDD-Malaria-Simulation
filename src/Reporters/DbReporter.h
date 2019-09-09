@@ -1,5 +1,11 @@
+/*
+ * DbReporter.h
+ * 
+ * Define the DbReporter class which is used to insert relevent information from the model into
+ * the database during model execution.
+ */
 #ifndef DBREPORTER_H
-#define DBREPORTER_
+#define DBREPORTER_H
 
 #include "Reporter.h"
 
@@ -7,8 +13,47 @@
 
 class DbReporter : public Reporter {
   private:
+    const std::string INSERT_COMMON = 
+    "INSERT INTO sim.MonthlyData (ReplicateId, DaysElapsed, ModelTime, SeasonalFactor, TreatmentFailures, Beta) "
+    "VALUES ({}, {}, {}, {}, {}, {}) RETURNING id;";
+
+    const std::string INSERT_GENOTYPE = 
+    "INSERT INTO sim.MonthlyGenomeData (MonthlyDataId, LocationId, GenomeId, Occurrences, WeightedFrequency) "
+    "VALUES ({}, {}, {}, {}, {});";
+
+    const std::string INSERT_REPLICATE = 
+    "INSERT INTO replicate (studyid, seed, status) VALUES ({}, {}, 0) RETURNING id;";
+
+    const std::string INSERT_SITE = 
+    "INSERT INTO sim.MonthlySiteData "
+    "(MonthlyDataId, LocationId, Population, ClinicalEpisodes, Treatments, TreatmentFailures, EIR, PfPrUnder5, PfPr2to10, PfPrAll) "
+    "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {});";
+
+    const std::string SELECT_LOCATION = 
+    "SELECT id, index FROM sim.location WHERE configurationid = {} ORDER BY index";
+
+    const std::string UPDATE_REPLICATE = 
+    "UPDATE replicate SET status = 1 WHERE id = {};";
+
+    // TODO Get this from the configuration file / command line?
+    std::string connection = "host=localhost dbname=masim user=sim password=sim";
+
+    // TODO Grab the study id and configuration from... somewhere
+    int config_id = 1;
+    int study_id = 1;
+
+    // TODO Shift this over to where the locations are actually stored?
+    int* location_index;
+    
+    int replicate;
     pqxx::connection* conn;
 
+    // Reporter specific
+    void prepare_configuration();
+    void prepare_replicate();
+    void monthly_genome_data(int id, std::string &query);
+    void monthly_site_data(int id, std::string &query);
+    
   public:
     DbReporter() = default;
     ~DbReporter() override = default;
@@ -20,7 +65,7 @@ class DbReporter : public Reporter {
     // Overrides
     void initialize(int job_number, std::string path) override;
     void monthly_report() override;
-    void after_run() override;
+    void after_run() override;    
 };
 
 #endif
