@@ -8,8 +8,6 @@
 class DbReporter : public Reporter {
   private:
     pqxx::connection* conn;
-    std::string query = "";
-    int count = 0;
 
   public:
     DbReporter() = default;
