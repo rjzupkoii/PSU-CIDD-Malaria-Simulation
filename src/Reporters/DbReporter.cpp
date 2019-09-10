@@ -29,13 +29,57 @@ void DbReporter::initialize(int job_number, std::string path) {
 
 // Make sure the relevent enteries for the configuration are in the database
 void DbReporter::prepare_configuration() {
-    LOG(INFO) << "Preparing configuration...";
+    // Load the text of the configuration
+    std::string filename = Model::MODEL->config_filename();
+    std::ifstream input(filename);
+    std::stringstream stream;
+    while (input >> stream.rdbuf());
+    
+    // Remove the new lines from the string
+    std::string yaml = stream.str();
+    yaml.erase(std::remove(yaml.begin(), yaml.end(), '\r'), yaml.end());
+    yaml.erase(std::remove(yaml.begin(), yaml.end(), '\n'), yaml.end());
+    
+    // Check to see if this is a known configuration
+    pqxx::work db(*conn);
+    std::string query = fmt::format(SELECT_CONFIGURATION, db.quote(yaml));
+    pqxx::result result = db.exec(query);
+    
+    // Note the id if provided
+    if (result.size() == 1) {
+        config_id = result[0][0].as<int>();
+        LOG(INFO) << fmt::format("Configuration loaded as ID {}.", config_id);
+        return;
+    }
+
+    // Check for a MD5 collision (unlikely given use case)
+    if (result.size() > 1) {
+        LOG(ERROR) << "MD5 hash collision adding the configuration file!";
+        throw new std::runtime_error("MD5 hash collision");
+    }
+
+    // The configuration is unknown, so we need to add it to the database
+    LOG(INFO) << "Adding unknown configuration to database.";
+    query = fmt::format(INSERT_CONFIGURATION, db.quote(yaml), db.quote(yaml));
+    result = db.exec(query);
+    config_id = result[0][0].as<int>();
+
+    // Prepare the loader query
+    query = "";
+    for (auto ndx = 0; ndx < Model::CONFIG->number_of_locations(); ndx++) {
+        query.append(fmt::format(INSERT_LOCATION, config_id, ndx, Model::CONFIG->location_db()[ndx].beta));
+    }
+
+    // Update the database
+    db.exec(query);
+    db.commit();
+    LOG(INFO) << fmt::format("Configuration loaded as ID {}.", config_id);
 }
 
 // Make sure the relevent enteries for this replicate are in the database
 void DbReporter::prepare_replicate() {
     // Insert the replicate into the database
-    std::string query = fmt::format(INSERT_REPLICATE, study_id, Model::RANDOM->seed());
+    std::string query = fmt::format(INSERT_REPLICATE, config_id, Model::RANDOM->seed());
     pqxx::work db(*conn);
     pqxx::result result = db.exec(query);
     replicate = result[0][0].as<int>();
@@ -43,7 +87,7 @@ void DbReporter::prepare_replicate() {
     // Load the location information
     int locations = Model::CONFIG->number_of_locations();
     location_index = new int[locations];
-    auto results = db.exec(fmt::format(SELECT_LOCATION, config_id));
+    pqxx::result results = db.exec(fmt::format(SELECT_LOCATION, config_id));
     for (auto ndx = 0; ndx < locations; ndx++) {
         location_index[ndx] = results[ndx][0].as<int>();
     }

@@ -11,33 +11,42 @@
 
 #include <pqxx/pqxx>
 
+// TODO Add the yaml file name as a field in the configuration table
 class DbReporter : public Reporter {
   private:
     const std::string INSERT_COMMON = 
     "INSERT INTO sim.MonthlyData (ReplicateId, DaysElapsed, ModelTime, SeasonalFactor, TreatmentFailures, Beta) "
     "VALUES ({}, {}, {}, {}, {}, {}) RETURNING id;";
 
+    const std::string INSERT_CONFIGURATION = 
+    "INSERT INTO sim.Configuration (Yaml, MD5) VALUES ({}, md5({})) RETURNING ID;";
+
     const std::string INSERT_GENOTYPE = 
     "INSERT INTO sim.MonthlyGenomeData (MonthlyDataId, LocationId, GenomeId, Occurrences, WeightedFrequency) "
     "VALUES ({}, {}, {}, {}, {});";
 
+    const std::string INSERT_LOCATION =
+    "INSERT INTO sim.Location (ConfigurationId, Index, Beta) VALUES ({}, {}, {});";
+
     const std::string INSERT_REPLICATE = 
-    "INSERT INTO replicate (studyid, seed, status) VALUES ({}, {}, 0) RETURNING id;";
+    "INSERT INTO replicate (ConfigurationId, Seed, Status, Time) VALUES ({}, {}, 0, now()) RETURNING id;";
 
     const std::string INSERT_SITE = 
     "INSERT INTO sim.MonthlySiteData "
     "(MonthlyDataId, LocationId, Population, ClinicalEpisodes, Treatments, TreatmentFailures, EIR, PfPrUnder5, PfPr2to10, PfPrAll) "
     "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {});";
 
+    const std::string SELECT_CONFIGURATION =
+    "SELECT id FROM sim.Configuration WHERE md5 = md5({});";
+
     const std::string SELECT_LOCATION = 
-    "SELECT id, index FROM sim.location WHERE configurationid = {} ORDER BY index";
+    "SELECT id, index FROM sim.location WHERE ConfigurationId = {} ORDER BY index;";
 
     const std::string UPDATE_REPLICATE = 
     "UPDATE replicate SET status = 1 WHERE id = {};";
 
     // TODO Grab the study id and configuration from... somewhere
     int config_id = 1;
-    int study_id = 1;
 
     // TODO Shift this over to where the locations are actually stored?
     int* location_index;
