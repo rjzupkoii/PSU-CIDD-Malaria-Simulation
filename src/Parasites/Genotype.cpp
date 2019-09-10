@@ -15,10 +15,8 @@
 Genotype::Genotype(const int &id, const GenotypeInfo &genotype_info, const IntVector &weight) : genotype_id_(id) {
 
   gene_expression_.clear();
-  //
   auto v = id;
   for (auto i = 0; i < genotype_info.loci_vector.size(); i++) {
-//    std::cout << v << "-" <<weight[i] << std::endl;
     gene_expression_.push_back(v/weight[i]);
     v = v%weight[i];
   }
@@ -30,7 +28,6 @@ Genotype::Genotype(const int &id, const GenotypeInfo &genotype_info, const IntVe
         1 - genotype_info.loci_vector[i].alleles[gene_expression_[i]].daily_cost_of_resistance;
   }
 
-//    std::cout << id << "-" << daily_fitness_multiple_infection_<<std::endl;
   //number_of_resistance_position (level)
   number_of_resistance_position_ = 0;
   for (auto i = 0; i < genotype_info.loci_vector.size(); i++) {
@@ -99,7 +96,6 @@ int Genotype::select_mutation_allele(const int &mutation_locus) {
                                                                                .loci_vector[mutation_locus]
                                                                                .alleles[current_allele_value]
                                                                                .mutation_values.size()));
-  //    double t = 1.0 / affecting_loci_.size();
   return Model::CONFIG->genotype_info().loci_vector[mutation_locus].alleles[current_allele_value].mutation_values[pos];
 }
 
@@ -109,17 +105,20 @@ std::ostream &operator<<(std::ostream &os, const Genotype &e) {
     const auto v = e.gene_expression_[i];
     os << Model::CONFIG->genotype_info().loci_vector[i].alleles[v];
   }
-
-//    os << "\t" << e.number_of_resistance_position_;
   return os;
 }
 
 // Get the string associated with this genotype.
 std::string Genotype::to_string() {
+  return to_string(Model::CONFIG);
+}
+
+// Get the string associated with this genotype, use the supplied configuration.
+std::string Genotype::to_string(Config* config) {
   std::string result;
   for (auto i = 0; i < gene_expression_.size(); i++) {
     const auto v = gene_expression_[i];
-    const auto value = Model::CONFIG->genotype_info().loci_vector[i].alleles[v];
+    const auto value = config->genotype_info().loci_vector[i].alleles[v];
     result.append(value.short_name);
   }
   return result;

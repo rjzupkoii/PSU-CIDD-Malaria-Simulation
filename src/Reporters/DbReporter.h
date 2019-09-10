@@ -9,7 +9,7 @@
 
 #include "Reporter.h"
 
-#include <pqxx/pqxx> 
+#include <pqxx/pqxx>
 
 class DbReporter : public Reporter {
   private:

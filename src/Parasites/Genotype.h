@@ -11,6 +11,8 @@
 #include "Core/TypeDef.h"
 #include "Core/PropertyMacro.h"
 
+class Config;
+
 class DrugDatabase;
 
 class DrugType;
@@ -50,7 +52,7 @@ class Genotype {
   friend std::ostream &operator<<(std::ostream &os, const Genotype &e);
 
   std::string to_string();
-
+  std::string to_string(Config* config);
 };
 
 #endif /* Genotype_H */
