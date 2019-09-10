@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 100000
+popsize = 70000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 plas2_introductions = {
