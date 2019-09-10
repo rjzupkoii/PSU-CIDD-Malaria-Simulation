@@ -62,6 +62,21 @@ TABLESPACE pg_default;
 ALTER TABLE sim.strategy
     OWNER to postgres;
 
+-- Table: sim.genotype
+CREATE TABLE sim.genotype
+(
+    id integer NOT NULL,
+    name character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT genotype_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE sim.genotype
+    OWNER to sim;
+
 -- Table: sim.configuration
 CREATE TABLE sim.configuration
 (
@@ -162,6 +177,10 @@ CREATE TABLE sim.monthlygenomedata
     occurrences integer NOT NULL,
     weightedfrequency double precision NOT NULL,
     CONSTRAINT monthlygenomedata_pkey PRIMARY KEY (monthlydataid, genomeid, locationid),
+    CONSTRAINT monthlygenomedata_genotypeid_fk FOREIGN KEY (genomeid)
+        REFERENCES sim.genotype (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
     CONSTRAINT monthlygenomedata_monthlydataid_fk FOREIGN KEY (monthlydataid)
         REFERENCES sim.monthlydata (id) MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -174,7 +193,12 @@ TABLESPACE pg_default;
 
 ALTER TABLE sim.monthlygenomedata
     OWNER to sim;
-	
+
+CREATE INDEX fki_g
+    ON sim.monthlygenomedata USING btree
+    (genomeid)
+    TABLESPACE pg_default;
+
 CREATE INDEX fki_monthlygenomedata_monthlydataid_fk
     ON sim.monthlygenomedata USING btree
     (monthlydataid)

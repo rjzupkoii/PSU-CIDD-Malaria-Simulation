@@ -33,7 +33,7 @@ class DbLoader {
                 }
 
                 // Insert the data
-                pqxx::connection conn("host=localhost dbname=masim user=sim password=sim");
+                pqxx::connection conn(config->connection_string());
                 pqxx::work db(conn);
                 db.exec(query);
                 db.commit();

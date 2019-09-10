@@ -35,9 +35,6 @@ class DbReporter : public Reporter {
     const std::string UPDATE_REPLICATE = 
     "UPDATE replicate SET status = 1 WHERE id = {};";
 
-    // TODO Get this from the configuration file / command line?
-    std::string connection = "host=localhost dbname=masim user=sim password=sim";
-
     // TODO Grab the study id and configuration from... somewhere
     int config_id = 1;
     int study_id = 1;

@@ -15,6 +15,9 @@
 # The number of model days between updates to the user
 days_between_notifications: 500
 
+# Connection string for the PostgreSQL database
+connection_string: "host=localhost dbname=masim user=sim password=sim"
+
 # ---------------------------------------------------------------
 # Items controlling the behavior of the model
 # ---------------------------------------------------------------

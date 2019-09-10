@@ -19,10 +19,8 @@
 
 void DbReporter::initialize(int job_number, std::string path) {
     // Connect to the database
-    conn = new pqxx::connection(connection);
+    conn = new pqxx::connection(Model::CONFIG->connection_string());
     LOG(INFO) << "Connected to " << conn->dbname();
-
-    // TODO Check the database to make sure it is what we want
 
     // Ensure that the database is prepared and grab relevent ids before running
     prepare_configuration();

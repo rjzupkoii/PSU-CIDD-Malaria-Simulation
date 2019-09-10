@@ -8,6 +8,8 @@
 #
 # ---------------------------------------------------------------
 
+# Connection string for the PostgreSQL database
+connection_string: "host=localhost dbname=masim user=sim password=sim"
 
 # starting time point of the simulation (in yyyy/m/d format) 
 # which is day 0 in the simulation
