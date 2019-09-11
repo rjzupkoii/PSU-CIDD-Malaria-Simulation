@@ -6,12 +6,29 @@ CREATE SCHEMA sim
 
 GRANT ALL ON SCHEMA sim TO sim;
 
+-- Table: sim.study
+CREATE TABLE sim.study
+(
+    id integer NOT NULL DEFAULT nextval('sim.study_id_seq'::regclass),
+    name character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT study_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE sim.study
+    OWNER to sim;
+
 -- Table: sim.configuration
 CREATE TABLE sim.configuration
 (
     id integer NOT NULL DEFAULT nextval('sim.configuration_id_seq'::regclass),
     yaml character varying COLLATE pg_catalog."default" NOT NULL,
     md5 character varying COLLATE pg_catalog."default" NOT NULL,
+    name character varying COLLATE pg_catalog."default",
+    notes character varying COLLATE pg_catalog."default",   
     CONSTRAINT configuration_pkey PRIMARY KEY (id)
 )
 WITH (
@@ -21,6 +38,39 @@ TABLESPACE pg_default;
 
 ALTER TABLE sim.configuration
     OWNER to sim;
+
+-- Table: sim.studyconfigurations
+CREATE TABLE sim.studyconfigurations
+(
+    studyid integer NOT NULL,
+    configurationid integer NOT NULL,
+    CONSTRAINT studyconfigurations_pkey PRIMARY KEY (studyid, configurationid),
+    CONSTRAINT studyconfigurations_configuratinid_fk FOREIGN KEY (configurationid)
+        REFERENCES sim.configuration (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT studyconfigurations_studyid_fk FOREIGN KEY (studyid)
+        REFERENCES sim.study (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE sim.studyconfigurations
+    OWNER to sim;
+
+CREATE INDEX fki_studyconfigurations_configuratinid_fk
+    ON sim.studyconfigurations USING btree
+    (configurationid)
+    TABLESPACE pg_default;
+
+CREATE INDEX fki_studyconfigurations_studyid_fk
+    ON sim.studyconfigurations USING btree
+    (studyid)
+    TABLESPACE pg_default;
 
 -- Table: sim.replicate
 CREATE TABLE sim.replicate
