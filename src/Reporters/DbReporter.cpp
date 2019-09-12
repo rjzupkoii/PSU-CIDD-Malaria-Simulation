@@ -25,6 +25,9 @@ void DbReporter::initialize(int job_number, std::string path) {
     // Ensure that the database is prepared and grab relevent ids before running
     prepare_configuration();
     prepare_replicate();
+    
+    // Inform the user that we are running
+    LOG(INFO) << fmt::format("Running configuration {}, replicate {}.", config_id, replicate);
 }
 
 // Make sure the relevent enteries for the configuration are in the database
@@ -48,7 +51,6 @@ void DbReporter::prepare_configuration() {
     // Note the id if provided
     if (result.size() == 1) {
         config_id = result[0][0].as<int>();
-        LOG(INFO) << fmt::format("Configuration loaded as ID {}.", config_id);
         return;
     }
 
@@ -73,7 +75,6 @@ void DbReporter::prepare_configuration() {
     // Update the database
     db.exec(query);
     db.commit();
-    LOG(INFO) << fmt::format("Configuration loaded as ID {}.", config_id);
 }
 
 // Make sure the relevent enteries for this replicate are in the database
@@ -92,7 +93,7 @@ void DbReporter::prepare_replicate() {
         location_index[ndx] = results[ndx][0].as<int>();
     }
 
-    // Commit prior work
+    // Commit prior work and let the user know we are running
     db.commit();
 }
 
@@ -183,6 +184,14 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         auto eir = Model::DATA_COLLECTOR->EIR_by_location_year()[location].empty() 
             ? 0 : Model::DATA_COLLECTOR->EIR_by_location_year()[location].back();
         
+        // Make sure the PfPR have valid bounds
+        auto pfpr_under5 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 0, 5) * 100;
+        pfpr_under5 = (std::isnan(pfpr_under5)) ? 0 : pfpr_under5;
+        auto pfpr_2to10 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100;
+        pfpr_2to10 = (std::isnan(pfpr_2to10)) ? 0 : pfpr_2to10;
+        auto pfpr_all = Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100;
+        pfpr_all = (std::isnan(pfpr_all)) ? 0 : pfpr_all;
+
         query.append(fmt::format(INSERT_SITE,
             id,
             location_index[location],
@@ -191,9 +200,9 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
             Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[location],
             -1,
             eir,
-            Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 0, 5) * 100,
-            Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100,
-            Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100
+            pfpr_under5,
+            pfpr_2to10,
+            pfpr_all
         ));
     }
 }
