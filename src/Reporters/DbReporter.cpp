@@ -183,6 +183,7 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         // Determine the EIR
         auto eir = Model::DATA_COLLECTOR->EIR_by_location_year()[location].empty() 
             ? 0 : Model::DATA_COLLECTOR->EIR_by_location_year()[location].back();
+        eir = (std::isnan(eir)) ? 0 : eir;
         
         // Make sure the PfPR have valid bounds
         auto pfpr_under5 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 0, 5) * 100;
