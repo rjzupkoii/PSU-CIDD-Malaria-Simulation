@@ -17,6 +17,9 @@
 #include "Population/SingleHostClonalParasitePopulations.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 
+// Macro to check to see if a value is NAN, report if it is, and update the value as needed
+#define check_nan(value) if (std::isnan(value)) LOG(WARNING) << "NaN caught: " << #value; value = std::isnan(value) ? 0 : value;
+
 void DbReporter::initialize(int job_number, std::string path) {
     // Connect to the database
     conn = new pqxx::connection(Model::CONFIG->connection_string());
@@ -180,18 +183,23 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
 // Iterate over all the sites and prepare the query for the site specific data
 void DbReporter::monthly_site_data(int id, std::string &query) {
     for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-        // Determine the EIR
+        // Check the population, if there is nobody there, press on
+        if (Model::DATA_COLLECTOR->popsize_by_location()[location] == 0) {
+            continue;
+        }
+
+        // Determine the EIR and PfPR values
         auto eir = Model::DATA_COLLECTOR->EIR_by_location_year()[location].empty() 
             ? 0 : Model::DATA_COLLECTOR->EIR_by_location_year()[location].back();
-        eir = (std::isnan(eir)) ? 0 : eir;
-        
-        // Make sure the PfPR have valid bounds
         auto pfpr_under5 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 0, 5) * 100;
-        pfpr_under5 = (std::isnan(pfpr_under5)) ? 0 : pfpr_under5;
         auto pfpr_2to10 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100;
-        pfpr_2to10 = (std::isnan(pfpr_2to10)) ? 0 : pfpr_2to10;
         auto pfpr_all = Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100;
-        pfpr_all = (std::isnan(pfpr_all)) ? 0 : pfpr_all;
+       
+        // Make make sure we have valid bounds
+        check_nan(eir);
+        check_nan(pfpr_under5);
+        check_nan(pfpr_2to10);
+        check_nan(pfpr_all);
 
         query.append(fmt::format(INSERT_SITE,
             id,

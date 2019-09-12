@@ -5,6 +5,7 @@
  * Created on March 22, 2013, 2:27 PM
  */
 
+#include <iomanip>
 #include <vector>
 #include "Scheduler.h"
 #include "Events/Event.h"
@@ -117,7 +118,9 @@ void Scheduler::run() {
   current_time_ = 0;
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
-    LOG_IF(current_time_ % days_between_notifications_ == 0, INFO) << "Day: " << current_time_;
+    std::time_t t = std::time(nullptr);
+    LOG_IF(current_time_ % days_between_notifications_ == 0, INFO) <<  std::put_time(std::localtime(&t), "%H:%M:%S - ") <<  "Day: " << current_time_;
+
     begin_time_step();
     // population related events
     execute_events_list(population_events_list_[current_time_]);

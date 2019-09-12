@@ -29,7 +29,7 @@ class DbReporter : public Reporter {
     "INSERT INTO sim.Location (ConfigurationId, Index, Beta) VALUES ({}, {}, {});";
 
     const std::string INSERT_REPLICATE = 
-    "INSERT INTO replicate (ConfigurationId, Seed, Start) VALUES ({}, {}, now()) RETURNING id;";
+    "INSERT INTO replicate (ConfigurationId, Seed, StartTime) VALUES ({}, {}, now()) RETURNING id;";
 
     const std::string INSERT_SITE = 
     "INSERT INTO sim.MonthlySiteData "
@@ -43,7 +43,7 @@ class DbReporter : public Reporter {
     "SELECT id, index FROM sim.location WHERE ConfigurationId = {} ORDER BY index;";
 
     const std::string UPDATE_REPLICATE = 
-    "UPDATE replicate SET End = now() WHERE id = {};";
+    "UPDATE replicate SET EndTime = now() WHERE id = {};";
 
     // TODO Grab the study id and configuration from... somewhere
     int config_id = 1;
