@@ -3,21 +3,27 @@
  *
  * Main entry point for the simulation, reads the CLI and starts the model.
  */
-
+#include <args.hxx>
 #include <iostream>
 #include <fmt/format.h>
-#include "Model.h"
+
 #include "easylogging++.h"
-#include <args.hxx>
-#include <Helpers/OSHelpers.h>
+#include "error_handler.hxx"
+#include "Helpers/OSHelpers.h"
 #include "Helpers/DbLoader.hxx"
+#include "Model.h"
 
 // Version information
 const std::string VERSION = "3.3, experimental";
 
+namespace {
+    // invoke set_terminate as part of global constant initialization
+    static const bool SET_TERMINATE = std::set_terminate(crit_err_terminate);
+}
+
 // Settings read from the CLI
 int job_number = 0;
-std::string path = "";
+std::string path("");
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -44,26 +50,32 @@ void config_logger() {
 
 int main(const int argc, char **argv) {
 
-  try {
+    // Set the last chance error handler
+    struct sigaction sigact;
+    sigact.sa_sigaction = crit_err_hdlr;
+    sigact.sa_flags = SA_RESTART | SA_SIGINFO;
+    if (sigaction(SIGABRT, &sigact, (struct sigaction *)NULL) != 0) {
+        std::cerr << "error setting handler for signal " << SIGABRT 
+                  << " (" << strsignal(SIGABRT) << ")\n";
+        exit(EXIT_FAILURE);
+    }
 
+    // Parse the CLI
     auto *m = new Model();
     handle_cli(m, argc, argv);
 
+    // Prepare the logger
     config_logger();
     START_EASYLOGGINGPP(argc, argv);
     LOG(INFO) << fmt::format("MaSim version {0}", VERSION);
 
+    // Run the model
     m->initialize(job_number, path);
-
     m->run();
 
+    // Clean-up and return
     delete m;
-  }
-  catch (const std::exception &e) {
-    std::cout << __FUNCTION__ << "-" << e.what() << std::endl;
-    return 1;
-  }
-  return 0;
+    exit(EXIT_SUCCESS);
 }
 
 void handle_cli(Model *model, int argc, char **argv) {
@@ -86,22 +98,22 @@ void handle_cli(Model *model, int argc, char **argv) {
   }
   catch (const args::Help &e) {
     std::cout << e.what() << parser;
-    exit(0);
+    exit(EXIT_SUCCESS);
   }
   catch (const args::ParseError &e) {
-    LOG(FATAL) << fmt::format("{0} {1}", e.what(), parser);
-    exit(1);
+    LOG(ERROR) << fmt::format("{0} {1}", e.what(), parser);
+    exit(EXIT_FAILURE);
   }
   catch (const args::ValidationError &e) {
-    LOG(FATAL) << fmt::format("{0} {1}", e.what(), parser);
-    exit(1);
+    LOG(ERROR) << fmt::format("{0} {1}", e.what(), parser);
+    exit(EXIT_FAILURE);
   }
 
   // Check for the existence of the input file, exit if it doesn't exist.
   const auto input = input_file ? args::get(input_file) : "input.yml";
   if (!OsHelpers::file_exists(input)) {    
-    LOG(FATAL) << fmt::format("File {0} is not exists. Rerun with -h or --help for help.", input);
-    exit(1);
+    LOG(ERROR) << fmt::format("File {0} does not exists. Rerun with -h or --help for help.", input);
+    exit(EXIT_FAILURE);
   }
   model->set_config_filename(input);
   
@@ -120,5 +132,4 @@ void handle_cli(Model *model, int argc, char **argv) {
   model->set_cluster_job_number(job_number);
   const auto reporter_type = reporter ? args::get(reporter) : "";
   model->set_reporter_type(reporter_type);
-
 }

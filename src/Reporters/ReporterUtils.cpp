@@ -186,7 +186,7 @@ void ReporterUtils::output_genotype_frequency3(std::stringstream &ss, const int 
   }
 
   ss << group_sep;
-  ss << sum1_all;
+  ss << sum1_all << sep;
 }
 
 void ReporterUtils::output_3_genotype_frequency(std::stringstream &ss, const int &number_of_genotypes,

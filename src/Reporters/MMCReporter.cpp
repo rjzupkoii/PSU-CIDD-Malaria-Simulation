@@ -52,14 +52,15 @@ void MMCReporter::print_treatment_failure_rate_by_therapy() {
 }
 
 void MMCReporter::print_ntf_by_location() {
-  auto sum_ntf = 0.0;
+  double sum_ntf = 0.0;
   ul pop_size = 0;
   for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
     pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
+    
   }
 
-  ss << (sum_ntf * 100 / pop_size) << Tsv::sep;
+  ss << (sum_ntf * 100.0 / pop_size) << Tsv::sep;
 }
 
 void MMCReporter::monthly_report() {
