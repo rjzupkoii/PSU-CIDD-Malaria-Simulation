@@ -15,8 +15,10 @@
 #include "TurnOnMutationEvent.h"
 #include "TurnOffMutationEvent.h"
 #include "IntroducePlas2CopyParasiteEvent.h"
+#include "IntroduceAQMutantEvent.h"
+#include "IntroduceLumefantrineMutantEvent.h"
 
-std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node &node, Config* config) {
+std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     auto location = node[i]["location"].as<int>();
@@ -37,7 +39,7 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(cons
 }
 
 std::vector<Event*>
-PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML::Node &node, Config* config) {
+PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
 
   for (std::size_t i = 0; i < node.size(); i++) {
@@ -69,7 +71,7 @@ PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML
 }
 
 std::vector<Event*>
-PopulationEventBuilder::build_change_treatment_coverage_event(const YAML::Node &node, Config* config) {
+PopulationEventBuilder::build_change_treatment_coverage_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     auto* tcm = ITreatmentCoverageModel::build(node[i], config);
@@ -81,7 +83,7 @@ PopulationEventBuilder::build_change_treatment_coverage_event(const YAML::Node &
 }
 
 std::vector<Event*>
-PopulationEventBuilder::build_change_treatment_strategy_event(const YAML::Node &node, Config* config) {
+PopulationEventBuilder::build_change_treatment_strategy_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto starting_date = node[i]["day"].as<date::year_month_day>();
@@ -95,7 +97,7 @@ PopulationEventBuilder::build_change_treatment_strategy_event(const YAML::Node &
   return events;
 }
 
-std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const YAML::Node &node, Config* config) {
+std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto starting_date = node[i]["day"].as<date::year_month_day>();
@@ -114,7 +116,7 @@ std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const Y
 }
 
 std::vector<Event*>
-PopulationEventBuilder::build_modify_nested_mft_strategy_event(const YAML::Node &node, Config* config) {
+PopulationEventBuilder::build_modify_nested_mft_strategy_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto starting_date = node[i]["day"].as<date::year_month_day>();
@@ -128,13 +130,14 @@ PopulationEventBuilder::build_modify_nested_mft_strategy_event(const YAML::Node 
   return events;
 }
 
-std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const YAML::Node &node, Config* config) {
+std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto starting_date = node[i]["day"].as<date::year_month_day>();
     auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
-    double mutation_probability = node[i]["mutation_probability"] ? node[i]["mutation_probability"].as<double>()
-                                                                  : Model::CONFIG->drug_db()->at(0)->p_mutation();
+    double mutation_probability = node[i]["mutation_probability"]
+                                    ? node[i]["mutation_probability"].as<double>()
+                                    : Model::CONFIG->drug_db()->at(0)->p_mutation();
 
     int drug_id = node[i]["drug_id"] ? node[i]["drug_id"].as<int>() : -1;
 
@@ -145,7 +148,7 @@ std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const Y
   return events;
 }
 
-std::vector<Event*> PopulationEventBuilder::build_turn_off_mutation_event(const YAML::Node &node, Config* config) {
+std::vector<Event*> PopulationEventBuilder::build_turn_off_mutation_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     const auto starting_date = node[i]["day"].as<date::year_month_day>();
@@ -158,7 +161,7 @@ std::vector<Event*> PopulationEventBuilder::build_turn_off_mutation_event(const 
 }
 
 std::vector<Event*>
-PopulationEventBuilder::build_introduce_plas2_parasite_events(const YAML::Node &node, Config* config) {
+PopulationEventBuilder::build_introduce_plas2_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     auto location = node[i]["location"].as<int>();
@@ -175,13 +178,57 @@ PopulationEventBuilder::build_introduce_plas2_parasite_events(const YAML::Node &
   return events;
 }
 
-std::vector<Event*> PopulationEventBuilder::build(const YAML::Node &node, Config* config) {
+std::vector<Event*> PopulationEventBuilder::build_introduce_aq_mutant_parasite_events(const YAML::Node& node,
+                                                                                      Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {
+    auto location = node[i]["location"].as<int>();
+    if (location < config->number_of_locations()) {
+      auto fraction = node[i]["fraction"].as<double>();
+
+      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+
+      auto* event = new IntroduceAQMutantEvent(location, time, fraction);
+      events.push_back(event);
+    }
+  }
+  return events;
+}
+
+std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_parasite_events(const YAML::Node& node,
+                                                                                                Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {
+    auto location = node[i]["location"].as<int>();
+    if (location < config->number_of_locations()) {
+      auto fraction = node[i]["fraction"].as<double>();
+
+      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+
+      auto* event = new IntroduceLumefantrineMutantEvent(location, time, fraction);
+      events.push_back(event);
+    }
+  }
+  return events;
+}
+
+std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   const auto name = node["name"].as<std::string>();
   // std::cout << name << std::endl;
   if (name == "introduce_plas2_parasites") {
     events = build_introduce_plas2_parasite_events(node["info"], config);
   }
+  if (name == "introduce_aq_mutant_parasites") {
+    events = build_introduce_aq_mutant_parasite_events(node["info"], config);
+  }
+
+  if (name == "introduce_lumefantrine_mutant_parasites") {
+    events = build_introduce_lumefantrine_mutant_parasite_events(node["info"], config);
+  }
+
   if (name == "introduce_parasites") {
     events = build_introduce_parasite_events(node["info"], config);
   }
@@ -211,4 +258,3 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node &node, Config
   }
   return events;
 }
-

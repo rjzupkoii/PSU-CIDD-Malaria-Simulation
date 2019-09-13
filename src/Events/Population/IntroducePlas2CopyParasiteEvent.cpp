@@ -25,15 +25,15 @@ void IntroducePlas2CopyParasiteEvent::execute() {
 
 
   for (int j = 0; j < Model::CONFIG->number_of_age_classes(); ++j) {
-    auto number_infected_individial_in_ac =
+    const auto number_infected_individual_in_ac =
       pi->vPerson()[0][Person::ASYMPTOMATIC][j].size() + pi->vPerson()[0][Person::CLINICAL][j].size();
     const auto number_of_importation_cases = Model::RANDOM->random_poisson(
-      number_infected_individial_in_ac * fraction_);
+      number_infected_individual_in_ac * fraction_);
     if (number_of_importation_cases == 0)
       continue;
     for (auto i = 0; i < number_of_importation_cases; i++) {
 
-      const size_t index = Model::RANDOM->random_uniform(number_infected_individial_in_ac);
+      const size_t index = Model::RANDOM->random_uniform(number_infected_individual_in_ac);
 
       Person* p = nullptr;
       if (index < pi->vPerson()[0][Person::ASYMPTOMATIC][j].size()) {

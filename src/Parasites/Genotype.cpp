@@ -69,8 +69,8 @@ Genotype* Genotype::combine_mutation_to(const int &locus, const int &value) {
     return this;
   }
 
-  int id = 0;
-  for (int i = 0; i < gene_expression_.size(); i++) {
+  auto id = 0;
+  for (auto i = 0; i < gene_expression_.size(); i++) {
     if (i==locus) {
       id += Model::CONFIG->genotype_db()->weight()[i]*value;
     } else {
