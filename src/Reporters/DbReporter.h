@@ -15,8 +15,8 @@
 class DbReporter : public Reporter {
   private:
     const std::string INSERT_COMMON = 
-    "INSERT INTO sim.MonthlyData (ReplicateId, DaysElapsed, ModelTime, SeasonalFactor, TreatmentFailures, Beta) "
-    "VALUES ({}, {}, {}, {}, {}, {}) RETURNING id;";
+    "INSERT INTO sim.MonthlyData (ReplicateId, DaysElapsed, ModelTime, SeasonalFactor, TreatmentFailures, Beta, EntryTime) "
+    "VALUES ({}, {}, {}, {}, {}, {}, now()) RETURNING id;";
 
     const std::string INSERT_CONFIGURATION = 
     "INSERT INTO sim.Configuration (Yaml, MD5) VALUES ({}, md5({})) RETURNING ID;";

@@ -25,10 +25,10 @@ starting_date: 1990/1/1
 
 # the day at which the MDC will begin collecting NTF, AMU, UTL
 # This indicates the end of the burn-in period for the model
-start_of_comparison_period: 2019/12/1
+start_of_comparison_period: 1991/12/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 2041/1/1
+ending_date: 2001/1/1
 
 # the day at which the simulation's reporting functionality begins collecting data for 
 # EIR, # of clinical episodes, # death , # of treatment, #TF by location,...

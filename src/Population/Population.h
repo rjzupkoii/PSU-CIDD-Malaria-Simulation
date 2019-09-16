@@ -101,8 +101,6 @@ class Population : public Dispatcher {
   virtual void notify_change_in_force_of_infection(const int &location, const int &parasite_type_id,
                                                    const double &relative_force_of_infection);
 
-  // void update() override;
-
   void update_force_of_infection(const int &current_time);
 
   void perform_birth_event();
@@ -110,8 +108,6 @@ class Population : public Dispatcher {
   void perform_death_event();
 
   void give_1_birth(const int &location);
-
-  void clear_all_dead_state_individual();
 
   void perform_circulation_event();
 

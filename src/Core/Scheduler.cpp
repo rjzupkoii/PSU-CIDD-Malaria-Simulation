@@ -114,6 +114,11 @@ void Scheduler::execute_events_list(EventPtrVector &events_list) const {
 
 void Scheduler::run() {
 
+  // Make sure we have a model
+  if (model_ == nullptr) {
+    throw std::runtime_error("Scheduler::run() called without model!");
+  }
+
   LOG(INFO) << "Simulation is running";
   current_time_ = 0;
 
@@ -135,23 +140,19 @@ void Scheduler::run() {
 }
 
 void Scheduler::begin_time_step() const {
-  if (model_!=nullptr) {
-    model_->begin_time_step();
-    if (is_today_first_day_of_month()) {
-      model_->monthly_update();
-    }
+  model_->begin_time_step();
+  if (is_today_first_day_of_month()) {
+    model_->monthly_update();
+  }
 
-    if (is_today_first_day_of_year()) {
-      // std::cout << date::year_month_day{calendar_date} << std::endl;
-      model_->yearly_update();
-    }
+  if (is_today_first_day_of_year()) {
+    // std::cout << date::year_month_day{calendar_date} << std::endl;
+    model_->yearly_update();
   }
 }
 
 void Scheduler::end_time_step() const {
-  if (model_!=nullptr) {
-    model_->daily_update(current_time_);
-  }
+  model_->daily_update(current_time_);
 }
 
 bool Scheduler::can_stop() const {
