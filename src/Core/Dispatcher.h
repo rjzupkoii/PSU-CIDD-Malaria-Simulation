@@ -18,10 +18,12 @@ class Dispatcher {
 
  POINTER_PROPERTY(EventPtrVector, events)
 
+private:
+  const int INTITAL_ALLOCATION = 32;
+
  public:
   Dispatcher();
 
-  //    Dispatcher(const Dispatcher& orig);
   virtual ~Dispatcher();
 
   virtual void init();
@@ -32,9 +34,7 @@ class Dispatcher {
 
   virtual void clear_events();
 
-  virtual void update();
-
 };
 
-#endif    /* DISPATCHER_H */
+#endif
 
