@@ -8,10 +8,11 @@
 #ifndef SINGLEHOSTCLONALPARASITEPOPULATIONS_H
 #define    SINGLEHOSTCLONALPARASITEPOPULATIONS_H
 
+#include <vector>
+
 #include "Core/PropertyMacro.h"
 #include "Core/ObjectPool.h"
 #include "Core/TypeDef.h"
-#include <vector>
 
 class ClonalParasitePopulation;
 
@@ -33,6 +34,9 @@ class SingleHostClonalParasitePopulations {
  POINTER_PROPERTY(DoubleVector, relative_effective_parasite_density)
 
  PROPERTY_REF(double, log10_total_relative_density);
+
+ private:
+  int parasite_types = -1;
 
  public:
   SingleHostClonalParasitePopulations(Person *person = nullptr);
@@ -83,9 +87,7 @@ class SingleHostClonalParasitePopulations {
 
   bool is_gametocytaemic() const;
 
- private:
-
 };
 
-#endif    /* SINGLEHOSTCLONALPARASITEPOPULATIONS_H */
+#endif
 

@@ -676,34 +676,29 @@ void Population::initialize_person_indices() {
 }
 
 void Population::perform_interupted_feeding_recombination() {
+  // Cache some values
+  auto parasite_types = Model::CONFIG->number_of_parasite_types();
+  auto number_of_locations = Model::CONFIG->number_of_locations();
+
   // calculate vector Y, Z
-  auto y = DoubleVector2(static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()),
-                         DoubleVector(Model::CONFIG->number_of_parasite_types(), 0));
-  auto z = DoubleVector2(static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()),
-                         DoubleVector(Model::CONFIG->number_of_parasite_types(), 0));
+  auto y = DoubleVector2(static_cast<unsigned long long int>(number_of_locations), DoubleVector(parasite_types, 0));
+  auto z = DoubleVector2(static_cast<unsigned long long int>(number_of_locations), DoubleVector(parasite_types, 0));
 
-  //expected allel frequencies after recombination
-  auto eafar = DoubleVector2(static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()),
-                             DoubleVector(Model::CONFIG->number_of_parasite_types(), 0));
-
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (auto parasite_type_id = 0;
-         parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
+  for (auto loc = 0; loc < number_of_locations; loc++) {
+    for (auto parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
       interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] =
           current_force_of_infection_by_location_parasite_type_[loc][parasite_type_id];
       y[loc][parasite_type_id] =
-          interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id]*
-              (1 - Model::CONFIG->fraction_mosquitoes_interrupted_feeding());
+          interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] * (1 - Model::CONFIG->fraction_mosquitoes_interrupted_feeding());
       z[loc][parasite_type_id] =
-          interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id]*
-              Model::CONFIG->fraction_mosquitoes_interrupted_feeding();
+          interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] * Model::CONFIG->fraction_mosquitoes_interrupted_feeding();
     }
   }
 
   auto number_of_gametocytaemic = 0;
 
   auto pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (auto loc = 0; loc < number_of_locations; loc++) {
     //hs 2: assymptomatic, 3: clinical
     for (auto hs = 2; hs <= 3; hs++) {
       for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
@@ -716,45 +711,49 @@ void Population::perform_interupted_feeding_recombination() {
     }
   }
 
+  // Find the sum, use it to calculate a
   double sum_z = 0;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (auto parasite_type_id = 0;
-         parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
+  for (auto loc = 0; loc < number_of_locations; loc++) {
+    for (auto parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
       sum_z += z[loc][parasite_type_id];
     }
   }
+  const auto a = Model::CONFIG->fraction_mosquitoes_interrupted_feeding() * number_of_gametocytaemic / sum_z;
 
-  const auto a = Model::CONFIG->fraction_mosquitoes_interrupted_feeding()*number_of_gametocytaemic/sum_z;
-
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (auto parasite_type_id = 0;
-         parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
-      z[loc][parasite_type_id] = std::lround(a*z[loc][parasite_type_id]);
-    }
-  }
-
+  // Calculate the new z value and the new sum
   sum_z = 0;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (auto parasite_type_id = 0;
-         parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
+  for (auto loc = 0; loc < number_of_locations; loc++) {
+    for (auto parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
+      z[loc][parasite_type_id] = std::lround(a * z[loc][parasite_type_id]);
       sum_z += z[loc][parasite_type_id];
     }
   }
+
+  // sum_z = 0;
+  // for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  //   for (auto parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
+  //     sum_z += z[loc][parasite_type_id];
+  //   }
+  // }
+  
+
+  //expected allel frequencies after recombination
+  auto eafar = DoubleVector2(static_cast<unsigned long long int>(number_of_locations), DoubleVector(parasite_types, 0));
 
   // perform free recombination in Z
   double sum_eafar = 0;
   if (sum_z > 0.0001) {
-    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
+    for (auto loc = 0; loc < number_of_locations; loc++) {
+      for (auto i = 0; i < parasite_types; i++) {
         if (z[loc][i]==0) continue;
-        for (auto j = 0; j < Model::CONFIG->number_of_parasite_types(); j++) {
+        for (auto j = 0; j < parasite_types; j++) {
           if (z[loc][j]==0) continue;
           if (i==j) {
             const auto weight = z[loc][i]*z[loc][i];
             eafar[loc][i] += weight;
           } else {
             const auto weight = 2*z[loc][i]*z[loc][j];
-            for (auto p = 0; p < Model::CONFIG->number_of_parasite_types(); p++) {
+            for (auto p = 0; p < parasite_types; p++) {
               if (Model::CONFIG->genotype_db()->get_offspring_density(i, j, p)==0) continue;
               eafar[loc][p] += weight*Model::CONFIG->genotype_db()->get_offspring_density(i, j, p);
             }
@@ -763,30 +762,32 @@ void Population::perform_interupted_feeding_recombination() {
       }
     }
 
-    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
+    for (auto loc = 0; loc < number_of_locations; loc++) {
+      for (auto i = 0; i < parasite_types; i++) {
         eafar[loc][i] /= (sum_z*sum_z);
         sum_eafar += eafar[loc][i];
       }
     }
 
     //normalize eafar
-    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      for (auto i = 0; i < Model::CONFIG->number_of_parasite_types(); i++) {
+    for (auto loc = 0; loc < number_of_locations; loc++) {
+      for (auto i = 0; i < parasite_types; i++) {
         eafar[loc][i] /= sum_eafar;
       }
     }
-    //weight Z with eafar and divide by a and calculate current_force_of_infection
-    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      auto new_z = std::vector<unsigned int>(Model::CONFIG->number_of_parasite_types(), 0);
-      Model::RANDOM->random_multinomial(static_cast<const int &>(eafar[loc].size()),
-                                        static_cast<const unsigned int &>(sum_z), &eafar[loc][0], &new_z[0]);
 
-      for (auto parasite_type_id = 0;
-           parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
+    //weight Z with eafar and divide by a and calculate current_force_of_infection
+    auto new_z = std::vector<unsigned int>(parasite_types, 0);
+    for (auto loc = 0; loc < number_of_locations; loc++) {
+      
+      Model::RANDOM->random_multinomial(static_cast<const int &>(eafar[loc].size()), static_cast<const unsigned int &>(sum_z), &eafar[loc][0], &new_z[0]);
+
+      for (auto parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
         z[loc][parasite_type_id] = new_z[parasite_type_id]/a;
-        interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] =
-            y[loc][parasite_type_id] + z[loc][parasite_type_id];
+        interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] = y[loc][parasite_type_id] + z[loc][parasite_type_id];
+
+        // This new_z value has been used, so clear it
+        new_z[parasite_type_id] = 0;
       }
     }
   }

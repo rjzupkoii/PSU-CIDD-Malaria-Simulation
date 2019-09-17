@@ -155,7 +155,8 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
                     sum += 1;
 
                     // Count the genotypes present in the individuals
-                    for (auto* parasite_population : *(person->all_clonal_parasite_populations()->parasites())) {
+                    for (auto ndx = 0; ndx < person->all_clonal_parasite_populations()->parasites()->size(); ndx++) {
+                        auto parasite_population = (*person->all_clonal_parasite_populations()->parasites())[ndx];
                         auto id = parasite_population->genotype()->genotype_id();
                         site[id]++;
                         individual[id]++;

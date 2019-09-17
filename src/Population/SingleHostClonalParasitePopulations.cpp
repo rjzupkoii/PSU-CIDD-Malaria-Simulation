@@ -23,16 +23,14 @@ OBJECTPOOL_IMPL(SingleHostClonalParasitePopulations)
 
 SingleHostClonalParasitePopulations::SingleHostClonalParasitePopulations(Person* person) : person_(person),
                                                                                            parasites_(nullptr),
-                                                                                           relative_effective_parasite_density_(
-                                                                                             nullptr),
-                                                                                           log10_total_relative_density_(
-                                                                                             ClonalParasitePopulation::
-                                                                                             LOG_ZERO_PARASITE_DENSITY) {}
+                                                                                           relative_effective_parasite_density_(nullptr),
+                                                                                           log10_total_relative_density_(ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY) { }
 
 void SingleHostClonalParasitePopulations::init() {
   parasites_ = new std::vector<ClonalParasitePopulation*>();
   if (Model::CONFIG != nullptr) {
-    relative_effective_parasite_density_ = new DoubleVector(Model::CONFIG->number_of_parasite_types(), 0.0);
+    parasite_types = Model::CONFIG->number_of_parasite_types();
+    relative_effective_parasite_density_ = new DoubleVector(parasite_types, 0.0);
   }
 }
 
@@ -134,7 +132,7 @@ void SingleHostClonalParasitePopulations::change_all_infection_force(const doubl
   if (NumberHelpers::is_equal(log10_total_relative_density_, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) { return; }
 
   // Note that this is not as safe as ::at() but is considerably faster since we avoid range checking!
-  for (auto p = 0; p < Model::CONFIG->number_of_parasite_types(); p++) {    
+  for (auto p = 0; p < parasite_types; p++) {    
       person_->notify_change_in_force_of_infection(sign, p, (*relative_effective_parasite_density_)[p], log10_total_relative_density_);
   }
 }
@@ -146,7 +144,7 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
   if (NumberHelpers::is_equal(log10_total_relative_density_, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) { return; }
 
   // Zero the current values
-  for (auto p = 0; p < Model::CONFIG->number_of_parasite_types(); p++) {
+  for (auto p = 0; p < parasite_types; p++) {
     (*relative_effective_parasite_density_)[p] = 0.0;
   }
 
@@ -160,38 +158,54 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
 
 void SingleHostClonalParasitePopulations::update_relative_effective_parasite_density_using_free_recombination() {
   // Get the parasite profiles, if the density is zero then return
-  std::vector<double> relative_parasite_density(size(), 0.0);
+  auto parasite_population_count = size();
+  std::vector<double> relative_parasite_density(parasite_population_count, 0.0);
   get_parasites_profiles(relative_parasite_density, log10_total_relative_density_);
   if (NumberHelpers::is_equal(log10_total_relative_density_, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) { return; }
 
-  assert(relative_parasite_density.size() == size());
+  assert(relative_parasite_density.size() == parasite_population_count);
 
   // Zero the current value
-  for (auto p = 0; p < Model::CONFIG->number_of_parasite_types(); p++) {
+  for (auto p = 0; p < parasite_types; p++) {
     (*relative_effective_parasite_density_)[p] = 0.0;
   }
 
-  for (auto i = 0; i < relative_parasite_density.size(); i++) {
-    if (NumberHelpers::is_equal(relative_parasite_density[i], 0.0)) { continue; }
+  // Cache the genotype DB reference
+  auto genotype_db = Model::CONFIG->genotype_db();
 
-    for (auto j = i; j < relative_parasite_density.size(); j++) {
-      if (NumberHelpers::is_equal(relative_parasite_density[j], 0.0)) continue;
+  for (auto i = 0; i < parasite_population_count; i++) {
+    auto density_i = relative_parasite_density[i];
+    if (NumberHelpers::is_equal(density_i, 0.0)) { continue; }
+
+    for (auto j = i; j < parasite_population_count; j++) {
+      auto density_j = relative_parasite_density[j];
+      if (NumberHelpers::is_equal(density_j, 0.0)) { continue; }
 
       // Are they the same?
       if (i == j) {
-        const auto weight = relative_parasite_density[i] * relative_parasite_density[i];
+        const auto weight = density_i * density_i;
         auto index = (*parasites_)[i]->genotype()->genotype_id();
         (*relative_effective_parasite_density_)[index] += weight;
         continue;
       } 
 
       // Different, more complicated update
-      const auto weight = 2 * relative_parasite_density[i] * relative_parasite_density[j];
+      const auto weight = 2 * density_i * density_j;
       const auto id_f = (*parasites_)[i]->genotype()->genotype_id();
       const auto id_m = (*parasites_)[j]->genotype()->genotype_id();
-      for (auto p = 0; p < Model::CONFIG->number_of_parasite_types(); p++) {
-        if (Model::CONFIG->genotype_db()->get_offspring_density(id_f, id_m, p) == 0) { continue; }
-        (*relative_effective_parasite_density_)[p] += weight * Model::CONFIG->genotype_db()->get_offspring_density(id_f, id_m, p);
+      for (auto p = 0; p < parasite_types; p++) {
+        // Check to see if a call to get_offspring_density is needed,
+        // if the indicies are the same then we know the value is zero (no change),
+        // or one (update with weight)
+        if (id_f == id_m) {
+          if (id_f == p) { 
+            (*relative_effective_parasite_density_)[p] += weight;
+          }
+        } else {        
+          // Check the density matrix and use that to ensure that the right weight is applied to the update
+          auto offspring_density = genotype_db->get_offspring_density(id_f, id_m, p);
+          (*relative_effective_parasite_density_)[p] += weight * offspring_density;
+        }
       }
     }
   }

@@ -32,8 +32,7 @@ void GenotypeDatabase::initialize_matting_matrix() {
 
   for (auto m = 0; m < size; m++) {
     for (auto f = 0; f < m; f++) {
-      mating_matrix_[m][f] = generate_offspring_parasite_density((*this)[m]->gene_expression(),
-                                                                 (*this)[f]->gene_expression());
+      mating_matrix_[m][f] = generate_offspring_parasite_density((*this)[m]->gene_expression(), (*this)[f]->gene_expression());
     }
   }
 }
@@ -71,13 +70,11 @@ std::vector<double> GenotypeDatabase::generate_offspring_parasite_density(const 
 }
 
 double GenotypeDatabase::get_offspring_density(const int &m, const int &f, const int &p) {
-  if (m==f && f==p)
-    return 1.0;
-  if (m==f)
-    return 0.0;
-  if (m < f)
-    return mating_matrix_[f][m][p];
+  if (m == f) {
+    return (f == p) ? 1 : 0;
+  }
 
+  if (m < f) { return mating_matrix_[f][m][p]; }
   return mating_matrix_[m][f][p];
 }
 
