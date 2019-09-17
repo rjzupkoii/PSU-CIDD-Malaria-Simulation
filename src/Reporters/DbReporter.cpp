@@ -142,28 +142,29 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
 
         // Iterate over all of the possible states
         for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
-            // Iterate overall of the age classes
+            // Iterate over all of the age classes
             for (auto ac = 0; ac < index->vPerson()[0][0].size(); ac++) {
+                // Iterate over all of the genotypes
                 for (auto i = 0ull; i < index->vPerson()[location][hs][ac].size(); i++) {
 
                     // Get the person, press on if they are not infected (i.e., no parasites)
                     auto* person = index->vPerson()[location][hs][ac][i];
-                    if (person->all_clonal_parasite_populations()->parasites()->empty()) {
-                        continue;
-                    }
+                    if (person->all_clonal_parasite_populations()->parasites()->empty()) { continue; }
 
                     // Update count of parasites
                     sum += 1;
 
                     // Count the genotypes present in the individuals
                     for (auto* parasite_population : *(person->all_clonal_parasite_populations()->parasites())) {
-                        site[parasite_population->genotype()->genotype_id()]++;
-                        individual[parasite_population->genotype()->genotype_id()]++;
+                        auto id = parasite_population->genotype()->genotype_id();
+                        site[id]++;
+                        individual[id]++;
                     }
 
                     // Update the frequency and reset the individual count
+                    auto size = static_cast<double>(person->all_clonal_parasite_populations()->parasites()->size());
                     for (int ndx = 0; ndx < genotypes; ndx++) {
-                        frequency[ndx] += (individual[ndx] / static_cast<double>(person->all_clonal_parasite_populations()->parasites()->size()));
+                        frequency[ndx] += (individual[ndx] / size);
                         individual[ndx] = 0;
                     }
                 }
@@ -172,9 +173,7 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
 
         // Prepare and append the query, pass if the genotype was not seen
         for (int genotype = 0; genotype < genotypes; genotype++) {
-            if (frequency[genotype] == 0) { 
-                continue; 
-            }
+            if (frequency[genotype] == 0) { continue; }
             query.append(fmt::format(INSERT_GENOTYPE, id, location_index[location], genotype, site[genotype], (frequency[genotype] / sum)));
         }
     }

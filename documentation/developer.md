@@ -54,6 +54,18 @@ cd /build/bin
 ./MaSim -i ../../misc/input.yml
 ```
 
+# Profiling
+While there are many approaches to code profiling, as a quick way to get up and running, [http://www.valgrind.org/](valgrind) is recommended along with [https://github.com/jrfonseca/gprof2dot](gprof2dot). Following installation, the simulation can be profiled using:
+
+```bash
+valgrind --tool=callgrind ./bin/MaSim - ../input/sample.yml
+gprof2dot -f callgrind callgrind.out.* | dot -Tpng -o output.png
+```
+
+This will generate a PNG file containing a node graph of where most of the simulation's time is spent during execution along with the percentage of time spent in a given function. 
+
+Note that `valgrind` adds **considerable** overhead to the execution of the simulation so it is highly recommended that profiling be limited to small simulations. 
+
 # Data Files
 Several tab separated values (TSV) data files are generated depending upon the reporter that is selected for use. The files listed below are based upon the `MonthlyReporter` which generates two files. File(s) are organized with group separators indicated by the sentinel value `-1111` and *n* is a zero-indexed location id.
 
