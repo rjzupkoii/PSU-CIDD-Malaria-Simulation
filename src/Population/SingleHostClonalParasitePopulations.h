@@ -22,6 +22,8 @@ class DrugType;
 
 class DrugsInBlood;
 
+class ParasiteDensityUpdateFunction;
+
 class SingleHostClonalParasitePopulations {
  OBJECTPOOL(SingleHostClonalParasitePopulations)
 

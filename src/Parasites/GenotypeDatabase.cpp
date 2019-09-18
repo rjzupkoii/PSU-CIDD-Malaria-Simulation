@@ -10,9 +10,6 @@
 #include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
 
-// Flat[x + WIDTH * (y + DEPTH * z)] 
-#define lookup(flat, x, y, z, width, depth) flat[x + width * (y + depth * z)]
-
 GenotypeDatabase::~GenotypeDatabase() {
   for (auto &i : *this) {
     delete i.second;
@@ -29,31 +26,15 @@ void GenotypeDatabase::add(Genotype *genotype) {
 
 void GenotypeDatabase::initialize_matting_matrix() {
   const int size = static_cast<const int>(this->size());
-  auto mating_matrix_ = MatingMatrix(size, std::vector<std::vector<double>>(size, std::vector<double>()));
+  auto working = MatingMatrix(size, std::vector<std::vector<double>>(size, std::vector<double>()));
 
-  auto depth = 0;
   for (auto m = 0; m < size; m++) {
     for (auto f = 0; f < m; f++) {
-      mating_matrix_[m][f] = generate_offspring_parasite_density((*this)[m]->gene_expression(), (*this)[f]->gene_expression());
-      depth = (mating_matrix_[m][f].size() > depth) ? mating_matrix_[m][f].size() : depth;
+      working[m][f] = generate_offspring_parasite_density((*this)[m]->gene_expression(), (*this)[f]->gene_expression());
     }
   }
   
-  // Note the dimensions and allocate memory
-  auto height = size;
-  matrix_width = size;
-  matrix_depth = depth;
-  flat_matrix = new double[height * matrix_width * matrix_depth];
-
-  // Now copy the values over
-  for (auto ndx = 0; ndx < height; ndx++) {
-    for (auto ndy = 0; ndy < matrix_width; ndy++) {
-      for (auto ndz = 0; ndz < matrix_depth; ndz++) {
-          lookup(flat_matrix, ndx, ndy, ndz, matrix_width, matrix_depth) = 
-            mating_matrix_[ndx][ndy].size() != 0 ?  mating_matrix_[ndx][ndy][ndz] : 0;
-      }
-    }
-  }
+  mating_matrix = Flat3D<double>::flatten(working);
 }
 
 std::vector<double> GenotypeDatabase::generate_offspring_parasite_density(const IntVector &m, const IntVector &f) {
@@ -93,9 +74,9 @@ double GenotypeDatabase::get_offspring_density(const int &m, const int &f, const
   if (m == f) {
     return (f == p) ? 1 : 0;
   }
-  
-  if (m < f) { return lookup(flat_matrix, f, m, p, matrix_width, matrix_depth); }
-  return lookup(flat_matrix, m, f, p, matrix_width, matrix_depth);
+
+  if (m < f) { return mating_matrix->get(f, m, p); }
+  return mating_matrix->get(m, f, p);
 }
 
 int GenotypeDatabase::get_id(const IntVector &gene) {

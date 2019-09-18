@@ -8,10 +8,12 @@
 #ifndef PARASITEDATABASE_H
 #define PARASITEDATABASE_H
 
+#include "Core/FlatArray.hxx"
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "Genotype.h"
 #include <map>
+#include "Population/SingleHostClonalParasitePopulations.h"
 
 class Genotype;
 
@@ -26,9 +28,13 @@ class GenotypeDatabase : public GenotypePtrMap {
   VIRTUAL_PROPERTY_REF(IntVector, weight)
 
   private:
-    double* flat_matrix;
-    int matrix_width;
-    int matrix_depth;
+    Flat3D<double>* mating_matrix;
+
+    // This is generally bad practice, but since the method gets called a lot 
+    // during the model we need to get as much performance as we can out of it.
+    // By making the function a friend we can avoid any stack calls at the
+    // expense of needing to be more diligent about our code.
+    friend void SingleHostClonalParasitePopulations::update_relative_effective_parasite_density_using_free_recombination();
 
   public:
     GenotypeDatabase() = default;
