@@ -127,12 +127,14 @@ void DbReporter::monthly_report() {
 
 // Iterate over all the sites and prepare the query for the site specific genome data
 void DbReporter::monthly_genome_data(int id, std::string &query) {
-    // Grab the person index
-    PersonIndexByLocationStateAgeClass* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
     // Prepare the data structures
     auto genotypes = Model::CONFIG->number_of_parasite_types();
     std::vector<int> individual(genotypes, 0);
+
+    // Cache some values
+    PersonIndexByLocationStateAgeClass* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+    auto age_classes = index->vPerson()[0][0].size();
 
     // Iterate over all of the possible locations
     for (auto location = 0; location < index->vPerson().size(); location++) {
@@ -143,29 +145,31 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
         // Iterate over all of the possible states
         for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
             // Iterate over all of the age classes
-            for (auto ac = 0; ac < index->vPerson()[0][0].size(); ac++) {
+            for (auto ac = 0; ac < age_classes; ac++) {
                 // Iterate over all of the genotypes
-                for (auto i = 0ull; i < index->vPerson()[location][hs][ac].size(); i++) {
+                auto age_class = index->vPerson()[location][hs][ac];
+                for (auto i = 0ull; i < age_class.size(); i++) {
 
                     // Get the person, press on if they are not infected (i.e., no parasites)
-                    auto* person = index->vPerson()[location][hs][ac][i];
-                    if (person->all_clonal_parasite_populations()->parasites()->empty()) { continue; }
+                    auto parasites = age_class[i]->all_clonal_parasite_populations()->parasites();
+                    auto size = parasites->size();
+                    if (size == 0) { continue; }
 
                     // Update count of parasites
                     sum += 1;
 
                     // Count the genotypes present in the individuals
-                    for (auto ndx = 0; ndx < person->all_clonal_parasite_populations()->parasites()->size(); ndx++) {
-                        auto parasite_population = (*person->all_clonal_parasite_populations()->parasites())[ndx];
+                    for (auto ndx = 0; ndx < size; ndx++) {
+                        auto parasite_population = (*parasites)[ndx];
                         auto id = parasite_population->genotype()->genotype_id();
                         site[id]++;
                         individual[id]++;
                     }
 
                     // Update the frequency and reset the individual count
-                    auto size = static_cast<double>(person->all_clonal_parasite_populations()->parasites()->size());
+                    auto divisor = static_cast<double>(size);
                     for (int ndx = 0; ndx < genotypes; ndx++) {
-                        frequency[ndx] += (individual[ndx] / size);
+                        frequency[ndx] += (individual[ndx] / divisor);
                         individual[ndx] = 0;
                     }
                 }
@@ -191,9 +195,9 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         // Determine the EIR and PfPR values
         auto eir = Model::DATA_COLLECTOR->EIR_by_location_year()[location].empty() 
             ? 0 : Model::DATA_COLLECTOR->EIR_by_location_year()[location].back();
-        auto pfpr_under5 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 0, 5) * 100;
-        auto pfpr_2to10 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100;
-        auto pfpr_all = Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100;
+        auto pfpr_under5 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 0, 5) * 100.0;
+        auto pfpr_2to10 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100.0;
+        auto pfpr_all = Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100.0;
        
         // Make make sure we have valid bounds
         check_nan(eir);
