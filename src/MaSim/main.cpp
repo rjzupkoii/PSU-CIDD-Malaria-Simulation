@@ -8,14 +8,16 @@
 #include <fmt/format.h>
 
 #include "easylogging++.h"
-#include "error_handler.hxx"
+
+// need to have execinfo lib
+// #include "error_handler.hxx"
 #include "Helpers/OSHelpers.h"
 #include "Model.h"
 
-namespace {
-    // invoke set_terminate as part of global constant initialization
-    static const bool SET_TERMINATE = std::set_terminate(crit_err_terminate);
-}
+// namespace {
+//     // invoke set_terminate as part of global constant initialization
+//     static const bool SET_TERMINATE = std::set_terminate(crit_err_terminate);
+// }
 
 // Settings read from the CLI
 int job_number = 0;
@@ -81,14 +83,14 @@ void config_logger() {
 int main(const int argc, char **argv) {
 
     // Set the last chance error handler
-    struct sigaction sigact;
-    sigact.sa_sigaction = crit_err_hdlr;
-    sigact.sa_flags = SA_RESTART | SA_SIGINFO;
-    if (sigaction(SIGABRT, &sigact, (struct sigaction *)NULL) != 0) {
-        std::cerr << "error setting handler for signal " << SIGABRT 
-                  << " (" << strsignal(SIGABRT) << ")\n";
-        exit(EXIT_FAILURE);
-    }
+    // struct sigaction sigact;
+    // sigact.sa_sigaction = crit_err_hdlr;
+    // sigact.sa_flags = SA_RESTART | SA_SIGINFO;
+    // if (sigaction(SIGABRT, &sigact, (struct sigaction *)NULL) != 0) {
+    //     std::cerr << "error setting handler for signal " << SIGABRT 
+    //               << " (" << strsignal(SIGABRT) << ")\n";
+    //     exit(EXIT_FAILURE);
+    // }
 
     // Parse the CLI
     auto *m = new Model();
