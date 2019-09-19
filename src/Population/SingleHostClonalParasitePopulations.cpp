@@ -171,7 +171,7 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
   }
 
   // Cache the genotype DB reference
-  auto genotype_db = Model::CONFIG->genotype_db();
+  const auto& genotype_db = Model::CONFIG->genotype_db();
 
   for (auto i = 0; i < parasite_population_count; i++) {
     auto density_i = relative_parasite_density[i];
