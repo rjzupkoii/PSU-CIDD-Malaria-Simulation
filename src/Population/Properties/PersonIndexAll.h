@@ -28,7 +28,7 @@ class PersonIndexAll : public PersonIndex {
 
   virtual std::size_t size() const;
 
-  virtual void update();
+  virtual void defragment();
 
   virtual void notify_change(Person *p, const Person::Property &property, const void *oldValue, const void *newValue);
 

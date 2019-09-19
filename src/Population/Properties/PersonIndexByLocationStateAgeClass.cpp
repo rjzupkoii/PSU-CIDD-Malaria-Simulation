@@ -94,7 +94,7 @@ void PersonIndexByLocationStateAgeClass::change_property(Person *p, const int &l
 }
 
 // Iterate through the data structure and force std::vector to reallocate the underlying memory.
-void PersonIndexByLocationStateAgeClass::update() {
+void PersonIndexByLocationStateAgeClass::defragment() {
   for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     for (int hs = 0; hs < Person::NUMBER_OF_STATE; hs++) {
       for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
