@@ -9,12 +9,12 @@
 #define    PERSON_H
 
 #include "Core/PropertyMacro.h"
-#include "Properties/PersonIndexAllHandler.h"
-#include "Properties/PersonIndexByLocationStateAgeClassHandler.h"
+#include "Properties/PersonIndexAllHandler.hxx"
+#include "Properties/PersonIndexByLocationStateAgeClassHandler.hxx"
 #include "Core/ObjectPool.h"
 #include "Core/Dispatcher.h"
-#include "Properties/PersonIndexByLocationBittingLevelHandler.h"
-#include "Properties/PersonIndexByLocationMovingLevelHandler.h"
+#include "Properties/PersonIndexByLocationBittingLevelHandler.hxx"
+#include "Properties/PersonIndexByLocationMovingLevelHandler.hxx"
 #include "ClonalParasitePopulation.h"
 
 class Population;

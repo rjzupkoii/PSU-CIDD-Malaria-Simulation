@@ -11,7 +11,7 @@
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "Population/Person.h"
-#include "PersonIndex.h"
+#include "PersonIndex.hxx"
 
 class PersonIndexByLocationMovingLevel : public PersonIndex {
  DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationMovingLevel);

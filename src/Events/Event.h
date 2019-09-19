@@ -8,7 +8,7 @@
 #ifndef EVENT_H
 #define    EVENT_H
 
-#include "Population/Properties/IndexHandler.h"
+#include "Population/Properties/IndexHandler.hxx"
 #include "Core/PropertyMacro.h"
 #include <string>
 

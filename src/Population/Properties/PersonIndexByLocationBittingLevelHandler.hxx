@@ -6,23 +6,21 @@
  */
 
 #ifndef PERSONINDEXBYLOCATIONBITTINGLEVELHANDLER_H
-#define    PERSONINDEXBYLOCATIONBITTINGLEVELHANDLER_H
+#define PERSONINDEXBYLOCATIONBITTINGLEVELHANDLER_H
 
-#include "IndexHandler.h"
+#include "IndexHandler.hxx"
 #include "Core/PropertyMacro.h"
 
 class PersonIndexByLocationBittingLevelHandler : public IndexHandler {
+
  DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationBittingLevelHandler)
 
  public:
-  PersonIndexByLocationBittingLevelHandler();
+  PersonIndexByLocationBittingLevelHandler() { }
 
-//    PersonIndexByLocationBittingLevelHandler(const PersonIndexByLocationBittingLevelHandler& orig);
-  virtual ~PersonIndexByLocationBittingLevelHandler();
-
- private:
+  virtual ~PersonIndexByLocationBittingLevelHandler() { }
 
 };
 
-#endif    /* PERSONINDEXBYLOCATIONBITTINGLEVELHANDLER_H */
+#endif
 

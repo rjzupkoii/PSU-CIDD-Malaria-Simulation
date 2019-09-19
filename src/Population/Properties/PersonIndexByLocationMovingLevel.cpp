@@ -55,16 +55,16 @@ std::size_t PersonIndexByLocationMovingLevel::size() const {
 }
 
 void PersonIndexByLocationMovingLevel::add(Person *p, const int &location, const int &moving_level) {
-  vPerson_[location][moving_level].push_back(p);
-  p->PersonIndexByLocationMovingLevelHandler::set_index(vPerson_[location][moving_level].size() - 1);
+  auto& reference = vPerson_[location][moving_level];
+  reference.push_back(p);
+  p->PersonIndexByLocationMovingLevelHandler::set_index(reference.size() - 1);
 }
 
 void PersonIndexByLocationMovingLevel::remove_without_set_index(Person *p) {
-  vPerson_[p->location()][p->moving_level()].back()->PersonIndexByLocationMovingLevelHandler::set_index(
-      p->PersonIndexByLocationMovingLevelHandler::index());
-  vPerson_[p->location()][p->moving_level()][p->PersonIndexByLocationMovingLevelHandler::index()] =
-      vPerson_[p->location()][p->moving_level()].back();
-  vPerson_[p->location()][p->moving_level()].pop_back();
+  auto& reference = vPerson_[p->location()][p->moving_level()];
+  reference.back()->PersonIndexByLocationMovingLevelHandler::set_index(p->PersonIndexByLocationMovingLevelHandler::index());
+  reference[p->PersonIndexByLocationMovingLevelHandler::index()] = reference.back();
+  reference.pop_back();
 }
 
 void PersonIndexByLocationMovingLevel::change_property(Person *p, const int &location, const int &moving_level) {

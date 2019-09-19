@@ -9,15 +9,15 @@
 #define    PERSONINDEX_H
 
 #include "Core/PropertyMacro.h"
-#include "../Person.h"
+#include "Population/Person.h"
 
 class PersonIndex {
  DISALLOW_COPY_AND_ASSIGN(PersonIndex)
 
  public:
-  PersonIndex();
+  PersonIndex() = default;
 
-  virtual ~PersonIndex();
+  virtual ~PersonIndex() = default;
 
   virtual void add(Person *p) = 0;
 
@@ -34,5 +34,5 @@ class PersonIndex {
 
 };
 
-#endif    /* PERSONINDEX_H */
+#endif
 

@@ -56,16 +56,16 @@ std::size_t PersonIndexByLocationBittingLevel::size() const {
 }
 
 void PersonIndexByLocationBittingLevel::add(Person *p, const int &location, const int &bitting_level) {
-  vPerson_[location][bitting_level].push_back(p);
+  auto& reference = vPerson_[location][bitting_level];
+  reference.push_back(p);
   p->PersonIndexByLocationBittingLevelHandler::set_index(vPerson_[location][bitting_level].size() - 1);
 }
 
 void PersonIndexByLocationBittingLevel::remove_without_set_index(Person *p) {
-  vPerson_[p->location()][p->bitting_level()].back()->PersonIndexByLocationBittingLevelHandler::set_index(
-      p->PersonIndexByLocationBittingLevelHandler::index());
-  vPerson_[p->location()][p->bitting_level()][p->PersonIndexByLocationBittingLevelHandler::index()] =
-      vPerson_[p->location()][p->bitting_level()].back();
-  vPerson_[p->location()][p->bitting_level()].pop_back();
+  auto & reference = vPerson_[p->location()][p->bitting_level()];
+  reference.back()->PersonIndexByLocationBittingLevelHandler::set_index(p->PersonIndexByLocationBittingLevelHandler::index());
+  reference[p->PersonIndexByLocationBittingLevelHandler::index()] = reference.back();
+  reference.pop_back();
 }
 
 void PersonIndexByLocationBittingLevel::change_property(Person *p, const int &location, const int &bitting_level) {

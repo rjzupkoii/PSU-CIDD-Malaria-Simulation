@@ -6,22 +6,21 @@
  */
 
 #ifndef PERSONINDEXALLHANDLER_H
-#define    PERSONINDEXALLHANDLER_H
+#define PERSONINDEXALLHANDLER_H
 
 #include "Core/PropertyMacro.h"
-#include "IndexHandler.h"
+#include "IndexHandler.hxx"
 
 class PersonIndexAllHandler : public IndexHandler {
+
  DISALLOW_COPY_AND_ASSIGN(PersonIndexAllHandler)
 
  public:
-  PersonIndexAllHandler();
+  PersonIndexAllHandler() { }
 
-  virtual ~PersonIndexAllHandler();
-
- private:
+  virtual ~PersonIndexAllHandler() { }
 
 };
 
-#endif    /* PERSONINDEXALLHANDLER_H */
+#endif
 

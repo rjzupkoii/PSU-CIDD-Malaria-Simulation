@@ -8,7 +8,7 @@
 #ifndef PERSONINDEXALL_H
 #define    PERSONINDEXALL_H
 
-#include "PersonIndex.h"
+#include "PersonIndex.hxx"
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 

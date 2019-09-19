@@ -11,7 +11,7 @@
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "Person.h"
-#include "Properties/PersonIndex.h"
+#include "Properties/PersonIndex.hxx"
 #include "Core/Dispatcher.h"
 #include <vector>
 
