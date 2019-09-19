@@ -1,6 +1,9 @@
 /*
- *
+ * FlatArray.hxx
  * 
+ * This pseudo-library provides templates for a 2D and 3D data structure that has been flattended
+ * into a 1D array. This is generally going to be more performant than dimensional data structures 
+ * but may not be as flexible.
  */ 
 #ifndef FLATARRAY_H
 #define FLATARRAY_H
@@ -11,8 +14,8 @@ template <typename T>
 class Flat2D {
     private:
         T* data = nullptr;
-        int x_size = 0;
-        int y_size = 0;
+        int x_size = 0;         // Width
+        int y_size = 0;         // Height
 
     public:
         Flat2D() = default;
@@ -56,12 +59,15 @@ template <typename T>
 class Flat3D {
     private:
         T* data = nullptr;
-        int x_size = 0;
-        int y_size = 0;
-        int z_size = 0;
+        int x_size = 0;         // Width
+        int y_size = 0;         // Height
+        int z_size = 0;         // Depth
 
     public:
         Flat3D() = default;
+
+        // Allocate the space for an x by y by z sized space. Note that if max(x) > max(y)
+        // unexpected behavior may occur.
         Flat3D(int x_size, int y_size, int z_size)  {
             this->x_size = x_size;
             this->y_size = y_size;
@@ -70,8 +76,8 @@ class Flat3D {
             data = new T[x_size * y_size * z_size];
         }
 
-        T get(int x, int y, int z) { return data[x + y_size * (y + z_size * z)]; }
-        void set(int x, int y, int z, T value) { data[x + y_size * (y + z_size * z)] = value; }
+        T get(int x, int y, int z) { return data[x + y_size * (y + x_size * z)]; }
+        void set(int x, int y, int z, T value) { data[x + y_size * (y + x_size * z)] = value; }
 
         static Flat3D<T>* flatten(std::vector<std::vector<std::vector<T>>> input)  {
             // Create the object
