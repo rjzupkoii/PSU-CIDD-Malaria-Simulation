@@ -1,9 +1,13 @@
+# Enable for compiler warnings on core simulation files
+set(BUILD_WARNINGS false CACHE BOOL "Enable for build warnings")
+
 # Enable if building on the Windows Subsystem for Linux (WSL), via the command line use -DBUILD_WSL:BOOL=true
 set(BUILD_WSL false CACHE BOOL "Enable for builds on WSL")
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
-file(GLOB SRC_FILES *.cpp 
+# Define the core simulation files
+file(GLOB SOURCE *.cpp 
         Core/*.cpp 
         Core/Config/*.cpp 
         Core/Index/*.cpp 
@@ -21,10 +25,13 @@ file(GLOB SRC_FILES *.cpp
         Therapies/*.cpp       
 )
 
-set(SRC_FILES ${SRC_FILES}
+# Define extra library files
+file(GLOB LIBRARY
         ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.h
         ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc
-       )
+)
+
+set(SRC_FILES ${SOURCE} ${LIBRARY})
 
 add_library(MaSimCore STATIC ${SRC_FILES})
 add_dependencies(MaSimCore date args)
@@ -41,6 +48,13 @@ target_link_libraries(MaSimCore PUBLIC
         GSL::gsl GSL::gslcblas
         fmt::fmt fmt::fmt-header-only
         )
+endif()
+
+# Enable warnings when building debug
+# -Wunused-parameter from -Wextra is disabled since the YAML parser will emit the warning
+# -Wunused-variable from -Wall is disabled since easylogging++ frequently emits it
+if (BUILD_WARNINGS)
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable")
 endif()
 
 # Update the linker for Libpqxx
@@ -68,3 +82,12 @@ target_compile_features(DxGGenerator PRIVATE cxx_range_for)
 
 #install(TARGETS DxGGenerator DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 #install(FILES ${PROJECT_SOURCE_DIR}/misc/input_DxG.yml DESTINATION ${PROJECT_SOURCE_DIR}/bin)
+
+# Note the flags that we ran with
+message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
+message(STATUS "Library Type: " ${LIB_TYPE})
+message(STATUS "Compiler flags:" ${CMAKE_CXX_COMPILE_FLAGS})
+message(STATUS "Compiler cxx debug flags:" ${CMAKE_CXX_FLAGS_DEBUG})
+message(STATUS "Compiler cxx release flags:" ${CMAKE_CXX_FLAGS_RELEASE})
+message(STATUS "Compiler cxx min size flags:" ${CMAKE_CXX_FLAGS_MINSIZEREL})
+message(STATUS "Compiler cxx flags:" ${CMAKE_CXX_FLAGS})
