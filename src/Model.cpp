@@ -168,7 +168,8 @@ void Model::initialize(int job_number, std::string std) {
   VLOG(1) << "Initializing population";
   //initialize Population
   population_->initialize();
-  LOG(INFO) << fmt::format("Popuation size: {0}", population_->size());
+  LOG(INFO) << fmt::format("Location count: {0}", CONFIG->number_of_locations());
+  LOG(INFO) << fmt::format("Population size: {0}", population_->size());
 
   VLOG(1) << "Introducing initial cases";
   //initialize infected_cases
