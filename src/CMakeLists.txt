@@ -1,4 +1,4 @@
-# Enable if buildling on the Windows Subsystem for Linux (WSL), via the command line use -DBUILD_WSL:BOOL=true
+# Enable if building on the Windows Subsystem for Linux (WSL), via the command line use -DBUILD_WSL:BOOL=true
 set(BUILD_WSL false CACHE BOOL "Enable for builds on WSL")
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
