@@ -182,8 +182,7 @@ void Model::initialize(int job_number, std::string std) {
 }
 
 void Model::initialize_object_pool(const int &size) {
-
-  VLOG(1) << "Initialize the object pool";
+  VLOG(1) << fmt::format("Initialize the object pool, size: {0},", size);
 
   BirthdayEvent::InitializeObjectPool(size);
   ProgressToClinicalEvent::InitializeObjectPool(size);
@@ -259,8 +258,8 @@ void Model::run() {
   after_run();
   LOG(INFO) << "Model finished!";
 
-  // Note the final popuation of the model
-  LOG(INFO) << fmt::format("Final popuation: {0}", population_->size());
+  // Note the final population of the model
+  LOG(INFO) << fmt::format("Final population: {0}", population_->size());
 
   // Note the final run-time of the model
   std::chrono::duration<double> elapsed_seconds = end-start;
@@ -387,7 +386,7 @@ void Model::add_reporter(Reporter* reporter) {
 double Model::get_seasonal_factor(const date::sys_days &today, const int &location) const {
   if (!Model::CONFIG->seasonal_info().enable) {
     return 1;
-  }
+  }  
   const auto day_of_year = TimeHelpers::day_of_year(today);
   const auto is_rainy_period = Model::CONFIG->seasonal_info().phi[location] < Constants::DAYS_IN_YEAR() / 2.0
                                ? day_of_year >= Model::CONFIG->seasonal_info().phi[location]
