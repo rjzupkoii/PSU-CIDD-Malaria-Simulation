@@ -8,7 +8,9 @@
 #include <fmt/format.h>
 
 #include "easylogging++.h"
-#include "error_handler.hxx"
+
+// need to have execinfo lib
+// #include "error_handler.hxx"
 #include "Helpers/OSHelpers.h"
 #include "Model.h"
 
