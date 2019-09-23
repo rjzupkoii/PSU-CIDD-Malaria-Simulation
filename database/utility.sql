@@ -11,3 +11,11 @@ FROM
 (SELECT count(*) months FROM sim.monthlydata) md,
 (SELECT count(*) site FROM sim.monthlysitedata) msd,
 (SELECT count(*) genome FROM sim.monthlygenomedata) mgd
+
+-- Running time vs PfPR 
+select * from v_runningstats
+inner join (
+select monthlydataid, avg(pfprall) 
+from sim.monthlysitedata 
+group by monthlydataid) stats on stats.monthlydataid = id
+order by id desc

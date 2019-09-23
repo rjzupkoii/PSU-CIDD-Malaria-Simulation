@@ -157,8 +157,11 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
 }
 
 void SingleHostClonalParasitePopulations::update_relative_effective_parasite_density_using_free_recombination() {
-  // Get the parasite profiles, if the density is zero then return
+  // Get the population count, if it is zero then return
   auto parasite_population_count = size();
+  if (parasite_population_count == 0) { return; }
+
+  // Get the parasite profiles, if the density is zero then return
   std::vector<double> relative_parasite_density(parasite_population_count, 0.0);
   get_parasites_profiles(relative_parasite_density, log10_total_relative_density_);
   if (NumberHelpers::is_equal(log10_total_relative_density_, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) { return; }
