@@ -40,6 +40,8 @@ class SingleHostClonalParasitePopulations {
  private:
   int parasite_types = -1;
 
+  void remove(const int &index);
+
  public:
   SingleHostClonalParasitePopulations(Person *person = nullptr);
 
@@ -51,10 +53,6 @@ class SingleHostClonalParasitePopulations {
   virtual int size();
 
   virtual void add(ClonalParasitePopulation *blood_parasite);
-
-  virtual void remove(ClonalParasitePopulation *blood_parasite);
-
-  virtual void remove(const int &index);
 
   virtual void add_all_infection_force();
 

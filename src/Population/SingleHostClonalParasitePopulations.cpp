@@ -65,45 +65,20 @@ void SingleHostClonalParasitePopulations::add(ClonalParasitePopulation* blood_pa
   assert(parasites_->at(blood_parasite->index()) == blood_parasite);
 }
 
-void SingleHostClonalParasitePopulations::remove(ClonalParasitePopulation* blood_parasite) {
-  remove(blood_parasite->index());
-}
-
+// Remove the parasite at the given index from the population, does not recalculate the infection force.
 void SingleHostClonalParasitePopulations::remove(const int &index) {
   ClonalParasitePopulation* bp = parasites_->at(index);
-  //    std::cout << parasites_.size() << std::endl;
   if (bp->index() != index) {
     std::cout << bp->index() << "-" << index << "-" << parasites_->at(index)->index() << std::endl;
     assert(bp->index() == index);
   }
-
-  //    assert(contain(bp));
-  //    std::cout << parasites_.size() << std::endl;
-  //Remove all infection force
-  remove_all_infection_force();
-
-  //    BloodParasite* last_parasite = parasites_.back();
 
   parasites_->back()->set_index(index);
   parasites_->at(index) = parasites_->back();
   parasites_->pop_back();
   bp->set_index(-1);
 
-  //    for(BloodParasite* bp :  parasites_) {
-  //        std::cout << bp->index()<< "\t";
-  //    }
-  //    std::cout<< std::endl;
-
-  //add all infection force
-  add_all_infection_force();
-
   bp->set_parasite_population(nullptr);
-
-  //    if (contain(bp)) {
-  //        //        std::cout <<  parasites_.size()<< std::endl;
-  //        assert(false);
-  //    }
-  //    std::cout << parasites_.size() << std::endl;
 
   delete bp;
   bp = nullptr;
@@ -324,12 +299,25 @@ void SingleHostClonalParasitePopulations::update() const {
 
 void SingleHostClonalParasitePopulations::clear_cured_parasites() {
 
-  //    std::vector<int> cured_parasites_index;
+  // Only recalculate on update
+  bool updated = false;
+
   for (int i = parasites_->size() - 1; i >= 0; i--) {
-    if (parasites_->at(i)->last_update_log10_parasite_density() <=
-        Model::CONFIG->parasite_density_level().log_parasite_density_cured + 0.00001) {
+    if ((*parasites_)[i]->last_update_log10_parasite_density() <= Model::CONFIG->parasite_density_level().log_parasite_density_cured + 0.00001) {
+      
+      // Clear the infection force prior to removal
+      if (!updated) {
+        remove_all_infection_force();
+        updated = true;
+      }
+
       remove(i);
     }
+  }
+
+  // Update the infection force
+  if (updated) {
+    add_all_infection_force();
   }
 }
 
