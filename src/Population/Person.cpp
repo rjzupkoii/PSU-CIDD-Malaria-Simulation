@@ -283,6 +283,18 @@ void Person::cancel_all_events_except(Event* event) const {
   }
 }
 
+//void Person::record_treatment_failure_for_test_treatment_failure_events() {
+//
+//    for(Event* e :  *events()) {
+//        if (dynamic_cast<TestTreatmentFailureEvent*> (e) != nullptr && e->executable()) {
+//            //            e->set_dispatcher(nullptr);
+//            //record treatment failure
+//            Model::DATA_COLLECTOR->record_1_treatment_failure_by_therapy(location_, age_, ((TestTreatmentFailureEvent*) e)->therapyId());
+//
+//        }
+//    }
+//}
+
 void
 Person::change_all_parasite_update_function(ParasiteDensityUpdateFunction* from,
                                             ParasiteDensityUpdateFunction* to) const {
@@ -499,6 +511,41 @@ void Person::schedule_relapse_event(ClonalParasitePopulation* clinical_caused_pa
                                           Model::SCHEDULER->current_time() + duration);
 }
 
+void Person::update() {
+  //    std::cout << "Person Update"<< std::endl;
+  //already update
+  assert(host_state_ != DEAD);
+
+  if (latest_update_time_ == Model::SCHEDULER->current_time()) return;
+
+  //    std::cout << "ppu"<< std::endl;
+  ///update the density of each blood parasite in parasite population
+  // parasite will be kill by immune system
+  all_clonal_parasite_populations_->update();
+
+  //    std::cout << "dibu"<< std::endl;
+  //update all drugs concentration
+  drugs_in_blood_->update();
+
+  //update drug activity on parasite
+  all_clonal_parasite_populations_->update_by_drugs(drugs_in_blood_);
+
+  //    std::cout << "imm"<< std::endl;
+  immune_system_->update();
+
+  //    std::cout << "csu"<< std::endl;
+  update_current_state();
+
+  //    Dispatcher::update();
+
+  //update bitting level only less than 1 to save performance
+  // the other will be update in birthday event
+  update_bitting_level();
+
+  latest_update_time_ = Model::SCHEDULER->current_time();
+  //    std::cout << "End Person Update"<< std::endl;
+}
+
 void Person::update_bitting_level() {
   if (Model::CONFIG->using_age_dependent_bitting_level()) {
 
@@ -516,6 +563,24 @@ void Person::update_bitting_level() {
       //              std::cout << "ok" << std::endl;
     }
   }
+}
+
+void Person::update_current_state() {
+  //    std::cout << "ccod" << std::endl;
+  //clear drugs <=0.1
+  drugs_in_blood_->clear_cut_off_drugs_by_event(nullptr);
+  //    std::cout << "ccp" << std::endl;
+  //clear cured parasite
+  all_clonal_parasite_populations_->clear_cured_parasites();
+
+  //    std::cout << "change state" << std::endl;
+  if (all_clonal_parasite_populations_->size() == 0) {
+    change_state_when_no_parasite_in_blood();
+  } else {
+
+    immune_system_->set_increase(true);
+  }
+
 }
 
 void Person::randomly_choose_parasite() {
@@ -626,6 +691,26 @@ void Person::move_to_population(Population* target_population) {
 
   population_->remove_person(this);
   target_population->add_person(this);
+}
+
+bool Person::has_birthday_event() const {
+
+  for (Event* e : *events()) {
+    if (dynamic_cast<BirthdayEvent*>(e) != nullptr) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Person::has_update_by_having_drug_event() const {
+
+  for (Event* e : *events()) {
+    if (dynamic_cast<UpdateWhenDrugIsPresentEvent*>(e) != nullptr) {
+      return true;
+    }
+  }
+  return false;
 }
 
 double Person::get_age_dependent_biting_factor() const {
