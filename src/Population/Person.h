@@ -200,7 +200,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   void determine_clinical_or_not(ClonalParasitePopulation *clinical_caused_parasite);
 
-  void update() override;
+  void update();
 
   void update_current_state();
 
