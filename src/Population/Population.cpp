@@ -446,6 +446,13 @@ void Population::update_force_of_infection(const int &current_time) {
   }
 }
 
+// Free space in the population indicies.
+void Population::update() {
+  for (PersonIndex* person_index : *person_index_list_) {
+    person_index->defragment();
+  }
+}
+
 void Population::perform_birth_event() {
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     auto poisson_means = size(loc)*Model::CONFIG->birth_rate()/Constants::DAYS_IN_YEAR();

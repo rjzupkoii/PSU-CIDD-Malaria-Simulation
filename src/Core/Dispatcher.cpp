@@ -55,3 +55,7 @@ void Dispatcher::clear_events() {
   // Remove the events from the dispatcher
   events_->clear();
 }
+
+void Dispatcher::update() {
+  events_->shrink_to_fit();
+}

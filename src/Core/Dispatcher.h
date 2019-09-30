@@ -32,6 +32,8 @@ private:
 
   virtual void remove(Event *event);
 
+  virtual void update();
+
   virtual void clear_events();
 
 };
