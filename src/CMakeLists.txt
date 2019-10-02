@@ -13,6 +13,7 @@ file(GLOB SOURCE *.cpp
         Core/Index/*.cpp 
         Events/*.cpp 
         Events/Population/*.cpp 
+        GIS/*.cpp
         Helpers/*.cpp 
         Malaria/*.cpp
         MDC/*.cpp 
