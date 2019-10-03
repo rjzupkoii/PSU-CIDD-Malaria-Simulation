@@ -15,32 +15,38 @@
 // provide a header indicating if the data is floating point or integer, the data is presumed
 // to be floathing point. 
 struct AscFile {
+    // Flag to indicate the value has not been set yet
+    static const int NOT_SET = -1;
+
     // Number of rows
-    int NROWS;
+    int NROWS = NOT_SET;
 
     // Number of columns
-    int NCOLS;
+    int NCOLS = NOT_SET;
 
     // X-center coordinate
-    double XLLCENTER;
+    double XLLCENTER = NOT_SET;
 
     // Y-center coordinate
-    double YLLCENTER;
+    double YLLCENTER = NOT_SET;
 
     // X-lower left corner coordinate
-    double XLLCORNER;
+    double XLLCORNER = NOT_SET;
     
     // X-lower left corner coordinate
-    double YLLCORNER;
+    double YLLCORNER = NOT_SET;
 
     // Size of a cell, in units of projection
-    double CELLSIZE;
+    double CELLSIZE = NOT_SET;
 
-    // Representation of a cell with no data
-    double NODATA_VALUE;
+    // Representation of a cell with no data, default value is zero at time of initialization
+    double NODATA_VALUE = 0;
 
     // The data stored in the file
-    double* data;
+    double** data = nullptr;
+
+    // Deconstructor
+    ~AscFile();
 };
 
 class AscFileManager {
@@ -52,6 +58,7 @@ class AscFileManager {
         AscFileManager() { }
 
     public:
+        static bool checkAscFile(AscFile* file, std::string* errors);
         static AscFile* read(std::string fileName);
         static void write(AscFile* file, std::string fileName, int precision);
 };
