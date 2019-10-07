@@ -77,6 +77,15 @@ class Config {
 
   CONFIG_ITEM(location_db, std::vector<Spatial::Location>,
               std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
+              
+  // TODO Remove this item, testing and development feature
+  CONFIG_ITEM(location_raster, std::string, "")
+
+  // String containing the path to the EIR raster file
+  CONFIG_ITEM(eir_raster, std::string, "")
+
+  // String containing the path to the population raster file
+  CONFIG_ITEM(population_raster, std::string, "")
 
   CONFIG_ITEM(birth_rate, double, 0)
 

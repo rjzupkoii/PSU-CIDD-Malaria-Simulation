@@ -10,7 +10,6 @@
 #define ASCFILE_H
 
 #include <string>
-#include <variant>
 
 // The ASC file either as read, or to be written. Note that since the specification does not
 // provide a header indicating if the data is floating point or integer, the data is presumed
