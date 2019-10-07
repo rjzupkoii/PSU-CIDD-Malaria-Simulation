@@ -1,7 +1,8 @@
 /*
  * AscFile.h
  * 
- * Define the means of reading and writing ESRI ASCII files.
+ * Define the means of reading and writing ESRI ASCII files. Functionality has
+ * been verified against ESRI ArcMap 10.7.1
  * 
  * http://webhelp.esri.com/arcgisdesktop/9.3/index.cfm?TopicName=ESRI%20ASCII%20Raster%20format 
  */
@@ -17,6 +18,9 @@
 struct AscFile {
     // Flag to indicate the value has not been set yet
     static const int NOT_SET = -1;
+
+    // End-of-line for ASC files, ArcMap seems to be platform independent though.
+    inline static const std::string CRLF = "\r\n";
 
     // Number of rows
     int NROWS = NOT_SET;
@@ -60,7 +64,7 @@ class AscFileManager {
     public:
         static bool checkAscFile(AscFile* file, std::string* errors);
         static AscFile* read(std::string fileName);
-        static void write(AscFile* file, std::string fileName, int precision);
+        static void write(AscFile* file, std::string fileName);
 };
 
 #endif

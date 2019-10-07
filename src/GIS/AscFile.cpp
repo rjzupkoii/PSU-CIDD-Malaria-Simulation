@@ -1,5 +1,7 @@
 /*
- *
+ * AscFile.cpp
+ * 
+ * Implementation of defined functions.
  */
 #include "AscFile.h"
 
@@ -108,23 +110,28 @@ AscFile* AscFileManager::read(std::string fileName) {
     return results;
 }
 
-// 
-void AscFileManager::write(AscFile* file, std::string fileName, int precision) {
+// Write the contents of the AscFile to disk.
+void AscFileManager::write(AscFile* file, std::string fileName) {
 
     // Open the file for writing
     std::ofstream out(fileName);
 
     // Write the header
     out << std::setprecision(16) << std::left
-        << std::setw(HEADER_WIDTH) << "ncols" << file->NCOLS << std::endl
-        << std::setw(HEADER_WIDTH) << "nrows" << file->NROWS << std::endl
-        << std::setw(HEADER_WIDTH) << "xllcorner" << file->XLLCORNER << std::endl
-        << std::setw(HEADER_WIDTH) << "yllcorner" << file->YLLCORNER << std::endl
-        << std::setw(HEADER_WIDTH) << "cellsize" << file->CELLSIZE << std::endl
-        << std::setw(HEADER_WIDTH) << "NODATA_value" << file->NODATA_VALUE << std::endl;
+        << std::setw(HEADER_WIDTH) << "ncols" << file->NCOLS << AscFile::CRLF
+        << std::setw(HEADER_WIDTH) << "nrows" << file->NROWS << AscFile::CRLF
+        << std::setw(HEADER_WIDTH) << "xllcorner" << file->XLLCORNER << AscFile::CRLF
+        << std::setw(HEADER_WIDTH) << "yllcorner" << file->YLLCORNER << AscFile::CRLF
+        << std::setw(HEADER_WIDTH) << "cellsize" << file->CELLSIZE << AscFile::CRLF
+        << std::setw(HEADER_WIDTH) << "NODATA_value" << file->NODATA_VALUE << AscFile::CRLF;
 
     // Write the raster data
-    // TODO Write the write code
+    for (auto ndx = 0; ndx < file->NROWS; ndx++) {
+        for (auto ndy = 0; ndy < file->NCOLS; ndy++) {
+            out << std::setprecision(8) << file->data[ndx][ndy] << " ";
+        }
+        out << AscFile::CRLF;
+    }
 
     // Clean-up
     out.close();

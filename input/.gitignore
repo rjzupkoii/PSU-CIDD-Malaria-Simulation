@@ -1,0 +1,3 @@
+
+// ASC files can get really big - exclude them by default
+*.asc
