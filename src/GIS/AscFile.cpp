@@ -25,24 +25,18 @@ AscFile::~AscFile() {
 bool AscFileManager::checkAscFile(AscFile* file, std::string* errors) {
     
     // Check values that must be set
-    if (file->NCOLS == AscFile::NOT_SET) {
-        *errors += "Number of columns is not set.";
-    }
-    if (file->NROWS == AscFile::NOT_SET) {
-        *errors += "Number of rows is not set.";
-    }
-    if (file->CELLSIZE == AscFile::NOT_SET) {
-        *errors += "Cell size is not set.";
-    }
+    if (file->NCOLS == AscFile::NOT_SET) { *errors += "number of columns is not set;"; }
+    if (file->NROWS == AscFile::NOT_SET) { *errors += "number of rows is not set;"; }
+    if (file->CELLSIZE == AscFile::NOT_SET) { *errors += "cell size is not set;"; }
 
     // The coordinate to fix the raster should either be the lower-left, or the center
     if (file->XLLCENTER == AscFile::NOT_SET && file->YLLCENTER == AscFile::NOT_SET &&
         file->XLLCORNER == AscFile::NOT_SET && file->YLLCORNER == AscFile::NOT_SET) {
-        *errors += "No location provided for raster coordinate.";
+        *errors += "no location provided for raster coordinate;";
     }
     if (file->XLLCENTER != AscFile::NOT_SET && file->YLLCENTER != AscFile::NOT_SET &&
         file->XLLCORNER != AscFile::NOT_SET && file->YLLCORNER != AscFile::NOT_SET) {
-        *errors += "Conflicting raster coordinates.";
+        *errors += "conflicting raster coordinates;";
     }
 
     // Return true if errors were found
