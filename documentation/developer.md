@@ -54,7 +54,21 @@ cd /build/bin
 ./MaSim -i ../../misc/input.yml
 ```
 
-# Profiling
+# Development Tools
+
+## Isolating Segmentation Faults in Linux
+When developing new functionality in the model it is sometimes necessary to isolate segmentation faults. One of the easier ways to do this is through the use of `gdb` in a Linux environment. First, compile the program with the `debug` flag set, this will ensure that there are debug symbols in the binary. Then use `gdb` to open the gdb console:
+
+```bash
+file bin/MaSim              # Load the specified executable
+run -i ../input/sample.yml  # Run the program with the following command line parameters
+
+...                         # Program output omitted
+
+bd                          # Generates the stack trace
+```
+
+## Profiling
 While there are many approaches to code profiling, as a quick way to get up and running, [http://www.valgrind.org/](valgrind) is recommended along with [https://github.com/jrfonseca/gprof2dot](gprof2dot). Following installation, the simulation can be profiled using:
 
 ```bash

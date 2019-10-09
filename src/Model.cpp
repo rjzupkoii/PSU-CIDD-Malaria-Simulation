@@ -127,52 +127,51 @@ void Model::initialize(int job_number, std::string std) {
   LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
   config_->read_from_file(config_filename_);
 
-  //Initialize Random Seed
+  // If necessary, read the raster files and inject them into the location_db
+  // TODO WRITE THIS CODE
+  VLOG(1) << "Preparing spatial model...";
+  
   VLOG(1) << "Initialize Random";
   random_->initialize(config_->initial_seed_number());
 
-  //add reporter here
+  VLOG(1) << "Initialing reports";
+  // MARKER add reporter here
   if (reporter_type_.empty()) {
-    //add_reporter(Reporter::MakeReport(Reporter::MONTHLY_REPORTER));
-//    add_reporter(Reporter::MakeReport(Reporter::SPATIAL_REPORTER));
+
+    // TODO Review what to do with these reporters
+    // add_reporter(Reporter::MakeReport(Reporter::MONTHLY_REPORTER));
+    // add_reporter(Reporter::MakeReport(Reporter::SPATIAL_REPORTER));
+
     add_reporter(Reporter::MakeReport(Reporter::DB_REPORTER));
   } else {
     if (Reporter::ReportTypeMap.find(reporter_type_) != Reporter::ReportTypeMap.end()) {
       add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));
     }
   }
-
-  VLOG(1) << "Initialing reports";
-  //initialize reporters
   for (auto* reporter : reporters_) {
     reporter->initialize(job_number, std);
   }
 
-  // initialize scheduler
   VLOG(1) << "Initialzing scheduler";
   LOG(INFO) << "Starting day is " << CONFIG->starting_date();
   scheduler_->initialize(CONFIG->starting_date(), config_->total_time());
   scheduler_->set_days_between_notifications(config_->days_between_notifications());
 
   VLOG(1) << "Initialing initial strategy";
-  //set treatment strategy
   set_treatment_strategy(config_->initial_strategy_id());
 
   VLOG(1) << "Initialing initial treatment coverage model";
   build_initial_treatment_coverage();
 
   VLOG(1) << "Initializing data collector";
-  //initialize data_collector
   data_collector_->initialize();
 
   VLOG(1) << "Initializing population";
-  //initialize Population
   population_->initialize();
   LOG(INFO) << fmt::format("Location count: {0}", CONFIG->number_of_locations());
   LOG(INFO) << fmt::format("Population size: {0}", population_->size());
 
   VLOG(1) << "Introducing initial cases";
-  //initialize infected_cases
   population_->introduce_initial_cases();
 
   VLOG(1) << "Schedule for population event";

@@ -55,17 +55,22 @@ namespace YAML {
       return node;
     }
 
+    // Decode the contents of the location_db node
     static bool decode(const Node &node, std::vector<Spatial::Location> &location_db) {
-      //
-      // if (!node.IsScalar()) {
-      //   return false;
-      // }
-      const auto number_of_locations = node["location_info"].size();
-      for (std::size_t i = 0; i < number_of_locations; i++) {
-        location_db.emplace_back(node["location_info"][i][0].as<int>(),
-                                 node["location_info"][i][1].as<float>(),
-                                 node["location_info"][i][2].as<float>(), 0);
+
+      // If the user is supplying raster data, location_info will likely not be there.
+      // Since we are just decoding the file, just focus on loading the data and defer
+      // validation of the file to the recipent of the data
+      auto number_of_locations = 0;
+      if (node["location_info"]) {
+        number_of_locations = node["location_info"].size();
+        for (std::size_t i = 0; i < number_of_locations; i++) {
+          location_db.emplace_back(node["location_info"][i][0].as<int>(),
+                                   node["location_info"][i][1].as<float>(),
+                                   node["location_info"][i][2].as<float>(), 0);
+        }
       }
+
       for (std::size_t loc = 0; loc < number_of_locations; loc++) {
         auto input_loc = node["age_distribution_by_location"].size() < number_of_locations ? 0 : loc;
 
