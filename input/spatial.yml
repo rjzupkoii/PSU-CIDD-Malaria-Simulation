@@ -8,10 +8,14 @@
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------
-# Items control execution of the model
+# Items controling execution of the model
 # ---------------------------------------------------------------
 # The number of model days between updates to the user
 days_between_notifications: 365
+
+# The number to use as the default seed value, comment out or set
+# to zero (0) to use random seed.
+initial_seed_number: 8675309
 
 # Connection string for the PostgreSQL database
 connection_string: "host=localhost dbname=masim user=sim password=sim"

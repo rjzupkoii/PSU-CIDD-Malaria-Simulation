@@ -52,8 +52,6 @@ class Model {
 
  PROPERTY_REF(std::vector<Reporter *>, reporters)
 
- PROPERTY_REF(unsigned long, initial_seed_number)
-
  PROPERTY_REF(std::string, config_filename)
 
  PROPERTY_REF(int, cluster_job_number)

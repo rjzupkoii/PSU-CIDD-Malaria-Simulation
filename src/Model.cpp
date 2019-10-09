@@ -1,11 +1,13 @@
 /* 
  * File:   Model.cpp
  * 
- * Main class for the indivdually based model. Initalizes all of the relevent 
+ * Main class for the individually based model. Initializes all of the relevent 
  * objects, passes control to the scheduler, and manages the tear-down.
  */
-#include <fmt/format.h>
 #include "Model.h"
+
+#include <fmt/format.h>
+
 #include "Population/Population.h"
 #include "Core/Config/Config.h"
 #include "Population/Person.h"
@@ -69,7 +71,6 @@ Model::Model(const int &object_pool_size) {
 
   reporters_ = std::vector<Reporter*>();
 
-  initial_seed_number_ = 0;
   config_filename_ = "config.yml";
   tme_filename_ = "tme.txt";
   override_parameter_filename_ = "";
@@ -122,14 +123,13 @@ void Model::build_initial_treatment_coverage() {
 void Model::initialize(int job_number, std::string std) {
   LOG(INFO) << "Model initializing...";
 
-  // TODO Update the configuration to allow the seed to be set
-  LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
   //Read input file
+  LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
   config_->read_from_file(config_filename_);
 
-  VLOG(1) << "Initialize Random";
   //Initialize Random Seed
-  random_->initialize(initial_seed_number_);
+  VLOG(1) << "Initialize Random";
+  random_->initialize(config_->initial_seed_number());
 
   //add reporter here
   if (reporter_type_.empty()) {

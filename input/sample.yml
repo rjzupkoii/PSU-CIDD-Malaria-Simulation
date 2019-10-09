@@ -8,6 +8,9 @@
 #
 # ---------------------------------------------------------------
 
+# The number to use as the default seed value, comment out or set to zero (0) to use random seed.
+# initial_seed_number: 8675309
+
 # Connection string for the PostgreSQL database
 connection_string: "host=localhost dbname=masim user=sim password=sim"
 

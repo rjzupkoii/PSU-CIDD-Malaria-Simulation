@@ -31,6 +31,7 @@ class Config {
   std::vector<IConfigItem *> config_items{};
 
   CONFIG_ITEM(days_between_notifications, int, 100)
+  CONFIG_ITEM(initial_seed_number, unsigned long, 0)
   CONFIG_ITEM(connection_string, std::string, "")
 
   CONFIG_ITEM(starting_date, date::year_month_day, date::year_month_day{date::year{1999}/1/1})
