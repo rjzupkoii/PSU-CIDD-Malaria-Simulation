@@ -3,7 +3,7 @@
 
 #include <string>
 #include <utility>
-#include "ConfigItem.h"
+#include "ConfigItem.hxx"
 #include "Therapies/DrugDatabase.h"
 #include "Parasites/GenotypeDatabase.h"
 #include "Core/MultinomialDistributionGenerator.h"

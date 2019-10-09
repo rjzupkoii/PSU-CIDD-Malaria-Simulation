@@ -2,7 +2,7 @@
 #define CONFIGITEM_H
 
 #include "IConfigItem.h"
-#include "Core/YAML/YamlConverter.h"
+#include "YamlConverter.hxx"
 #include "easylogging++.h"
 #include <yaml-cpp/yaml.h>
 #include <fmt/format.h>

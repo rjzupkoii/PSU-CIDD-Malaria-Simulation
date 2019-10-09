@@ -11,7 +11,7 @@
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "CustomConfigItem.h"
-#include "ConfigItem.h"
+#include "ConfigItem.hxx"
 #include "Spatial/Location.h"
 #include "Core/MultinomialDistributionGenerator.h"
 #include <string>
