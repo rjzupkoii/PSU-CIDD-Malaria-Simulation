@@ -42,15 +42,26 @@ std::string NestedMFTMultiLocationStrategy::to_string() const {
   std::stringstream sstm;
   sstm << id << "-" << name << std::endl;
 
-  for (auto i : distribution[0]) {
-    sstm << i << ",";
+  // Determine the distribution size
+  if (distribution.size() == 0) {
+    sstm << "NOT_SET";
+  } else {
+    for (auto i : distribution[0]) {
+      sstm << i << ",";
+    }
+  } 
+  sstm << std::endl;
+
+  // Determine the start of the distribution
+  if (start_distribution.size() == 0) {
+    sstm << "NOT_SET";
+  } else {
+    for (auto i : start_distribution[0]) {
+      sstm << i << ",";
+    }
   }
   sstm << std::endl;
 
-  for (auto i : start_distribution[0]) {
-    sstm << i << ",";
-  }
-  sstm << std::endl;
   return sstm.str();
 }
 
