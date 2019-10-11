@@ -11,27 +11,28 @@
 
 #include "AscFile.h"
 
-enum SpatialFileType {
-    // Only use the data to define the model's location listing
-    RawLocations,
-
-    // Entomological Inoculation Rates (EIR)
-    EIR,
-
-    // Population data
-    Population,
-
-    // Number of sequential items in the type
-    Count
-};
-
-// TODO need to figure out how to pass data to the location db
-
 class SpatialData {
+    public:
+        enum SpatialFileType {
+            // Only use the data to define the model's location listing
+            RawLocations,
+
+            // Entomological Inoculation Rates (EIR)
+            EIR,
+
+            // Population data
+            Population,
+
+            // Number of sequential items in the type
+            Count
+        };
 
     private:
         // Array of the ASC file data, use SpatialFileType as the index
         AscFile** data;
+
+        // Flag to indicate if data has been loaded since the last time it was checked
+        bool dirty;
 
         // Constructor
         SpatialData();
@@ -40,7 +41,10 @@ class SpatialData {
         ~SpatialData();
 
         // Check the loaded spatial catalog for errors, returns true if there are errors
-        bool check_catalog(std::string* errors);
+        bool check_catalog(std::string& errors);
+
+        // Generate the locations for the location_db
+        void generate_locations();
 
     public:
         // Not supported by singleton.

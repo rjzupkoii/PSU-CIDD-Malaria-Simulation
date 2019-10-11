@@ -76,9 +76,6 @@ class Config {
   CONFIG_ITEM(fraction_mosquitoes_interrupted_feeding, double, 0.0)
   CONFIG_ITEM(inflation_factor, double, 0.01)
 
-  CONFIG_ITEM(location_db, std::vector<Spatial::Location>,
-              std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
-              
   // TODO Remove this item, testing and development feature
   CONFIG_ITEM(location_raster, std::string, "")
 
@@ -87,6 +84,9 @@ class Config {
 
   // String containing the path to the population raster file
   CONFIG_ITEM(population_raster, std::string, "")
+
+  CONFIG_ITEM(location_db, std::vector<Spatial::Location>,
+              std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
 
   CONFIG_ITEM(birth_rate, double, 0)
 

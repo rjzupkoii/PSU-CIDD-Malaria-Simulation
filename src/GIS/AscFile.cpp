@@ -52,6 +52,9 @@ AscFile* AscFileManager::read(std::string fileName) {
     // Open and read the first six lines of the header
     std::string field, value;
     std::ifstream in(fileName);
+    if (!in.good()) {
+        throw std::runtime_error("Error opening ASC file: " + fileName);
+    }
     for (auto ndx = 0; ndx < 6; ndx++) {
 
         // Read the field and value, cast to upper case
