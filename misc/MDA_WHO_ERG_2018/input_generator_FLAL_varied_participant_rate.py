@@ -17,7 +17,7 @@ def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
 
-stream = open('input_FLAL.yml', 'r');
+stream = open('input_FLAL_no_importation.yml', 'r');
 data = yaml.load(stream);
 stream.close();
 
@@ -80,7 +80,7 @@ for mda_round in number_MDA_round:
             
             new_data['mean_prob_individual_present_at_mda'] = [round(pr+0.05,3), round(pr-0.05,3), round(pr+0.05,3)]
             
-            output_filename = 'FLAL_varied_participant_rate_PFPR2_no_itc/%s/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL_participant_rate_%s.yml'%(kFormatter(popsize), kFormatter(popsize),mda_round,pfpr_str,pr_str);
+            output_filename = 'FLAL_varied_participant_rate_PFPR2_no_itc_no_imp/%s/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL_participant_rate_%s.yml'%(kFormatter(popsize), kFormatter(popsize),mda_round,pfpr_str,pr_str);
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 
             output_stream.close();
