@@ -66,5 +66,5 @@ void Introduce580YMutantEvent::execute() {
     }
   }
 
-  LOG(INFO) << date::year_month_day{scheduler->calendar_date} << " : Introduce Plas2 Copy";
+  LOG(INFO) << date::year_month_day{scheduler->calendar_date} << " : Introduce 580Y Copy";
 }

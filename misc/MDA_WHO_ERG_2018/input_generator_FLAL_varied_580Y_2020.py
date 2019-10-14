@@ -74,19 +74,16 @@ for mda_round in number_MDA_round:
                 
                 for index,event in enumerate(data['events']):
                     if event['name'] == 'single_round_MDA':
-                        new_data['events'][index]['info'] = data['events'][index]['info'][0:mda_round]       
+                        new_data['events'][index]['info'] = data['events'][index]['info'][0:mda_round]
+#                        if mda_round >0 :
+#                            print(new_data['events'][index]['info'])
                     
                 if itc == '':
                     for index,event in enumerate(data['events']):
                         if event['name'] == 'change_treatment_coverage':
                             new_data['events'][index]['info']= []
-                new_data['events'].append({'name': 'introduce_580Y_parasites', 'info':[{
-                            'location': 0,
-                            'day': '2019/11/01',
-                            'fraction': p_580Y
-                        }]})
-#           
-            
+                new_data['events'].append({'name': 'introduce_580Y_parasites', 'info':[{'location': 0,'day': '2019/11/1', 'fraction': p_580Y}]})
+                
                 print(mda_round, beta, p_580Y_str, itc);
                 output_filename = 'FLAL_varied_580Y_2020_no_importation/%s/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL_580Y_%s%s.yml'%(kFormatter(popsize), kFormatter(popsize),mda_round,pfpr_str,p_580Y_str,itc);
                 output_stream = open(output_filename, 'w');

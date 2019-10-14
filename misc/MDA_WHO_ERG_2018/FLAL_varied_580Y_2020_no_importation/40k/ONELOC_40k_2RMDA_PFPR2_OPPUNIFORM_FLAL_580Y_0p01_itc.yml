@@ -146,7 +146,7 @@ events:
     fraction_population_targeted: [1.0]
   name: single_round_MDA
 - info:
-  - {day: 2019/11/01, fraction: 0.01, location: 0}
+  - {day: 2019/11/1, fraction: 0.01, location: 0}
   name: introduce_580Y_parasites
 external_population_circulation_information:
   circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01]
