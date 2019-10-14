@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 300000
+popsize = 40000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
@@ -52,7 +52,8 @@ data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 pfprs = {
 #        0.06413: 'PFPR3',
         0.0585: 'PFPR2',
-        0.0538: 'PFPR1'}
+        #0.0538: 'PFPR1'
+        }
 
 p_580Ys = {
         0.01: '0p01',
@@ -79,7 +80,7 @@ for mda_round in number_MDA_round:
                     for index,event in enumerate(data['events']):
                         if event['name'] == 'change_treatment_coverage':
                             new_data['events'][index]['info']= []
-                new_data['events'].append({'name': 'introduce_plas2_parasites', 'info':[{
+                new_data['events'].append({'name': 'introduce_580Y_parasites', 'info':[{
                             'location': 0,
                             'day': '2019/11/01',
                             'fraction': p_580Y

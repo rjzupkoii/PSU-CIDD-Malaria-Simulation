@@ -153,7 +153,7 @@ events:
   name: single_round_MDA
 - info:
   - {day: 2019/11/01, fraction: 0.02, location: 0}
-  name: introduce_plas2_parasites
+  name: introduce_580Y_parasites
 external_population_circulation_information:
   circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01]
   daily_EIR: [0.01, 0.01, 0.01, 0.01, 0.1]
