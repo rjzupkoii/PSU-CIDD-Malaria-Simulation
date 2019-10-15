@@ -50,9 +50,9 @@ data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 
 
 
-betas = [0.0585]
+betas = [0.077]
 
-pfpr = { 0.0585: 'PFPR2'}
+pfpr = { 0.077: 'PFPR5'}
 
 participant_rate = {
         0.8: '0p8', 
@@ -80,7 +80,7 @@ for mda_round in number_MDA_round:
             
             new_data['mean_prob_individual_present_at_mda'] = [round(pr+0.05,3), round(pr-0.05,3), round(pr+0.05,3)]
             
-            output_filename = 'FLAL_varied_participant_rate_PFPR2_no_itc_no_imp/%s/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL_participant_rate_%s.yml'%(kFormatter(popsize), kFormatter(popsize),mda_round,pfpr_str,pr_str);
+            output_filename = 'FLAL_varied_participant_rate_PFPR5_no_itc_no_imp/%s/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL_participant_rate_%s.yml'%(kFormatter(popsize), kFormatter(popsize),mda_round,pfpr_str,pr_str);
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 
             output_stream.close();
