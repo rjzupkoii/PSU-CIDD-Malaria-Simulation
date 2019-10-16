@@ -10,6 +10,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.
 file(GLOB SOURCE *.cpp 
         Core/*.cpp 
         Core/Config/*.cpp 
+        Core/Config/Decoders/*.cpp
         Core/Index/*.cpp 
         Events/*.cpp 
         Events/Population/*.cpp 

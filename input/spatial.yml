@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------
-# Items controling execution of the model
+# Items controlling execution of the model
 # ---------------------------------------------------------------
 # The number of model days between updates to the user
 days_between_notifications: 365
@@ -19,19 +19,6 @@ initial_seed_number: 8675309
 
 # Connection string for the PostgreSQL database
 connection_string: "host=localhost dbname=masim user=sim password=sim"
-
-# ---------------------------------------------------------------
-# Rasters to be used in conjunction with the location_db, note 
-# that the paths are relative to the binary file for the simuation
-# ---------------------------------------------------------------
-# TESTING AND DEVELOPMENT feature
-location_raster: "../input/Burkina_Faso.asc"
-
-# Raster file that contains site specific EIR
-eir_raster: "../input/Burkina_Faso.asc"
-
-# Raster file that contains the site specific population data
-population_raster: "../input/Burkina_Faso.asc"
 
 # ---------------------------------------------------------------
 # Items controlling the behavior of the model
@@ -71,12 +58,24 @@ age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 20, 60, 100]
 initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35, 45, 55, 65, 100]
 
 # population_size_by_location is scaled by this value to increase the total 
-# number of indivduals in the model
+# number of individuals in the model
 artificial_rescaling_of_population_size: 1.0
 
-# spatial information, note that these values can be abstract if need be
-location_db:
-  # When raster files are being used, we assume that the age distribution can be constant for the country
+# ---------------------------------------------------------------
+# Rasters to be used in conjunction with the location_db, note 
+# that the paths are relative to the binary file for the simulation
+# ---------------------------------------------------------------
+raster_db:
+  # TESTING AND DEVELOPMENT feature
+  location_raster: "../input/Burkina_Faso.asc"
+
+  # Raster file that contains site specific EIR
+  beta_raster: "../input/Burkina_Faso.asc"
+
+  # Raster file that contains the site specific population data
+  population_raster: "../input/Burkina_Faso.asc"
+  
+    # When raster files are being used, we assume that the age distribution can be constant for the country
   age_distribution_by_location: [[0.0334, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387]]
 
   # probability that a symptomatic and infected individual seeks and receives antimalarial treatment
@@ -91,7 +90,6 @@ location_db:
 
   #if the number of values less than number of locations, the first value will be applied for all locations
   population_size_by_location: [ 10 ]
-  #spatial_model could be Gravity, Barabasi, or Wesolowski
 
 # seasonality parameters for all location
 seasonal_info:

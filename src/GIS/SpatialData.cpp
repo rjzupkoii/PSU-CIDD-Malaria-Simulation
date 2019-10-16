@@ -82,10 +82,12 @@ void SpatialData::generate_locations() {
     db.reserve(reference->NROWS * reference->NCOLS);
 
     // Scan the data and insert fields with a value
+    auto id = 0;
     for (auto row = 0; row < reference->NROWS; row++) {
         for (auto col = 0; col < reference->NCOLS; col++) {
             if (reference->data[row][col] == reference->NODATA_VALUE) { continue; }
-            db.emplace_back(reference->data[row][col], row, col, 0);
+            db.emplace_back(id, row, col, 0);
+            id++;
         }
     }
 

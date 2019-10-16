@@ -85,6 +85,8 @@ class Config {
   // String containing the path to the population raster file
   CONFIG_ITEM(population_raster, std::string, "")
 
+  CUSTOM_CONFIG_ITEM(raster_db, nullptr)
+
   CONFIG_ITEM(location_db, std::vector<Spatial::Location>,
               std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
 
