@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 40000
+popsize = 300000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
@@ -50,9 +50,9 @@ data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 
 
 pfprs = {
-#        0.06413: 'PFPR3',
+        0.06413: 'PFPR3',
         0.0585: 'PFPR2',
-        #0.0538: 'PFPR1'
+        0.0538: 'PFPR1'
         }
 
 p_580Ys = {
@@ -90,22 +90,3 @@ for mda_round in number_MDA_round:
                 output_stream = open(output_filename, 'w');
                 yaml.dump(new_data, output_stream); 
                 output_stream.close();
-
-#for index,beta in enumerate(betas):
-#    data['location_db']['beta_by_location'] = np.full(number_of_locations, beta).tolist()
-#    output_filename = 'beta/input_beta_%d.yml'%index;
-#    output_stream = open(output_filename, 'w');
-#    yaml.dump(data, output_stream);
-#    output_stream.close();
-
-#
-#
-#print(kFormatter(9000));
-#print(p.number_to_words( number_of_locations, threshold=10));
-
-#output_filename = 'ONELOC_300K_3RMDA_PFPR15_OPPUNIFORM_FLAL.yml';
-#
-#output_filename = 'input_test.yml';
-#
-#output_stream = open(output_filename, 'w');
-#yaml.dump(data, output_stream);
