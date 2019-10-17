@@ -139,6 +139,14 @@ struct ParasiteDensityLevel {
   }
 };
 
+// This structure is a hook so we can convert rasters to location_db
+struct RasterDb {
+  friend std::ostream &operator<<(std::ostream &os, const RasterDb &rdb) {
+    os << "raster_db: ";
+    return os;
+  }
+};
+
 struct RelativeBittingInformation {
   double max_relative_biting_value;
   int number_of_biting_levels;

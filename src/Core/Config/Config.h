@@ -76,17 +76,9 @@ class Config {
   CONFIG_ITEM(fraction_mosquitoes_interrupted_feeding, double, 0.0)
   CONFIG_ITEM(inflation_factor, double, 0.01)
 
-  // TODO Remove this item, testing and development feature
-  CONFIG_ITEM(location_raster, std::string, "")
-
-  // String containing the path to the EIR raster file
-  CONFIG_ITEM(eir_raster, std::string, "")
-
-  // String containing the path to the population raster file
-  CONFIG_ITEM(population_raster, std::string, "")
-
-  CUSTOM_CONFIG_ITEM(raster_db, nullptr)
-
+  // Either the raster_db field or the location_db MUST be supplied in the YAML
+  // and they MUST appear by this point in the file as well
+  CONFIG_ITEM(raster_db, RasterDb, RasterDb())
   CONFIG_ITEM(location_db, std::vector<Spatial::Location>,
               std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
 
@@ -120,7 +112,7 @@ class Config {
 
   CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
 
-  CUSTOM_CONFIG_ITEM(number_of_locations, 1)
+  CUSTOM_CONFIG_ITEM(number_of_locations, 0)
 
   CUSTOM_CONFIG_ITEM(spatial_distance_matrix, DoubleVector2())
 

@@ -9,6 +9,7 @@
 #include <stdexcept>
 
 #include "Core/Config/Config.h"
+#include "easylogging++.h"
 #include "Model.h"
 
 SpatialData::SpatialData() {
@@ -53,8 +54,6 @@ bool SpatialData::check_catalog(std::string& errors) {
         if (data[ndx]->YLLCORNER != reference->YLLCORNER) { errors += "mismatched YLLCORNER;"; }
     }
 
-    std::cout << errors << std::endl;
-
     // Set the dirty flag based upon the errors, return the result
     auto has_errors = !errors.empty();
     dirty = has_errors;
@@ -93,6 +92,10 @@ void SpatialData::generate_locations() {
 
     // It's likely we over allocated, allow some space to be reclaimed
     db.shrink_to_fit();
+
+    // Update the configured count
+    Model::CONFIG->number_of_locations.set_value();
+    VLOG(1) << "Generated " << Model::CONFIG->number_of_locations() << " locations";
 }
 
 void SpatialData::load(std::string filename, SpatialFileType type) {
@@ -100,11 +103,70 @@ void SpatialData::load(std::string filename, SpatialFileType type) {
     if (data[type] != nullptr) { delete data[type]; }
 
     // Load the data and set the reference
+    VLOG(1) << "Loading " << filename;
     AscFile* file = AscFileManager::read(filename);
     data[type] = file;
 
     // The data needs to be checked
     dirty = true;
+}
+
+bool SpatialData::parse(const YAML::Node &node) {
+
+    // First, start by attempting to load any rasters
+    if (node["location_raster"]) {
+        load(node["location_raster"].as<std::string>(), SpatialData::SpatialFileType::RawLocations);
+    }
+    if (node["beta_raster"]) {
+        load(node["beta_raster"].as<std::string>(), SpatialData::SpatialFileType::EIR);
+    }
+    if (node["population_raster"]) {
+        load(node["population_raster"].as<std::string>(), SpatialData::SpatialFileType::Population);
+    }
+
+    // Now convert the rasters into the location space
+    refresh();
+
+    // Grab the location_db to work with
+    auto location_db = Model::CONFIG->location_db();
+    auto number_of_locations = Model::CONFIG->number_of_locations();
+
+    // Load the age distribution from the YAML
+    for (auto loc = 0; loc < number_of_locations; loc++) {
+        auto input_loc = node["age_distribution_by_location"].size() < number_of_locations ? 0 : loc;
+        for (auto i = 0; i < node["age_distribution_by_location"][input_loc].size(); i++) {
+            location_db[loc].age_distribution.push_back(node["age_distribution_by_location"][input_loc][i].as<double>());
+        }
+    }
+
+    // Load the treatment information
+    for (auto loc = 0; loc < number_of_locations; loc++) {
+        auto input_loc = node["p_treatment_for_less_than_5_by_location"].size() < number_of_locations ? 0 : loc;
+        location_db[loc].p_treatment_less_than_5 = node["p_treatment_for_less_than_5_by_location"][input_loc].as<float>();
+    }
+    for (auto loc = 0; loc < number_of_locations; loc++) {
+        auto input_loc = node["p_treatment_for_more_than_5_by_location"].size() < number_of_locations ? 0 : loc;
+        location_db[loc].p_treatment_more_than_5 = node["p_treatment_for_more_than_5_by_location"][input_loc].as<float>();
+    }
+
+    // Load the beta if we don't have a raster for it
+    if (!node["beta_raster"]) {
+        for (auto loc = 0; loc < number_of_locations; loc++) {
+            auto input_loc = node["beta_by_location"].size() < number_of_locations ? 0 : loc;
+            location_db[loc].beta = node["beta_by_location"][input_loc].as<float>();
+        }
+    }
+
+    // Load the population if we don't have a raster for it
+    if (!node["population_raster"]) {
+        for (auto loc = 0; loc < number_of_locations; loc++) {
+            auto input_loc = node["population_size_by_location"].size() < number_of_locations ? 0 : loc;
+            location_db[loc].population_size = node["population_size_by_location"][input_loc].as<int>();
+        }
+    }
+
+    // Load completed successfully
+    return true;
 }
 
 void SpatialData::refresh() {
@@ -117,12 +179,9 @@ void SpatialData::refresh() {
     // We have data and we know that it should be located in the same geographic space,
     // so now we can now refresh the location_db
     auto& db = Model::CONFIG->location_db();
-    if (db.size() == 0) {
-        std::cout << "Generating!" << std::endl;
+    if (Model::CONFIG->number_of_locations() == 0) {
         generate_locations();
-        std::cout << "done!" << std::endl;
     }
-
 }
 
 void SpatialData::write(std::string filename, SpatialFileType type) {

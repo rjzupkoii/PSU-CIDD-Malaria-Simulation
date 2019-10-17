@@ -125,9 +125,6 @@ class Model {
   IStrategy *treatment_strategy_{nullptr};
   ITreatmentCoverageModel *treatment_coverage_{nullptr};
 
-  // Load raster data that was provided and inject it into the location_db
-  void load_spatial_data();
-
 };
 
 #endif    /* MODEL_H */

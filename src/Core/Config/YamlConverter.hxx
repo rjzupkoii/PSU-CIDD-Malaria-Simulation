@@ -1,3 +1,8 @@
+/*
+ * YamlConverter.hxx
+ * 
+ * This file defines several converters that are used for parsing the YAML configuration file.
+ */ 
 #ifndef YAMLCONVERTER_H
 #define YAMLCONVERTER_H
 
@@ -6,7 +11,7 @@
 #include "Spatial/Location.h"
 #include "Core/TypeDef.h"
 #include <cmath>
-
+#include "GIS/SpatialData.h"
 
 namespace YAML {
   template<>
@@ -46,6 +51,18 @@ namespace YAML {
       return true;
     }
   };
+  
+  template<>
+  struct convert<RasterDb> {
+    static Node encode(const RasterDb &rdb) {
+      Node node;
+      node.push_back("raster_db");
+      return node;
+    }
+    static bool decode(const Node &node, RasterDb &rdb) {
+      return SpatialData::get_instance().parse(node);
+    }
+  };
 
   template<>
   struct convert<std::vector<Spatial::Location>> {
@@ -58,17 +75,20 @@ namespace YAML {
     // Decode the contents of the location_db node
     static bool decode(const Node &node, std::vector<Spatial::Location> &location_db) {
 
+      // Check to see if the location informatoin has already been entered, this implies
+      // that there was a raster_db node present and an error starte exists
+      if (location_db.size() != 0) {
+        throw std::runtime_error("location_db has already been instantaied, is a raster_db present in the file?");
+      }
+
       // If the user is supplying raster data, location_info will likely not be there.
       // Since we are just decoding the file, just focus on loading the data and defer
       // validation of the file to the recipent of the data
-      auto number_of_locations = 0;
-      if (node["location_info"]) {
-        number_of_locations = node["location_info"].size();
-        for (std::size_t i = 0; i < number_of_locations; i++) {
-          location_db.emplace_back(node["location_info"][i][0].as<int>(),
-                                   node["location_info"][i][1].as<float>(),
-                                   node["location_info"][i][2].as<float>(), 0);
-        }
+      auto number_of_locations = node["location_info"].size();
+      for (std::size_t i = 0; i < number_of_locations; i++) {
+        location_db.emplace_back(node["location_info"][i][0].as<int>(),
+                                  node["location_info"][i][1].as<float>(),
+                                  node["location_info"][i][2].as<float>(), 0);
       }
 
       for (std::size_t loc = 0; loc < number_of_locations; loc++) {
@@ -187,4 +207,4 @@ namespace YAML {
     }
   };
 }
-#endif // YAMLCONVERTER_H
+#endif

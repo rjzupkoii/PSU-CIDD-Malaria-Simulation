@@ -126,15 +126,8 @@ void Model::build_initial_treatment_coverage() {
 void Model::initialize(int job_number, std::string std) {
   LOG(INFO) << "Model initializing...";
 
-  //Read input file
   LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
   config_->read_from_file(config_filename_);
-
-  // If necessary, read the raster files and inject them into the location_db
-  if (config_->location_db().size() == 0) {
-    VLOG(1) << "Preparing spatial model...";
-    load_spatial_data();
-  }
   
   VLOG(1) << "Initialize Random";
   random_->initialize(config_->initial_seed_number());
@@ -183,36 +176,6 @@ void Model::initialize(int job_number, std::string std) {
   for (auto* event : config_->preconfig_population_events()) {
     scheduler_->schedule_population_event(event);
   }
-}
-
-void Model::load_spatial_data() { 
-  // If we have been called, assume location_db is empty, but we still need raster data
-  int count = 0;
-  auto& instance = SpatialData::get_instance();
-  if (!empty_or_blank(config_->eir_raster())) {
-    VLOG(1) << fmt::format("Loading raster '{}'", config_->eir_raster());
-    instance.load(config_->eir_raster(), SpatialData::SpatialFileType::EIR);
-    count++;
-  }
-  if (!empty_or_blank(config_->population_raster())) {
-    VLOG(1) << fmt::format("Loading raster '{}'", config_->population_raster());
-    instance.load(config_->population_raster(), SpatialData::SpatialFileType::Population);
-    count++;
-  }
-
-  // TODO Determine if this faster is going to be used
-  if (!empty_or_blank(config_->location_raster())) {
-    VLOG(1) << fmt::format("Loading raster '{}'", config_->location_raster());
-    instance.load(config_->location_raster(), SpatialData::SpatialFileType::RawLocations);
-    count++;
-  }
-  
-  if (count == 0) {
-    throw std::runtime_error("No location data (raster or array) has been provided.");
-  }
-
-  // Raster data is now loaded, so it needs to be pushed into the location_db
-  instance.refresh();
 }
 
 void Model::initialize_object_pool(const int &size) {

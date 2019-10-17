@@ -8,7 +8,6 @@
 #include "Therapies/DrugDatabase.h"
 #include "Parasites/GenotypeDatabase.h"
 #include "Core/MultinomialDistributionGenerator.h"
-#include "Core/Config/Decoders/SpatialDecoder.h"
 
 namespace YAML {
 class Node;
@@ -38,7 +37,10 @@ class number_of_locations : public ConfigItem<unsigned long> {
   number_of_locations(const std::string &name, const unsigned long &default_value, Config *config) : ConfigItem<unsigned long>(name,
                                                                                                            default_value,
                                                                                                            config) {}
+  // Update the number of locations based upon the location_db size
+  void set_value();
 
+  // Update the number of locations based upon the location_db size, the node is ignored
   void set_value(const YAML::Node &node) override;
 };
 
@@ -436,26 +438,6 @@ class prob_individual_present_at_mda_distribution : public IConfigItem {
   }
 
   void set_value(const YAML::Node &node) override;
-};
-
-// This custom configuration item acts as a hook to convert raster informaiton into
-// location_db information. Since the location_db is so closely interearted with the 
-// simulation we want to avoid rewriting it as much as possible.
-class raster_db : public IConfigItem {
-  DISALLOW_COPY_AND_ASSIGN(raster_db)
-  DISALLOW_MOVE(raster_db)
-
-  public:
-    //constructor
-    explicit raster_db(const std::string &name, raster_db *default_value, Config *config = nullptr) : IConfigItem(config, name) {}
-
-    // destructor
-    virtual ~raster_db() { }
-
-    void set_value(const YAML::Node &node) override {
-      SpatialDecoder::decode(this->config_, node);
-    }
-
 };
 
 #endif

@@ -24,8 +24,12 @@ void number_of_age_classes::set_value(const YAML::Node &node) {
   value_ = static_cast<int>(config_->age_structure().size());
 }
 
-void number_of_locations::set_value(const YAML::Node &node) {
+void number_of_locations::set_value() {
   value_ = static_cast<int>(config_->location_db().size());
+}
+
+void number_of_locations::set_value(const YAML::Node &node) {
+  set_value();
 }
 
 void spatial_distance_matrix::set_value(const YAML::Node &node) {

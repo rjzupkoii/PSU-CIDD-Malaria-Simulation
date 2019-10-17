@@ -8,6 +8,7 @@
 
 #include <string>
 #include <vector>
+#include <yaml-cpp/yaml.h>
 
 #include "AscFile.h"
 
@@ -64,6 +65,9 @@ class SpatialData {
 
         // Load the given raster file into the spatial catalog and assign the given label
         void load(std::string filename, SpatialFileType type);
+
+        // Parse the YAML node provided to extract all of the relevent information for the simulation
+        bool parse(const YAML::Node &node);
 
         // Refresh the data from the model (i.e., Location DB) to the spaital data
         void refresh();
