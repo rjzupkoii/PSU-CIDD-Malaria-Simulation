@@ -1,3 +1,8 @@
+/*
+ * ConfigItem.hxx
+ *
+ * This file contains various templates for the YAML file.
+ */
 #ifndef CONFIGITEM_H
 #define CONFIGITEM_H
 
@@ -120,6 +125,13 @@ std::vector<T> &ConfigItem<std::vector<T>>::operator()() {
 
 template<typename T>
 void ConfigItem<std::vector<T>>::set_value(const YAML::Node &node) {
+
+  // Are we looking at the location_db type?
+  if (typeid(T) == typeid(Spatial::Location) && this->value_.size() != 0) {
+    LOG(INFO) << "location_db appears to have been set by raster_db";
+    return;
+  }
+
   typedef std::vector<T> VectorT;
   if (node[this->name_]) {
     this->value_ = node[this->name_].template as<VectorT>();

@@ -70,10 +70,10 @@ raster_db:
   location_raster: "../input/Burkina_Faso.asc"
 
   # Raster file that contains site specific EIR
-  beta_raster: "../input/Burkina_Faso.asc"
+#  beta_raster: "../input/Burkina_Faso.asc"
 
   # Raster file that contains the site specific population data
-  population_raster: "../input/Burkina_Faso.asc"
+#  population_raster: "../input/Burkina_Faso.asc"
   
     # When raster files are being used, we assume that the age distribution can be constant for the country
   age_distribution_by_location: [[0.0334, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387]]
