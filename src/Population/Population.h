@@ -15,10 +15,6 @@
 #include "Core/Dispatcher.h"
 #include <vector>
 
-//#include "PersonIndexByLocationStateAgeClass.h"
-
-
-//class Person;
 class Model;
 
 class PersonIndexAll;
@@ -44,6 +40,10 @@ class Population : public Dispatcher {
  PROPERTY_REF(std::vector<std::vector<double> >, current_force_of_infection_by_location_parasite_type);
  PROPERTY_REF(std::vector<std::vector<double> >, interupted_feeding_force_of_infection_by_location_parasite_type);
  PROPERTY_REF(std::vector<std::vector<std::vector<double> > >, force_of_infection_for7days_by_location_parasite_type);
+
+  private:
+    // Generate the individual at the given location
+    void generate_individual(int location, int age_class);
 
  public:
   Population(Model *model = nullptr);
@@ -138,4 +138,4 @@ T *Population::get_person_index() {
   return nullptr;
 }
 
-#endif    /* POPULATION_H */
+#endif

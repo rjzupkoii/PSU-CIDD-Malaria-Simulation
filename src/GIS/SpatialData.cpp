@@ -127,8 +127,8 @@ bool SpatialData::parse(const YAML::Node &node) {
     // Now convert the rasters into the location space
     refresh();
 
-    // Grab the location_db to work with
-    auto location_db = Model::CONFIG->location_db();
+    // Grab reference to the location_db to work with
+    auto& location_db = Model::CONFIG->location_db();
     auto number_of_locations = Model::CONFIG->number_of_locations();
 
     // Load the age distribution from the YAML
