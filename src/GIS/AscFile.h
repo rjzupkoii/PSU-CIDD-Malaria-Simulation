@@ -46,7 +46,7 @@ struct AscFile {
     double NODATA_VALUE = 0;
 
     // The data stored in the file
-    double** data = nullptr;
+    float** data = nullptr;
 
     // Deconstructor
     ~AscFile();

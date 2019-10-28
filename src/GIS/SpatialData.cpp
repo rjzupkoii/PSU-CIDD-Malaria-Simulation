@@ -1,11 +1,12 @@
 /*
  * SpaitalData.cpp
  * 
- *
+ * Implemention of SpatialData functions.
  */
 #include "SpatialData.h"
 
 #include <fmt/format.h>
+#include <math.h>
 #include <stdexcept>
 
 #include "Core/Config/Config.h"
@@ -111,14 +112,74 @@ void SpatialData::load(std::string filename, SpatialFileType type) {
     dirty = true;
 }
 
+void SpatialData::load_beta() {
+    // Verify that we have beta values and grab the reference
+    if (data[SpatialFileType::Beta] == nullptr) {
+        throw std::runtime_error(fmt::format("{} called without a beta raster being loaded.", __FUNCTION__));
+    }
+    auto* betas = data[SpatialFileType::Beta];
+    
+    // Grab a reference to the location_db to work with
+    auto& location_db = Model::CONFIG->location_db();
+    
+    // Iterate through the raseter and locations to set the beta value
+    auto id = 0;
+    for (auto row = 0; row < betas->NROWS; row++) {
+        for (auto col = 0; col < betas->NCOLS; col++) {
+            if (betas->data[row][col] == betas->NODATA_VALUE) { continue; }
+            location_db[id].beta = betas->data[row][col];
+            id++;
+        }
+    }
+
+    // When we are done the last id value should match the number of locations
+    assert(id == Model::CONFIG->number_of_locations());
+
+    // Log the updates
+    VLOG(1) << "Loaded beta values from raster file.";
+}
+
+void SpatialData::load_population() {
+    // Verify that we have population values and grab the reference
+    if (data[SpatialFileType::Population] == nullptr) {
+        throw std::runtime_error(fmt::format("{} called without a popuation raster being loaded.", __FUNCTION__));
+    }
+    auto* popuation = data[SpatialFileType::Population];
+
+    // Grab a reference to the location_db to work with
+    auto& location_db = Model::CONFIG->location_db();
+
+    // Iterate through the raster and locations to set the popuation value
+    auto id = 0;
+    for (auto row = 0; row < popuation->NROWS; row++) {
+        for (auto col = 0; col < popuation->NCOLS; col++) {
+            if (popuation->data[row][col] == popuation->NODATA_VALUE) { continue; }
+
+            // Verify that we aren't losing data
+            if (popuation->data[row][col] != ceil(popuation->data[row][col])) {
+                LOG(WARNING) << fmt::format("Population data lost at row {}, col {}, value {}", row, col, popuation->data[row][col]);
+            }
+
+            location_db[id].population_size = static_cast<int>(popuation->data[row][col]);
+            id++;
+        }
+    }
+
+    // When we are done the last id value should match the number of locations
+    assert(id == Model::CONFIG->number_of_locations());
+
+    // Log the updates
+    VLOG(1) << "Loaded population values from raster file.";
+}
+
 bool SpatialData::parse(const YAML::Node &node) {
 
     // First, start by attempting to load any rasters
     if (node["location_raster"]) {
-        load(node["location_raster"].as<std::string>(), SpatialData::SpatialFileType::RawLocations);
+        load(node["location_raster"].as<std::string>(), SpatialData::SpatialFileType::Locations);
     }
     if (node["beta_raster"]) {
-        load(node["beta_raster"].as<std::string>(), SpatialData::SpatialFileType::EIR);
+        load(node["beta_raster"].as<std::string>(), SpatialData::SpatialFileType::Beta);
     }
     if (node["population_raster"]) {
         load(node["population_raster"].as<std::string>(), SpatialData::SpatialFileType::Population);
@@ -127,7 +188,7 @@ bool SpatialData::parse(const YAML::Node &node) {
     // Now convert the rasters into the location space
     refresh();
 
-    // Grab reference to the location_db to work with
+    // Grab a reference to the location_db to work with
     auto& location_db = Model::CONFIG->location_db();
     auto number_of_locations = Model::CONFIG->number_of_locations();
 
@@ -177,11 +238,15 @@ void SpatialData::refresh() {
     }
 
     // We have data and we know that it should be located in the same geographic space,
-    // so now we can now refresh the location_db
+    // so now we can now refresh the location_db 
     auto& db = Model::CONFIG->location_db();
     if (Model::CONFIG->number_of_locations() == 0) {
         generate_locations();
     }
+    
+    // Load the remaining data, note this spot is a marker for adding more types
+    if (data[SpatialFileType::Beta] != nullptr) { load_beta(); }
+    if (data[SpatialFileType::Population] != nullptr) { load_population(); }
 }
 
 void SpatialData::write(std::string filename, SpatialFileType type) {

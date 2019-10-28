@@ -89,16 +89,16 @@ AscFile* AscFileManager::read(std::string fileName) {
     delete errors;
 
     // Allocate the memory and read the remainder of the actual raster data
-    results->data = new double*[results->NROWS];
+    results->data = new float*[results->NROWS];
     for (auto ndx = 0; ndx < results->NROWS; ndx++) {
-        results->data[ndx] = new double[results->NCOLS];
+        results->data[ndx] = new float[results->NCOLS];
     }
 
     // Remainder of the file is the actual raster data
     for (auto ndx = 0; ndx < results->NROWS; ndx++) {
         for (auto ndy = 0; ndy < results->NCOLS; ndy++) {
             in >> value;
-            results->data[ndx][ndy] = std::stod(value);
+            results->data[ndx][ndy] = std::stof(value);
         }
     }
 

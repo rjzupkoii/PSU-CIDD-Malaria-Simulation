@@ -6,12 +6,14 @@
 #ifndef YAMLCONVERTER_H
 #define YAMLCONVERTER_H
 
+#include <cmath>
 #include <date/date.h>
 #include <yaml-cpp/yaml.h>
-#include "Spatial/Location.h"
+
 #include "Core/TypeDef.h"
-#include <cmath>
+#include "easylogging++.h"
 #include "GIS/SpatialData.h"
+#include "Spatial/Location.h"
 
 namespace YAML {
   template<>
@@ -107,14 +109,25 @@ namespace YAML {
         auto input_loc = node["p_treatment_for_more_than_5_by_location"].size() < number_of_locations ? 0 : loc;
         location_db[loc].p_treatment_more_than_5 = node["p_treatment_for_more_than_5_by_location"][input_loc].as<float>();
       }
-      for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-        auto input_loc = node["beta_by_location"].size() < number_of_locations ? 0 : loc;
-        location_db[loc].beta = node["beta_by_location"][input_loc].as<float>();
+
+      // If a raster was loaded for these items then use that instead
+      if (SpatialData::get_instance().has_raster(SpatialData::SpatialFileType::Beta)) {
+        LOG(WARNING) << "Beta raster and value supplied, ignoring beta_by_location setting";
+      } else { 
+        for (std::size_t loc = 0; loc < number_of_locations; loc++) {
+          auto input_loc = node["beta_by_location"].size() < number_of_locations ? 0 : loc;
+          location_db[loc].beta = node["beta_by_location"][input_loc].as<float>();
+        }
       }
-      for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-        auto input_loc = node["population_size_by_location"].size() < number_of_locations ? 0 : loc;
-        location_db[loc].population_size = node["population_size_by_location"][input_loc].as<int>();
+      if (SpatialData::get_instance().has_raster(SpatialData::SpatialFileType::Population)) {
+        LOG(WARNING) << "Population raster and value supplied, ignoring population_size_by_location setting";
+      } else {
+        for (std::size_t loc = 0; loc < number_of_locations; loc++) {
+          auto input_loc = node["population_size_by_location"].size() < number_of_locations ? 0 : loc;
+          location_db[loc].population_size = node["population_size_by_location"][input_loc].as<int>();
+        }
       }
+
       return true;
     }
   };

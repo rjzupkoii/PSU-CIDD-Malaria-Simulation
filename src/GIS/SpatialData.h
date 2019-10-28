@@ -16,10 +16,10 @@ class SpatialData {
     public:
         enum SpatialFileType {
             // Only use the data to define the model's location listing
-            RawLocations,
+            Locations,
 
-            // Entomological Inoculation Rates (EIR)
-            EIR,
+            // Transimission intensity, linked to the Entomological Inoculation Rates (EIR)
+            Beta,
 
             // Population data
             Population,
@@ -47,6 +47,12 @@ class SpatialData {
         // Generate the locations for the location_db
         void generate_locations();
 
+        // Load the beta values into the location_db
+        void load_beta();
+
+        // Load the popuation values into the location_db
+        void load_population();
+
     public:
         // Not supported by singleton.
         SpatialData(SpatialData const&) = delete;
@@ -62,6 +68,9 @@ class SpatialData {
 
         // Clears all of the loaded data
         void clear();
+
+        // Return true if a raster file has been loaded, false otherwise
+        bool has_raster(SpatialFileType type) { return data[type] == nullptr; }
 
         // Load the given raster file into the spatial catalog and assign the given label
         void load(std::string filename, SpatialFileType type);
