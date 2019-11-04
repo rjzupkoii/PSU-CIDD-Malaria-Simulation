@@ -1,3 +1,11 @@
+/*
+ * CustomConfigItem.cpp
+ * 
+ * Implement the customer configuration items. 
+ * 
+ * Note that the compiler has a hard time determining the correct data type for iterators at times, so they may need to be manually supplied.
+ */
+
 #define _USE_MATH_DEFINES
 #define NOMINMAX
 
@@ -186,7 +194,7 @@ void drug_db::set_value(const YAML::Node &node) {
   ObjectHelpers::delete_pointer<DrugDatabase>(value_);
   value_ = new DrugDatabase();
 
-  for (auto drug_id = 0; drug_id < node[name_].size(); drug_id++) {
+  for (unsigned int drug_id = 0; drug_id < node[name_].size(); drug_id++) {
     auto* dt = new DrugType();
     dt->set_id(drug_id);
 
@@ -233,15 +241,15 @@ void EC50_power_n_table::set_value(const YAML::Node &node) {
   value_.clear();
   value_.assign(config_->genotype_db()->size(), std::vector<double>());
 
-  for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-    for (auto i = 0; i < config_->drug_db()->size(); i++) {
+  for (unsigned int g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
+    for (unsigned int i = 0; i < config_->drug_db()->size(); i++) {
       value_[g_id].push_back(config_->drug_db()->at(i)->infer_ec50(config_->genotype_db()->at(g_id)));
     }
   }
 
 
-  for (auto g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-    for (auto i = 0; i < config_->drug_db()->size(); i++) {
+  for (unsigned int g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
+    for (unsigned int i = 0; i < config_->drug_db()->size(); i++) {
       value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->at(i)->n());
     }
   }
@@ -295,8 +303,8 @@ void circulation_info::set_value(const YAML::Node &node) {
     t += i;
   }
 
-  assert(value_.number_of_moving_levels == value_.v_moving_level_density.size());
-  assert(value_.number_of_moving_levels == value_.v_moving_level_value.size());
+  assert((unsigned)value_.number_of_moving_levels == value_.v_moving_level_density.size());
+  assert((unsigned)value_.number_of_moving_levels == value_.v_moving_level_value.size());
   assert(fabs(t - 1) < 0.0001);
 
   value_.circulation_percent = info_node["circulation_percent"].as<double>();
@@ -361,8 +369,8 @@ void relative_bitting_info::set_value(const YAML::Node &node) {
     t += i;
   }
 
-  assert(value_.number_of_biting_levels == value_.v_biting_level_density.size());
-  assert(value_.number_of_biting_levels == value_.v_biting_level_value.size());
+  assert((unsigned)value_.number_of_biting_levels == value_.v_biting_level_density.size());
+  assert((unsigned)value_.number_of_biting_levels == value_.v_biting_level_value.size());
   assert(fabs(t - 1) < 0.0001);
 
 }
@@ -416,11 +424,10 @@ void initial_parasite_info::set_value(const YAML::Node &node) {
   for (size_t index = 0; index < info_node.size(); index++) {
     const auto location = info_node[index]["location_id"].as<int>();
     const auto location_from = location == -1 ? 0 : location;
-    const auto location_to = location == -1 ? config_->number_of_locations() : std::min<int>(location + 1,
-                                                                                             config_->number_of_locations());
+    const auto location_to = location == -1 ? config_->number_of_locations() : std::min<int>(location + 1, config_->number_of_locations());
 
-    //apply for all location
-    for (auto loc = location_from; loc < location_to; ++loc) {
+    //apply for all location, note that the compiler has a hard time guessing the right type for auto here
+    for (unsigned long loc = location_from; loc < location_to; ++loc) {
       for (std::size_t j = 0; j < info_node[index]["parasite_info"].size(); j++) {
         auto parasite_type_id = info_node[index]["parasite_info"][j]["parasite_type_id"].as<int>();
         auto prevalence = info_node[index]["parasite_info"][j]["prevalence"].as<double>();

@@ -132,8 +132,8 @@ void SpatialData::load_beta() {
         }
     }
 
-    // When we are done the last id value should match the number of locations
-    assert(id == Model::CONFIG->number_of_locations());
+    // When we are done the last id value should match the number of locations, accounting for zero indexing
+    assert((unsigned)(id + 1) == Model::CONFIG->number_of_locations());
 
     // Log the updates
     VLOG(1) << "Loaded beta values from raster file.";
@@ -165,8 +165,8 @@ void SpatialData::load_population() {
         }
     }
 
-    // When we are done the last id value should match the number of locations
-    assert(id == Model::CONFIG->number_of_locations());
+    // When we are done the last id value should match the number of locations, accounting for zero indexing
+    assert((unsigned)(id + 1) == Model::CONFIG->number_of_locations());
 
     // Log the updates
     VLOG(1) << "Loaded population values from raster file.";
@@ -193,26 +193,26 @@ bool SpatialData::parse(const YAML::Node &node) {
     auto number_of_locations = Model::CONFIG->number_of_locations();
 
     // Load the age distribution from the YAML
-    for (auto loc = 0; loc < number_of_locations; loc++) {
+    for (auto loc = 0ul; loc < number_of_locations; loc++) {
         auto input_loc = node["age_distribution_by_location"].size() < number_of_locations ? 0 : loc;
-        for (auto i = 0; i < node["age_distribution_by_location"][input_loc].size(); i++) {
+        for (auto i = 0ul; i < node["age_distribution_by_location"][input_loc].size(); i++) {
             location_db[loc].age_distribution.push_back(node["age_distribution_by_location"][input_loc][i].as<double>());
         }
     }
 
     // Load the treatment information
-    for (auto loc = 0; loc < number_of_locations; loc++) {
+    for (auto loc = 0ul; loc < number_of_locations; loc++) {
         auto input_loc = node["p_treatment_for_less_than_5_by_location"].size() < number_of_locations ? 0 : loc;
         location_db[loc].p_treatment_less_than_5 = node["p_treatment_for_less_than_5_by_location"][input_loc].as<float>();
     }
-    for (auto loc = 0; loc < number_of_locations; loc++) {
+    for (auto loc = 0ul; loc < number_of_locations; loc++) {
         auto input_loc = node["p_treatment_for_more_than_5_by_location"].size() < number_of_locations ? 0 : loc;
         location_db[loc].p_treatment_more_than_5 = node["p_treatment_for_more_than_5_by_location"][input_loc].as<float>();
     }
 
     // Load the beta if we don't have a raster for it
     if (!node["beta_raster"]) {
-        for (auto loc = 0; loc < number_of_locations; loc++) {
+        for (auto loc = 0ul; loc < number_of_locations; loc++) {
             auto input_loc = node["beta_by_location"].size() < number_of_locations ? 0 : loc;
             location_db[loc].beta = node["beta_by_location"][input_loc].as<float>();
         }
@@ -220,7 +220,7 @@ bool SpatialData::parse(const YAML::Node &node) {
 
     // Load the population if we don't have a raster for it
     if (!node["population_raster"]) {
-        for (auto loc = 0; loc < number_of_locations; loc++) {
+        for (auto loc = 0ul; loc < number_of_locations; loc++) {
             auto input_loc = node["population_size_by_location"].size() < number_of_locations ? 0 : loc;
             location_db[loc].population_size = node["population_size_by_location"][input_loc].as<int>();
         }

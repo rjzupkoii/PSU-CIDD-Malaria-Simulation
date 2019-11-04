@@ -17,7 +17,7 @@
 class DbLoader {
     public:
         // Load the genotypes into the database, assume that these are the same for ALL configurations
-        static void load_genotypes(std::string configuration) {
+        static bool load_genotypes(std::string configuration) {
             const std::string INSERT_GENOTYPE = "INSERT INTO sim.Genotype (id, name) VALUES ({}, '{}');";
 
             try {
@@ -27,7 +27,7 @@ class DbLoader {
 
                 // Prepare the bulk query
                 std::string query = "DELETE FROM sim.Genotype;";
-                for (int id = 0; id < config->number_of_parasite_types(); id++) {
+                for (auto id = 0ul; id < config->number_of_parasite_types(); id++) {
                     auto genotype = (*config->genotype_db())[id];
                     query.append(fmt::format(INSERT_GENOTYPE, id, genotype->to_string(config)));
                 }
@@ -37,8 +37,13 @@ class DbLoader {
                 pqxx::work db(conn);
                 db.exec(query);
                 db.commit();
+
+                // Report the good news
+                return true;
+
             } catch (const std::exception &ex) {
                 std::cerr << __FUNCTION__ << "-" << ex.what() << std::endl;
+                return false;
             }
         }
 };

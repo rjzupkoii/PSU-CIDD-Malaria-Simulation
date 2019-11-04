@@ -127,10 +127,12 @@ void handle_cli(Model *model, int argc, char **argv) {
   
   // Check to see if we are doing a genotype load, do that and exit
   if (load_genotypes) {
-    std::cout << "Loading genotypes...";
-    DbLoader::load_genotypes(input);
-    std::cout << "done!" << std::endl;
-    std::cout << "Exiting simulation." << std::endl;
+    std::cout << "Loading genotypes..." << std::endl;
+    if (DbLoader::load_genotypes(input)) {
+      std::cout << "Load complete!" << std::endl;
+    } else {
+      std::cout << "Terminated with error(s)." << std::endl;
+    }
     exit(0);
   }
 
