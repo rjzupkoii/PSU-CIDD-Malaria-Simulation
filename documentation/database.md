@@ -101,7 +101,7 @@ sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
 mkdir environments
 cd environments
 python3 -m venv py_env
-source py_env/bin/activiate
+source py_env/bin/activate
 python -m pip install wheel
 deactivate
 cd ~
@@ -186,6 +186,6 @@ sudo systemctl restart apache2
 
 At this point you should be able to connect to the pgAdmin control panel at http://[SERVER IP ADDRESS]. Login to the control panel using the credentials supplied in [Step 6](#Step6). One logged in, you should be able to add the localhost via "Add New Server" and proceed with administration of the databases using pgAdmin.
 
-## Creation of Simuation Database
+## Creation of Simulation Database
 
-After logging into the pgAdmin control panel, start by creating the user `sim` and ensuring they have permissions to login to the database. This is the user that will be the simuation to write results to the database during model exeuction. Next, run the script `database.sql` which can be found under the `/database` directory of this repostiory.
+After logging into the pgAdmin control panel, start by creating the user `sim` and ensuring they have permissions to login to the database. This is the user that will be the simulation to write results to the database during model execution. Next, run the script `database.sql` which can be found under the `/database` directory of this repository.
