@@ -20,6 +20,12 @@ The specific requirements for the server are dependent in part upon the number o
 ssh [User]@[IP address] -p [port]
 ```
 
+2. Set the default encoding on the server, the setting can be verified by running `locale`
+
+```bash
+export LANG=en_US.UTF-8
+```
+
 2. Install the GPG key and repository for PostgreSQL packages
 
 ```bash
@@ -43,16 +49,34 @@ postgres-# \conninfo
 postgres-# \q
 ```
 
-5. Create administrative user, supply the password and select yes when asked if the user should be a super user.
+5. Create administrative user
+
+Be sure to supply the password and select yes when asked if the user should be a super user.
 
 ```bash
 sudo -u postgres createuser --interactive --pwprompt
 ```
 
-6. Enable service
+6. Configure the server to listen for connections
+
+This is done by first editing the file `/etc/postgresql/11/main/postgresql.conf` and updating the line `listen_addresses='*'`. Next, the file `/etc/postgresql/11/main/pg_hba.conf` needs to have the line `host all all 0.0.0.0/0 md5` added at the end. Note that this means that the server will listen to connections from *any* IP address. If this is not desired behavior, a more restrictive configuration should be used.
+
+7. Enable service
 
 ```bash
 sudo update-rc.d postgresql enable
+```
+
+Optional. Update default locale for the database template. This is necessary if you get an error that states "Encoding UTF8 does not match locale en_US. The chosen LC_CTYPE setting requires encoding LATIN1" from pgAdmin when creating a database
+
+```bash
+sudo -u postgres psql postgres
+
+update pg_database set datistemplate=false where datname='template1';
+drop database Template1;
+create database template1 with owner=postgres encoding='UTF-8' lc_collate='en_US.utf8' lc_ctype='en_US.utf8' template template0;
+update pg_database set datistemplate=true where datname='template1';
+\q
 ```
 
 ## Installation of pgAdmin
@@ -161,3 +185,7 @@ sudo systemctl restart apache2
 ```
 
 At this point you should be able to connect to the pgAdmin control panel at http://[SERVER IP ADDRESS]. Login to the control panel using the credentials supplied in [Step 6](#Step6). One logged in, you should be able to add the localhost via "Add New Server" and proceed with administration of the databases using pgAdmin.
+
+## Creation of Simuation Database
+
+After logging into the pgAdmin control panel, start by creating the user `sim` and ensuring they have permissions to login to the database. This is the user that will be the simuation to write results to the database during model exeuction. Next, run the script `database.sql` which can be found under the `/database` directory of this repostiory.
