@@ -4,7 +4,7 @@ The following document is intended provide a walk through of how to get the Mala
 
 # Hardware Requirements
 
-The specific requirements for the server are dependent in part upon the number of instances that will be connecting to it while a simuation is running. However, as a baseline the following is a resonable starting point for a virtual machine:
+The specific requirements for the server are dependent in part upon the number of instances that will be connecting to it while a simulation is running. However, as a baseline the following is a reasonable starting point for a virtual machine:
 
 - 4 CPUs
 - 8 GB RAM
@@ -43,7 +43,13 @@ postgres-# \conninfo
 postgres-# \q
 ```
 
-5. Enable service
+5. Create administrative user, supply the password and select yes when asked if the user should be a super user.
+
+```bash
+sudo -u postgres createuser --interactive --pwprompt
+```
+
+6. Enable service
 
 ```bash
 sudo update-rc.d postgresql enable
@@ -65,7 +71,7 @@ sudo apt install -y python3-venv
 sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
 ```
 
-3. Preapre build environments
+3. Prepare build environments
 
 ```bash
 mkdir environments
@@ -94,12 +100,12 @@ sudo chown -R [user]:[user] /var/log/pgadmin4/
 
 ```bash
 cd environments
-source py_env/bin/activiate
-wget https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v3.4/pip/pgadmin4-3.4-py2.py3-none-any.whl
-python -m pip install pgadmin4-3.4-py2.py3-none-any.whl 
+source py_env/bin/activate
+wget https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v4.14/pip/pgadmin4-4.14-py2.py3-none-any.whl
+python -m pip install pgadmin4-4.14-py2.py3-none-any.whl 
 ```
 
-6. Configure pgAdmin 4
+6. Configure pgAdmin 4 <a name="Step6"></a>
 
 Start by creating the file `py_env/lib/python3.6/site-packages/pgadmin4/config_local.py` and adding the following lines:
 
@@ -117,7 +123,7 @@ Run the pgAdmin setup script to set the login credentials:
 python py_env/lib/python3.6/site-packages/pgadmin4/setup.py
 ```
 
-Wrap-up by deactiviating the enviornemtn and setting directory ownerhsip:
+Wrap-up by deactivating the environment and setting directory ownership:
 
 ```bash
 deactivate
@@ -136,7 +142,7 @@ Start in the root (`/`) directory, create the file `/etc/apache2/sites-available
     WSGIDaemonProcess pgadmin processes=1 threads=25 python-home=/home/[USERNAME]/environments/py_env
     WSGIScriptAlias / /home/[USERNAME]/environments/py_env/lib/python3.6/site-packages/pgadmin4/pgAdmin4.wsgi
 
-    <Directory "/home/sammy/environments/my_env/lib/python3.6/site-packages/pgadmin4/">
+    <Directory "/home/[USERNAME]/environments/py_env/lib/python3.6/site-packages/pgadmin4/">
         WSGIProcessGroup pgadmin
         WSGIApplicationGroup %{GLOBAL}
         Require all granted
@@ -153,3 +159,5 @@ sudo a2dissite 000-default.conf
 sudo a2ensite pgadmin4.conf
 sudo systemctl restart apache2
 ```
+
+At this point you should be able to connect to the pgAdmin control panel at http://[SERVER IP ADDRESS]. Login to the control panel using the credentials supplied in [Step 6](#Step6). One logged in, you should be able to add the localhost via "Add New Server" and proceed with administration of the databases using pgAdmin.
