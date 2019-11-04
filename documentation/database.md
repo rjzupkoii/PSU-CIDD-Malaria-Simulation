@@ -126,3 +126,30 @@ sudo chown -R www-data:www-data /var/log/pgadmin4/
 ```
 
 ## Configuration of Apache for pgAdmin
+
+Start in the root (`/`) directory, create the file `/etc/apache2/sites-available/pgadmin4.conf`, and add the following lines:
+
+```
+<VirtualHost *>
+    ServerName [SERVER IP ADDRESS]
+
+    WSGIDaemonProcess pgadmin processes=1 threads=25 python-home=/home/[USERNAME]/environments/py_env
+    WSGIScriptAlias / /home/[USERNAME]/environments/py_env/lib/python3.6/site-packages/pgadmin4/pgAdmin4.wsgi
+
+    <Directory "/home/sammy/environments/my_env/lib/python3.6/site-packages/pgadmin4/">
+        WSGIProcessGroup pgadmin
+        WSGIApplicationGroup %{GLOBAL}
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+Note that `[SERVER IP ADDRESS]` and `[USERNAME]` need to be updated for your server. Syntax can be verified using `apachectl configtest`
+
+Next, switch the default site over to pgAdmin:
+
+```bash
+sudo a2dissite 000-default.conf
+sudo a2ensite pgadmin4.conf
+sudo systemctl restart apache2
+```
