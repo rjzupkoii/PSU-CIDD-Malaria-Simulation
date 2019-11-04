@@ -129,7 +129,7 @@ sudo chown -R www-data:www-data /var/log/pgadmin4/
 
 Start in the root (`/`) directory, create the file `/etc/apache2/sites-available/pgadmin4.conf`, and add the following lines:
 
-```
+```xml
 <VirtualHost *>
     ServerName [SERVER IP ADDRESS]
 
