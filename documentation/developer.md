@@ -54,6 +54,38 @@ cd /build/bin
 ./MaSim -i ../../misc/input.yml
 ```
 
+# Buildling on ICDS-ACI
+To build the simuation to run on the ICDS-ACI the first time it is necessary to perform a number of configuration steps. After logging on to the interactive enviorment (`aci-b.aci.ics.psu.edu`) 
+
+```bash
+module load cmake/3.9.1
+module load gcc/7.3.1
+
+# Clone and build git
+git clone git://git.kernel.org/pub/scm/git/git.git
+cd git
+make configure
+./configure --prefix=/home
+make all
+pwd
+export PATH=[pwd path]:$PATH
+
+# Clone and build vcpkg
+
+./vcpkg install yaml-cpp
+./vcpkg install fmt
+./vcpkg install date
+./vcpkg install args
+```
+
+The `.bash_profile` file should be updated with the following lines to make the operating enviorment a bit easier to work with:
+
+```bash
+export PATH=[pwd path]:$PATH
+module load cmake/3.9.1
+module load gcc/7.3.1
+```
+
 # Development Tools
 
 ## Isolating Segmentation Faults in Linux
