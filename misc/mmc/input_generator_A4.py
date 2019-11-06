@@ -17,7 +17,7 @@ def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
 
-stream = open('input_mmc_A4_mu_0p0019.yml', 'r');
+stream = open('input_mmc_A4_mu_0p001983.yml', 'r');
 data = yaml.load(stream);
 stream.close();
 
@@ -97,7 +97,7 @@ for plas2, plas2_str in plas2_introductions.items():
                 new_data['location_db']['beta_by_location'][0] = beta
                 
                 ## save to file
-                output_filename = 'A4_v2/input_mmc_A4_mu_0p0019_plas2_%s_comp_%s_tc_%s_pfpr_%s.yml'%( plas2_str, comp_str, tc_map['f'], pfpr);
+                output_filename = 'A4_v2/input_mmc_A4_mu_0p001983_plas2_%s_comp_%s_tc_%s_pfpr_%s.yml'%( plas2_str, comp_str, tc_map['f'], pfpr);
                 output_stream = open(output_filename, 'w');
                 yaml.dump(new_data, output_stream); 
                 output_stream.close();
