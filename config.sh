@@ -32,6 +32,21 @@ if check_version $required $current; then
   export PATH="`pwd`/cmake-3.15.0-Linux-x86_64/bin/:$PATH"
 fi
 
+# If vcpkg doesn't already exist as a directory, load it
+if [ -d "~/work/build_env/vcpkg" ]; then
+  git clone https://github.com/Microsoft/vcpkg.git
+  cd vcpkg
+  ./bootstrap-vcpkg.sh
+  cd ..
+fi
+
+# Load gcc
+module load gcc/7.3.1
+
+# Load the relevent packages
+cd vcpkg
+./vcpkg install yaml-cpp fmt date args
+
 # Return to the source directory
 cd $source
 
