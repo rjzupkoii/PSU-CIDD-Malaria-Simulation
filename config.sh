@@ -2,6 +2,9 @@
 
 function check_version() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
 
+# Load gcc
+module load gcc/7.3.1
+
 # Create the directory to work in
 source=$(pwd)
 mkdir -p ~/work/build_env
@@ -33,15 +36,12 @@ if check_version $required $current; then
 fi
 
 # If vcpkg doesn't already exist as a directory, load it
-if [ -d "~/work/build_env/vcpkg" ]; then
+if [ ! -d "~/work/build_env/vcpkg" ]; then
   git clone https://github.com/Microsoft/vcpkg.git
   cd vcpkg
   ./bootstrap-vcpkg.sh
   cd ..
 fi
-
-# Load gcc
-module load gcc/7.3.1
 
 # Load the relevent packages
 cd vcpkg
@@ -50,5 +50,14 @@ cd vcpkg
 # Return to the source directory
 cd $source
 
-# Prompt to update the bash profile
-echo $PATH
+# Create the build script
+if [ ! -d "build" ]; then
+  mkdir -p build
+  cd build
+  toolchain="`pwd`/work/build_env/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  echo "module load gcc/7.3.1" > build.sh
+  echo "export PATH=$PATH"
+  echo "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$toolchain .." >> build.sh
+  echo "make -j 8" >> build.sh
+  chmod +x build.sh
+fi

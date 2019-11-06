@@ -36,6 +36,7 @@ file(GLOB LIBRARY
 set(SRC_FILES ${SOURCE} ${LIBRARY})
 
 add_library(MaSimCore STATIC ${SRC_FILES})
+add_library(yaml-cpp STATIC yaml-cpp/yaml.h)
 add_dependencies(MaSimCore date args)
 
 if (BUILD_WSL)
@@ -49,6 +50,7 @@ target_link_libraries(MaSimCore PUBLIC
         yaml-cpp
         GSL::gsl GSL::gslcblas
         fmt::fmt fmt::fmt-header-only
+        date::date
         )
 endif()
 
