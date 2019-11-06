@@ -54,7 +54,7 @@ cd $source
 if [ ! -d "build" ]; then
   mkdir -p build
   cd build
-  toolchain="`pwd`/work/build_env/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  toolchain="`(echo ~)`/work/build_env/vcpkg/scripts/buildsystems/vcpkg.cmake"
   echo "module load gcc/7.3.1" > build.sh
   echo "export PATH=$PATH"
   echo "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$toolchain .." >> build.sh
