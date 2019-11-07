@@ -56,7 +56,7 @@ if [ ! -d "build" ]; then
   cd build
   toolchain="`(echo ~)`/work/build_env/vcpkg/scripts/buildsystems/vcpkg.cmake"
   echo "module load gcc/7.3.1" > build.sh
-  echo "export PATH=$PATH"
+  echo "export PATH=$PATH" >> build.sh
   echo "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$toolchain .." >> build.sh
   echo "make -j 8" >> build.sh
   chmod +x build.sh
