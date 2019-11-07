@@ -35,6 +35,34 @@ if check_version $required $current; then
   export PATH="`pwd`/cmake-3.15.0-Linux-x86_64/bin/:$PATH"
 fi
 
+# If PostgreSQL isn't present, download and install it to the user directory
+if [ ! -d "~/work/build_env/postgresql" ]; then
+  # Get the source files
+  wget https://github.com/postgres/postgres/archive/master.zip
+  unzip master.zip
+  rm master.zip
+
+  # Build the source files
+  cd postgres-master
+  ./configure --prefix=$HOME/work/build_env/postgres
+  make -j 8
+  make install
+  cd ..
+  rm -rf postgres-master
+
+  # Export the relevent variables  
+  export PATH="$HOME/work/build_env/postgres/bin:$PATH"
+  export PKG_CONFIG_PATH="$HOME/work/build_env/postgres/lib/pkgconfig:$PKG_CONFIG_PATH"
+  export LIBRARY_PATH="$HOME/work/build_env/postgres/lib:$LIBRARY_PATH"
+
+  # Prepare the libpqxx library
+  git clone https://github.com/rjzupkoii/libpqxx.git
+  cd libpqxx
+  ./configure --disable-documentation --prefix=$HOME/work/build_env/lib
+  make -j 8
+  make install
+fi
+
 # If vcpkg doesn't already exist as a directory, load it
 if [ ! -d "~/work/build_env/vcpkg" ]; then
   git clone https://github.com/Microsoft/vcpkg.git
@@ -54,7 +82,7 @@ cd $source
 if [ ! -d "build" ]; then
   mkdir -p build
   cd build
-  toolchain="`(echo ~)`/work/build_env/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  toolchain="$HOME/work/build_env/vcpkg/scripts/buildsystems/vcpkg.cmake"
   echo "module load gcc/7.3.1" > build.sh
   echo "export PATH=$PATH" >> build.sh
   echo "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$toolchain .." >> build.sh
