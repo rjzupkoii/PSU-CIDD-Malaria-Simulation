@@ -37,6 +37,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 find_package(GSL REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+#add_library(yaml-cpp STATIC yaml-cpp/yaml.h)
 
 message(${YAML_CPP_LIBRARIES})
 
