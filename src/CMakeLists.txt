@@ -66,6 +66,7 @@ endif()
 # Update the linker for libpqxx
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
 if (BUILD_CLUSTER)
+        include_directories($ENV{HOME}/work/build_env/lib/include)
         find_library(PQXX_LIB pqxx PATHS $ENV{HOME}/work/build_env/lib/lib)
         find_library(PQ_LIB pq PATHS $ENV{HOME}/work/build_env/postgres/lib)
 else()
