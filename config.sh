@@ -56,7 +56,7 @@ if [ ! -d "~/work/build_env/postgresql" ]; then
   export LIBRARY_PATH="$HOME/work/build_env/postgres/lib:$LIBRARY_PATH"
 
   # Prepare the libpqxx library
-  git clone https://github.com/rjzupkoii/libpqxx.git
+  git clone https://github.com/jtv/libpqxx.git
   cd libpqxx
   ./configure --disable-documentation --prefix=$HOME/work/build_env/lib
   make -j 8
