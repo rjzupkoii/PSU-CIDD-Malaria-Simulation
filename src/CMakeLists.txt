@@ -36,10 +36,14 @@ file(GLOB LIBRARY
         ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4/easylogging++.cc
 )
 
+# Set the source files
 set(SRC_FILES ${SOURCE} ${LIBRARY})
-
 add_library(MaSimCore STATIC ${SRC_FILES})
-add_dependencies(MaSimCore date args)
+
+# Pull in date::date for the correct location if we are on the cluster
+if (BUILD_CLUSTER) 
+        find_package(date CONFIG REQUIRED)
+endif()
 
 if (BUILD_WSL)
 target_link_libraries(MaSimCore PUBLIC
@@ -74,15 +78,14 @@ else()
         find_library(PQ_LIB pq)
 endif()
 
+# Prepare to build the executables
 add_executable(MaSim MaSim/main.cpp)
 add_dependencies(MaSim MaSimCore)
-
 target_link_libraries(MaSim PRIVATE MaSimCore ${PQXX_LIB} ${PQ_LIB})
 target_compile_features(MaSim PRIVATE cxx_range_for)
 
 install(TARGETS MaSim DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 install(FILES ${PROJECT_SOURCE_DIR}/misc/input_dev.yml DESTINATION ${PROJECT_SOURCE_DIR}/bin)
-
 
 file(GLOB DXG_SRC_FILES DxGGenerator/*.cpp DxGGenerator/*.h)
 
@@ -90,9 +93,6 @@ add_executable(DxGGenerator ${DXG_SRC_FILES})
 add_dependencies(DxGGenerator  MaSimCore)
 target_link_libraries(DxGGenerator PRIVATE MaSimCore ${PQXX_LIB} ${PQ_LIB})
 target_compile_features(DxGGenerator PRIVATE cxx_range_for)
-
-#install(TARGETS DxGGenerator DESTINATION ${PROJECT_SOURCE_DIR}/bin)
-#install(FILES ${PROJECT_SOURCE_DIR}/misc/input_DxG.yml DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 
 # Note the flags that we ran with
 message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
