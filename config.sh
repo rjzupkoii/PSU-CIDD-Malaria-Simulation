@@ -3,8 +3,7 @@
 function check_version() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
 
 # Define some paths
-BUILD_ENV="~/work/build_env"
-HOME_BUILD_ENV="$HOME/work/build_env"
+BUILD_ENV="$HOME/work/build_env"
 
 # Load gcc
 module load gcc/7.3.1
@@ -47,21 +46,21 @@ if [ ! -d "$BUILD_ENV/postgres" ]; then
 
   # Build the source files
   cd postgres-master
-  ./configure --prefix=$HOME_BUILD_ENV/postgres
+  ./configure --prefix=$BUILD_ENV/postgres
   make -j 8
   make install
   cd ..
   rm -rf $BUILD_ENV/postgres-master
 
   # Export the relevent variables  
-  export PATH="$HOME_BUILD_ENV/postgres/bin:$PATH"
-  export PKG_CONFIG_PATH="$HOME_BUILD_ENV/postgres/lib/pkgconfig:$PKG_CONFIG_PATH"
-  export LIBRARY_PATH="$HOME_BUILD_ENV/postgres/lib:$LIBRARY_PATH"
+  export PATH="$BUILD_ENV/postgres/bin:$PATH"
+  export PKG_CONFIG_PATH="$BUILD_ENV/postgres/lib/pkgconfig:$PKG_CONFIG_PATH"
+  export LIBRARY_PATH="$BUILD_ENV/postgres/lib:$LIBRARY_PATH"
 
   # Prepare the libpqxx library
   git clone https://github.com/jtv/libpqxx.git
   cd libpqxx
-  ./configure --disable-documentation --prefix=$HOME_BUILD_ENV/lib
+  ./configure --disable-documentation --prefix=$BUILD_ENV/lib
   make -j 8
   make install
 fi
@@ -85,7 +84,7 @@ cd $source
 if [ ! -d "build" ]; then
   mkdir -p build
   cd build
-  toolchain="$HOME_BUILD_ENV/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  toolchain="$BUILD_ENV/vcpkg/scripts/buildsystems/vcpkg.cmake"
   echo "module load gcc/7.3.1" > build.sh
   echo "export PATH=$PATH" >> build.sh
   echo "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$toolchain .." >> build.sh
