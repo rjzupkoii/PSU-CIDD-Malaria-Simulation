@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Enable if building on the cluster, via the command line use -DBUILD_CLUSTER:BOOL=true
+set(BUILD_CLUSTER false CACHE BOOL "Enable for builds on the cluster")
+
 option(USING_ZAPCC "Use ZAPCC compiler." OFF)
 if (USING_ZAPCC)
   SET(CMAKE_C_COMPILER /home/ubuntu/zapcc-20170802-175507/bin/zapcc)
@@ -32,8 +35,10 @@ find_package(fmt CONFIG REQUIRED)
 
 # Include external projects
 set(EXT_PROJECTS_DIR ${PROJECT_SOURCE_DIR}/ext)
-add_subdirectory(${EXT_PROJECTS_DIR}/date)
-add_subdirectory(${EXT_PROJECTS_DIR}/args)
+if (NOT BUILD_CLUSTER)
+  add_subdirectory(${EXT_PROJECTS_DIR}/date)
+  add_subdirectory(${EXT_PROJECTS_DIR}/args)
+endif()
 include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${ARGS_INCLUDE_DIR} ${EXT_PROJECTS_DIR}/CLI11)
 
 # Add the source subdirectory
