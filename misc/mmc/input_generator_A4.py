@@ -38,9 +38,8 @@ popsize = 70000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 plas2_introductions = {
-        0.01 : '0p01',
-        0.1: '0p10',
-        0.25: '0p25'        
+        0.00 : '0p00',
+        0.50: '0p50'        
         };
         
 treatment_coverages = {
@@ -97,7 +96,7 @@ for plas2, plas2_str in plas2_introductions.items():
                 new_data['location_db']['beta_by_location'][0] = beta
                 
                 ## save to file
-                output_filename = 'A4_v2/input_mmc_A4_mu_0p001983_plas2_%s_comp_%s_tc_%s_pfpr_%s.yml'%( plas2_str, comp_str, tc_map['f'], pfpr);
+                output_filename = 'A4_v3/input_mmc_A4_mu_0p001983_plas2_%s_comp_%s_tc_%s_pfpr_%s.yml'%( plas2_str, comp_str, tc_map['f'], pfpr);
                 output_stream = open(output_filename, 'w');
                 yaml.dump(new_data, output_stream); 
                 output_stream.close();
