@@ -38,8 +38,8 @@ popsize = 70000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 plas2_introductions = {
-        0.00 : '0p00',
-        0.50: '0p50'        
+        0.01 : '0p01',
+        0.25: '0p25'        
         };
         
 treatment_coverages = {
