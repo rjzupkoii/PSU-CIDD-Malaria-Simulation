@@ -79,7 +79,8 @@ CREATE TABLE sim.configuration (
     yaml character varying NOT NULL,
     md5 character varying NOT NULL,
     name character varying,
-    notes character varying
+    notes character varying,
+    filename character varying
 );
 
 
@@ -146,7 +147,9 @@ CREATE TABLE sim.monthlygenomedata (
     monthlydataid integer NOT NULL,
     locationid integer NOT NULL,
     genomeid integer NOT NULL,
-    occurrences integer NOT NULL,
+    clinicaloccurrences integer NOT NULL,
+    occurrences0to5 integer NOT NULL,
+    occurrences2to10 integer NOT NULL,
     weightedfrequency double precision NOT NULL
 );
 

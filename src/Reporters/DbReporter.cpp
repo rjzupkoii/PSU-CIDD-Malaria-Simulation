@@ -138,7 +138,10 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
 
     // Iterate over all of the possible locations
     for (auto location = 0; location < index->vPerson().size(); location++) {
-        std::vector<int> site(genotypes, 0);
+        std::vector<int> occurrences(genotypes, 0);
+        std::vector<int> clinicalOccurrences(genotypes, 0);
+        std::vector<int> occurrencesZeroToFive(genotypes, 0);
+        std::vector<int> occurrencesTwoToTen(genotypes, 0);
         std::vector<double> frequency(genotypes, 0.0);
         auto sum = 0.0;
 
@@ -155,6 +158,10 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
                     auto size = parasites->size();
                     if (size == 0) { continue; }
 
+                    // Note the age and clinical status of the person
+                    auto age = age_class[i]->age();
+                    auto clinical = (int)(age_class[i]->host_state() == Person::HostStates::CLINICAL);
+
                     // Update count of parasites
                     sum += 1;
 
@@ -162,8 +169,13 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
                     for (auto ndx = 0; ndx < size; ndx++) {
                         auto parasite_population = (*parasites)[ndx];
                         auto id = parasite_population->genotype()->genotype_id();
-                        site[id]++;
+                        occurrences[id]++;
+                        occurrencesZeroToFive[id] += (age <= 5);
+                        occurrencesTwoToTen[id] += (age >= 2 && age <= 10);
                         individual[id]++;
+                        
+                        // TODO Double check how we are counting these
+                        clinicalOccurrences[id] += clinical;
                     }
 
                     // Update the frequency and reset the individual count
@@ -179,7 +191,8 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
         // Prepare and append the query, pass if the genotype was not seen
         for (int genotype = 0; genotype < genotypes; genotype++) {
             if (frequency[genotype] == 0) { continue; }
-            query.append(fmt::format(INSERT_GENOTYPE, id, location_index[location], genotype, site[genotype], (frequency[genotype] / sum)));
+            query.append(fmt::format(INSERT_GENOTYPE, id, location_index[location], genotype, occurrences[genotype], 
+                                     clinicalOccurrences[genotype], occurrencesZeroToFive[genotype], occurrencesTwoToTen[genotype], (frequency[genotype] / sum)));
         }
     }
 }

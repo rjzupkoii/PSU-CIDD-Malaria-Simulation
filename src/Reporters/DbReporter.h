@@ -19,11 +19,11 @@ class DbReporter : public Reporter {
     "VALUES ({}, {}, {}, {}, {}, {}, now()) RETURNING id;";
 
     const std::string INSERT_CONFIGURATION = 
-    "INSERT INTO sim.Configuration (Yaml, MD5) VALUES ({}, md5({})) RETURNING ID;";
+    "INSERT INTO sim.Configuration (Yaml, MD5, FileName) VALUES ({}, md5({})) RETURNING ID;";
 
     const std::string INSERT_GENOTYPE = 
-    "INSERT INTO sim.MonthlyGenomeData (MonthlyDataId, LocationId, GenomeId, Occurrences, WeightedFrequency) "
-    "VALUES ({}, {}, {}, {}, {});";
+    "INSERT INTO sim.MonthlyGenomeData (MonthlyDataId, LocationId, GenomeId, Occurrences, ClinicalOccurrences, Occurrences0to5, Occurrences2to10, WeightedFrequency) "
+    "VALUES ({}, {}, {}, {}, {}, {}, {}, {});";
 
     const std::string INSERT_LOCATION =
     "INSERT INTO sim.Location (ConfigurationId, Index, Beta) VALUES ({}, {}, {});";
