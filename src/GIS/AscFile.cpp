@@ -49,12 +49,17 @@ AscFile* AscFileManager::read(std::string fileName) {
     // Treat the struct as POD
     AscFile* results = new AscFile();
 
-    // Open and read the first six lines of the header
+    // Open the file and verify it
     std::string field, value;
     std::ifstream in(fileName);
     if (!in.good()) {
         throw std::runtime_error("Error opening ASC file: " + fileName);
     }
+    if (in.peek() == std::ifstream::traits_type::eof()) {
+	throw std::runtime_error("EOF encountered at start of the file: " + fileName);
+    } 
+    
+    // Read the first six lines of the header
     for (auto ndx = 0; ndx < 6; ndx++) {
 
         // Read the field and value, cast to upper case
