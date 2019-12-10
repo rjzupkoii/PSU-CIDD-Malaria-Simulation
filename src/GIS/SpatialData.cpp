@@ -99,6 +99,28 @@ void SpatialData::generate_locations() {
     VLOG(1) << "Generated " << Model::CONFIG->number_of_locations() << " locations";
 }
 
+SpatialData::RasterInformation SpatialData::get_raster_header() {
+    RasterInformation results;
+    for (auto ndx = 0; ndx < SpatialFileType::Count; ndx++) {
+        if (data[ndx] != nullptr) {
+            results.number_columns = data[ndx]->NCOLS;
+            results.number_rows = data[ndx]->NROWS;
+            results.x_lower_left_corner = data[ndx]->XLLCORNER;
+            results.y_lower_left_corner = data[ndx]->YLLCORNER;
+            results.cellsize = data[ndx]->CELLSIZE;
+            break;
+        }
+    }
+    return results;
+}
+
+bool SpatialData::has_raster() {
+    for (auto ndx = 0; ndx != SpatialFileType::Count; ndx++) {
+        if (data[ndx] != nullptr) { return true; }
+    }
+    return false;
+}
+
 void SpatialData::load(std::string filename, SpatialFileType type) {
     // Check to see if something has already been loaded
     if (data[type] != nullptr) { delete data[type]; }

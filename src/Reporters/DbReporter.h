@@ -21,6 +21,10 @@ class DbReporter : public Reporter {
     const std::string INSERT_CONFIGURATION = 
     "INSERT INTO sim.Configuration (Yaml, MD5, FileName) VALUES ({}, md5({})) RETURNING ID;";
 
+    const std::string INSERT_CONFIGURATION_RASTER =
+    "INSERT INTO sim.Configuration (Yaml, MD5, FileName, ncols, nrows, xllcorner, yllcorner, cellsize) "
+    "VALUES ({}, md5({}), {}, {}, {}, {}, {}, {}) RETURNING ID";
+
     const std::string INSERT_GENOTYPE = 
     "INSERT INTO sim.MonthlyGenomeData (MonthlyDataId, LocationId, GenomeId, Occurrences, ClinicalOccurrences, Occurrences0to5, Occurrences2to10, WeightedFrequency) "
     "VALUES ({}, {}, {}, {}, {}, {}, {}, {});";

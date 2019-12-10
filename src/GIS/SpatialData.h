@@ -28,6 +28,26 @@ class SpatialData {
             Count
         };
 
+        struct RasterInformation {
+            // Flag to indicate the value has not been set yet
+            static const int NOT_SET = -1;
+
+            // The number of columns in the raster
+            int number_columns = NOT_SET;
+
+            // The number of rows in the raster
+            int number_rows = NOT_SET;
+
+            // The lower-left X coordinate of the raster
+            double x_lower_left_corner = NOT_SET;
+
+            // The lower-left Y coordinate of the raster
+            double y_lower_left_corner = NOT_SET;
+
+            // The size of the cell, typically in meters
+            int cellsize = NOT_SET;
+        };
+
     private:
         // Array of the ASC file data, use SpatialFileType as the index
         AscFile** data;
@@ -68,6 +88,12 @@ class SpatialData {
 
         // Clears all of the loaded data
         void clear();
+
+        // Return the raster header or the default structure if no raster are loaded
+        RasterInformation get_raster_header();
+
+        // Return true if any raster file has been loaded, false otherwise
+        bool has_raster();
 
         // Return true if a raster file has been loaded, false otherwise
         bool has_raster(SpatialFileType type) { return data[type] == nullptr; }

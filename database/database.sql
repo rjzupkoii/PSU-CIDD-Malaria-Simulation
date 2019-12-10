@@ -80,7 +80,12 @@ CREATE TABLE sim.configuration (
     md5 character varying NOT NULL,
     name character varying,
     notes character varying,
-    filename character varying
+    filename character varying,
+    ncols integer default -1 NOT NULL,
+    nrows integer default -1 NOT NULL,
+    xllcorner double precision default 0 NOT NULL,
+    yllcorner double precision default 0 NOT NULL,
+    cellsize integer default -1 NOT NULL
 );
 
 
