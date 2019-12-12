@@ -81,7 +81,10 @@ void DbReporter::prepare_configuration() {
     // Prepare the loader query
     query = "";
     for (unsigned int ndx = 0; ndx < Model::CONFIG->number_of_locations(); ndx++) {
-        query.append(fmt::format(INSERT_LOCATION, config_id, ndx, Model::CONFIG->location_db()[ndx].beta));
+        auto location = Model::CONFIG->location_db()[ndx];
+        auto x = (int)location.coordinate.get()->latitude;
+        auto y = (int)location.coordinate.get()->longitude;
+        query.append(fmt::format(INSERT_LOCATION, config_id, ndx, x, y, location.beta));
     }
 
     // Update the database

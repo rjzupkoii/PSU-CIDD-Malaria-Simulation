@@ -116,6 +116,8 @@ CREATE TABLE sim.location (
     id integer NOT NULL,
     configurationid integer NOT NULL,
     index integer NOT NULL,
+    x integer NOT NULL,
+    y integer NOT NULL,
     beta double precision NOT NULL
 );
 
