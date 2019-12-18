@@ -88,9 +88,9 @@ spatial_model::~spatial_model() {
 }
 
 void spatial_model::set_value(const YAML::Node &node) {
-  //read spatial_model
   const auto sm_name = node[name_]["name"].as<std::string>();
   value_ = Spatial::SpatialModelBuilder::Build(sm_name, node[name_][sm_name]);
+  VLOG(1) << "Using spatial model: " << sm_name;
 }
 
 void immune_system_information::set_value(const YAML::Node &node) {

@@ -87,14 +87,24 @@ int main(const int argc, char **argv) {
 }
 
 void handle_cli(Model *model, int argc, char **argv) {
+  /* QUICK REFERENCE
+   * -c / --config - config file
+   * -h / --help   - help screen
+   * -i / --input  - input file
+   * -j            - cluster job number
+   * -l / --load   - load genotypes and exit
+   * -m / --mvmt   - dump the movement model during operation
+   * -o            - path for output files
+   * -r            - reporter type
+   */
   args::ArgumentParser parser("Individual-based simulation for malaria.", "uut47@psu.edu");
-
   args::Group commands(parser, "commands");
   args::HelpFlag help(commands, "help", "Display this help menu", {'h', "help"});
   args::ValueFlag<std::string> input_file(commands, "string", "The config file (YAML format). \nEx: MaSim -i input.yml", {'i', 'c', "input", "config"});
   args::ValueFlag<int> cluster_job_number(commands, "int", "Cluster job number. \nEx: MaSim -j 1", {'j'});
   args::ValueFlag<std::string> reporter(commands, "string", "Reporter Type. \nEx: MaSim -r mmc", {'r'});
   args::ValueFlag<std::string> input_path(commands, "string", "Path for output files, default is current directory. \nEx: MaSim -p out", {'o'});
+  args::Flag dump_movement(commands, "mvmt", "Dump the movement model as calculated", {'m', "mvmt"});
   args::Flag load_genotypes(commands, "load", "Load the genotypes to the database and exit", {'l', "load"});
   
   // Allow the --v=[int] flag to be processed by START_EASYLOGGINGPP
@@ -142,4 +152,9 @@ void handle_cli(Model *model, int argc, char **argv) {
   model->set_cluster_job_number(job_number);
   const auto reporter_type = reporter ? args::get(reporter) : "";
   model->set_reporter_type(reporter_type);
+  
+  if (dump_movement) {
+    LOG(INFO) << "Dumping model movement enabled.";
+    model->set_dump_movement(dump_movement);
+  }
 }

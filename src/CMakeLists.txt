@@ -24,7 +24,8 @@ file(GLOB SOURCE *.cpp
         Reporters/*.cpp 
         Spatial/*.cpp 
         Strategies/*.cpp
-        Therapies/*.cpp       
+        Therapies/*.cpp
+        Utility/*.cpp
 )
 
 # Define extra library files

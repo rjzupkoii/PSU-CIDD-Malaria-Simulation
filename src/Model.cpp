@@ -40,6 +40,8 @@
 #include "Constants.h"
 #include "Helpers/TimeHelpers.h"
 #include "GIS/SpatialData.h"
+#include "Spatial/SpatialModel.h"
+#include "Utility/MatrixWriter.hxx"
 
 #define empty_or_blank(string_data) (string_data.empty() || string_data.size() == 0)
 
@@ -176,6 +178,8 @@ void Model::initialize(int job_number, std::string std) {
   for (auto* event : config_->preconfig_population_events()) {
     scheduler_->schedule_population_event(event);
   }
+
+  if (dump_movement_) { write_movement_data(); }
 }
 
 void Model::initialize_object_pool(const int &size) {
@@ -399,4 +403,32 @@ double Model::get_seasonal_factor(const date::sys_days &today, const int &locati
                Model::CONFIG->seasonal_info().C[location]) +
            Model::CONFIG->seasonal_info().min_value[location]
          : Model::CONFIG->seasonal_info().min_value[location];
+}
+
+void  Model::write_movement_data() {
+  const std::string DISTANCES = "./dump/distances.csv";
+  const std::string ODDS = "./dump/odds.csv";
+
+  // Create the directory
+  mkdir("./dump", 0777);
+
+  // Get the distances matrix and dump it
+  LOG(INFO) << "Dumping distance matrix to: " << DISTANCES;
+  MatrixWriter<DoubleVector2>::write(Model::CONFIG->spatial_distance_matrix(), DISTANCES);
+
+  // Setup the references and matrix to run
+  const auto residents_by_location = Model::DATA_COLLECTOR->popsize_residence_by_location();
+  const auto distance_matrix = Model::CONFIG->spatial_distance_matrix();
+  const auto location_count = distance_matrix.size();
+  const auto spatial = Model::CONFIG->spatial_model();
+  DoubleVector2 odds(location_count);  
+  
+  // Calculate the odds for each row, then write the data
+  for (std::size_t ndx = 0; ndx < location_count; ndx++) {
+    odds[ndx].resize(location_count, 0);
+    odds[ndx] = spatial->get_v_relative_out_movement_to_destination(ndx, location_count, distance_matrix[ndx], residents_by_location);
+  }
+
+  LOG(INFO) << "Dumping odds matrix to: " << ODDS;
+  MatrixWriter<DoubleVector2>::write(odds, ODDS);
 }
