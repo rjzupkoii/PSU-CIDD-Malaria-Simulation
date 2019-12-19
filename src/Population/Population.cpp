@@ -108,13 +108,13 @@ std::size_t Population::size(const int &location, const int &age_class) {
   std::size_t temp = 0;
   if (age_class==-1) {
 
-    for (auto state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
-      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+    for (std::size_t state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
+      for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         temp += pi_lsa->vPerson()[location][state][ac].size();
       }
     }
   } else {
-    for (auto state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
+    for (std::size_t state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
       temp += pi_lsa->vPerson()[location][state][age_class].size();
     }
   }
@@ -141,9 +141,9 @@ std::size_t Population::size_residents_only(const int &location) {
     return 0;
   }
   auto temp = 0ul;
-  for (auto state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
-    for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-      for (auto i = 0; i < pi_lsa->vPerson()[location][state][ac].size(); i++) {
+  for (std::size_t state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
+    for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+      for (std::size_t i = 0; i < pi_lsa->vPerson()[location][state][ac].size(); i++) {
         if (pi_lsa->vPerson()[location][state][ac][i]->residence_location()==location) {
           temp++;
         }
@@ -162,13 +162,13 @@ void Population::perform_infection_event() {
   auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
   // Iterate over all the locations in the model
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
 
     // Calculate location adjustments
     const auto new_beta = Model::CONFIG->location_db()[loc].beta*Model::MODEL->get_seasonal_factor(Model::SCHEDULER->calendar_date, loc);
 
     // Iterate over all of the parasite types
-    for (auto parasite_type_id = 0; parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
+    for (std::size_t parasite_type_id = 0; parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
 
       // Calculate the force of infection if ~0 then press on 
       auto trackingDays = Model::SCHEDULER->current_time()%Model::CONFIG->number_of_tracking_days();
@@ -185,7 +185,7 @@ void Population::perform_infection_event() {
 
       // Determine the distribution of the bites
       DoubleVector vLevelDensity;
-      for (auto i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
+      for (int i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
         auto temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] * pi->vPerson()[loc][i].size();
         vLevelDensity.push_back(temp);
       }
@@ -193,12 +193,12 @@ void Population::perform_infection_event() {
       model_->random()->random_multinomial(vLevelDensity.size(), number_of_bites, &vLevelDensity[0], &v_int_number_of_bites[0]);
 
       // Inflict the bites upon the population
-      for (auto bitting_level = 0; bitting_level < v_int_number_of_bites.size(); bitting_level++) {
+      for (std::size_t bitting_level = 0; bitting_level < v_int_number_of_bites.size(); bitting_level++) {
         // If there is nobody at this level, press on
         const auto size = pi->vPerson()[loc][bitting_level].size();
         if (size==0) { continue; }
 
-        for (auto j = 0u; j < v_int_number_of_bites[bitting_level]; j++) {
+        for (std::size_t j = 0u; j < v_int_number_of_bites[bitting_level]; j++) {
           //select 1 random person from level i
           const auto index = model_->random()->random_uniform(size);
           auto* person = pi->vPerson()[loc][bitting_level][index];
@@ -265,12 +265,12 @@ void Population::initialize() {
 
   // Initialize population
   auto& location_db = Model::CONFIG->location_db();
-  for (auto loc = 0; loc < number_of_location; loc++) {
+  for (std::size_t loc = 0; loc < number_of_location; loc++) {
     VLOG(9) << fmt::format("Cell {}, population {}", loc, location_db[loc].population_size);
 
     const auto popsize_by_location = static_cast<int>(location_db[loc].population_size * Model::CONFIG->artificial_rescaling_of_population_size());
     auto temp_sum = 0;
-    for (auto age_class = 0; age_class < Model::CONFIG->initial_age_structure().size(); age_class++) {
+    for (std::size_t age_class = 0; age_class < Model::CONFIG->initial_age_structure().size(); age_class++) {
       auto number_of_individual_by_loc_ageclass = 0;
       if (age_class == Model::CONFIG->initial_age_structure().size() - 1) {
         number_of_individual_by_loc_ageclass = popsize_by_location - temp_sum;
@@ -278,7 +278,7 @@ void Population::initialize() {
         number_of_individual_by_loc_ageclass = static_cast<int>(popsize_by_location * location_db[loc].age_distribution[age_class]);
         temp_sum += number_of_individual_by_loc_ageclass;
       }
-      for (auto i = 0; i < number_of_individual_by_loc_ageclass; i++) {
+      for (int i = 0; i < number_of_individual_by_loc_ageclass; i++) {
         generate_individual(loc, age_class);
       }
     }
@@ -354,9 +354,9 @@ void Population::introduce_initial_cases() {
   }
 
   //update force of infection for 7 days
-  for (auto d = 0; d < Model::CONFIG->number_of_tracking_days(); d++) {
-    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      for (auto genotype = 0; genotype < Model::CONFIG->number_of_parasite_types(); genotype++) {
+  for (int d = 0; d < Model::CONFIG->number_of_tracking_days(); d++) {
+    for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+      for (std::size_t genotype = 0; genotype < Model::CONFIG->number_of_parasite_types(); genotype++) {
         force_of_infection_for7days_by_location_parasite_type_[d][loc][genotype] =
             current_force_of_infection_by_location_parasite_type_[loc][genotype];
       }
@@ -371,7 +371,7 @@ void Population::introduce_parasite(const int &location, Genotype* parasite_type
   DoubleVector vLevelDensity;
   auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
-  for (auto i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
+  for (int i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
     auto temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] * pi->vPerson()[location][i].size();
     vLevelDensity.push_back(temp);
   }
@@ -379,10 +379,10 @@ void Population::introduce_parasite(const int &location, Genotype* parasite_type
   std::vector<unsigned int> vIntNumberOfBites(vLevelDensity.size());
   model_->random()->random_multinomial(vLevelDensity.size(), num_of_infections, &vLevelDensity[0], &vIntNumberOfBites[0]);
 
-  for (auto biting_level = 0; biting_level < vIntNumberOfBites.size(); biting_level++) {
+  for (std::size_t biting_level = 0; biting_level < vIntNumberOfBites.size(); biting_level++) {
     const int size = pi->vPerson()[location][biting_level].size();
     if (size==0) continue;
-    for (auto j = 0u; j < vIntNumberOfBites[biting_level]; j++) {
+    for (std::size_t j = 0u; j < vIntNumberOfBites[biting_level]; j++) {
 
       //select 1 random person from level i
       const int index = model_->random()->random_uniform(size);
@@ -429,8 +429,8 @@ void Population::notify_change_in_force_of_infection(const int &location, const 
 void Population::update_force_of_infection(const int &current_time) {
   perform_interupted_feeding_recombination();
 
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (auto p_type = 0; p_type < Model::CONFIG->number_of_parasite_types(); p_type++) {
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (std::size_t p_type = 0; p_type < Model::CONFIG->number_of_parasite_types(); p_type++) {
       force_of_infection_for7days_by_location_parasite_type()[current_time%
           Model::CONFIG->number_of_tracking_days()][loc][p_type] =
           interupted_feeding_force_of_infection_by_location_parasite_type()[loc][
@@ -447,10 +447,10 @@ void Population::update() {
 }
 
 void Population::perform_birth_event() {
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     auto poisson_means = size(loc)*Model::CONFIG->birth_rate()/Constants::DAYS_IN_YEAR();
     const auto number_of_births = Model::RANDOM->random_poisson(poisson_means);
-    for (auto i = 0; i < number_of_births; i++) {
+    for (int i = 0; i < number_of_births; i++) {
       give_1_birth(loc);
       Model::DATA_COLLECTOR->update_person_days_by_years(loc, Constants::DAYS_IN_YEAR() -
           Model::SCHEDULER->current_day_in_year());
@@ -510,9 +510,9 @@ void Population::perform_death_event() {
   PersonPtrVector deceased;
 
   // Iterate over the locations, age brackets, and states
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-      for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+      for (std::size_t hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
 
         // Skip the dead state for the outer scan
         if (hs == Person::DEAD) { 
@@ -551,42 +551,41 @@ void Population::perform_death_event() {
 }
 
 void Population::perform_circulation_event() {
-  //for each location
-  // get number of circulations based on size * circulation_percent
-  // distributes that number into others location based of other location size
-  // for each number in that list select an individual, and schedule a movement event on next day
-  PersonPtrVector today_circulations;
-
+#ifdef DEBUG
   auto start = std::chrono::system_clock::now();
+#endif
+
+  // Before entering, check the overall circulation, if zero then assume it is disabled
+  auto circulation_percent = Model::CONFIG->circulation_info().circulation_percent;
+  if (circulation_percent == 0.0) { return; }
+
+  PersonPtrVector today_circulations;
 
   // Grab a copy of residents by location
   const auto residents_by_location = Model::DATA_COLLECTOR->popsize_residence_by_location();
 
-//  std::vector<int> v_number_of_residents_by_location(Model::CONFIG->number_of_locations(), 0);
-
-  // for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-  //   v_number_of_residents_by_location[location] = Model::DATA_COLLECTOR->popsize_residence_by_location()[location];
-  // }
-
-  for (int from_location = 0; from_location < Model::CONFIG->number_of_locations(); from_location++) {
+  //for each location
+  // get number of circulations based on size * circulation_percent
+  // distributes that number into others location based of other location size
+  // for each number in that list select an individual, and schedule a movement event on next day
+  for (std::size_t from_location = 0; from_location < Model::CONFIG->number_of_locations(); from_location++) {
     
     // How much of the population is moving? If none then press on
-    auto poisson_means = size(from_location) * Model::CONFIG->circulation_info().circulation_percent;
+    auto poisson_means = size(from_location) * circulation_percent;
     if (poisson_means == 0) { continue; }
     const auto number_of_circulating_from_this_location = Model::RANDOM->random_poisson(poisson_means);
-    if (number_of_circulating_from_this_location==0) { continue; }
+    if (number_of_circulating_from_this_location == 0) { continue; }
 
     DoubleVector v_relative_outmovement_to_destination(Model::CONFIG->number_of_locations(), 0);
     v_relative_outmovement_to_destination = Model::CONFIG->spatial_model()->get_v_relative_out_movement_to_destination(
-        from_location, Model::CONFIG->number_of_locations(), Model::CONFIG->spatial_distance_matrix()[from_location], residents_by_location);
+      from_location, Model::CONFIG->number_of_locations(), Model::CONFIG->spatial_distance_matrix()[from_location], residents_by_location);
 
     std::vector<unsigned int> v_num_leavers_to_destination(static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()));
-
     Model::RANDOM->random_multinomial(static_cast<int>(v_relative_outmovement_to_destination.size()),
                                       static_cast<unsigned int>(number_of_circulating_from_this_location),
                                       &v_relative_outmovement_to_destination[0], &v_num_leavers_to_destination[0]);
 
-    for (int target_location = 0; target_location < Model::CONFIG->number_of_locations(); target_location++) {
+    for (std::size_t target_location = 0; target_location < Model::CONFIG->number_of_locations(); target_location++) {
       if (v_num_leavers_to_destination[target_location]==0) { continue; }
       perform_circulation_for_1_location(from_location, target_location, v_num_leavers_to_destination[target_location], today_circulations);
     }
@@ -597,11 +596,13 @@ void Population::perform_circulation_event() {
     p->randomly_choose_target_location();
   }
 
+#ifdef DEBUG
   auto end = std::chrono::system_clock::now();
   std::chrono::duration<double> elapsed_seconds = end-start;
   if (elapsed_seconds.count() >= 1) {
     LOG(INFO) << "Long circulation" << elapsed_seconds.count();
   }
+#endif
 }
 
 void Population::perform_circulation_for_1_location(const int &from_location, const int &target_location,
@@ -622,10 +623,10 @@ void Population::perform_circulation_for_1_location(const int &from_location, co
                                        static_cast<unsigned int>(number_of_circulation), &vLevelDensity[0],
                                        &vIntNumberOfCirculation[0]);
 
-  for (int moving_level = 0; moving_level < vIntNumberOfCirculation.size(); moving_level++) {
+  for (std::size_t moving_level = 0; moving_level < vIntNumberOfCirculation.size(); moving_level++) {
     auto size = static_cast<int>(pi->vPerson()[from_location][moving_level].size());
     if (size==0) continue;
-    for (auto j = 0u; j < vIntNumberOfCirculation[moving_level]; j++) {
+    for (std::size_t j = 0u; j < vIntNumberOfCirculation[moving_level]; j++) {
 
 
       //select 1 random person from level i
@@ -642,9 +643,9 @@ void Population::perform_circulation_for_1_location(const int &from_location, co
 
 bool Population::has_0_case() {
   auto pi = get_person_index<PersonIndexByLocationStateAgeClass>();
-  for (int loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (int hs = Person::EXPOSED; hs <= Person::CLINICAL; hs++) {
-      for (int ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (std::size_t hs = Person::EXPOSED; hs <= Person::CLINICAL; hs++) {
+      for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         if (!pi->vPerson()[loc][hs][ac].empty()) {
           return false;
         }
@@ -684,8 +685,8 @@ void Population::perform_interupted_feeding_recombination() {
   auto y = DoubleVector2(static_cast<unsigned long long int>(number_of_locations), DoubleVector(parasite_types, 0));
   auto z = DoubleVector2(static_cast<unsigned long long int>(number_of_locations), DoubleVector(parasite_types, 0));
 
-  for (auto loc = 0; loc < number_of_locations; loc++) {
-    for (auto parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
+  for (std::size_t loc = 0; loc < number_of_locations; loc++) {
+    for (std::size_t parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
       interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] =
           current_force_of_infection_by_location_parasite_type_[loc][parasite_type_id];
       y[loc][parasite_type_id] =
@@ -698,10 +699,10 @@ void Population::perform_interupted_feeding_recombination() {
   auto number_of_gametocytaemic = 0;
 
   auto pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
-  for (auto loc = 0; loc < number_of_locations; loc++) {
+  for (std::size_t loc = 0; loc < number_of_locations; loc++) {
     //hs 2: assymptomatic, 3: clinical
-    for (auto hs = 2; hs <= 3; hs++) {
-      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+    for (std::size_t hs = 2; hs <= 3; hs++) {
+      for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         for (auto p : pi->vPerson()[loc][hs][ac]) {
           if (p->isGametocytaemic()) {
             number_of_gametocytaemic++;
@@ -713,8 +714,8 @@ void Population::perform_interupted_feeding_recombination() {
 
   // Find the sum, use it to calculate a
   double sum_z = 0;
-  for (auto loc = 0; loc < number_of_locations; loc++) {
-    for (auto parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
+  for (std::size_t loc = 0; loc < number_of_locations; loc++) {
+    for (std::size_t parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
       sum_z += z[loc][parasite_type_id];
     }
   }
@@ -722,8 +723,8 @@ void Population::perform_interupted_feeding_recombination() {
 
   // Calculate the new z value and the new sum
   sum_z = 0;
-  for (auto loc = 0; loc < number_of_locations; loc++) {
-    for (auto parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
+  for (std::size_t loc = 0; loc < number_of_locations; loc++) {
+    for (std::size_t parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
       z[loc][parasite_type_id] = std::lround(a * z[loc][parasite_type_id]);
       sum_z += z[loc][parasite_type_id];
     }
@@ -743,17 +744,17 @@ void Population::perform_interupted_feeding_recombination() {
   // perform free recombination in Z
   double sum_eafar = 0;
   if (sum_z > 0.0001) {
-    for (auto loc = 0; loc < number_of_locations; loc++) {
-      for (auto i = 0; i < parasite_types; i++) {
+    for (std::size_t loc = 0; loc < number_of_locations; loc++) {
+      for (std::size_t i = 0; i < parasite_types; i++) {
         if (z[loc][i]==0) continue;
-        for (auto j = 0; j < parasite_types; j++) {
+        for (std::size_t j = 0; j < parasite_types; j++) {
           if (z[loc][j]==0) continue;
           if (i==j) {
             const auto weight = z[loc][i]*z[loc][i];
             eafar[loc][i] += weight;
           } else {
             const auto weight = 2*z[loc][i]*z[loc][j];
-            for (auto p = 0; p < parasite_types; p++) {
+            for (std::size_t p = 0; p < parasite_types; p++) {
               if (Model::CONFIG->genotype_db()->get_offspring_density(i, j, p)==0) continue;
               eafar[loc][p] += weight*Model::CONFIG->genotype_db()->get_offspring_density(i, j, p);
             }
@@ -762,27 +763,27 @@ void Population::perform_interupted_feeding_recombination() {
       }
     }
 
-    for (auto loc = 0; loc < number_of_locations; loc++) {
-      for (auto i = 0; i < parasite_types; i++) {
+    for (std::size_t loc = 0; loc < number_of_locations; loc++) {
+      for (std::size_t i = 0; i < parasite_types; i++) {
         eafar[loc][i] /= (sum_z*sum_z);
         sum_eafar += eafar[loc][i];
       }
     }
 
     //normalize eafar
-    for (auto loc = 0; loc < number_of_locations; loc++) {
-      for (auto i = 0; i < parasite_types; i++) {
+    for (std::size_t loc = 0; loc < number_of_locations; loc++) {
+      for (std::size_t i = 0; i < parasite_types; i++) {
         eafar[loc][i] /= sum_eafar;
       }
     }
 
     //weight Z with eafar and divide by a and calculate current_force_of_infection
     auto new_z = std::vector<unsigned int>(parasite_types, 0);
-    for (auto loc = 0; loc < number_of_locations; loc++) {
+    for (std::size_t loc = 0; loc < number_of_locations; loc++) {
       
       Model::RANDOM->random_multinomial(static_cast<const int &>(eafar[loc].size()), static_cast<const unsigned int &>(sum_z), &eafar[loc][0], &new_z[0]);
 
-      for (auto parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
+      for (std::size_t parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
         z[loc][parasite_type_id] = new_z[parasite_type_id]/a;
         interupted_feeding_force_of_infection_by_location_parasite_type_[loc][parasite_type_id] = y[loc][parasite_type_id] + z[loc][parasite_type_id];
 

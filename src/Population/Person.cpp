@@ -149,7 +149,7 @@ void Person::set_age(const int &value) {
 
     //update age class
     if (Model::MODEL != nullptr) {
-      auto ac = age_class_ == -1 ? 0 : age_class_;
+      unsigned int ac = age_class_ == -1 ? 0 : age_class_;
 
       while (ac < (Model::CONFIG->number_of_age_classes() - 1) && age_ >= Model::CONFIG->age_structure()[ac]) {
         ac++;
@@ -357,7 +357,7 @@ void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinica
   auto* sc_therapy = dynamic_cast<SCTherapy*>(therapy);
   if (sc_therapy != nullptr) {
 
-    for (int j = 0; j < sc_therapy->drug_ids.size(); ++j) {
+    for (std::size_t j = 0; j < sc_therapy->drug_ids.size(); ++j) {
       int drug_id = sc_therapy->drug_ids[j];
       auto dosing_days = sc_therapy->drug_ids.size() == sc_therapy->dosing_day.size() ? sc_therapy->dosing_day[j]
                                                                                       : sc_therapy->dosing_day[0];
@@ -375,7 +375,7 @@ void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinica
     //else if therapy is MACTherapy
     auto* mac_therapy = dynamic_cast<MACTherapy*>(therapy);
     assert(mac_therapy != nullptr);
-    for (auto i = 0; i < mac_therapy->therapy_ids().size(); i++) {
+    for (std::size_t i = 0; i < mac_therapy->therapy_ids().size(); i++) {
       const auto therapy_id = mac_therapy->therapy_ids()[i];
       const auto start_day = mac_therapy->start_at_days()[i];
 
@@ -758,7 +758,7 @@ bool Person::isGametocytaemic() const {
 
 void Person::generate_prob_present_at_mda_by_age() {
   if (prob_present_at_mda_by_age().empty()) {
-    for (auto i = 0; i < Model::CONFIG->mean_prob_individual_present_at_mda().size(); i++) {
+    for (std::size_t i = 0; i < Model::CONFIG->mean_prob_individual_present_at_mda().size(); i++) {
       auto value = Model::RANDOM->random_beta(
         Model::CONFIG->prob_individual_present_at_mda_distribution()[i].alpha,
         Model::CONFIG->prob_individual_present_at_mda_distribution()[i].beta);
@@ -768,7 +768,7 @@ void Person::generate_prob_present_at_mda_by_age() {
 }
 
 double Person::prob_present_at_mda() {
-  auto i = 0;
+  std::size_t i = 0;
   // std::cout << "hello " << i << std::endl;
   while (age_ > Model::CONFIG->age_bracket_prob_individual_present_at_mda()[i]
          && i < Model::CONFIG->age_bracket_prob_individual_present_at_mda().size()) {

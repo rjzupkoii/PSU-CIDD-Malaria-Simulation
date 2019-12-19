@@ -416,14 +416,17 @@ void  Model::write_movement_data() {
   LOG(INFO) << "Dumping distance matrix to: " << DISTANCES;
   MatrixWriter<DoubleVector2>::write(Model::CONFIG->spatial_distance_matrix(), DISTANCES);
 
-  // Setup the references and matrix to run
-  const auto residents_by_location = Model::DATA_COLLECTOR->popsize_residence_by_location();
+  // Setup the references and get the population
   const auto distance_matrix = Model::CONFIG->spatial_distance_matrix();
   const auto location_count = distance_matrix.size();
   const auto spatial = Model::CONFIG->spatial_model();
-  DoubleVector2 odds(location_count);  
-  
+  IntVector residents_by_location(location_count, 0);
+  for (std::size_t ndx = 0; ndx < location_count; ndx++) {
+    residents_by_location[ndx] = Model::CONFIG->location_db()[ndx].population_size;
+  }
+
   // Calculate the odds for each row, then write the data
+  DoubleVector2 odds(location_count);  
   for (std::size_t ndx = 0; ndx < location_count; ndx++) {
     odds[ndx].resize(location_count, 0);
     odds[ndx] = spatial->get_v_relative_out_movement_to_destination(ndx, location_count, distance_matrix[ndx], residents_by_location);
@@ -431,4 +434,4 @@ void  Model::write_movement_data() {
 
   LOG(INFO) << "Dumping odds matrix to: " << ODDS;
   MatrixWriter<DoubleVector2>::write(odds, ODDS);
-}
+} 
