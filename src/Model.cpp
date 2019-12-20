@@ -39,7 +39,6 @@
 #include "Malaria/SteadyTCM.h"
 #include "Constants.h"
 #include "Helpers/TimeHelpers.h"
-#include "GIS/SpatialData.h"
 #include "Spatial/SpatialModel.h"
 #include "Utility/MatrixWriter.hxx"
 

@@ -55,6 +55,10 @@ class SpatialData {
         // Flag to indicate if data has been loaded since the last time it was checked
         bool dirty;
 
+        // The size of the cells in the raster, the units shouldn't matter, but this was
+        // written when we were using 5x5 km cells
+        float cell_size = 0;
+
         // Constructor
         SpatialData();
 
@@ -97,6 +101,9 @@ class SpatialData {
 
         // Return true if a raster file has been loaded, false otherwise
         bool has_raster(SpatialFileType type) { return data[type] == nullptr; }
+
+        // Generate the Euclidian distances for the location_db
+        void generate_distances();
 
         // Load the given raster file into the spatial catalog and assign the given label
         void load(std::string filename, SpatialFileType type);

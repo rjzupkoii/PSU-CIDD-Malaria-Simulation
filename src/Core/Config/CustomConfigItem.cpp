@@ -24,6 +24,8 @@
 #include <date/date.h>
 #include <algorithm>
 
+#include "GIS/SpatialData.h"
+
 void total_time::set_value(const YAML::Node &node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
 }
@@ -41,6 +43,13 @@ void number_of_locations::set_value(const YAML::Node &node) {
 }
 
 void spatial_distance_matrix::set_value(const YAML::Node &node) {
+  if (SpatialData::get_instance().has_raster()) {
+    VLOG(1) << "Raster data detected, using it to generate distances";
+    SpatialData::get_instance().generate_distances();
+    return;
+  }
+
+  VLOG(1) << "Generating Euclidian distances using coordinates provided";
   value_.resize(static_cast<unsigned long>(config_->number_of_locations()));
   for (auto from_location = 0ul; from_location < config_->number_of_locations(); from_location++) {
     value_[from_location].resize(static_cast<unsigned long long int>(config_->number_of_locations()));

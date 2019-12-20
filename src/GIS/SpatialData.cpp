@@ -61,6 +61,24 @@ bool SpatialData::check_catalog(std::string& errors) {
     return has_errors;
 }
 
+void SpatialData::generate_distances() {
+    auto& db = Model::CONFIG->location_db();
+    auto& distances = Model::CONFIG->spatial_distance_matrix();
+
+    auto locations = db.size();
+    distances.resize(static_cast<unsigned long>(locations));
+    for (std::size_t from = 0; from < locations; from++) {
+        distances[from].resize(static_cast<unsigned long long int>(locations));
+        for (std::size_t to = 0; to < locations; to ++) {
+            distances[from][to] = std::sqrt(
+                std::pow(cell_size * (db[from].coordinate->latitude - db[to].coordinate->latitude), 2) + 
+                std::pow(cell_size * (db[from].coordinate->longitude - db[to].coordinate->longitude), 2));
+        }
+    }
+
+    VLOG(1) << "Updated Euclidean distances using raster data";
+}
+
 void SpatialData::generate_locations() {
     // Reference parameters
     AscFile* reference;
@@ -206,6 +224,9 @@ bool SpatialData::parse(const YAML::Node &node) {
     if (node["population_raster"]) {
         load(node["population_raster"].as<std::string>(), SpatialData::SpatialFileType::Population);
     }
+    
+    // Set the cell size
+    cell_size = node["cell_size"].as<float>();
 
     // Now convert the rasters into the location space
     refresh();
