@@ -34,7 +34,7 @@ double Reporter::calculate_treatment_failures() {
 
   auto sum_ntf = 0.0;
   ul pop_size = 0;
-  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++)
+  for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++)
   {
     sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
     pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
