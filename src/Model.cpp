@@ -39,8 +39,7 @@
 #include "Malaria/SteadyTCM.h"
 #include "Constants.h"
 #include "Helpers/TimeHelpers.h"
-#include "Spatial/SpatialModel.h"
-#include "Utility/MatrixWriter.hxx"
+#include "Validation/MovementValidation.h"
 
 #define empty_or_blank(string_data) (string_data.empty() || string_data.size() == 0)
 
@@ -178,7 +177,19 @@ void Model::initialize(int job_number, std::string std) {
     scheduler_->schedule_population_event(event);
   }
 
-  if (dump_movement_) { write_movement_data(); }
+  if (dump_movement_) { 
+    // Generate a movement reporter
+    Reporter* reporter = Reporter::MakeReport(Reporter::ReportType::MOVEMENT_REPORTER);
+    add_reporter(reporter);
+    reporter->initialize(job_number, std);
+
+    // Get the validator and prepare it for the run
+    auto& validator = MovementValidation::get_instance();
+    validator.set_reporter((MovementReporter*)reporter);
+
+    // Dump the initial movement data
+    validator.write_movement_data();    
+  }
 }
 
 void Model::initialize_object_pool(const int &size) {
@@ -403,34 +414,3 @@ double Model::get_seasonal_factor(const date::sys_days &today, const int &locati
            Model::CONFIG->seasonal_info().min_value[location]
          : Model::CONFIG->seasonal_info().min_value[location];
 }
-
-void  Model::write_movement_data() {
-  const std::string DISTANCES = "./dump/distances.csv";
-  const std::string ODDS = "./dump/odds.csv";
-
-  // Create the directory
-  mkdir("./dump", 0777);
-
-  // Get the distances matrix and dump it
-  LOG(INFO) << "Dumping distance matrix to: " << DISTANCES;
-  MatrixWriter<DoubleVector2>::write(Model::CONFIG->spatial_distance_matrix(), DISTANCES);
-
-  // Setup the references and get the population
-  const auto distance_matrix = Model::CONFIG->spatial_distance_matrix();
-  const auto location_count = distance_matrix.size();
-  const auto spatial = Model::CONFIG->spatial_model();
-  IntVector residents_by_location(location_count, 0);
-  for (std::size_t ndx = 0; ndx < location_count; ndx++) {
-    residents_by_location[ndx] = Model::CONFIG->location_db()[ndx].population_size;
-  }
-
-  // Calculate the odds for each row, then write the data
-  DoubleVector2 odds(location_count);  
-  for (std::size_t ndx = 0; ndx < location_count; ndx++) {
-    odds[ndx].resize(location_count, 0);
-    odds[ndx] = spatial->get_v_relative_out_movement_to_destination(ndx, location_count, distance_matrix[ndx], residents_by_location);
-  }
-
-  LOG(INFO) << "Dumping odds matrix to: " << ODDS;
-  MatrixWriter<DoubleVector2>::write(odds, ODDS);
-} 

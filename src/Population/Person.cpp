@@ -4,8 +4,11 @@
  * 
  * Created on March 22, 2013, 2:25 PM
  */
-
 #include "Person.h"
+
+#include <algorithm>
+#include <cmath>
+
 #include "Population.h"
 #include "ImmuneSystem.h"
 #include "Model.h"
@@ -34,8 +37,7 @@
 #include "Therapies/MACTherapy.h"
 #include "Events/ReceiveTherapyEvent.h"
 #include "Constants.h"
-#include <algorithm>
-#include <cmath>
+#include "Validation/MovementValidation.h"
 #include "Helpers/ObjectHelpers.h"
 
 OBJECTPOOL_IMPL(Person)
@@ -643,6 +645,11 @@ void Person::randomly_choose_target_location() {
   } else {
     const int index_random_location = Model::RANDOM->random_uniform(today_target_locations_->size());
     target_location = today_target_locations_->at(index_random_location);
+  }
+
+  // FLAG Call out to note the movement
+  if (Model::MODEL->dump_movement()) {
+    MovementValidation::add_move(location_, target_location);
   }
 
   schedule_move_to_target_location_next_day_event(target_location);

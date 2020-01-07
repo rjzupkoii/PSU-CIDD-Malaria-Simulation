@@ -26,6 +26,7 @@ file(GLOB SOURCE *.cpp
         Strategies/*.cpp
         Therapies/*.cpp
         Utility/*.cpp
+        Validation/*.cpp
 )
 
 # Define extra library files

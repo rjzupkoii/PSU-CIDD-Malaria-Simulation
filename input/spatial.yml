@@ -59,7 +59,7 @@ initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 3
 
 # population_size_by_location is scaled by this value to increase the total 
 # number of individuals in the model
-artificial_rescaling_of_population_size: 1.0
+artificial_rescaling_of_population_size: 0.01
 
 # ---------------------------------------------------------------
 # Rasters to be used in conjunction with the location_db, note 
@@ -67,8 +67,11 @@ artificial_rescaling_of_population_size: 1.0
 # ---------------------------------------------------------------
 raster_db:
   # Raster file that contains the site specific population data
-  population_raster: "../input/burkina_faso_int.asc"
+  population_raster: "../input/safane.asc"
   
+  # Set the cell size used by raster, in sq.km
+  cell_size: 5
+
   # When raster files are being used, we assume that the age distribution can be constant for the country
   age_distribution_by_location: [[0.0334, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387]]
 
@@ -81,9 +84,6 @@ raster_db:
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
   beta_by_location: [0.05]
-
-  #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [ 10 ]
 
 # seasonality parameters for all location
 seasonal_info:

@@ -19,6 +19,7 @@ class Config;
 class Random;
 class ModelDataCollector;
 class Reporter;
+class MovementReporter;
 
 class Model {
  DISALLOW_COPY_AND_ASSIGN(Model)
@@ -102,10 +103,6 @@ class Model {
  private:
   IStrategy *treatment_strategy_{nullptr};
   ITreatmentCoverageModel *treatment_coverage_{nullptr};
-
-  // Write the movement data that is generated after model initiation.
-  void write_movement_data();
-
 };
 
 #endif

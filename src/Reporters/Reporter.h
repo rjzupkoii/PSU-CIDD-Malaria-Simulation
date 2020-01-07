@@ -1,8 +1,8 @@
 /* 
- * File:   Reporter.h
- * Author: Merlin
+ * Reporter.h
  *
- * Created on August 1, 2013, 12:05 PM
+ * Define various enumerations and constants related to reporters as well as the 
+ * factory pattern used to initialize reporters.
  */
 
 #ifndef REPORTER_H
@@ -29,15 +29,6 @@ class Reporter {
 
  POINTER_PROPERTY(Model, model)
 
-  enum ReportType {
-    CONSOLE,
-    GUI,
-    MONTHLY_REPORTER,
-    MMC_REPORTER,
-    SPATIAL_REPORTER,
-    DB_REPORTER
-  };
-
 protected:
 
   // Constants used when generating TSV files
@@ -48,6 +39,16 @@ protected:
   double calculate_treatment_failures();
 
  public:
+
+   enum ReportType {
+    CONSOLE,
+    GUI,
+    MONTHLY_REPORTER,
+    MMC_REPORTER,
+    SPATIAL_REPORTER,
+    DB_REPORTER,
+    MOVEMENT_REPORTER
+  };
 
   static std::map<std::string, ReportType> ReportTypeMap;
 
@@ -69,4 +70,4 @@ protected:
 
 };
 
-#endif /* REPORTER_H */
+#endif

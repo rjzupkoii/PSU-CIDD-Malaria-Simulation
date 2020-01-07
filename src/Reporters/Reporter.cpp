@@ -1,8 +1,7 @@
 /* 
- * File:   Reporter.cpp
- * Author: Merlin
+ * Reporter.cpp
  * 
- * Created on August 1, 2013, 12:05 PM
+ * Implements a factory pattern to generate the various reporter types.
  */
 
 #include "Reporter.h"
@@ -10,21 +9,22 @@
 #include "ConsoleReporter.h"
 #include "Constants.h"
 #include "Core/Config/Config.h"
+#include "DbReporter.h"
 #include "easylogging++.h"
 #include "MDC/ModelDataCollector.h"
 #include "Model.h"
 #include "MonthlyReporter.h"
+#include "MovementReporter.h"
 #include "MMCReporter.h"
 #include "SpatialReporter.h"
-
-#include "DbReporter.h"
 
 std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
     {"Console", CONSOLE},
     {"MonthlyReporter", MONTHLY_REPORTER},
     {"MMC", MMC_REPORTER},
     {"SpatialReporter", SPATIAL_REPORTER},
-    {"DbReporter", DB_REPORTER}
+    {"DbReporter", DB_REPORTER},
+    {"MovementReporter", MOVEMENT_REPORTER}
 };
 
 // Calculate the number of treatment failures (NTF) for the model
@@ -50,8 +50,9 @@ Reporter *Reporter::MakeReport(ReportType report_type) {
     case MMC_REPORTER:return new MMCReporter();
     case SPATIAL_REPORTER: return new SpatialReporter();
     case DB_REPORTER: return new DbReporter();
+    case MOVEMENT_REPORTER: return new MovementReporter();
     default:
-      LOG(WARNING) << "No reporter type supplied, returning MonthlyReporter";
-      return new MonthlyReporter();
+      LOG(ERROR) << "No reporter type supplied";
+      throw new std::runtime_error("No reporter type supplie");
   }
 }
