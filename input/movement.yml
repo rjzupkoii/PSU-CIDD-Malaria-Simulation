@@ -18,7 +18,7 @@ days_between_notifications: 365
 initial_seed_number: 0
 
 # Connection string for the PostgreSQL database
-connection_string: "host=masimdb.vmhost.psu.edu dbname=masim user=sim password=sim"
+connection_string: "host=localhost dbname=masim user=sim password=sim"
 
 # ---------------------------------------------------------------
 # Items controlling the behavior of the model
@@ -59,7 +59,7 @@ initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 3
 
 # population_size_by_location is scaled by this value to increase the total 
 # number of individuals in the model
-artificial_rescaling_of_population_size: 0.05
+artificial_rescaling_of_population_size: 1.0
 
 # ---------------------------------------------------------------
 # Rasters to be used in conjunction with the location_db, note 
@@ -84,9 +84,6 @@ raster_db:
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
   beta_by_location: [0.05]
-
-  #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [ 10 ]
 
 # seasonality parameters for all location
 seasonal_info:

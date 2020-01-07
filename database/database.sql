@@ -214,6 +214,32 @@ CREATE TABLE sim.studyconfigurations (
 );
 
 
+CREATE TABLE sim.movement
+(
+    id integer NOT NULL DEFAULT nextval('sim.movement_id_seq'::regclass),
+    replicateid integer NOT NULL,
+    timestep integer NOT NULL,
+    source integer NOT NULL,
+    destination integer NOT NULL,
+    CONSTRAINT movement_pkey PRIMARY KEY (id),
+    CONSTRAINT movement_replicateid_fk FOREIGN KEY (replicateid)
+        REFERENCES sim.replicate (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+ALTER TABLE sim.movement
+    OWNER to sim;
+
+-- Index: fki_movement_replicateid_fk
+
+-- DROP INDEX sim.fki_movement_replicateid_fk;
+
+CREATE INDEX fki_movement_replicateid_fk
+    ON sim.movement USING btree
+    (replicateid)
+    TABLESPACE pg_default;
+
 ALTER TABLE sim.studyconfigurations OWNER TO sim;
 
 ALTER TABLE ONLY sim.configuration ALTER COLUMN id SET DEFAULT nextval('sim.configuration_id_seq'::regclass);
