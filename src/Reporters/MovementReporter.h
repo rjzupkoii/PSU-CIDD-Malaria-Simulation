@@ -15,8 +15,8 @@
 class MovementReporter : public Reporter {
     private:
         const std::string INSERT_MOVE = 
-        "INSERT INTO sim.Movement (ReplicateId, Timestep, Source, Destination) "
-        "VALUES ({}, {}, {}, {});";
+        "INSERT INTO sim.Movement (ReplicateId, Timestep, IndividualId, Source, Destination) "
+        "VALUES ({}, {}, {}, {}, {});";
 
         // NOTE This may not always work if the same random number is reused.
         //      However, this assumed to be a testing / early validation reporter
@@ -41,7 +41,7 @@ class MovementReporter : public Reporter {
         void monthly_report() override;
         void after_run() override;
 
-        void add_move(int source, int destination);
+        void add_move(int individual, int source, int destination);
 };
 
 #endif

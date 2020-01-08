@@ -14,8 +14,8 @@
 #include "Model.h"
 
 // Add a reported move to the update
-void MovementReporter::add_move(int source, int destination) {
-    update_query.append(fmt::format(INSERT_MOVE, replicate, Model::SCHEDULER->current_time(), source, destination));
+void MovementReporter::add_move(int individual, int source, int destination) {
+    update_query.append(fmt::format(INSERT_MOVE, replicate, Model::SCHEDULER->current_time(), individual, source, destination));
 }
 
 // Open a connection to the database and get the replicate based on the random seed value

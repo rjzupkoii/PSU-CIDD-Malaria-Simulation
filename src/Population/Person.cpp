@@ -649,7 +649,8 @@ void Person::randomly_choose_target_location() {
 
   // FLAG Call out to note the movement
   if (Model::MODEL->dump_movement()) {
-    MovementValidation::add_move(location_, target_location);
+    auto id = static_cast<int>(PersonIndexAllHandler::index());
+    MovementValidation::add_move(id, location_, target_location);
   }
 
   schedule_move_to_target_location_next_day_event(target_location);

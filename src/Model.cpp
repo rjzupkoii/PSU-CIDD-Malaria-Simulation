@@ -178,6 +178,9 @@ void Model::initialize(int job_number, std::string std) {
   }
 
   if (dump_movement_) { 
+    // Generate a warning for the user. 
+    LOG(INFO) << "Recording movement information from the model, this will impact performance!";
+
     // Generate a movement reporter
     Reporter* reporter = Reporter::MakeReport(Reporter::ReportType::MOVEMENT_REPORTER);
     add_reporter(reporter);

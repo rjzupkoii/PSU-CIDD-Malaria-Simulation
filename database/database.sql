@@ -219,6 +219,7 @@ CREATE TABLE sim.movement
     id integer NOT NULL DEFAULT nextval('sim.movement_id_seq'::regclass),
     replicateid integer NOT NULL,
     timestep integer NOT NULL,
+    individualid integer NOT NULL,
     source integer NOT NULL,
     destination integer NOT NULL,
     CONSTRAINT movement_pkey PRIMARY KEY (id),

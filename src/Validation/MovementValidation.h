@@ -35,7 +35,7 @@ class MovementValidation {
         }
 
         // Add the move to the monthly report
-        static void add_move(int source, int destination) { get_instance().reporter->add_move(source, destination); }
+        static void add_move(int individual, int source, int destination) { get_instance().reporter->add_move(individual, source, destination); }
 
         // Set the reporter to use
         void set_reporter(MovementReporter* reporter) { this->reporter = reporter; }
