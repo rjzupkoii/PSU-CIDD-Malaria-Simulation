@@ -97,6 +97,7 @@ void SpatialData::generate_locations() {
 
     // Start by overallocating the location_db
     auto& db = Model::CONFIG->location_db();
+    db.clear();
     db.reserve(reference->NROWS * reference->NCOLS);
 
     // Scan the data and insert fields with a value
@@ -173,7 +174,7 @@ void SpatialData::load_beta() {
     }
 
     // When we are done the last id value should match the number of locations, accounting for zero indexing
-    assert((unsigned)(id + 1) == Model::CONFIG->number_of_locations());
+    assert((unsigned)(id) == Model::CONFIG->number_of_locations());
 
     // Log the updates
     VLOG(1) << "Loaded beta values from raster file.";
@@ -206,7 +207,7 @@ void SpatialData::load_population() {
     }
 
     // When we are done the last id value should match the number of locations, accounting for zero indexing
-    assert((unsigned)(id + 1) == Model::CONFIG->number_of_locations());
+    assert((unsigned)(id) == Model::CONFIG->number_of_locations());
 
     // Log the updates
     VLOG(1) << "Loaded population values from raster file.";
