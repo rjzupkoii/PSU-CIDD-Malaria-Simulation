@@ -1,0 +1,4 @@
+# Ignore files used for analysis
+*.asc
+*.csv
+*.png
