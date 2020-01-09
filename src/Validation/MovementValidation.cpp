@@ -14,9 +14,18 @@
 #include "Spatial/SpatialModel.h"
 #include "Utility/MatrixWriter.hxx"
 
+#define LOCATION_COUNT_CUTOFF 100
+
 void MovementValidation::write_movement_data() {
   const std::string DISTANCES = "./dump/distances.csv";
   const std::string ODDS = "./dump/odds.csv";
+
+  // Before we do anything, check the size of the matrix
+  const auto location_count = Model::CONFIG->spatial_distance_matrix().size();
+  if (location_count > LOCATION_COUNT_CUTOFF) {
+    LOG(WARNING) << "Location count of " << location_count << " exceeds maximum of " << LOCATION_COUNT_CUTOFF << " distances and odds not dumped.";
+    return;
+  }
 
   // Create the directory
   mkdir("./dump", 0777);
@@ -27,7 +36,6 @@ void MovementValidation::write_movement_data() {
 
   // Setup the references and get the population
   const auto distance_matrix = Model::CONFIG->spatial_distance_matrix();
-  const auto location_count = distance_matrix.size();
   const auto spatial = Model::CONFIG->spatial_model();
   IntVector residents_by_location(location_count, 0);
   for (std::size_t ndx = 0; ndx < location_count; ndx++) {
