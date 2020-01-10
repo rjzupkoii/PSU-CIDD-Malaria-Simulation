@@ -5,6 +5,9 @@
  * 
  * NOTE Since we assume this class will mostly be used for testing purposes, there
  *      is an assumed dependency on DbReporter having already initalized the database.
+ * 
+ * NOTE This code could be significantly optimized; however, since it is only used 
+ *      for the inital model validation it hasn't been tuned that much.
  */
 #include "MovementReporter.h"
 
@@ -15,7 +18,15 @@
 
 // Add a reported move to the update
 void MovementReporter::add_move(int individual, int source, int destination) {
-    update_query.append(fmt::format(INSERT_MOVE, replicate, Model::SCHEDULER->current_time(), individual, source, destination));
+    // Append the move
+    auto current_time = Model::SCHEDULER->current_time();
+    update_query.append(fmt::format(INSERT_MOVE, replicate, current_time, individual, source, destination));
+
+    // Check to see if the time changed, if so, report
+    if (this->current_time != current_time) {
+        report();
+        this->current_time = current_time;
+    }
 }
 
 // Open a connection to the database and get the replicate based on the random seed value
@@ -38,8 +49,8 @@ void MovementReporter::initialize(int job_number, std::string path) {
 }
 
 // Insert the buffered moves into the database
-void MovementReporter::monthly_report() {
-    // INsert the data
+void MovementReporter::report() {
+    // Insert the data
     pqxx::work db(*conn);
     db.exec(update_query);
     db.commit();

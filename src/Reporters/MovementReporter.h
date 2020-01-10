@@ -24,6 +24,7 @@ class MovementReporter : public Reporter {
         const std::string SELECT_REPLICATE = 
         "SELECT id FROM sim.replicate WHERE seed = {}";
 
+        int current_time = 0;
         int replicate;
         pqxx::connection* conn;
         std::string update_query;
@@ -38,10 +39,11 @@ class MovementReporter : public Reporter {
 
         // Overrides
         void initialize(int job_number, std::string path) override;
-        void monthly_report() override;
+        void monthly_report() override { report(); }
         void after_run() override;
 
         void add_move(int individual, int source, int destination);
+        void report();
 };
 
 #endif
