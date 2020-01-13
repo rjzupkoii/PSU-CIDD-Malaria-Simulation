@@ -24,3 +24,12 @@ FROM (
 ) movements
 GROUP BY distance 
 ORDER BY distance ASC
+
+-- Pull summary data for a single replicate
+SELECT monthlydataid, dayselapsed, sum(population) AS "Population", avg(eir) AS "EIR", 
+  avg(pfprunder5) AS "PfPR < 5", avg(pfpr2to10) AS "PfPR 2 - 10", avg(pfprall)  AS "PfPR All"
+FROM sim.monthlydata md
+  INNER JOIN sim.monthlysitedata msd ON msd.monthlydataid = md.id
+WHERE md.replicateid = 90
+GROUP BY monthlydataid, dayselapsed
+ORDER BY dayselapsed DESC
