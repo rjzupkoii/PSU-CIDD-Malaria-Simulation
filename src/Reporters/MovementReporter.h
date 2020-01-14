@@ -42,7 +42,8 @@ class MovementReporter : public Reporter {
         void monthly_report() override { report(); }
         void after_run() override;
 
-        void add_move(int individual, int source, int destination);
+        void add_coarse_move(int individual, int source, int destination);
+        void add_fine_move(int individual, int source, int destination);
         void report();
 };
 

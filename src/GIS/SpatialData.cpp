@@ -118,6 +118,12 @@ void SpatialData::generate_locations() {
     VLOG(1) << "Generated " << Model::CONFIG->number_of_locations() << " locations";
 }
 
+int SpatialData::get_district(int location) {
+
+    // TODO Write this method!
+
+}
+
 SpatialData::RasterInformation SpatialData::get_raster_header() {
     RasterInformation results;
     for (auto ndx = 0; ndx < SpatialFileType::Count; ndx++) {
@@ -216,14 +222,17 @@ void SpatialData::load_population() {
 bool SpatialData::parse(const YAML::Node &node) {
 
     // First, start by attempting to load any rasters
-    if (node["location_raster"]) {
-        load(node["location_raster"].as<std::string>(), SpatialData::SpatialFileType::Locations);
+    if (node[LOCATION_RASTER]) {
+        load(node[LOCATION_RASTER].as<std::string>(), SpatialData::SpatialFileType::Locations);
     }
-    if (node["beta_raster"]) {
-        load(node["beta_raster"].as<std::string>(), SpatialData::SpatialFileType::Beta);
+    if (node[BETA_RASTER]) {
+        load(node[BETA_RASTER].as<std::string>(), SpatialData::SpatialFileType::Beta);
     }
-    if (node["population_raster"]) {
-        load(node["population_raster"].as<std::string>(), SpatialData::SpatialFileType::Population);
+    if (node[POPULATION_RASTER]) {
+        load(node[POPULATION_RASTER].as<std::string>(), SpatialData::SpatialFileType::Population);
+    }
+    if (node[DISTRICT_RASTER]) {
+        load(node[DISTRICT_RASTER].as<std::string>(), SpatialData::SpatialFileType::Districts);
     }
     
     // Set the cell size
@@ -255,7 +264,7 @@ bool SpatialData::parse(const YAML::Node &node) {
     }
 
     // Load the beta if we don't have a raster for it
-    if (!node["beta_raster"]) {
+    if (!node[BETA_RASTER]) {
         for (auto loc = 0ul; loc < number_of_locations; loc++) {
             auto input_loc = node["beta_by_location"].size() < number_of_locations ? 0 : loc;
             location_db[loc].beta = node["beta_by_location"][input_loc].as<float>();
@@ -263,7 +272,7 @@ bool SpatialData::parse(const YAML::Node &node) {
     }
 
     // Load the population if we don't have a raster for it
-    if (!node["population_raster"]) {
+    if (!node[POPULATION_RASTER]) {
         for (auto loc = 0ul; loc < number_of_locations; loc++) {
             auto input_loc = node["population_size_by_location"].size() < number_of_locations ? 0 : loc;
             location_db[loc].population_size = node["population_size_by_location"][input_loc].as<int>();

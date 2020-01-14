@@ -43,6 +43,8 @@ class Model {
  PROPERTY_REF(int, override_parameter_line_number) // base 1
  PROPERTY_REF(int, gui_type)
  PROPERTY_REF(bool, dump_movement)
+ PROPERTY_REF(bool, fine_movement)
+ PROPERTY_REF(bool, coarse_movement)
  PROPERTY_REF(bool, is_farm_output)
  PROPERTY_REF(std::string, reporter_type)
 
@@ -99,6 +101,9 @@ class Model {
   void add_reporter(Reporter *reporter);
 
   double get_seasonal_factor(const date::sys_days &today, const int &location) const;
+
+  // True if movement should be reported by individuals, false otherwise.
+  bool report_movement() { return (fine_movement_ || coarse_movement_); }
 
  private:
   IStrategy *treatment_strategy_{nullptr};

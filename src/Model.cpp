@@ -177,10 +177,7 @@ void Model::initialize(int job_number, std::string std) {
     scheduler_->schedule_population_event(event);
   }
 
-  if (dump_movement_) { 
-    // Generate a warning for the user. 
-    LOG(INFO) << "Recording movement information from the model, this will impact performance!";
-
+  if (report_movement()) {
     // Generate a movement reporter
     Reporter* reporter = Reporter::MakeReport(Reporter::ReportType::MOVEMENT_REPORTER);
     add_reporter(reporter);
@@ -190,8 +187,20 @@ void Model::initialize(int job_number, std::string std) {
     auto& validator = MovementValidation::get_instance();
     validator.set_reporter((MovementReporter*)reporter);
 
-    // Dump the initial movement data
-    validator.write_movement_data();    
+    // Set the flags on the validator
+    validator.set_fine_movement(fine_movement_);
+    validator.set_coarse_movement(coarse_movement_);
+  }
+
+  if (coarse_movement_) {
+    if (!SpatialData::get_instance().has_raster(SpatialData::SpatialFileType::Districts)) {
+      LOG(ERROR) << "Districts raster must be loaded to track coarse movements.";
+      throw std::runtime_error("--mc set without districts raster loaded.");
+    }
+  }
+
+  if (dump_movement_) {
+      MovementValidation::write_movement_data();    
   }
 }
 

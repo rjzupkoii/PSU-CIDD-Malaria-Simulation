@@ -24,6 +24,9 @@ class SpatialData {
             // Population data
             Population,
 
+            // District location
+            Districts,
+
             // Number of sequential items in the type
             Count
         };
@@ -49,6 +52,11 @@ class SpatialData {
         };
 
     private:
+        const std::string BETA_RASTER = "beta_raster";
+        const std::string DISTRICT_RASTER = "district_raster";
+        const std::string LOCATION_RASTER = "location_raster";
+        const std::string POPULATION_RASTER = "population_raster";
+
         // Array of the ASC file data, use SpatialFileType as the index
         AscFile** data;
 
@@ -104,6 +112,9 @@ class SpatialData {
 
         // Generate the Euclidian distances for the location_db
         void generate_distances();
+
+        // Get the district id that corresponds to the cell id
+        int get_district(int location);
 
         // Load the given raster file into the spatial catalog and assign the given label
         void load(std::string filename, SpatialFileType type);

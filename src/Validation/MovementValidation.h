@@ -6,14 +6,15 @@
 #ifndef MOVEMENTVALIDATION_H
 #define MOVEMENTVALIDATION_H
 
+#include "Core/PropertyMacro.h"
 #include "Reporters/MovementReporter.h"
 
 class MovementValidation {
-    private:
-        const std::string INSERT_MOVE = 
-        "INSERT INTO sim.Movement (ReplicateId, Timestep, Source, Destination) "
-        "VALUES ({}, {}, {}, {})";
 
+    PROPERTY_REF(bool, coarse_movement)
+    PROPERTY_REF(bool, fine_movement)
+
+    private:
         MovementValidation() { }
         ~MovementValidation() { }
 
@@ -34,14 +35,14 @@ class MovementValidation {
             return instance;
         }
 
-        // Add the move to the monthly report
-        static void add_move(int individual, int source, int destination) { get_instance().reporter->add_move(individual, source, destination); }
+        // Add the movement to the record
+        static void add_move(int individual, int source, int destination);
 
         // Set the reporter to use
         void set_reporter(MovementReporter* reporter) { this->reporter = reporter; }
 
         // Write the movement data that is generated after model initiation.
-        void write_movement_data();
+        static void write_movement_data();
 };
 
 #endif

@@ -12,9 +12,31 @@
 #include "Model.h"
 #include "Reporters/MovementReporter.h"
 #include "Spatial/SpatialModel.h"
+#include "GIS/SpatialData.h"
 #include "Utility/MatrixWriter.hxx"
 
 #define LOCATION_COUNT_CUTOFF 100
+
+void MovementValidation::add_move(int individual, int source, int destination) { 
+  // Record fine movement if need be
+  auto& instance = get_instance();
+  if (instance.fine_movement_) {
+    instance.reporter->add_fine_move(individual, source, destination); 
+  }
+
+  // Return if we are done
+  if (!instance.coarse_movement_) { return; }
+
+  // Determine the districts
+  auto& sd = SpatialData::get_instance();
+  int source_district = sd.get_district(source);
+  int destination_district = sd.get_district(destination);
+
+  // Record the move if we left the district
+  if (source_district != destination_district) {
+    instance.reporter->add_coarse_move(individual, source_district, destination_district);
+  }
+}
 
 void MovementValidation::write_movement_data() {
   const std::string DISTANCES = "./dump/distances.csv";

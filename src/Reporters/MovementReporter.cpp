@@ -19,7 +19,7 @@
 #define COUNT_LIMIT 100
 
 // Add a reported move to the update
-void MovementReporter::add_move(int individual, int source, int destination) {
+void MovementReporter::add_fine_move(int individual, int source, int destination) {
     // Append the move
     update_query.append(fmt::format(INSERT_MOVE, replicate, Model::SCHEDULER->current_time(), individual, source, destination));
 
@@ -27,8 +27,13 @@ void MovementReporter::add_move(int individual, int source, int destination) {
     count++;
     if (count >= COUNT_LIMIT) {
         report();
-        count = 0;
     }
+}
+
+void MovementReporter::add_coarse_move(int individual, int source, int destination) {
+
+    // TODO Write this method!
+
 }
 
 // Open a connection to the database and get the replicate based on the random seed value
@@ -57,8 +62,9 @@ void MovementReporter::report() {
     db.exec(update_query);
     db.commit();
 
-    // Reset the query
+    // Reset the query and counter
     update_query = "";
+    count = 0;
 }
 
 // Close the connection

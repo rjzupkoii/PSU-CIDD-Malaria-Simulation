@@ -93,7 +93,9 @@ void handle_cli(Model *model, int argc, char **argv) {
    * -i / --input  - input file
    * -j            - cluster job number
    * -l / --load   - load genotypes and exit
-   * -m / --mvmt   - dump the movement model during operation
+   * --md          - dump the movement matrix as calculated           
+   * --mf          - record fine level movement data
+   * --mc          - record the coarse movement between districts
    * -o            - path for output files
    * -r            - reporter type
    */
@@ -104,7 +106,9 @@ void handle_cli(Model *model, int argc, char **argv) {
   args::ValueFlag<int> cluster_job_number(commands, "int", "Cluster job number. \nEx: MaSim -j 1", {'j'});
   args::ValueFlag<std::string> reporter(commands, "string", "Reporter Type. \nEx: MaSim -r mmc", {'r'});
   args::ValueFlag<std::string> input_path(commands, "string", "Path for output files, default is current directory. \nEx: MaSim -p out", {'o'});
-  args::Flag dump_movement(commands, "mvmt", "Dump the movement model as calculated", {'m', "mvmt"});
+  args::Flag dump_movement(commands, "md", "Dump the movement matrix as calculated", { "md" });
+  args::Flag fine_movement(commands, "mf", "Record fine movement detail", { "mf" });
+  args::Flag coarse_movement(commands, "mc", "Record the coarse movements between districts", { "mc" });
   args::Flag load_genotypes(commands, "load", "Load the genotypes to the database and exit", {'l', "load"});
   
   // Allow the --v=[int] flag to be processed by START_EASYLOGGINGPP
@@ -153,8 +157,9 @@ void handle_cli(Model *model, int argc, char **argv) {
   const auto reporter_type = reporter ? args::get(reporter) : "";
   model->set_reporter_type(reporter_type);
   
-  if (dump_movement) {
-    LOG(INFO) << "Dumping model movement enabled.";
-    model->set_dump_movement(dump_movement);
-  }
+  // Flags related to how movement is recorded (or not)
+  model->set_dump_movement(dump_movement);
+  model->set_fine_movement(fine_movement);
+  model->set_coarse_movement(coarse_movement);
 }
+ 
