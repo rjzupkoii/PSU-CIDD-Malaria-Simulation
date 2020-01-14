@@ -16,16 +16,18 @@
 #include "easylogging++.h"
 #include "Model.h"
 
+#define COUNT_LIMIT
+
 // Add a reported move to the update
 void MovementReporter::add_move(int individual, int source, int destination) {
     // Append the move
-    auto current_time = Model::SCHEDULER->current_time();
-    update_query.append(fmt::format(INSERT_MOVE, replicate, current_time, individual, source, destination));
+    update_query.append(fmt::format(INSERT_MOVE, replicate, Model::SCHEDULER->current_time(), individual, source, destination));
 
-    // Check to see if the time changed, if so, report
-    if (this->current_time != current_time) {
+    // Check to see if we should report
+    count++;
+    if (count >= COUNT_LIMIT) {
         report();
-        this->current_time = current_time;
+        count = 0;
     }
 }
 

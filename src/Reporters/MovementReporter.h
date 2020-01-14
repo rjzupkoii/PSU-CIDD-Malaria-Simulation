@@ -24,7 +24,7 @@ class MovementReporter : public Reporter {
         const std::string SELECT_REPLICATE = 
         "SELECT id FROM sim.replicate WHERE seed = {}";
 
-        int current_time = 0;
+        int count = 0;
         int replicate;
         pqxx::connection* conn;
         std::string update_query;
