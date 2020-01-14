@@ -16,7 +16,7 @@
 #include "easylogging++.h"
 #include "Model.h"
 
-#define COUNT_LIMIT
+#define COUNT_LIMIT 100
 
 // Add a reported move to the update
 void MovementReporter::add_move(int individual, int source, int destination) {
