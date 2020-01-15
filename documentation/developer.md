@@ -68,7 +68,7 @@ run -i ../input/sample.yml  # Run the program with the following command line pa
 
 ...                         # Program output omitted
 
-bd                          # Generates the stack trace
+bt                          # Generates the stack trace
 ```
 
 ## Profiling
