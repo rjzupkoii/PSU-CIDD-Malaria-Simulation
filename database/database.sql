@@ -118,7 +118,8 @@ CREATE TABLE sim.location (
     index integer NOT NULL,
     x integer NOT NULL,
     y integer NOT NULL,
-    beta double precision NOT NULL
+    beta double precision NOT NULL,
+    district integer
 );
 
 

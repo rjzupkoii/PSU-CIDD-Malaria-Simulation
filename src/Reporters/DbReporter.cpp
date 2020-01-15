@@ -78,13 +78,22 @@ void DbReporter::prepare_configuration() {
     result = db.exec(query);
     config_id = result[0][0].as<int>();
 
+    // Check to see if districts were loaded
+    auto districts = SpatialData::get_instance().has_raster(SpatialData::SpatialFileType::Districts);
+
     // Prepare the loader query
     query = "";
     for (unsigned int ndx = 0; ndx < Model::CONFIG->number_of_locations(); ndx++) {
         auto location = Model::CONFIG->location_db()[ndx];
         auto x = (int)location.coordinate.get()->latitude;
         auto y = (int)location.coordinate.get()->longitude;
-        query.append(fmt::format(INSERT_LOCATION, config_id, ndx, x, y, location.beta));
+
+        if (districts) {
+            auto district = SpatialData::get_instance().get_district(ndx);
+            query.append(fmt::format(INSERT_LOCATION_DISTRICT, config_id, ndx, x, y, location.beta, district));
+        } else {
+            query.append(fmt::format(INSERT_LOCATION, config_id, ndx, x, y, location.beta));
+        }
     }
 
     // Update the database
