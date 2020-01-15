@@ -67,10 +67,10 @@ artificial_rescaling_of_population_size: 0.01
 # ---------------------------------------------------------------
 raster_db:
   # Raster file that contains the site specific population data
-  population_raster: "../input/BurkinaFaso/bf_pop_raster.asc"
+  population_raster: "bf_pop_raster.asc"
 
   # Raster file that contains the districts mapping
-  district_raster: "../input/BurkinaFaso/bf_admin_raster.asc"
+  district_raster: "bf_admin_raster.asc"
   
   # Set the cell size used by raster, in sq.km
   cell_size: 5

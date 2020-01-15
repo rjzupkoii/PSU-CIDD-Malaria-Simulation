@@ -146,7 +146,7 @@ int SpatialData::get_district_count() {
         for (auto ndy = 0; ndy <  data[SpatialFileType::Districts]->NCOLS; ndy++) {
             if ( data[SpatialFileType::Districts]->data[ndx][ndy] ==  data[SpatialFileType::Districts]->NODATA_VALUE) { continue; }
             if ( data[SpatialFileType::Districts]->data[ndx][ndy] > district_count) {
-                district_count =  data[SpatialFileType::Districts]->data[ndx][ndy];
+                district_count = data[SpatialFileType::Districts]->data[ndx][ndy];
             }
         }
     }
