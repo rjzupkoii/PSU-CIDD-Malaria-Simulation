@@ -188,8 +188,14 @@ void Model::initialize(int job_number, std::string std) {
     validator.set_reporter((MovementReporter*)reporter);
 
     // Set the flags on the validator
-    validator.set_fine_movement(fine_movement_);
-    validator.set_coarse_movement(coarse_movement_);
+    if (fine_movement_) {
+      LOG(INFO) << "Tracking of fine movement enabled.";
+      validator.set_fine_movement(true);
+    }
+    if (coarse_movement_) {
+      LOG(INFO) << "Tracking of coarse movement enabled.";
+      validator.set_coarse_movement(coarse_movement_);
+    }
   }
 
   if (coarse_movement_) {

@@ -647,8 +647,8 @@ void Person::randomly_choose_target_location() {
     target_location = today_target_locations_->at(index_random_location);
   }
 
-  // FLAG Call out to note the movement
-  if (Model::MODEL->dump_movement()) {
+  // Report the movement if need be
+  if (Model::MODEL->report_movement()) {
     auto id = static_cast<int>(PersonIndexAllHandler::index());
     MovementValidation::add_move(id, location_, target_location);
   }

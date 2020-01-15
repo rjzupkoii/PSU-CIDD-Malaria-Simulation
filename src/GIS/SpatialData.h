@@ -67,6 +67,10 @@ class SpatialData {
         // written when we were using 5x5 km cells
         float cell_size = 0;
 
+        // Count of district loaded in the map, default zero, lazy initialization to actual value when 
+        // requested the first time
+        int district_count = 0;
+
         // Constructor
         SpatialData();
 
@@ -108,13 +112,16 @@ class SpatialData {
         bool has_raster();
 
         // Return true if a raster file has been loaded, false otherwise
-        bool has_raster(SpatialFileType type) { return data[type] == nullptr; }
+        bool has_raster(SpatialFileType type) { return data[type] != nullptr; }
 
         // Generate the Euclidian distances for the location_db
         void generate_distances();
 
         // Get the district id that corresponds to the cell id
         int get_district(int location);
+
+        // Get the count of districts loaded, or -1 if they have not been loaded
+        int get_district_count();
 
         // Load the given raster file into the spatial catalog and assign the given label
         void load(std::string filename, SpatialFileType type);

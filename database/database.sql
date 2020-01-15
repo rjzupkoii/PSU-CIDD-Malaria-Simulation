@@ -154,6 +154,7 @@ CREATE TABLE sim.monthlygenomedata (
     monthlydataid integer NOT NULL,
     locationid integer NOT NULL,
     genomeid integer NOT NULL,
+	occurrences integer NOT NULL,
     clinicaloccurrences integer NOT NULL,
     occurrences0to5 integer NOT NULL,
     occurrences2to10 integer NOT NULL,
@@ -293,7 +294,15 @@ ALTER TABLE ONLY sim.studyconfigurations
 ALTER TABLE ONLY sim.studyconfigurations
     ADD CONSTRAINT studyconfigurations_studyid_fk FOREIGN KEY (studyid) REFERENCES sim.study(id);
 
--- The movement table isn't strictly necessary for the database
+-- The fine movement table isn't strictly necessary for the database
+CREATE SEQUENCE sim.movement_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 CREATE TABLE sim.movement
 (
     id bigint NOT NULL DEFAULT nextval('sim.movement_id_seq'::regclass),
@@ -315,8 +324,45 @@ WITH (
 TABLESPACE pg_default;
 
 ALTER TABLE sim.movement OWNER to sim;
+ALTER SEQUENCE sim.movement_id_seq OWNER to sim;
 
 CREATE INDEX fki_movement_replicateid_fk
     ON sim.movement USING btree
+    (replicateid)
+    TABLESPACE pg_default;
+
+-- The coarse movement table isn't strictly necessary for the database
+CREATE SEQUENCE sim.districtmovement_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE TABLE sim.districtmovement
+(
+    id integer NOT NULL DEFAULT nextval('sim.districtmovement_id_seq'::regclass),
+    replicateid integer NOT NULL,
+    timestep integer NOT NULL,
+    count integer NOT NULL,
+    source integer NOT NULL,
+    destination integer NOT NULL,
+    CONSTRAINT districtmovement_pkey PRIMARY KEY (id),
+    CONSTRAINT districtmovement_replicateid_fk FOREIGN KEY (replicateid)
+        REFERENCES sim.replicate (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE sim.districtmovement OWNER to sim;
+ALTER SEQUENCE sim.districtmovement_id_seq OWNER to sim;
+
+CREATE INDEX fki_districtmovement_replicateid_fk
+    ON sim.districtmovement USING btree
     (replicateid)
     TABLESPACE pg_default;

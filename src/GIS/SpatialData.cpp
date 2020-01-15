@@ -119,9 +119,40 @@ void SpatialData::generate_locations() {
 }
 
 int SpatialData::get_district(int location) {
+    // Throw an error if there are not districts
+    if (data[SpatialFileType::Districts] == nullptr) {
+        throw std::runtime_error(fmt::format("{} called without district data loaded", __FUNCTION__));
+    }
 
-    // TODO Write this method!
+    // Get the coordinate of the location
+    auto& coordinate = Model::CONFIG->location_db()[location].coordinate;
 
+    // Use the x, y to get the district id
+    auto district = (int)data[SpatialFileType::Districts]->data[(int)coordinate->latitude][(int)coordinate->longitude];
+    return district;
+}
+
+int SpatialData::get_district_count() {
+    // This can be called without throwing an error
+    if (data[SpatialFileType::Districts] == nullptr) {
+        return -1;
+    }
+
+    // Do we already have a count?
+    if (district_count != 0) { return district_count; }
+
+    // Determine the count
+    for (auto ndx = 0; ndx <  data[SpatialFileType::Districts]->NROWS; ndx++) {
+        for (auto ndy = 0; ndy <  data[SpatialFileType::Districts]->NCOLS; ndy++) {
+            if ( data[SpatialFileType::Districts]->data[ndx][ndy] ==  data[SpatialFileType::Districts]->NODATA_VALUE) { continue; }
+            if ( data[SpatialFileType::Districts]->data[ndx][ndy] > district_count) {
+                district_count =  data[SpatialFileType::Districts]->data[ndx][ndy];
+            }
+        }
+    }
+
+    // Return the result
+    return district_count;
 }
 
 SpatialData::RasterInformation SpatialData::get_raster_header() {
