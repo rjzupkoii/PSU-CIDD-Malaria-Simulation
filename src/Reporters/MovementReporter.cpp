@@ -37,9 +37,12 @@ void MovementReporter::add_coarse_move(int individual, int source, int destinati
 
 // Prepare and perform a bulk insert of the coarse movements
 void MovementReporter::coarse_report() {
+    // If we are at the zero time point, just return since we don't anticpate anything to do
+    auto timestep = Model::SCHEDULER->current_time();
+    if (timestep == 0) { return; }
+
     // Prepare the insert query, also zero out any values
     std::string query;
-    auto timestep = Model::SCHEDULER->current_time();
     for (auto source = 0; source < district_count; source++) {
         for (auto destination = 0; destination < district_count; destination++) {
             if (district_movements[source][destination] == 0) { continue; }
@@ -97,7 +100,7 @@ void MovementReporter::initialize(int job_number, std::string path) {
 
 // Call the relevent sub reports
 void MovementReporter::monthly_report() {
-    if (district_movements != nullptr) { VLOG(1) << "Reporting coarse..."; coarse_report(); }
+    if (district_movements != nullptr) { coarse_report(); }
     if (count > 0) { fine_report(); }
 }
 
