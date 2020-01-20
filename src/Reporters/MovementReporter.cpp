@@ -48,6 +48,11 @@ void MovementReporter::coarse_report() {
         }
     }
 
+    // Issue a warning if there were no movements since zeroed data is not recorded
+    if (query.empty()) {
+        LOG(WARNING) << "No movement between districts recorded.";
+    }
+
     // Insert the movements
     pqxx::work db(*conn);
     db.exec(query);
@@ -92,7 +97,7 @@ void MovementReporter::initialize(int job_number, std::string path) {
 
 // Call the relevent sub reports
 void MovementReporter::monthly_report() {
-    if (district_movements != nullptr) { coarse_report(); }
+    if (district_movements != nullptr) { VLOG(1) << "Reporting coarse..."; coarse_report(); }
     if (count > 0) { fine_report(); }
 }
 
