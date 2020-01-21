@@ -18,7 +18,7 @@ days_between_notifications: 365
 initial_seed_number: 0
 
 # Connection string for the PostgreSQL database
-connection_string: "host=masimdb.vmhost.psu.edu dbname=masim user=sim password=sim"
+connection_string: "host=localhost dbname=masim user=sim password=sim"
 
 # ---------------------------------------------------------------
 # Items controlling the behavior of the model
@@ -32,7 +32,7 @@ starting_date: 1990/1/1
 start_of_comparison_period: 1991/12/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 2001/1/1
+ending_date: 1991/1/1
 
 # the day at which the simulation's reporting functionality begins collecting data for 
 # EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
@@ -59,7 +59,7 @@ initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 3
 
 # population_size_by_location is scaled by this value to increase the total 
 # number of individuals in the model
-artificial_rescaling_of_population_size: 0.01
+artificial_rescaling_of_population_size: 0.02
 
 # ---------------------------------------------------------------
 # Rasters to be used in conjunction with the location_db, note 
@@ -67,7 +67,10 @@ artificial_rescaling_of_population_size: 0.01
 # ---------------------------------------------------------------
 raster_db:
   # Raster file that contains the site specific population data
-  population_raster: "../input/safane.asc"
+  population_raster: "../input/BurkinaFaso/bf_pop_raster.asc"
+
+  # Raster file that contains the districts mapping
+  district_raster: "../input/BurkinaFaso/bf_admin_raster.asc"
   
   # Set the cell size used by raster, in sq.km
   cell_size: 5
@@ -102,10 +105,10 @@ spatial_model:
     kappa: 350
 
   Wesolowski:
-    kappa: 0.01093251
-    alpha: 0.22268982
-    beta: 0.14319618
-    gamma: 0.83741484
+    kappa: 0.1
+    alpha: 0.5
+    beta:  0.1
+    gamma: 2.0
 
 # below value indicates 37.25 births per 1000 individuals per year
 birth_rate: 0.03725
@@ -176,7 +179,7 @@ circulation_info:
     Gamma:
       mean: 5
       sd: 10
-  circulation_percent: 0.0
+  circulation_percent: 0.2
   length_of_stay:
     mean: 5
     sd: 10
