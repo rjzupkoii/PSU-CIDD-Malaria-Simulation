@@ -91,32 +91,40 @@ void handle_cli(Model *model, int argc, char **argv) {
    * -c / --config - config file
    * -h / --help   - help screen
    * -i / --input  - input file
+   * --im          - record individual movement data
    * -j            - cluster job number
    * -l / --load   - load genotypes and exit
-   * --md          - dump the movement matrix as calculated           
-   * --mf          - record fine level movement data
-   * --mc          - record the coarse movement between districts
+   * --dump          - dump the movement matrix as calculated           
+   * --mc          - record the movement between cells
+   * --md          - record the movement between districts
    * -o            - path for output files
    * -r            - reporter type
    */
-  args::ArgumentParser parser("Individual-based simulation for malaria.", "uut47@psu.edu");
+  args::ArgumentParser parser("Individual-based simulation for malaria.", "Boni Lab at Penn State");
   args::Group commands(parser, "commands");
   args::HelpFlag help(commands, "help", "Display this help menu", {'h', "help"});
   args::ValueFlag<std::string> input_file(commands, "string", "The config file (YAML format). \nEx: MaSim -i input.yml", {'i', 'c', "input", "config"});
   args::ValueFlag<int> cluster_job_number(commands, "int", "Cluster job number. \nEx: MaSim -j 1", {'j'});
   args::ValueFlag<std::string> reporter(commands, "string", "Reporter Type. \nEx: MaSim -r mmc", {'r'});
   args::ValueFlag<std::string> input_path(commands, "string", "Path for output files, default is current directory. \nEx: MaSim -p out", {'o'});
-  args::Flag dump_movement(commands, "md", "Dump the movement matrix as calculated", { "md" });
-  args::Flag fine_movement(commands, "mf", "Record fine movement detail", { "mf" });
-  args::Flag coarse_movement(commands, "mc", "Record the coarse movements between districts", { "mc" });
-  args::Flag load_genotypes(commands, "load", "Load the genotypes to the database and exit", {'l', "load"});
+  args::Flag dump_movement(commands, "dump", "Dump the movement matrix as calculated", { "dump" });
+  args::Flag individual_movement(commands, "im", "Record individual movement detail", { "im" });
+  args::Flag cell_movement(commands, "mc", "Record the movement between cells, cannot run with --md", { "mc" });
+  args::Flag district_movement(commands, "md", "Record the movement between districts, cannot run with --mc", { "md" });
+  args::Flag load_genotypes(commands, "load", "Load the genotypes to the database", {'l', "load"});
   
   // Allow the --v=[int] flag to be processed by START_EASYLOGGINGPP
   args::Group arguments(parser, "verbosity", args::Group::Validators::DontCare, args::Options::Global);
-  args::ValueFlag<int> verbosity(arguments, "int", "Sets the current verbosity of the logging, default zero", {"v"});
+  args::ValueFlag<int> verbosity(arguments, "int", "Sets the verbosity of the logging, default zero", {"v"});
 
   try {
     parser.ParseCLI(argc, argv);
+
+    // Check to if both --mc and --md are set, if so, generate an error
+    if (cell_movement == true && district_movement == true) {
+      std::cerr << "--mc and --md are mutual exclusive and may not be run together.\n";
+      exit(EXIT_FAILURE);
+    }
   }
   catch (const args::Help &e) {
     std::cout << e.what() << parser;
@@ -147,7 +155,7 @@ void handle_cli(Model *model, int argc, char **argv) {
     } else {
       std::cout << "Terminated with error(s)." << std::endl;
     }
-    exit(0);
+    exit(EXIT_SUCCESS);
   }
 
   // Set the remaining values if given
@@ -159,7 +167,8 @@ void handle_cli(Model *model, int argc, char **argv) {
   
   // Flags related to how movement is recorded (or not)
   model->set_dump_movement(dump_movement);
-  model->set_fine_movement(fine_movement);
-  model->set_coarse_movement(coarse_movement);
+  model->set_individual_movement(individual_movement);
+  model->set_cell_movement(cell_movement);
+  model->set_district_movement(district_movement);
 }
  

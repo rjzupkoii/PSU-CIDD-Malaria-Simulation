@@ -170,7 +170,8 @@ CREATE TABLE sim.replicate (
     configurationid integer NOT NULL,
     seed bigint NOT NULL,
     starttime timestamp with time zone NOT NULL,
-    endtime timestamp with time zone
+    endtime timestamp with time zone,
+    movement character(1)
 );
 
 

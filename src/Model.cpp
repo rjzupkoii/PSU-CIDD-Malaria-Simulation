@@ -188,20 +188,24 @@ void Model::initialize(int job_number, std::string std) {
     validator.set_reporter((MovementReporter*)reporter);
 
     // Set the flags on the validator
-    if (fine_movement_) {
-      LOG(INFO) << "Tracking of fine movement enabled.";
-      validator.set_fine_movement(true);
+    if (individual_movement_) {
+      LOG(INFO) << "Tracking of individual movement enabled.";
+      validator.set_individual_movement(individual_movement_);
     }
-    if (coarse_movement_) {
-      LOG(INFO) << "Tracking of coarse movement enabled.";
-      validator.set_coarse_movement(coarse_movement_);
+    if (cell_movement_) {
+      LOG(INFO) << "Tracking of cell movement enabled.";
+      validator.set_cell_movement(cell_movement_);
+    }
+    if (district_movement_) {
+      LOG(INFO) << "Tracking of district movement enabled.";
+      validator.set_district_movement(district_movement_);
     }
   }
 
-  if (coarse_movement_) {
+  if (district_movement_) {
     if (!SpatialData::get_instance().has_raster(SpatialData::SpatialFileType::Districts)) {
-      LOG(ERROR) << "Districts raster must be loaded to track coarse movements.";
-      throw std::runtime_error("--mc set without districts raster loaded.");
+      LOG(ERROR) << "Districts raster must be loaded to track district movements.";
+      throw std::runtime_error("--mcd set without districts raster loaded.");
     }
   }
 

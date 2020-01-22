@@ -103,8 +103,20 @@ void DbReporter::prepare_configuration() {
 
 // Make sure the relevent enteries for this replicate are in the database
 void DbReporter::prepare_replicate() {
+    // Check to see what type of movement is being recoreded, if any
+    char movement = 'X';
+    if (Model::MODEL->report_movement()) {
+        if (Model::MODEL->individual_movement()) {
+            movement = 'I';
+        } else if (Model::MODEL->cell_movement()) {
+            movement = 'C';
+        } else if (Model::MODEL->district_movement()) {
+            movement = 'D';
+        }
+    }
+
     // Insert the replicate into the database
-    std::string query = fmt::format(INSERT_REPLICATE, config_id, Model::RANDOM->seed());
+    std::string query = fmt::format(INSERT_REPLICATE, config_id, Model::RANDOM->seed(), movement);
     pqxx::work db(*conn);
     pqxx::result result = db.exec(query);
     replicate = result[0][0].as<int>();

@@ -11,8 +11,9 @@
 
 class MovementValidation {
 
-    PROPERTY_REF(bool, coarse_movement)
-    PROPERTY_REF(bool, fine_movement)
+    PROPERTY_REF(bool, cell_movement)
+    PROPERTY_REF(bool, district_movement)
+    PROPERTY_REF(bool, individual_movement)
 
     private:
         MovementValidation() { }

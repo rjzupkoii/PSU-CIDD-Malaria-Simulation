@@ -18,14 +18,21 @@
 #define LOCATION_COUNT_CUTOFF 100
 
 void MovementValidation::add_move(int individual, int source, int destination) { 
-  // Record fine movement if need be
+  // Record individual movement if need be
   auto& instance = get_instance();
-  if (instance.fine_movement_) {
+  if (instance.individual_movement_) {
     instance.reporter->add_fine_move(individual, source, destination); 
+    return;
   }
 
-  // Return if we are done
-  if (!instance.coarse_movement_) { return; }
+  // Record coarse cell movement if need be
+  if (instance.cell_movement_) {
+    instance.reporter->add_coarse_move(individual, source, destination);
+    return;
+  }
+
+  // Return if there is nothing to do
+  if (!instance.district_movement_) { return; }
 
   // Determine the districts
   auto& sd = SpatialData::get_instance();

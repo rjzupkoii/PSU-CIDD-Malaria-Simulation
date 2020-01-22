@@ -36,7 +36,7 @@ class DbReporter : public Reporter {
     "INSERT INTO sim.Location (ConfigurationId, Index, X, Y, Beta, District) VALUES ({}, {}, {}, {}, {}, {});";
 
     const std::string INSERT_REPLICATE = 
-    "INSERT INTO replicate (ConfigurationId, Seed, StartTime) VALUES ({}, {}, now()) RETURNING id;";
+    "INSERT INTO replicate (ConfigurationId, Seed, StartTime, Movement) VALUES ({}, {}, now(), '{}') RETURNING id;";
 
     const std::string INSERT_SITE = 
     "INSERT INTO sim.MonthlySiteData "
