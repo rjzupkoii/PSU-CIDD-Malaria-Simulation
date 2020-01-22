@@ -32,7 +32,7 @@ void MovementReporter::add_fine_move(int individual, int source, int destination
 
 // Add a move between districts
 void MovementReporter::add_coarse_move(int individual, int source, int destination) {
-    district_movements[source][destination]++;
+    movement_counts[source][destination]++;
 }
 
 // Prepare and perform a bulk insert of the coarse movements
@@ -43,11 +43,11 @@ void MovementReporter::coarse_report() {
 
     // Prepare the insert query, also zero out any values
     std::string query;
-    for (auto source = 0; source < district_count; source++) {
-        for (auto destination = 0; destination < district_count; destination++) {
-            if (district_movements[source][destination] == 0) { continue; }
-            query.append(fmt::format(INSERT_COARSE_MOVE, replicate, timestep, district_movements[source][destination], source, destination));
-            district_movements[source][destination] = 0;
+    for (auto source = 0; source < division_count; source++) {
+        for (auto destination = 0; destination < division_count; destination++) {
+            if (movement_counts[source][destination] == 0) { continue; }
+            query.append(fmt::format(INSERT_COARSE_MOVE, replicate, timestep, movement_counts[source][destination], source, destination));
+            movement_counts[source][destination] = 0;
         }
     }
 
@@ -77,19 +77,24 @@ void MovementReporter::initialize(int job_number, std::string path) {
         throw new std::runtime_error("Unable to load replicate from database");
     }
 
-    // Get the district count, prepare the memory. Note that we are assuming that the count
-    // is coming from ArcGis which will use one-based indexing. Therefore we need some extra
-    // padding on the area to prevent errors. Since we are only inserting actual movement
-    // (i.e., district A to district B) cells with zero are not as big of a concern (baring
-    // any memory considerations).
-    district_count = SpatialData::get_instance().get_district_count();
-    VLOG(1) << "District Count: " << district_count;
-    if (district_count != -1) {
-        district_movements = new int*[district_count + 1];
-        for (auto ndx = 0; ndx < district_count + 1; ndx++) {
-            district_movements[ndx] = new int[district_count + 1];
-            for (auto ndy = 0; ndy < district_count + 1; ndy++) {
-                district_movements[ndx][ndy] = 0;
+    if (Model::MODEL->district_movement()) {
+        // Get the district count, prepare the memory. Note that we are assuming that the count
+        // is coming from ArcGis which will use one-based indexing. Therefore we need some extra
+        // padding on the area to prevent errors. Since we are only inserting actual movement
+        // (i.e., district A to district B) cells with zero are not as big of a concern (baring
+        // any memory considerations).
+        division_count = SpatialData::get_instance().get_district_count();
+    } else {
+        // Assume we are tracking cells
+        division_count = static_cast<int>(Model::CONFIG->number_of_locations());
+    }
+     VLOG(1) << "Division Count: " << division_count;
+    if (division_count != -1) {
+        movement_counts = new int*[division_count + 1];
+        for (auto ndx = 0; ndx < division_count + 1; ndx++) {
+            movement_counts[ndx] = new int[division_count + 1];
+            for (auto ndy = 0; ndy < division_count + 1; ndy++) {
+                movement_counts[ndx][ndy] = 0;
             }
         }
     }
@@ -100,7 +105,7 @@ void MovementReporter::initialize(int job_number, std::string path) {
 
 // Call the relevent sub reports
 void MovementReporter::monthly_report() {
-    if (district_movements != nullptr) { coarse_report(); }
+    if (movement_counts != nullptr) { coarse_report(); }
     if (count > 0) { fine_report(); }
 }
 

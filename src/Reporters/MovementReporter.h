@@ -34,8 +34,8 @@ class MovementReporter : public Reporter {
         pqxx::connection* conn;
         std::string fine_update_query;
 
-        int district_count;
-        int** district_movements = nullptr;
+        int division_count;
+        int** movement_counts = nullptr;
 
     public:
         MovementReporter() = default;
