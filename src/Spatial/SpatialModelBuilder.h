@@ -6,7 +6,7 @@
 #define SPATIAL_SPATIALMODELBUILDER_H
 
 #include "Core/PropertyMacro.h"
-#include "SpatialModel.h"
+#include "SpatialModel.hxx"
 #include "yaml-cpp/yaml.h"
 
 namespace Spatial {

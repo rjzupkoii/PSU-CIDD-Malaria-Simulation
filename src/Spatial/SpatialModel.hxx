@@ -13,9 +13,9 @@ class SpatialModel {
  DISALLOW_COPY_AND_ASSIGN(SpatialModel)
 
  public:
-  SpatialModel();
+  SpatialModel() { }
 
-  virtual ~SpatialModel();
+  virtual ~SpatialModel() { }
 
   virtual DoubleVector
   get_v_relative_out_movement_to_destination(const int &from_location, const int &number_of_locations,
@@ -25,4 +25,4 @@ class SpatialModel {
 };
 }
 
-#endif //SPATIAL_SPATIALMODEL_H
+#endif
