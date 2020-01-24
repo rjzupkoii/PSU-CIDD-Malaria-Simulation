@@ -25,7 +25,7 @@
 #include "Helpers/TimeHelpers.h"
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
-#include "Spatial/SpatialModel.h"
+#include "Spatial/SpatialModel.hxx"
 #include <cmath>
 #include <cfloat>
 

@@ -11,7 +11,7 @@
 #include "easylogging++.h"
 #include "Model.h"
 #include "Reporters/MovementReporter.h"
-#include "Spatial/SpatialModel.h"
+#include "Spatial/SpatialModel.hxx"
 #include "GIS/SpatialData.h"
 #include "Utility/MatrixWriter.hxx"
 

@@ -11,7 +11,7 @@
 
 #include "CustomConfigItem.h"
 #include "Config.h"
-#include "Spatial/SpatialModelBuilder.h"
+#include "Spatial/SpatialModelBuilder.hxx"
 #include "Helpers/ObjectHelpers.h"
 #include "Helpers/NumberHelpers.h"
 #include "Therapies/Therapy.h"
