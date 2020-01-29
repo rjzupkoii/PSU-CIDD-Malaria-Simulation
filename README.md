@@ -18,7 +18,7 @@ The HRSpatial branch of the Malaria Simulation (MaSim) marks a significant upgra
 
 ## Documentation
 
-The following commands are available from the simulation as of commit baeb7a8b0cf3259c44c4547588d1dd78c142c7d2
+The following commands are available from the simulation:
 <pre>
 -h, --help                            Display this help menu
 -i[string], -c[string],               The config file (YAML format); ex. MaSim -i input.yml
