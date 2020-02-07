@@ -49,7 +49,7 @@ void DbReporter::prepare_configuration() {
     
     // Check to see if this is a known configuration
     pqxx::work db(*conn);
-    std::string query = fmt::format(SELECT_CONFIGURATION, db.quote(yaml));
+    std::string query = fmt::format(SELECT_CONFIGURATION, db.quote(yaml), db.quote(filename));
     pqxx::result result = db.exec(query);
     
     // Note the id if provided

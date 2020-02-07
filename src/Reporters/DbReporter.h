@@ -44,7 +44,7 @@ class DbReporter : public Reporter {
     "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {});";
 
     const std::string SELECT_CONFIGURATION =
-    "SELECT id FROM sim.Configuration WHERE md5 = md5({});";
+    "SELECT id FROM sim.Configuration WHERE md5 = md5({} AND filename = {});";
 
     const std::string SELECT_LOCATION = 
     "SELECT id, index FROM sim.location WHERE ConfigurationId = {} ORDER BY index;";
