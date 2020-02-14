@@ -41,25 +41,27 @@ void MovementReporter::coarse_report() {
     auto timestep = Model::SCHEDULER->current_time();
     if (timestep == 0) { return; }
 
-    // Prepare the insert query, also zero out any values
+    // Open the transaction
+    pqxx::work db(*conn);
+
+    // Send the inserts as we read the table
     std::string query;
     for (auto source = 0; source < division_count; source++) {
         for (auto destination = 0; destination < division_count; destination++) {
             if (movement_counts[source][destination] == 0) { continue; }
-            query.append(fmt::format(INSERT_COARSE_MOVE, replicate, timestep, movement_counts[source][destination], source, destination));
+            query = fmt::format(INSERT_COARSE_MOVE, replicate, timestep, movement_counts[source][destination], source, destination);
+            db.exec(query);
             movement_counts[source][destination] = 0;
         }
     }
 
-    // Issue a warning if there were no movements since zeroed data is not recorded
     if (query.empty()) {
+        // Issue a warning if there were no movements since zeroed data is not recorded
         LOG(WARNING) << "No movement between districts recorded.";
+        db.abort();
+    } else {
+        db.commit();
     }
-
-    // Insert the movements
-    pqxx::work db(*conn);
-    db.exec(query);
-    db.commit();
 }
 
 // Open a connection to the database and get the replicate based on the random seed value
