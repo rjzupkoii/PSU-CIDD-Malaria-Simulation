@@ -29,8 +29,8 @@ void PersonIndexByLocationMovingLevel::Initialize(const int &no_location, const 
 }
 
 void PersonIndexByLocationMovingLevel::add(Person *p) {
-  assert(vPerson_.size() > p->location() && p->location() >= 0);
-  assert(vPerson_[p->location()].size() > p->moving_level());
+  assert(vPerson_.size() > static_cast<std::size_t>(p->location()) && p->location() >= 0);
+  assert(vPerson_[p->location()].size() > static_cast<std::size_t>(p->moving_level()));
   add(p, p->location(), p->moving_level());
 }
 
@@ -76,7 +76,7 @@ void PersonIndexByLocationMovingLevel::change_property(Person *p, const int &loc
 }
 
 void PersonIndexByLocationMovingLevel::defragment() {
-  for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+  for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     for (int ml = 0; ml < Model::CONFIG->circulation_info().number_of_moving_levels; ml++) {
       std::vector<Person *>(vPerson_[location][ml]).swap(vPerson_[location][ml]);
     }

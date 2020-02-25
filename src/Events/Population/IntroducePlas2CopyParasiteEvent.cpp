@@ -24,7 +24,7 @@ void IntroducePlas2CopyParasiteEvent::execute() {
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
 
-  for (int j = 0; j < Model::CONFIG->number_of_age_classes(); ++j) {
+  for (std::size_t j = 0; j < Model::CONFIG->number_of_age_classes(); ++j) {
     const auto number_infected_individual_in_ac =
       pi->vPerson()[0][Person::ASYMPTOMATIC][j].size() + pi->vPerson()[0][Person::CLINICAL][j].size();
     const auto number_of_importation_cases = Model::RANDOM->random_poisson(

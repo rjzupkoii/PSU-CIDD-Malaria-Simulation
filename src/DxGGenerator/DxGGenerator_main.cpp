@@ -175,7 +175,7 @@ int main(int argc, char** argv) {
 EF50Key get_EC50_key(SCTherapy* p_therapy, Genotype* p_genotype) {
   EF50Key result;
 
-  for (int j = 0; j < p_therapy->drug_ids.size(); ++j) {
+  for (std::size_t j = 0; j < p_therapy->drug_ids.size(); ++j) {
 //    drug_type->ec50_map()
     auto ec50 = Model::CONFIG->EC50_power_n_table()[p_genotype->genotype_id()][p_therapy->drug_ids[j]];
 //    std::cout << p_therapy->drug_ids[j] << "-" << ec50 << std::endl;

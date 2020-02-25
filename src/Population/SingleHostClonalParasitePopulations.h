@@ -40,7 +40,7 @@ class SingleHostClonalParasitePopulations {
  private:
   int parasite_types = -1;
 
-  void remove(const int &index);
+  void remove(const std::size_t &index);
 
  public:
   SingleHostClonalParasitePopulations(Person *person = nullptr);

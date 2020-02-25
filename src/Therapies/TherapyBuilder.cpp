@@ -25,12 +25,12 @@ Therapy* TherapyBuilder::build(const YAML::Node &ns, const int &t_id) {
   if (ns["drug_id"]) {
     t = new SCTherapy();
     t->set_id(t_id);
-    for (auto i = 0; i < ns["drug_id"].size(); i++) {
+    for (std::size_t i = 0; i < ns["drug_id"].size(); i++) {
       const auto drug_id = ns["drug_id"][i].as<int>();
       //        std::cout << therapy_id << "-" << drug_id << std::endl;
       dynamic_cast<SCTherapy*>(t)->add_drug(drug_id);
     }
-    for (auto i = 0; i < ns["dosing_days"].size(); i++) {
+    for (std::size_t i = 0; i < ns["dosing_days"].size(); i++) {
       const auto dosing_days = ns["dosing_days"][i].as<int>();
       dynamic_cast<SCTherapy*>(t)->dosing_day.push_back(dosing_days);
     }
@@ -41,12 +41,12 @@ Therapy* TherapyBuilder::build(const YAML::Node &ns, const int &t_id) {
       t = new MACTherapy();
       t->set_id(t_id);
 
-      for (int i = 0; i < ns["therapy_ids"].size(); i++) {
+      for (std::size_t i = 0; i < ns["therapy_ids"].size(); i++) {
         auto therapy_id = ns["therapy_ids"][i].as<int>();
         //        std::cout << therapy_id << "-" << drug_id << std::endl;
         dynamic_cast<MACTherapy*>(t)->add_therapy_id(therapy_id);
       }
-      for (int i = 0; i < ns["regimen"].size(); i++) {
+      for (std::size_t i = 0; i < ns["regimen"].size(); i++) {
         auto starting_day = ns["regimen"][i].as<int>();
         //        std::cout << therapy_id << "-" << drug_id << std::endl;
         dynamic_cast<MACTherapy*>(t)->add_schedule(starting_day);

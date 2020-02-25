@@ -28,8 +28,8 @@ void PersonIndexByLocationBittingLevel::Initialize(const int &no_location, const
 }
 
 void PersonIndexByLocationBittingLevel::add(Person *p) {
-  assert(vPerson_.size() > p->location() && p->location() >= 0);
-  assert(vPerson_[p->location()].size() > p->bitting_level());
+  assert(vPerson_.size() > static_cast<std::size_t>(p->location()) && p->location() >= 0);
+  assert(vPerson_[p->location()].size() > static_cast<std::size_t>(p->bitting_level()));
   add(p, p->location(), p->bitting_level());
 }
 
@@ -77,7 +77,7 @@ void PersonIndexByLocationBittingLevel::change_property(Person *p, const int &lo
 }
 
 void PersonIndexByLocationBittingLevel::defragment() {
-  for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+  for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     for (int bl = 0; bl < Model::CONFIG->relative_bitting_info().number_of_biting_levels; bl++) {
       std::vector<Person *>(vPerson_[location][bl]).swap(vPerson_[location][bl]);
     }

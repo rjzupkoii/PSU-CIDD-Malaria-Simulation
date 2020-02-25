@@ -46,7 +46,7 @@ void MFTRebalancingStrategy::update_end_of_time_step() {
 
   if (Model::SCHEDULER->current_time()==latest_adjust_distribution_time) {
     // actual trigger adjust distribution
-    for (auto i = 0; i < distribution.size(); i++) {
+    for (std::size_t i = 0; i < distribution.size(); i++) {
       distribution[i] = next_distribution[i];
     }
     next_update_time = Model::SCHEDULER->current_time() + update_duration_after_rebalancing;
@@ -56,7 +56,7 @@ void MFTRebalancingStrategy::update_end_of_time_step() {
   } else {
     if (Model::SCHEDULER->current_time()==next_update_time) {
       double sum = 0;
-      for (auto i = 0; i < distribution.size(); i++) {
+      for (std::size_t i = 0; i < distribution.size(); i++) {
         LOG(INFO) << "Current treatment failure rate of " << therapy_list[i]->id() << " : "
                   << Model::DATA_COLLECTOR->
                       current_tf_by_therapy()[therapy_list[i]->id()];
@@ -68,7 +68,7 @@ void MFTRebalancingStrategy::update_end_of_time_step() {
         sum += next_distribution[i];
       }
 
-      for (auto i = 0; i < distribution.size(); i++) {
+      for (std::size_t i = 0; i < distribution.size(); i++) {
         next_distribution[i] = next_distribution[i]/sum;
       }
       latest_adjust_distribution_time = Model::SCHEDULER->current_time() + delay_until_actual_trigger;

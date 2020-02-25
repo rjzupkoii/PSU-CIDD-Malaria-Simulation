@@ -14,8 +14,8 @@ template <typename T>
 class Flat2D {
     private:
         T* data = nullptr;
-        int x_size = 0;         // Width
-        int y_size = 0;         // Height
+        std::size_t x_size = 0;         // Width
+        std::size_t y_size = 0;         // Height
 
     public:
         Flat2D() = default;
@@ -36,7 +36,7 @@ class Flat2D {
             // Note the dimensions
             result->x_size = input.size();
             result->y_size = input[0].size();
-            for (auto ndx = 1; ndx < result.x_size; ndx++) {
+            for (std::size_t ndx = 1; ndx < result.x_size; ndx++) {
                 result->y_size = (input[ndx].size() > result->y_size) ? input[ndx].size() : result->y_size;
             }
 
@@ -44,8 +44,8 @@ class Flat2D {
             result = new T[result->x_size * result->y_size];
 
             // Copy the data
-            for (auto ndx = 0; ndx < result->x_size; ndx++) {
-                for (auto ndy = 0; ndy < result->y_size; ndy++) {
+            for (std::size_t ndx = 0; ndx < result->x_size; ndx++) {
+                for (std::size_t ndy = 0; ndy < result->y_size; ndy++) {
                     result->set(ndx, ndy, input[ndx][ndy]);
                 }
             }
@@ -59,9 +59,9 @@ template <typename T>
 class Flat3D {
     private:
         T* data = nullptr;
-        int x_size = 0;         // Width
-        int y_size = 0;         // Height
-        int z_size = 0;         // Depth
+        std::size_t x_size = 0;         // Width
+        std::size_t y_size = 0;         // Height
+        std::size_t z_size = 0;         // Depth
 
     public:
         Flat3D() = default;
@@ -87,10 +87,10 @@ class Flat3D {
             result->x_size = input.size();
             result->y_size = 0;
             result->z_size = 0;
-            for (auto ndx = 0; ndx < result->x_size; ndx++) {
+            for (std::size_t ndx = 0; ndx < result->x_size; ndx++) {
                 if (input[ndx].size() == 0) { continue; }
                 result->y_size = (input[ndx].size() > result->y_size) ? input[ndx].size() : result->y_size;
-                for (auto ndy = 0; ndy < input[ndx].size(); ndy++) {
+                for (std::size_t ndy = 0; ndy < input[ndx].size(); ndy++) {
                     result->z_size = (input[ndx][ndy].size() > result->z_size) ? input[ndx][ndy].size() : result->z_size;
                 }
             }
@@ -99,9 +99,9 @@ class Flat3D {
             result->data = new T[result->x_size * result->y_size * result->z_size];
 
             // Copy the data
-            for (auto ndx = 0; ndx < result->x_size; ndx++) {
-                for (auto ndy = 0; ndy < result->y_size; ndy++) {
-                    for (auto ndz = 0; ndz < result->z_size; ndz++) {
+            for (std::size_t ndx = 0; ndx < result->x_size; ndx++) {
+                for (std::size_t ndy = 0; ndy < result->y_size; ndy++) {
+                    for (std::size_t ndz = 0; ndz < result->z_size; ndz++) {
                         result->set(ndx, ndy, ndz, input[ndx][ndy].size() > 0 ? input[ndx][ndy][ndz] : 0);
                     }
                 }

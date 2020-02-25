@@ -19,7 +19,7 @@ class DbReporter : public Reporter {
     "VALUES ({}, {}, {}, {}, {}, {}, now()) RETURNING id;";
 
     const std::string INSERT_CONFIGURATION = 
-    "INSERT INTO sim.Configuration (Yaml, MD5, FileName) VALUES ({}, md5({})) RETURNING ID;";
+    "INSERT INTO sim.Configuration (Yaml, MD5, FileName) VALUES ({}, md5({}), {}) RETURNING ID;";
 
     const std::string INSERT_CONFIGURATION_RASTER =
     "INSERT INTO sim.Configuration (Yaml, MD5, FileName, ncols, nrows, xllcorner, yllcorner, cellsize) "

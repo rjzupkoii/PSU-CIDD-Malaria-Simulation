@@ -43,7 +43,7 @@ std::vector<double> GenotypeDatabase::generate_offspring_parasite_density(const 
   const IntVector ge(m.size(), 0);
   results.push_back(ge);
 
-  for (auto i = 0; i < m.size(); i++) {
+  for (std::size_t i = 0; i < m.size(); i++) {
     const int old_size = static_cast<const int>(results.size());
     for (auto j = 0; j < old_size; j++) {
       results.push_back(results[j]);
@@ -82,7 +82,7 @@ double GenotypeDatabase::get_offspring_density(const int &m, const int &f, const
 int GenotypeDatabase::get_id(const IntVector &gene) {
 
   auto id = 0;
-  for (auto i = 0; i < gene.size(); i++) {
+  for (std::size_t i = 0; i < gene.size(); i++) {
     // locus i have weighted
     id += weight_[i]*gene[i];
   }

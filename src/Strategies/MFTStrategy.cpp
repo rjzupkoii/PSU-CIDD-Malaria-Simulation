@@ -25,7 +25,7 @@ Therapy *MFTStrategy::get_therapy(Person *person) {
   const auto p = Model::RANDOM->random_flat(0.0, 1.0);
 
   double sum = 0;
-  for (auto i = 0; i < distribution.size(); i++) {
+  for (std::size_t i = 0; i < distribution.size(); i++) {
     sum += distribution[i];
     if (p <= sum) {
       return therapy_list[i];

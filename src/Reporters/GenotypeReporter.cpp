@@ -37,14 +37,14 @@ void GenotypeReporter::output_genotype_weighted(std::ofstream &out) {
     std::vector<double> results_all(count, 0.0);
 
     // Iterate over all of the possible locations
-    for (auto loc = 0; loc < index->vPerson().size(); loc++) {
+    for (std::size_t loc = 0; loc < index->vPerson().size(); loc++) {
         std::vector<double> results(count, 0.0);
         auto sum = 0.0;
 
         // Iterate over all of the possible states
         for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
             // Iterate overall of the age classes
-            for (auto ac = 0; ac < index->vPerson()[0][0].size(); ac++) {
+            for (std::size_t ac = 0; ac < index->vPerson()[0][0].size(); ac++) {
                 for (auto i = 0ull; i < index->vPerson()[loc][hs][ac].size(); i++) {
 
                     // Get the person, press on if they are not infected (i.e., no parasites)
@@ -99,15 +99,15 @@ void GenotypeReporter::output_genotype_weighted_header(std::ofstream &out) {
     out << "Genotype frequencies by the weighted number of parasite-positive individuals carrying genotype" << Tsv::end_line;
 
     // Location and genotype
-    for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-        for (int type = 0; type < Model::CONFIG->number_of_parasite_types(); type++) {
+    for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+        for (std::size_t type = 0; type < Model::CONFIG->number_of_parasite_types(); type++) {
             auto genotype = (*Model::CONFIG->genotype_db())[type];
             out << "Site " << location << " / " << genotype->to_string() << Tsv::sep;
         }
     }
 
     // Total for all locations
-    for (int type = 0; type < Model::CONFIG->number_of_parasite_types(); type++) {
+    for (std::size_t type = 0; type < Model::CONFIG->number_of_parasite_types(); type++) {
         auto genotype = (*Model::CONFIG->genotype_db())[type];
         out << genotype->to_string() << Tsv::sep;
     }

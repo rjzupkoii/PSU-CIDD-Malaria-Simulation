@@ -4,12 +4,12 @@
 #include "SteadyTCM.h"
 #include "Core/Config/Config.h"
 #include "LinearTCM.h"
-#include "InflatedTCM.h"
+#include "InflatedTCM.hxx"
 
 double ITreatmentCoverageModel::get_probability_to_be_treated(const int &location, const int &age) {
-  LOG_IF(location < 0 || location >= p_treatment_less_than_5.size() || location >= p_treatment_more_than_5.size(),
-         FATAL)
-    << "wrong locaction value: " << location;
+  LOG_IF(location < 0 || static_cast<std::size_t>(location) >= p_treatment_less_than_5.size() || 
+         static_cast<std::size_t>(location) >= p_treatment_more_than_5.size(), FATAL) << "wrong locaction value: " << location;
+         
   return age <= 5 ? p_treatment_less_than_5[location] : p_treatment_more_than_5[location];
 }
 
@@ -28,10 +28,10 @@ ITreatmentCoverageModel *ITreatmentCoverageModel::build_steady_tcm(const YAML::N
 }
 
 void ITreatmentCoverageModel::read_p_treatment(const YAML::Node &node, std::vector<double> &p_treatments,
-                                               const int number_of_locations) {
+                                               const std::size_t number_of_locations) {
   if (node) {
     for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-      auto input_loc = node.size() < number_of_locations ? 0 : loc;
+      std::size_t input_loc = node.size() < number_of_locations ? 0 : loc;
       p_treatments.push_back(node[input_loc].as<float>());
     }
   }

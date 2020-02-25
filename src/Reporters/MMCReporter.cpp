@@ -54,7 +54,7 @@ void MMCReporter::print_treatment_failure_rate_by_therapy() {
 void MMCReporter::print_ntf_by_location() {
   double sum_ntf = 0.0;
   ul pop_size = 0;
-  for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+  for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
     pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
     
@@ -75,11 +75,11 @@ void MMCReporter::monthly_report() {
 
   print_EIR_PfPR_by_location();
   ss << group_sep;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << Tsv::sep;
   }
   ss << group_sep;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << Tsv::sep;
   }
   ss << group_sep;
@@ -118,7 +118,7 @@ void MMCReporter::after_run() {
 }
 
 void MMCReporter::print_EIR_PfPR_by_location() {
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
     //
     // EIR
     if (Model::DATA_COLLECTOR->EIR_by_location_year()[loc].empty()) {

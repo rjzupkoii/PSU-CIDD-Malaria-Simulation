@@ -81,7 +81,7 @@ double DrugType::infer_ec50(Genotype* genotype) {
   //compare genotype.short_name with Ccnfig to get EC50
   for (auto &item : ec50_map_) {
     auto key = item.first;
-    auto i = 0;
+    std::size_t i = 0;
     for (i = 0; i < genotype->gene_expression().size(); i++) {
       if (key[i] == '.')
         continue;

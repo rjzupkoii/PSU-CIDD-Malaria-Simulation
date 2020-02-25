@@ -56,17 +56,17 @@ void MonthlyReporter::monthly_report()
 
   print_EIR_PfPR_by_location();
   ss << group_sep;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++)
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++)
   {
     ss << Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[loc] << Tsv::sep;
   }
   ss << group_sep;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++)
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++)
   {
     ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << Tsv::sep;
   }
   ss << group_sep;
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++)
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++)
   {
     ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << Tsv::sep;
   }
@@ -102,7 +102,7 @@ void MonthlyReporter::after_run()
 
 void MonthlyReporter::print_EIR_PfPR_by_location()
 {
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc)
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc)
   {
     //
     // EIR

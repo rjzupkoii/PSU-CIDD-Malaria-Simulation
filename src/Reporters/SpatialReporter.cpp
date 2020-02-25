@@ -107,7 +107,7 @@ void SpatialReporter::after_run() {
 
 // Export the EIR and PfPR as a TSV to the stream provided
 void SpatialReporter::export_eir_pfpr_table(std::ofstream &out) {
-    for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+    for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
         // Time and location
         out << Model::SCHEDULER->current_time() << Tsv::sep;
         out << location << Tsv::sep;

@@ -18,7 +18,7 @@ void IntroduceLumefantrineMutantEvent::execute() {
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
 
-  for (auto j = 0; j < Model::CONFIG->number_of_age_classes(); ++j) {
+  for (std::size_t j = 0; j < Model::CONFIG->number_of_age_classes(); ++j) {
     static const std::vector<int> mutant_alleles{ 0, 2, 3, 4, 5, 6, 7 };
 
 

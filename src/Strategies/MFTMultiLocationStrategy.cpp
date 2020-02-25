@@ -25,7 +25,7 @@ Therapy *MFTMultiLocationStrategy::get_therapy(Person *person) {
   const auto loc = person->location();
 
   double sum = 0;
-  for (auto i = 0; i < distribution[loc].size(); i++) {
+  for (std::size_t i = 0; i < distribution[loc].size(); i++) {
     sum += distribution[loc][i];
     if (p <= sum) {
       return therapy_list[i];
@@ -39,14 +39,14 @@ std::string MFTMultiLocationStrategy::to_string() const {
   std::stringstream sstm;
   sstm << IStrategy::id << "-" << IStrategy::name << "-";
 
-  for (auto i = 0; i < therapy_list.size() - 1; i++) {
+  for (std::size_t i = 0; i < therapy_list.size() - 1; i++) {
     sstm << therapy_list[i]->id() <<  "::";
   }
   sstm << therapy_list[therapy_list.size() - 1]->id() << "-" << std::endl;;
 
-  for (auto loc = 0; loc < distribution.size(); loc++) {
+  for (std::size_t loc = 0; loc < distribution.size(); loc++) {
     sstm << "[";
-    for (auto i = 0; i < distribution[loc].size() - 1; i++) {
+    for (std::size_t i = 0; i < distribution[loc].size() - 1; i++) {
       sstm << distribution[loc][i] << ",";
     }
     sstm << distribution[loc][therapy_list.size() - 1] << "]" << std::endl;
@@ -66,11 +66,11 @@ void MFTMultiLocationStrategy::adjust_started_time_point(const int &current_time
 void MFTMultiLocationStrategy::monthly_update() {
   if (peak_after==-1) {
     // inflation every year
-    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
       const auto d_act = distribution[loc][0]*(1 + Model::CONFIG->inflation_factor()/12);
       distribution[loc][0] = d_act;
       const auto other_d = (1 - d_act)/(distribution[loc].size() - 1);
-      for (auto i = 1; i < distribution[loc].size(); i++) {
+      for (std::size_t i = 1; i < distribution[loc].size(); i++) {
         distribution[loc][i] = other_d;
       }
     }
@@ -78,8 +78,8 @@ void MFTMultiLocationStrategy::monthly_update() {
     // increasing linearly
     if (Model::SCHEDULER->current_time() <= starting_time + peak_after) {
       if (distribution[0][0] < 1) {
-        for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-          for (auto i = 0; i < distribution[loc].size(); i++) {
+        for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+          for (std::size_t i = 0; i < distribution[loc].size(); i++) {
             const auto dist = (peak_distribution[loc][i] - start_distribution[loc][i])*
                 (Model::SCHEDULER->current_time() - starting_time)
                 /peak_after +

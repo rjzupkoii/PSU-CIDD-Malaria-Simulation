@@ -66,7 +66,7 @@ void SingleHostClonalParasitePopulations::add(ClonalParasitePopulation* blood_pa
 }
 
 // Remove the parasite at the given index from the population, does not recalculate the infection force.
-void SingleHostClonalParasitePopulations::remove(const int &index) {
+void SingleHostClonalParasitePopulations::remove(const std::size_t &index) {
   ClonalParasitePopulation* bp = parasites_->at(index);
   if (bp->index() != index) {
     std::cout << bp->index() << "-" << index << "-" << parasites_->at(index)->index() << std::endl;
@@ -124,7 +124,7 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
   }
 
   // Update the current values
-  for (auto i = 0; i < relative_parasite_density.size(); i++) {
+  for (std::size_t i = 0; i < relative_parasite_density.size(); i++) {
     if (NumberHelpers::is_equal(relative_parasite_density[i], 0.0)) { continue; }
     auto index = (*parasites_)[i]->genotype()->genotype_id();
     (*relative_effective_parasite_density_)[index] += relative_parasite_density[i];
@@ -133,7 +133,7 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
 
 void SingleHostClonalParasitePopulations::update_relative_effective_parasite_density_using_free_recombination() {
   // Get the population count, if it is zero then return
-  auto parasite_population_count = size();
+  std::size_t parasite_population_count = size();
   if (parasite_population_count == 0) { return; }
 
   // Get the parasite profiles, if the density is zero then return
@@ -151,11 +151,11 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
   // Cache the genotype DB reference
   const auto& genotype_db = Model::CONFIG->genotype_db();
 
-  for (auto i = 0; i < parasite_population_count; i++) {
+  for (std::size_t i = 0; i < parasite_population_count; i++) {
     auto density_i = relative_parasite_density[i];
     if (NumberHelpers::is_equal(density_i, 0.0)) { continue; }
 
-    for (auto j = i; j < parasite_population_count; j++) {
+    for (std::size_t j = i; j < parasite_population_count; j++) {
       auto density_j = relative_parasite_density[j];
       if (NumberHelpers::is_equal(density_j, 0.0)) { continue; }
 
@@ -192,10 +192,10 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
 void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<double> &relative_parasite_density, double &log10_total_relative_density) const {
   
   // Note the size once
-  auto size = parasites_->size();
+  std::size_t size = parasites_->size();
 
   // Scan the densities to see if they are all zero
-  auto i = 0;
+  std::size_t i = 0;
   while ((i < size) && (NumberHelpers::is_equal((*parasites_)[i]->get_log10_relative_density(), ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY))) {
     relative_parasite_density[i] = 0.0;
     i++;
@@ -212,7 +212,7 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
   relative_parasite_density[i] = (log10_total_relative_density);
 
   // Scan the remainder of the parasites
-  for (auto j = i + 1; j < size; j++) {
+  for (std::size_t j = i + 1; j < size; j++) {
     const auto log10_relative_density = (*parasites_)[j]->get_log10_relative_density();
 
     // Update or clear accordingly
@@ -225,7 +225,7 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
   }
 
   // Update the densities
-  for (auto j = 0; j < size; j++) {
+  for (std::size_t j = 0; j < size; j++) {
     if (NumberHelpers::is_enot_qual(relative_parasite_density[j], 0.0)) {
       relative_parasite_density[j] = pow(10, relative_parasite_density[j] - log10_total_relative_density);
     }
@@ -234,7 +234,7 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
 }
 
 double SingleHostClonalParasitePopulations::get_log10_total_relative_density() {
-  auto i = 0;
+  std::size_t i = 0;
 
   while ((i < parasites_->size()) &&
          (NumberHelpers::is_equal(parasites_->at(i)->get_log10_relative_density(),
@@ -248,7 +248,7 @@ double SingleHostClonalParasitePopulations::get_log10_total_relative_density() {
 
   auto log10_total_relative_density = parasites_->at(i)->get_log10_relative_density();
 
-  for (int j = i + 1; j < parasites_->size(); j++) {
+  for (std::size_t j = i + 1; j < parasites_->size(); j++) {
     const auto log10_relative_density = parasites_->at(j)->get_log10_relative_density();
 
     if (NumberHelpers::is_enot_qual(log10_relative_density, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) {
@@ -387,7 +387,7 @@ bool SingleHostClonalParasitePopulations::is_gametocytaemic() const {
   // This approach to the code is slightly faster than a foreach iterator 
   // which is improtant since this gets called a lot!
   auto size = parasites_->size();
-  for (auto ndx = 0; ndx < size; ndx++) {
+  for (std::size_t ndx = 0; ndx < size; ndx++) {
     if ((*parasites_)[ndx]->gametocyte_level() > 0) {
       return true;
     }

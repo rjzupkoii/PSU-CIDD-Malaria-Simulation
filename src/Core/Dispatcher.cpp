@@ -47,7 +47,7 @@ void Dispatcher::clear_events() {
   if (events_->empty()) { return; }
 
   // Disable the events in the dispatcher, slightly faster than an iterator
-  for (auto ndx = 0; ndx < events_->size(); ndx++) {
+  for (std::size_t ndx = 0; ndx < events_->size(); ndx++) {
     (*events_)[ndx]->dispatcher = nullptr;
     (*events_)[ndx]->executable = false;
   }

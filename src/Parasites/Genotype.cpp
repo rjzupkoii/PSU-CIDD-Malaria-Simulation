@@ -16,21 +16,21 @@ Genotype::Genotype(const int &id, const GenotypeInfo &genotype_info, const IntVe
 
   gene_expression_.clear();
   auto v = id;
-  for (auto i = 0; i < genotype_info.loci_vector.size(); i++) {
+  for (std::size_t i = 0; i < genotype_info.loci_vector.size(); i++) {
     gene_expression_.push_back(v/weight[i]);
     v = v%weight[i];
   }
 
   //daily_fitness
   daily_fitness_multiple_infection_ = 1;
-  for (auto i = 0; i < genotype_info.loci_vector.size(); i++) {
+  for (std::size_t i = 0; i < genotype_info.loci_vector.size(); i++) {
     daily_fitness_multiple_infection_ *=
         1 - genotype_info.loci_vector[i].alleles[gene_expression_[i]].daily_cost_of_resistance;
   }
 
   //number_of_resistance_position (level)
   number_of_resistance_position_ = 0;
-  for (auto i = 0; i < genotype_info.loci_vector.size(); i++) {
+  for (std::size_t i = 0; i < genotype_info.loci_vector.size(); i++) {
     number_of_resistance_position_ += genotype_info.loci_vector[i].alleles[gene_expression_[i]].mutation_level;
   }
 
@@ -39,8 +39,8 @@ Genotype::Genotype(const int &id, const GenotypeInfo &genotype_info, const IntVe
 Genotype::~Genotype() = default;
 
 bool Genotype::resist_to(DrugType* dt) {
-  for (auto i = 0; i < dt->affecting_loci().size(); i++) {
-    for (auto j = 0; j < dt->selecting_alleles()[i].size(); j++) {
+  for (std::size_t i = 0; i < dt->affecting_loci().size(); i++) {
+    for (std::size_t j = 0; j < dt->selecting_alleles()[i].size(); j++) {
       if (gene_expression_[dt->affecting_loci()[i]]==dt->selecting_alleles()[i][j]) {
         return true;
       }
@@ -67,8 +67,8 @@ Genotype* Genotype::combine_mutation_to(const int &locus, const int &value) {
   }
 
   int id = 0;
-  for (int i = 0; i < gene_expression_.size(); i++) {
-    if (i==locus) {
+  for (std::size_t i = 0; i < gene_expression_.size(); i++) {
+    if (i==static_cast<std::size_t>(locus)) {
       id += Model::CONFIG->genotype_db()->weight()[i]*value;
     } else {
       id += Model::CONFIG->genotype_db()->weight()[i]*gene_expression_[i];
@@ -101,7 +101,7 @@ int Genotype::select_mutation_allele(const int &mutation_locus) {
 
 std::ostream &operator<<(std::ostream &os, const Genotype &e) {
   os << e.genotype_id_ << "\t";
-  for (auto i = 0; i < e.gene_expression_.size(); i++) {
+  for (std::size_t i = 0; i < e.gene_expression_.size(); i++) {
     const auto v = e.gene_expression_[i];
     os << Model::CONFIG->genotype_info().loci_vector[i].alleles[v];
   }
@@ -116,7 +116,7 @@ std::string Genotype::to_string() {
 // Get the string associated with this genotype, use the supplied configuration.
 std::string Genotype::to_string(Config* config) {
   std::string result;
-  for (auto i = 0; i < gene_expression_.size(); i++) {
+  for (std::size_t i = 0; i < gene_expression_.size(); i++) {
     const auto v = gene_expression_[i];
     const auto value = config->genotype_info().loci_vector[i].alleles[v];
     result.append(value.short_name);

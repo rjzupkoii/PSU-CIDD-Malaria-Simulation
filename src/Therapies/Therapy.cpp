@@ -23,7 +23,7 @@ void Therapy::add_drug(int drug_id) {
 std::ostream &operator<<(std::ostream &os, const Therapy &therapy) {
 
   os << Model::CONFIG->drug_db()->at(therapy.drug_ids[0])->name();
-  for (int i = 1; i < therapy.drug_ids.size(); ++i) {
+  for (std::size_t i = 1; i < therapy.drug_ids.size(); ++i) {
     os << "+" << Model::CONFIG->drug_db()->at(therapy.drug_ids[i])->name();
   }
 
