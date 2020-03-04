@@ -8,6 +8,7 @@
 
 #include "BarabasiSM.h"
 #include "Core/PropertyMacro.h"
+#include "Experimental.hxx"
 #include "GeneralGravitySM.h"
 #include "Marshall.hxx"
 #include "SpatialModel.hxx"
@@ -28,6 +29,9 @@ class SpatialModelBuilder {
       }
       if (name == "Barabasi") {
         return new BarabasiSM(node);
+      }
+      if (name == "Experimental") {
+        return new ExperimentalSM(node);
       }
       if (name == "Marshall") {
         return new MarshallSM(node);

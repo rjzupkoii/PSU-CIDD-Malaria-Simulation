@@ -27,6 +27,9 @@ class SpatialData {
             // District location
             Districts,
 
+            // Travel time data
+            Travel,
+
             // Number of sequential items in the type
             Count
         };
@@ -56,6 +59,7 @@ class SpatialData {
         const std::string DISTRICT_RASTER = "district_raster";
         const std::string LOCATION_RASTER = "location_raster";
         const std::string POPULATION_RASTER = "population_raster";
+        const std::string TRAVEL_RASTER = "travel_raster";
 
         // Array of the ASC file data, use SpatialFileType as the index
         AscFile** data;
@@ -122,6 +126,9 @@ class SpatialData {
 
         // Get the count of districts loaded, or -1 if they have not been loaded
         int get_district_count();
+
+        // Get a reference to the AscFile raster, may be a nullptr
+        AscFile* get_raster(SpatialFileType type) { return data[type]; }
 
         // Load the given raster file into the spatial catalog and assign the given label
         void load(std::string filename, SpatialFileType type);

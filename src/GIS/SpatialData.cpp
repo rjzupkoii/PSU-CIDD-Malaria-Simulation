@@ -265,7 +265,10 @@ bool SpatialData::parse(const YAML::Node &node) {
     if (node[DISTRICT_RASTER]) {
         load(node[DISTRICT_RASTER].as<std::string>(), SpatialData::SpatialFileType::Districts);
     }
-    
+    if (node[TRAVEL_RASTER]) {
+        load(node[TRAVEL_RASTER].as<std::string>(), SpatialData::SpatialFileType::Travel);
+    }
+
     // Set the cell size
     cell_size = node["cell_size"].as<float>();
 
