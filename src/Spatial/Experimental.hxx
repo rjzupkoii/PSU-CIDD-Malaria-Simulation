@@ -100,7 +100,7 @@ namespace Spatial {
                     double probability = std::pow(population, tau_) * kernel;
 
                     // Apply the adjustment
-                    probability = std::min(probability, probability * (scalar_ - normalized[destination]));
+                    probability = probability * (scalar_ - normalized[destination]);
 
                     results[destination] = probability;
                 }
