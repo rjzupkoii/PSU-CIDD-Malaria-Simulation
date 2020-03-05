@@ -35,31 +35,37 @@ void MovementReporter::add_coarse_move(int individual, int source, int destinati
     movement_counts[source][destination]++;
 }
 
-// Prepare and perform a bulk insert of the coarse movements
+// Prepare and perform a bulk insert of the aggregated movements (can be cell-to-cell or district-to-district)
+//
+// NOTE This is slowed down a lot by sending the query to the DB for each source-destination. For district movements
+//      this isn't too bad, but for celluar it can be painfully slow. 
 void MovementReporter::coarse_report() {
     // If we are at the zero time point, just return since we don't anticpate anything to do
     auto timestep = Model::SCHEDULER->current_time();
     if (timestep == 0) { return; }
+
+    // Open the transaction
+    pqxx::work db(*conn);
 
     // Send the inserts as we read the table
     std::string query;
     for (auto source = 0; source < division_count; source++) {
         for (auto destination = 0; destination < division_count; destination++) {
             if (movement_counts[source][destination] == 0) { continue; }
-            query.append(fmt::format(INSERT_COARSE_MOVE, replicate, timestep, movement_counts[source][destination], source, destination));
+            query = fmt::format(INSERT_COARSE_MOVE, replicate, timestep, movement_counts[source][destination], source, destination);
             movement_counts[source][destination] = 0;
+            db.exec(query);
         }
     }
 
     if (query.empty()) {
         // Issue a warning if there were no movements since zeroed data is not recorded
         LOG(WARNING) << "No movement between districts recorded.";
+        db.abort();
         return;
     } 
 
     // Commit the data
-    pqxx::work db(*conn);
-    db.exec(query);
     db.commit();
 }
 
