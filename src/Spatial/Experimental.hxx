@@ -9,6 +9,7 @@
 #ifndef EXPERIMENTALSM_HXX
 #define EXPERIMENTALSM_HXX
 
+#include "easylogging++.h"
 #include "GIS/AscFile.h"
 #include "GIS/SpatialData.h"
 #include "Helpers/NumberHelpers.h"
@@ -44,6 +45,7 @@ namespace Spatial {
                 float max = std::numeric_limits<float>::min();
                 for (auto row = 0; row < raster->NROWS; row++) {
                     for (auto col = 0; col < raster->NCOLS; col++) {
+                        if (raster->data[row][col] == raster->NODATA_VALUE) { continue; }
                         min = std::min(min, raster->data[row][col]);
                         max = std::max(max, raster->data[row][col]);
                     }
