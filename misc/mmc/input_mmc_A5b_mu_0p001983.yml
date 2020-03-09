@@ -315,8 +315,7 @@ initial_parasite_info:
   #if location id is -1 all location will have the same initial parasites
   - location_id: -1
     parasite_info:
-      #TNY__C1x
-      - {parasite_type_id: 72, prevalence: 0.1}
+      - {parasite_type_id: 0, prevalence: 0.1}
       
 
       # drug information below

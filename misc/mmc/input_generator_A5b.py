@@ -38,7 +38,13 @@ popsize = 70000
 data['location_db']['population_size_by_location'] = [popsize];       
 
 aq_mutant_introductions = {
-        0.0: '0p00'
+        0.0: '0p00',
+        0.01 : '0p01',
+        0.05 : '0p05',
+        0.1: '0p10',
+        0.15: '0p15',
+        0.25: '0p25',
+        0.5: '0p50'
         };
         
 treatment_coverages = {
