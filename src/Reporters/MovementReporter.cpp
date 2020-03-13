@@ -49,8 +49,8 @@ void MovementReporter::coarse_report() {
 
     // Send the inserts as we read the table
     std::string query;
-    for (auto source = 0; source < division_count; source++) {
-        for (auto destination = 0; destination < division_count; destination++) {
+    for (auto source = 0; source < division_count + 1; source++) {
+        for (auto destination = 0; destination < division_count + 1; destination++) {
             if (movement_counts[source][destination] == 0) { continue; }
             query = fmt::format(INSERT_COARSE_MOVE, replicate, timestep, movement_counts[source][destination], source, destination);
             movement_counts[source][destination] = 0;
@@ -95,7 +95,7 @@ void MovementReporter::initialize(int job_number, std::string path) {
         // Assume we are tracking cells
         division_count = static_cast<int>(Model::CONFIG->number_of_locations());
     }
-     VLOG(1) << "Division Count: " << division_count;
+    VLOG(1) << "Division Count: " << division_count;
     if (division_count != -1) {
         movement_counts = new int*[division_count + 1];
         for (auto ndx = 0; ndx < division_count + 1; ndx++) {
