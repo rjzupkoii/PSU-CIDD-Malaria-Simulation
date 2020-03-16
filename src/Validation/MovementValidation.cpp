@@ -39,10 +39,8 @@ void MovementValidation::add_move(int individual, int source, int destination) {
   int source_district = sd.get_district(source);
   int destination_district = sd.get_district(destination);
 
-  // Record the move if we left the district
-  if (source_district != destination_district) {
-    instance.reporter->add_coarse_move(individual, source_district, destination_district);
-  }
+  // Record the move
+  instance.reporter->add_coarse_move(individual, source_district, destination_district);
 }
 
 void MovementValidation::write_movement_data() {

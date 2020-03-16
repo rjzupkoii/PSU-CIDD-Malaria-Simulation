@@ -47,10 +47,11 @@ void MovementReporter::coarse_report() {
     // Open the transaction
     pqxx::work db(*conn);
 
-    // Send the inserts as we read the table
+    // Send the inserts as we read the table, note that we assume that the division count is correct prepared 
+    // with padding as needed if it is coming from one-index ArcGIS
     std::string query;
-    for (auto source = 0; source < division_count + 1; source++) {
-        for (auto destination = 0; destination < division_count + 1; destination++) {
+    for (auto source = 0; source < division_count; source++) {
+        for (auto destination = 0; destination < division_count; destination++) {
             if (movement_counts[source][destination] == 0) { continue; }
             query = fmt::format(INSERT_COARSE_MOVE, replicate, timestep, movement_counts[source][destination], source, destination);
             movement_counts[source][destination] = 0;
@@ -91,18 +92,28 @@ void MovementReporter::initialize(int job_number, std::string path) {
         // (i.e., district A to district B) cells with zero are not as big of a concern (baring
         // any memory considerations).
         division_count = SpatialData::get_instance().get_district_count();
+        if (division_count == -1) {
+            VLOG(1) << "District not loaded";
+            return;
+        }
+        
+        // Pad the count
+        division_count++;
+
+        VLOG(1) << "Real District Count: " << division_count - 1;
+        VLOG(1) << "Adjusted District Count: " << division_count;
     } else {
         // Assume we are tracking cells
         division_count = static_cast<int>(Model::CONFIG->number_of_locations());
+        VLOG(1) << "Cell count: " << division_count;
     }
-    VLOG(1) << "Division Count: " << division_count;
-    if (division_count != -1) {
-        movement_counts = new int*[division_count + 1];
-        for (auto ndx = 0; ndx < division_count + 1; ndx++) {
-            movement_counts[ndx] = new int[division_count + 1];
-            for (auto ndy = 0; ndy < division_count + 1; ndy++) {
-                movement_counts[ndx][ndy] = 0;
-            }
+    
+    // Prpare the memory, assume that padding is in place
+    movement_counts = new int*[division_count];
+    for (auto ndx = 0; ndx < division_count; ndx++) {
+        movement_counts[ndx] = new int[division_count];
+        for (auto ndy = 0; ndy < division_count; ndy++) {
+            movement_counts[ndx][ndy] = 0;
         }
     }
 
