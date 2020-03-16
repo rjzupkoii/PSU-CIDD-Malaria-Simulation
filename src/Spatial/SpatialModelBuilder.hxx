@@ -8,11 +8,12 @@
 
 #include "BarabasiSM.h"
 #include "Core/PropertyMacro.h"
-#include "Experimental.hxx"
 #include "GeneralGravitySM.h"
 #include "Marshall.hxx"
+#include "MarshallNudge.hxx"
 #include "SpatialModel.hxx"
-#include "WesolowskiSM.h"
+#include "WesolowskiSM.hxx"
+#include "WesolowskiNudgeSM.hxx"
 #include "yaml-cpp/yaml.h"
 
 namespace Spatial {
@@ -30,14 +31,17 @@ class SpatialModelBuilder {
       if (name == "Barabasi") {
         return new BarabasiSM(node);
       }
-      if (name == "Experimental") {
-        return new ExperimentalSM(node);
-      }
       if (name == "Marshall") {
         return new MarshallSM(node);
       }
       if (name == "Wesolowski") {
         return new WesolowskiSM(node);
+      }
+      if (name == "MarshallNudge") {
+        return new MarshallNudgeSM(node);
+      }
+      if (name == "WesolowskiNudge") {
+        return new WesolowskiNudgeSM(node);
       }
       return nullptr;
     }
