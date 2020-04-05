@@ -37,11 +37,8 @@ class SpatialModelBuilder {
       if (name == "Wesolowski") {
         return new WesolowskiSM(node);
       }
-      if (name == "MarshallNudge") {
-        return new MarshallNudgeSM(node);
-      }
-      if (name == "WesolowskiNudge") {
-        return new WesolowskiNudgeSM(node);
+      if (name == "MarshallSurface") {
+        return new MarshallSurfaceSM(node);
       }
       return nullptr;
     }

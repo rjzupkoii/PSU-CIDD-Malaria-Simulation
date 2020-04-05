@@ -1,6 +1,5 @@
 /*
  * WesolowskiSM.hxx
-
  */
 #ifndef SPATIAL_WESOLOWSKISM_H
 #define SPATIAL_WESOLOWSKISM_H
