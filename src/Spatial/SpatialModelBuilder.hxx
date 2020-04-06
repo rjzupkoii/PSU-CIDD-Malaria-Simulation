@@ -10,10 +10,9 @@
 #include "Core/PropertyMacro.h"
 #include "GeneralGravitySM.h"
 #include "Marshall.hxx"
-#include "MarshallNudge.hxx"
+#include "MarshallSurfaceSM.hxx"
 #include "SpatialModel.hxx"
 #include "WesolowskiSM.hxx"
-#include "WesolowskiNudgeSM.hxx"
 #include "yaml-cpp/yaml.h"
 
 namespace Spatial {

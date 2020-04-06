@@ -15,12 +15,36 @@
 namespace Spatial {
     class NudgeBase {
         public:
+            // Generate a vector of the travel surface fro a given location.
+            double* friction_surface(const int &locations) const {
+
+                // Get the travel times raster
+                AscFile* raster = SpatialData::get_instance().get_raster(SpatialData::SpatialFileType::Travel);
+                if (raster == nullptr) {
+                    throw std::runtime_error(fmt::format("{} called without travel data loaded", __FUNCTION__));
+                }
+
+                // Use the min and max to normalize the raster into an array
+                auto id = 0;
+                double* surface = new double[locations];
+                for (auto row = 0; row < raster->NROWS; row++) {
+                    for (auto col = 0; col < raster->NCOLS; col++) {
+                        if (raster->data[row][col] == raster->NODATA_VALUE) { continue; }
+                        surface[id] = raster->data[row][col];
+                        id++;
+                    }
+                }
+
+                // Return the results
+                return surface;
+            }
+
             // Generate a vector of all of the normalized travel times from the given location
             //
             // NOTE This isn't the best way to do things since we end up regenerating it 
             //      for each cell, but since the movement probablities are only generated
             //      once, the overall impact should be small.
-            double* normalize_travel(const int &source, const int &locations) const {
+            double* normalize_travel(const int &locations) const {
 
                 // Get the travel times raster
                 AscFile* raster = SpatialData::get_instance().get_raster(SpatialData::SpatialFileType::Travel);

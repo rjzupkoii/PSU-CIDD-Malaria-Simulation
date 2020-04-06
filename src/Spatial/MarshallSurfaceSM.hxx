@@ -42,8 +42,11 @@ namespace Spatial {
                 // Note the population size
                 auto population = v_number_of_residents_by_location[from_location];
 
-                // Generate the normalized travel time
-                double* normalized = normalize_travel(from_location, number_of_locations);
+                // Version One, Generate the normalized travel time
+                //double* surface = normalize_travel(number_of_locations);
+
+                // Version Two, Get the surface in the correct order
+                double* surface = friction_surface(number_of_locations);
 
                 // Prepare the vector for results
                 std::vector<double> results(number_of_locations, 0.0);
@@ -59,19 +62,17 @@ namespace Spatial {
                     // Calculate the proportional probability
                     double probability = std::pow(population, tau_) * kernel;
 
-                    // Apply the adjustment
+                    // Version One adjustment
+                    //probability = std::min(probability, probability * (scalar_ - surface[destination]));
 
-                    // Version One
-                    probability = std::min(probability, probability * (scalar_ - normalized[destination]));
-
-                    // Version Two
-
+                    // Version Two adjustment
+                    probability = probability / (1 + surface[from_location] + surface[destination] );
 
                     results[destination] = probability;
                 }
 
-                // Free the memory used for the normalized
-                delete normalized;
+                // Free the memory used for the surface
+                delete surface;
 
                 // Done, return the results
                 return results;
