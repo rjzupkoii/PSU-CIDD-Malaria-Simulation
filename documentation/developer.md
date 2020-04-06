@@ -36,6 +36,24 @@ make
 sudo make install
 ```
 
+## WSL on the PSU VPN
+One minor problem that may occure while on the PSU VPN is that psu.edu domains are not resolved correctly. This is usually due to the `/etc/resolv.conf` file not being updated correctly by WSL. To manually update the file, launch PowerShell and run,
+
+```PowerShell
+Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandPropert ServerAddresses
+```
+
+copy the addresses to `/etc/resolv.conf` so you have something similar to 
+
+```
+nameserver 192.168.1.1
+nameserver 192.168.1.2
+nameserver 192.168.1.3
+search psu.edu
+```
+
+This may need to be done everytime you connect to the VPN, so scripting the update may be in order.
+
 # Building
 While building with `make` the `-j` switch may be used to control the number of cores used.
 
