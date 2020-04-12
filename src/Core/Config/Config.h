@@ -75,6 +75,9 @@ class Config {
   CONFIG_ITEM(fraction_mosquitoes_interrupted_feeding, double, 0.0)
   CONFIG_ITEM(inflation_factor, double, 0.01)
 
+  // Used primarily by Person::inflect_bite when the immune system is challenged
+  CONFIG_ITEM(transmission_parameter, double, 0.0)
+
   // Either the raster_db field or the location_db MUST be supplied in the YAML
   // and they MUST appear by this point in the file as well
   CONFIG_ITEM(raster_db, RasterDb, RasterDb())

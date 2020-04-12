@@ -619,9 +619,9 @@ bool Person::inflict_bite(const unsigned int parasite_type_id) {
   increase_number_of_times_bitten();
 
   // Calculate the probability that the immune system will fight something off
-  const float TRANSMISSION = 0.55;
-  auto theta = immune_system()->get_current_value();
-  auto pr_inf = TRANSMISSION * (1 - (theta - 0.2) / 0.8) + 0.1 * ((theta - 0.2) / 0.8);
+  double TRANSMISSION = Model::CONFIG->transmission_parameter();
+  double theta = immune_system()->get_current_value();
+  double pr_inf = TRANSMISSION * (1 - (theta - 0.2) / 0.8) + 0.1 * ((theta - 0.2) / 0.8);
 
   // If the immunity is greater than 0.8, then the infection doesn't take
   if (pr_inf > 0.8) {
@@ -631,7 +631,7 @@ bool Person::inflict_bite(const unsigned int parasite_type_id) {
   // If pr_inf (immunity) is less than 0.2, they are going to get infected 
   // regardless. Everything else gets a random draw, if immunity is less than 
   // the challenge then the infection takes hold
-  const auto challenge = Model::RANDOM->random_flat(0.0, 1.0);
+  const double challenge = Model::RANDOM->random_flat(0.0, 1.0);
   if (pr_inf < 0.2 || pr_inf < challenge) {
     if (host_state() != Person::EXPOSED && liver_parasite_type() == nullptr) {
       today_infections()->push_back(parasite_type_id);
