@@ -71,7 +71,6 @@ class Config {
   CONFIG_ITEM(tf_window_size, int, 60)
 
   CONFIG_ITEM(using_age_dependent_bitting_level, bool, false)
-  CONFIG_ITEM(using_variable_probability_infectious_bites_cause_infection, bool, false)
 
   CONFIG_ITEM(fraction_mosquitoes_interrupted_feeding, double, 0.0)
   CONFIG_ITEM(inflation_factor, double, 0.01)

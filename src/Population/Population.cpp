@@ -203,24 +203,23 @@ void Population::perform_infection_event() {
           const auto index = model_->random()->random_uniform(size);
           auto* person = pi->vPerson()[loc][bitting_level][index];
 
+          // If the person is not dead, inflict the bite upon them,
+          // an update today's infection if they get infected
           assert(person->host_state()!=Person::DEAD);
-          person->increase_number_of_times_bitten();
-
-          const auto p_infectious = Model::RANDOM->random_flat(0.0, 1.0);
-          //only infect with real infectious bite
-          if (Model::CONFIG->using_variable_probability_infectious_bites_cause_infection()) {
-            if (p_infectious <= person->p_infection_from_an_infectious_bite()) {
-              if (person->host_state()!=Person::EXPOSED && person->liver_parasite_type()==nullptr) {
-                person->today_infections()->push_back(parasite_type_id);
-                today_infections.push_back(person);
-              }
-            }
-          } else if (p_infectious <= Model::CONFIG->p_infection_from_an_infectious_bite()) {
-            if (person->host_state()!=Person::EXPOSED && person->liver_parasite_type()==nullptr) {
-              person->today_infections()->push_back(parasite_type_id);
-              today_infections.push_back(person);
-            }
+          if (person->inflict_bite(parasite_type_id)) {
+            today_infections.push_back(person);
           }
+
+          // TODO This is te legacy code, delete it once we know the new 
+          // TODO version works
+          // const auto p_infectious = Model::RANDOM->random_flat(0.0, 1.0);
+          // if (p_infectious <= Model::CONFIG->p_infection_from_an_infectious_bite()) {
+          //   if (person->host_state()!=Person::EXPOSED && person->liver_parasite_type()==nullptr) {
+          //     person->today_infections()->push_back(parasite_type_id);
+          //     today_infections.push_back(person);
+          //   }
+          // }
+          
         }
       }
     }
