@@ -30,7 +30,7 @@ public:
   ~IntroducePlas2CopyParasiteEvent() override;
 
   std::string name() override {
-    return "ImportationEvent";
+    return "Plas2ImportationEvent";
   }
 
 private:

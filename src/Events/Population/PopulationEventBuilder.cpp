@@ -15,6 +15,7 @@
 #include "TurnOnMutationEvent.h"
 #include "TurnOffMutationEvent.h"
 #include "IntroducePlas2CopyParasiteEvent.h"
+#include "Introduce580YMutantEvent.h"
 #include "IntroduceAQMutantEvent.h"
 #include "IntroduceLumefantrineMutantEvent.h"
 
@@ -177,6 +178,24 @@ PopulationEventBuilder::build_introduce_plas2_parasite_events(const YAML::Node& 
   }
   return events;
 }
+std::vector<Event*> PopulationEventBuilder::build_introduce_580Y_mutant_events(const YAML::Node &node, Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {
+    auto location = node[i]["location"].as<int>();
+    if (location < config->number_of_locations()) {
+      auto fraction = node[i]["fraction"].as<double>();
+
+      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+
+      auto* event = new Introduce580YMutantEvent(location, time, fraction);
+      events.push_back(event);
+    }
+  }
+  return events;
+}
+
+
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_aq_mutant_parasite_events(const YAML::Node& node,
                                                                                       Config* config) {
@@ -221,6 +240,9 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   if (name == "introduce_plas2_parasites") {
     events = build_introduce_plas2_parasite_events(node["info"], config);
   }
+  if (name == "introduce_580Y_parasites") {
+    events = build_introduce_580Y_mutant_events(node["info"], config);
+  }
   if (name == "introduce_aq_mutant_parasites") {
     events = build_introduce_aq_mutant_parasite_events(node["info"], config);
   }
@@ -258,3 +280,5 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   }
   return events;
 }
+
+

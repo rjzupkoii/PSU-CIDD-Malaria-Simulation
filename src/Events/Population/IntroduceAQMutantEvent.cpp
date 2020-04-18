@@ -19,7 +19,7 @@ void IntroduceAQMutantEvent::execute() {
 
 
   for (auto j = 0; j < Model::CONFIG->number_of_age_classes(); ++j) {
-    static const std::vector<int> mutant_alleles{0, 1, 3, 4, 5, 7};
+//    static const std::vector<int> mutant_alleles{0, 1, 3, 4, 5, 7};
 
 
     const auto number_infected_individual_in_ac =
@@ -43,10 +43,15 @@ void IntroduceAQMutantEvent::execute() {
       for (auto* pp : *(p->all_clonal_parasite_populations()->parasites())) {
         auto* old_genotype = pp->genotype();
 
-        auto* new_genotype = old_genotype->combine_mutation_to(0, 1);
-        // 0, 1,3,4,5,7
-        const auto allele_index = Model::RANDOM->random_uniform(mutant_alleles.size());
-        new_genotype = new_genotype->combine_mutation_to(1, mutant_alleles[allele_index]);
+        // old mutation mechanism
+//        auto* new_genotype = old_genotype->combine_mutation_to(0, 1);
+//        // 0, 1,3,4,5,7
+//        const auto allele_index = Model::RANDOM->random_uniform(mutant_alleles.size());
+//        new_genotype = new_genotype->combine_mutation_to(1, mutant_alleles[allele_index]);
+
+        //5b scenarios
+        auto* new_genotype = Model::CONFIG->genotype_db()->at(72);
+
         pp->set_genotype(new_genotype);
       }
     }
