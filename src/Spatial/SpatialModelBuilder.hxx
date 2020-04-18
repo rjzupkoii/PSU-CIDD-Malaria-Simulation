@@ -10,8 +10,9 @@
 #include "Core/PropertyMacro.h"
 #include "GeneralGravitySM.h"
 #include "Marshall.hxx"
+#include "BurkinaFaso.hxx"
 #include "SpatialModel.hxx"
-#include "WesolowskiSM.h"
+#include "WesolowskiSM.hxx"
 #include "yaml-cpp/yaml.h"
 
 namespace Spatial {
@@ -34,6 +35,9 @@ class SpatialModelBuilder {
       }
       if (name == "Wesolowski") {
         return new WesolowskiSM(node);
+      }
+      if (name == "BurkinaFaso") {
+        return new BurkinaFaso(node);
       }
       return nullptr;
     }

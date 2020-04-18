@@ -41,9 +41,6 @@ start_collect_data_day: 365
 # on the biting that took place 11 days ago
 number_of_tracking_days: 11
 
-# probability that an infectious bite on a human causes a blood stage malaria infection
-p_infection_from_an_infectious_bite: 0.1
-
 # the simulation itself uses explicit ages and birthdays
 # but for reporting purposes and for age-specific mortality calculations, individuals are grouped into the following age classes
 number_of_age_classes: 15
@@ -56,6 +53,10 @@ initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 3
 # population_size_by_location is scaled by this value to increase the total 
 # number of individuals in the model
 artificial_rescaling_of_population_size: 1.0
+
+# The transmission parameter that is used for determining if a challenged immune system
+# fights off the sporozoites or not.
+transmission_parameter: 0.275
 
 # ---------------------------------------------------------------
 # Rasters to be used in conjunction with the location_db, note 

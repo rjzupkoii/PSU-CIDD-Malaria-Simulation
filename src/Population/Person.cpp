@@ -1,8 +1,11 @@
 /* 
- * File:   Person.cpp
- * Author: nguyentran
+ * Person.cpp
  * 
- * Created on March 22, 2013, 2:25 PM
+ * Implement the Person object. Note that this is a very complex part of the 
+ * model and care should be taken in modifying it.
+ * 
+ * NOTE Longer term the goal is to simplify this a bit by shifting some 
+ *      operations out - remember, seperation of concerns!
  */
 #include "Person.h"
 
@@ -326,15 +329,6 @@ void Person::schedule_progress_to_clinical_event_by(ClonalParasitePopulation* bl
                                           Model::SCHEDULER->current_time() + time);
 }
 
-void Person::schedule_end_clinical_due_to_drug_resistance_event(ClonalParasitePopulation* blood_parasite) {
-
-  auto d_clinical = Model::RANDOM->random_normal(7, 2);
-  d_clinical = std::min<int>(std::max<int>(d_clinical, 5), 14);
-
-  EndClinicalDueToDrugResistanceEvent::schedule_event(Model::SCHEDULER, this, blood_parasite,
-                                                      Model::SCHEDULER->current_time() + d_clinical);
-}
-
 void Person::schedule_test_treatment_failure_event(ClonalParasitePopulation* blood_parasite, const int &testing_day,
                                                    const int &t_id) {
   TestTreatmentFailureEvent::schedule_event(Model::SCHEDULER, this, blood_parasite,
@@ -614,6 +608,39 @@ void Person::infected_by(const int &parasite_type_id) {
     schedule_move_parasite_to_blood(genotype, 7);
   }
 
+}
+
+// Inflict a bite upon the person with sporozoites of the given type being
+// contained within the bite. When a bite is inflicted, the immune system 
+// is challenged. If the challenge fails the method will return true 
+// indicating that they are now infected.
+bool Person::inflict_bite(const unsigned int parasite_type_id) {
+  // Update the overall bite count
+  increase_number_of_times_bitten();
+
+  // Calculate the probability that the immune system will fight something off
+  double TRANSMISSION = Model::CONFIG->transmission_parameter();
+  double theta = immune_system()->get_current_value();
+  double pr_inf = TRANSMISSION * (1 - (theta - 0.2) / 0.8) + 0.1 * ((theta - 0.2) / 0.8);
+
+  // If the immunity is greater than 0.8, then the infection doesn't take
+  if (pr_inf > 0.8) {
+    return false;
+  }
+
+  // If pr_inf (immunity) is less than 0.2, they are going to get infected 
+  // regardless. Everything else gets a random draw, if immunity is less than 
+  // the challenge then the infection takes hold
+  const double challenge = Model::RANDOM->random_flat(0.0, 1.0);
+  if (pr_inf < 0.2 || pr_inf < challenge) {
+    if (host_state() != Person::EXPOSED && liver_parasite_type() == nullptr) {
+      today_infections()->push_back(parasite_type_id);
+      return true;
+    }
+  }
+
+  // We were not infected
+  return false;
 }
 
 void Person::schedule_move_parasite_to_blood(Genotype* genotype, const int &time) {
