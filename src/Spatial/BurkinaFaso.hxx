@@ -23,7 +23,6 @@ namespace Spatial {
         VIRTUAL_PROPERTY_REF(double, tau)
         VIRTUAL_PROPERTY_REF(double, alpha)
         VIRTUAL_PROPERTY_REF(double, rho)
-        VIRTUAL_PROPERTY_REF(double, scalar)
         VIRTUAL_PROPERTY_REF(double, capital)
         VIRTUAL_PROPERTY_REF(double, penalty)
 
@@ -34,7 +33,6 @@ namespace Spatial {
                 tau_ = node["tau"].as<double>();
                 alpha_ = node["alpha"].as<double>();
                 rho_ = std::pow(10, node["log_rho"].as<double>());
-                scalar_ = node["scalar"].as<double>();
                 capital_ = node["capital"].as<double>();
                 penalty_ = node["penalty"].as<double>();
             }
@@ -49,10 +47,13 @@ namespace Spatial {
                 // Note the population size
                 auto population = v_number_of_residents_by_location[from_location];
 
+                // Note the source district
+                SpatialData &sd = SpatialData::get_instance();
+                auto source_district = sd.get_district(from_location);
+
                 // Get the relevent surfaces
                 double* travel = prepare_surface(SpatialData::SpatialFileType::Travel, number_of_locations);
-                double* districts = prepare_surface(SpatialData::SpatialFileType::Districts, number_of_locations);
-
+                
                 // Prepare the vector for results
                 std::vector<double> results(number_of_locations, 0.0);
 
@@ -72,7 +73,7 @@ namespace Spatial {
 
                     // If the source and the destination are both in the capital district,
                     // penalize the travel by 50%
-                    if (districts[from_location] == capital_ && districts[destination] == capital_) {
+                    if (source_district == capital_ && sd.get_district(destination) == capital_) {
                             probability /= penalty_;
                     }
 
@@ -81,7 +82,6 @@ namespace Spatial {
 
                 // Free the memory used for the surface
                 delete travel;
-                delete districts;
 
                 // Done, return the results
                 return results;
