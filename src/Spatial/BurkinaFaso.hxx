@@ -48,8 +48,7 @@ namespace Spatial {
                 auto population = v_number_of_residents_by_location[from_location];
 
                 // Note the source district
-                SpatialData &sd = SpatialData::get_instance();
-                auto source_district = sd.get_district(from_location);
+                auto source_district = SpatialData::get_instance().get_district(from_location);
 
                 // Get the relevent surfaces
                 double* travel = prepare_surface(SpatialData::SpatialFileType::Travel, number_of_locations);
@@ -73,7 +72,8 @@ namespace Spatial {
 
                     // If the source and the destination are both in the capital district,
                     // penalize the travel by 50%
-                    if (source_district == capital_ && sd.get_district(destination) == capital_) {
+                    if (source_district == capital_ && 
+                        SpatialData::get_instance().get_district(destination) == capital_) {
                             probability /= penalty_;
                     }
 
