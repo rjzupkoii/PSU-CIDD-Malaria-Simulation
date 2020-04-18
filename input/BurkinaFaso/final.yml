@@ -1,34 +1,43 @@
 # ---------------------------------------------------------------
 #
-# DATE: Sep 16 2015
-# AUTHORS: Tran Dang Nguyen and Maciej F Boni
+# DATE: 2019-09-11
+# AUTHORS: Boni Lab
 #
-# This sample input file was created to get a first-time user up 
-# and running quickly with the simulation.
+# Base configuration for Burkina Faso
 #
 # ---------------------------------------------------------------
 
-# The number to use as the default seed value, comment out or set to zero (0) to use random seed.
-# initial_seed_number: 8675309
+# ---------------------------------------------------------------
+# Items controlling execution of the model
+# ---------------------------------------------------------------
+# The number of model days between updates to the user
+days_between_notifications: 30
 
-# Connection string for the PostgreSQL database, connection timeout is in seconds
-connection_string: "host=localhost dbname=masim user=sim password=sim connect_timeout=300"
+# The number to use as the default seed value, comment out or set
+# to zero (0) to use random seed.
+initial_seed_number: 0
 
+# Connection string for the PostgreSQL database
+connection_string: "host=masimdb.vmhost.psu.edu dbname=masim user=sim password=sim connect_timeout=60"
+
+# ---------------------------------------------------------------
+# Items controlling the behavior of the model
+# ---------------------------------------------------------------
 # starting time point of the simulation (in yyyy/m/d format) 
 # which is day 0 in the simulation
-# including the burn-in period which we normally set to 4000# days;
 starting_date: 1990/1/1
 
+# the day at which the MDC will begin collecting NTF, AMU, UTL
+# This indicates the end of the burn-in period for the model
+start_of_comparison_period: 1991/12/1
+
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 1991/1/1
+ending_date: 1990/2/1
 
 # the day at which the simulation's reporting functionality begins collecting data for 
 # EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
 # for monthly data display
 start_collect_data_day: 365
-
-# the day at which the MDC will begin collecting NTF, AMU, UTL
-start_of_comparison_period: 2019/12/1
 
 # number of days to keep track total number of parasites in population
 # in other words, the simulation stores 11 days of mosquitoes-biting-on-humans history
@@ -48,34 +57,30 @@ age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 20, 60, 100]
 # the last four rows of the matrix below are ignored when the number of locations is 1
 initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35, 45, 55, 65, 100]
 
-artificial_rescaling_of_population_size: 1.0
+# population_size_by_location is scaled by this value to increase the total 
+# number of individuals in the model
+artificial_rescaling_of_population_size: 0.01
 
-#spatial information
-location_db:
-  #id, latitude, longitude
-  location_info: [
-  [0, 0, 0],
-  [1, 0, 1],
-  [2, 0, 2],
-  [3, 1, 0],
-  [4, 1, 1],
-  [5, 1, 2],
-  [6, 2, 0],
-  [7, 2, 1],
-  [8, 2, 2]
-  ]
-  #if the number of values less than number of locations, the first value will be applied for all locations
-  age_distribution_by_location: [
-  [0.0334, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0334, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0335, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0335, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0336, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0336, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0337, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0337, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387],
-  [0.0338, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387]
-  ]
+# ---------------------------------------------------------------
+# Rasters to be used in conjunction with the location_db, note 
+# that the paths are relative to the binary file for the simulation
+# ---------------------------------------------------------------
+raster_db:
+  # Raster file that contains the site specific population data
+  population_raster: "../input/BurkinaFaso/bf_pop_raster.asc"
+
+  # Raster file that contains the districts mapping
+  district_raster: "../input/BurkinaFaso/bf_admin_raster.asc"
+
+  # Raster file that contains the travel times
+  travel_raster: "../input/BurkinaFaso/bf_travel_raster.asc"
+  
+  # Set the cell size used by raster, in sq.km
+  cell_size: 5
+
+  # When raster files are being used, we assume that the age distribution can be constant for the country
+  age_distribution_by_location: [[0.0334, 0.0300, 0.0329, 0.0324, 0.0332, 0.0314, 0.0316, 0.0310, 0.0285, 0.0256, 0.0298, 0.0212, 0.0321, 0.0228, 0.0230, 0.1906, 0.1403, 0.0966, 0.0605, 0.0344, 0.0387]]
+
   # probability that a symptomatic and infected individual seeks and receives antimalarial treatment
   #if the number of values less than number of locations, the first value will be applied for all locations
   # this is the initial value, the modification values can be change by setting in events node
@@ -86,13 +91,9 @@ location_db:
   #if the number of values less than number of locations, the first value will be applied for all locations
   beta_by_location: [0.05]
 
-  #if the number of values less than number of locations, the first value will be applied for all locations
-  population_size_by_location: [1000, 10020, 10030, 10040, 10050, 10060, 10070, 10080, 10090 ]
-  #spatial_model could be Gravity, Barabasi, or Wesolowski
-
 # seasonality parameters for all location
 seasonal_info:
-  enable: true
+  enable: false
   a: [1]
   phi: [250]
   min_value: [0.1]
@@ -100,11 +101,16 @@ seasonal_info:
 
 spatial_model:
   name: "Wesolowski"
+  Experimental:
+    alpha: 1.27
+    log_rho: 0.54
+    tau: 1.342
+    scalar: 1.001
 
-  Barabasi:
-    r_g_0: 5.8
-    beta_r: 1.65
-    kappa: 350
+  Marshall:
+    alpha: 1.27
+    log_rho: 0.54
+    tau: 1.342
 
   Wesolowski:
     kappa: 0.01093251
@@ -112,10 +118,16 @@ spatial_model:
     beta: 0.14319618
     gamma: 0.83741484
 
-
+  WesolowskiNudge:
+    kappa: 0.01093251
+    alpha: 0.22268982
+    beta: 0.14319618
+    gamma: 0.83741484
+    scalar: 1.001
 
 # below value indicates 37.25 births per 1000 individuals per year
 birth_rate: 0.03725
+
 # annual death rate (probability) by age group
 death_rate_by_age_class: [0.053979329, 0.018935757, 0.006867257, 0.001124347, 0.001136455, 0.001606066, 0.001953783, 0.001530096, 0.001299153, 0.001068073, 0.000978264, 0.000978264, 0.0055, 0.0055, 0.04450]
 
@@ -123,15 +135,10 @@ death_rate_by_age_class: [0.053979329, 0.018935757, 0.006867257, 0.001124347, 0.
 # when received treatment, this rate drop by factor of 10 in code
 mortality_when_treatment_fail_by_age_class: [0.040, 0.020,0.020,0.020,0.020,0.004,0.004,0.004,0.004,0.004,0.004, 0.001, 0.001, 0.001, 0.001]
 
-
 # definitions of some log parasite density levels
-#
 parasite_density_level:
-  #  log_parasite_density_cured:        -2.699    # corresponds to 10,000 total parasites (0.002 per μl)
   log_parasite_density_cured:        -4.699    # corresponds to 100 total parasites (0.00002 per μl)
   log_parasite_density_from_liver:    -2.000    # corresponds to 50,000 total parasites (0.01 per μl)
-  #  log_parasite_density_asymptomatic: 1.301    # corresponds to 20 parasites per microliter of blood
-  #  log_parasite_density_asymptomatic: 2.69    # corresponds to 500 parasites per microliter of blood
   log_parasite_density_asymptomatic: 3    # corresponds to 1000 parasites per microliter of blood
   log_parasite_density_clinical:     4.301    # corresponds to 20,000 parasites per microliter of blood (total 10^11)
   log_parasite_density_clinical_from:     3.301    # corresponds to 2000 parasites per microliter of blood (total 10^10)
@@ -139,7 +146,6 @@ parasite_density_level:
   log_parasite_density_detectable:   1.000    # corresponds to 10 parasites per microliter of blood
   log_parasite_density_detectable_pfpr: 1.000 # corresponds to 100 parasites per microliter of blood
   log_parasite_density_pyrogenic:    3.398    # corresponds to 2500 parasites per microliter of blood
-
 
 immune_system_information:
   #rate at which antimalarial immune function increases when a host is parasitaemic
@@ -174,9 +180,9 @@ immune_system_information:
   # parameter kappa in supplement of 2015 LGH paper
   factor_effect_age_mature_immunity: 1
 
-
+# TODO Find out what this is for?
 # this functionality works, but it was not used in any analyses for the 2015 LGH paper
-#this applies for all locations
+# this applies for all locations
 circulation_info:
   max_relative_moving_value: 35
   number_of_moving_levels: 100
@@ -188,13 +194,12 @@ circulation_info:
     Gamma:
       mean: 5
       sd: 10
-  circulation_percent: 0.0
+  circulation_percent: 0.00336
   length_of_stay:
     mean: 5
     sd: 10
 
-
-
+# Define locations of drug resitant genes
 genotype_info:
   loci:
     # here we start defining the first locus
@@ -341,11 +346,6 @@ initial_parasite_info:
         prevalence: 0.05
       - parasite_type_id: 72
         prevalence: 0.05
-#      - parasite_type_id: 2
-#        prevalence: 0.1
-#      - parasite_type_id: 4
-#        prevalence: 0.1
-
 
 # drug information below
 #
@@ -354,7 +354,7 @@ initial_parasite_info:
 #       the highest possible drug concentration
 #
 # n: 
-#       the slope of the linear portion of the conentration-effect curve
+#       the slope of the linear portion of the concentration-effect curve
 #
 # EC50: 
 #       the drug concentration which produces 50% of the parasite killing achieved at maximum-concentration
@@ -365,7 +365,7 @@ initial_parasite_info:
 #
 # k: 
 #       parameter that describes the change in the mutation probability when drug levels are intermediate
-#       - set k=0.5 for a simple linear model where mutation probablity decreases linearly with drug concentration
+#       - set k=0.5 for a simple linear model where mutation probability decreases linearly with drug concentration
 #       - set k=2 or k=4 for a piecewise-linear model where mutation probability increases from high concentrations
 #               to intermediate concentrations, and then decreases linearly from intermediate concentrations to zero
 #
@@ -701,28 +701,8 @@ strategy_db:
     name: MFTMultiLocation
     type: MFTMultiLocation
     therapy_ids: [6,8,10,7,9]
-    start_distribution: [
-    [0.84,0.06,0.05,0.03,0.02]
-      #    [0.84,0.06,0.05,0.03,0.03],
-      #    [0.84,0.06,0.05,0.03,0.04],
-      #    [0.84,0.06,0.05,0.03,0.05],
-      #    [0.84,0.06,0.05,0.03,0.06],
-      #    [0.84,0.06,0.05,0.03,0.07],
-      #    [0.84,0.06,0.05,0.03,0.08],
-      #    [0.84,0.06,0.05,0.03,0.09],
-      #    [0.84,0.06,0.05,0.03,0.10]
-    ]
-    peak_distribution: [
-    [0.84,0.06,0.05,0.03,0.02]
-      #    [0.84,0.06,0.05,0.03,0.03],
-      #    [0.84,0.06,0.05,0.03,0.04],
-      #    [0.84,0.06,0.05,0.03,0.05],
-      #    [0.84,0.06,0.05,0.03,0.06],
-      #    [0.84,0.06,0.05,0.03,0.07],
-      #    [0.84,0.06,0.05,0.03,0.08],
-      #    [0.84,0.06,0.05,0.03,0.09],
-      #    [0.84,0.06,0.05,0.03,0.10]
-    ]
+    start_distribution: [[0.84,0.06,0.05,0.03,0.02]]
+    peak_distribution: [[0.84,0.06,0.05,0.03,0.02]]
     peak_after: 365
   14:
     name: BaseLineStrategy
@@ -734,17 +714,13 @@ strategy_db:
 
 initial_strategy_id: 5
 
-
-
 # this number use to detemine whether a therapy is "useful" or not and it is used to calculate 
 # the useful therapeutic duration of a therapy
 tf_rate: 0.1
 
-
 # days from end of liver-stage infection to appearance of symptoms
 days_to_clinical_under_five: 4
 days_to_clinical_over_five: 6
-
 
 # days that parasites develop mature gametocyte after exiting liverstage
 # please read the documentation carefully - there are no explicit gametocytes in
@@ -807,6 +783,7 @@ report_frequency: 30
 # parasite clone, this setting allows the new infection to cause symptoms
 allow_new_coinfection_to_cause_symtoms: true
 
+# TODO, is this used elsewhere in the code?
 # this functionality works, but it was not used in any analyses for the 2015 LGH paper
 external_population_circulation_information:
   max_relative_moving_value: 35
@@ -833,7 +810,6 @@ external_population_circulation_information:
 
 # free recombination among the drug resistance loci
 using_free_recombination: true
-#using_free_recombination: false
 
 # the current treatment failure rate as observed in the population is not really
 # today's treatment failure rate, as these data are never assembled that quickly in
@@ -885,52 +861,6 @@ events:
             genotype_id: -1
             number_of_cases: 1
             start_day: 1990/6/2
-
-            #            # TODO: other position not listed below will be drawn uniformly
-            #            allele_distributions:
-            #              - position: 4
-            #                distribution: [1.0,0.0]
-
-            #special genotype
-
-  - name: change_treatment_coverage
-    info:
-      - type: SteadyTCM
-        day: 1990/2/1
-        p_treatment_for_less_than_5_by_location: [0.600000]
-        p_treatment_for_more_than_5_by_location: [0.550000]
-      - type: InflatedTCM
-        day: 1990/3/1
-        annual_inflation_rate: 0.01
-        #p_treatment_for_less_than_5_by_location: [0.700000]
-        #p_treatment_for_more_than_5_by_location: [0.800000]
-      - type: LinearTCM
-        from_day: 1990/6/1
-        to_day: 1990/12/1
-        #p_treatment_for_less_than_5_by_location_from: [0.600000]
-        #p_treatment_for_more_than_5_by_location_from: [0.500000]
-        p_treatment_for_less_than_5_by_location_to: [0.900000]
-        p_treatment_for_more_than_5_by_location_to: [0.90000]
-  - name: change_treatment_strategy
-    info:
-      - day: 1990/3/2
-        strategy_id: 2
-      - day: 1990/6/2
-        strategy_id: 3
-      - day: 1990/9/2
-        strategy_id: 4
-  - name: single_round_MDA
-    info:
-      - day: 2020/1/1
-        fraction_population_targeted: [1.0]
-        days_to_complete_all_treatments: 14
-      - day: 2020/2/8
-        fraction_population_targeted: [0.03333333]
-        days_to_complete_all_treatments: 14
-      - day: 2020/3/14
-        fraction_population_targeted: [0.7]
-        days_to_complete_all_treatments: 14
-
 
 mda_therapy_id: 8
 

@@ -17,8 +17,8 @@ days_between_notifications: 365
 # to zero (0) to use random seed.
 initial_seed_number: 0
 
-# Connection string for the PostgreSQL database
-connection_string: "host=localhost dbname=masim user=sim password=sim"
+# Connection string for the PostgreSQL database, connection timeout is in seconds
+connection_string: "host=localhost dbname=masim user=sim password=sim connect_timeout=300"
 
 # ---------------------------------------------------------------
 # Items controlling the behavior of the model
@@ -59,7 +59,7 @@ initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 3
 
 # population_size_by_location is scaled by this value to increase the total 
 # number of individuals in the model
-artificial_rescaling_of_population_size: 0.02
+artificial_rescaling_of_population_size: 0.01
 
 # ---------------------------------------------------------------
 # Rasters to be used in conjunction with the location_db, note 
@@ -67,10 +67,10 @@ artificial_rescaling_of_population_size: 0.02
 # ---------------------------------------------------------------
 raster_db:
   # Raster file that contains the site specific population data
-  population_raster: "../input/BurkinaFaso/bf_pop_raster.asc"
+  population_raster: "../input/safane.asc"
 
   # Raster file that contains the districts mapping
-  district_raster: "../input/BurkinaFaso/bf_admin_raster.asc"
+#  district_raster: "../input/BurkinaFaso/bf_admin_raster.asc"
   
   # Set the cell size used by raster, in sq.km
   cell_size: 5

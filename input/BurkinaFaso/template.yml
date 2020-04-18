@@ -59,7 +59,7 @@ initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 3
 
 # population_size_by_location is scaled by this value to increase the total 
 # number of individuals in the model
-artificial_rescaling_of_population_size: 0.025
+artificial_rescaling_of_population_size: 0.01
 
 # ---------------------------------------------------------------
 # Rasters to be used in conjunction with the location_db, note 
@@ -71,6 +71,9 @@ raster_db:
 
   # Raster file that contains the districts mapping
   district_raster: "../input/BurkinaFaso/bf_admin_raster.asc"
+
+  # Raster file that contains the mean travel time (in minutes) to nearest city
+  travel_raster: "../input/BurkinaFaso/bf_travel_raster.asc"
   
   # Set the cell size used by raster, in sq.km
   cell_size: 5
@@ -97,18 +100,12 @@ seasonal_info:
   period: 365
 
 spatial_model:
-  name: "Wesolowski"
-
-  Barabasi:
-    r_g_0: 5.8
-    beta_r: 1.65
-    kappa: 350
-
-  Wesolowski:
-    kappa: -31.1569
-    alpha:   1.3669
-    beta:    2.0524
-    gamma:  -1.1615
+  name: "Experimental"
+  Experimental:
+    alpha:   1.27
+    log_rho: 0.54
+    tau:     1.342
+    scalar:  1.01
 
 # below value indicates 37.25 births per 1000 individuals per year
 birth_rate: 0.03725
@@ -179,7 +176,7 @@ circulation_info:
     Gamma:
       mean: 5
       sd: 10
-  circulation_percent: 0.1
+  circulation_percent: 0.00336
   length_of_stay:
     mean: 5
     sd: 10
