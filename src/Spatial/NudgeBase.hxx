@@ -16,10 +16,10 @@ namespace Spatial {
     class NudgeBase {
         public:
             // Generate a vector of the travel surface fro a given location.
-            double* friction_surface(const int &locations) const {
+            double* prepare_surface(const SpatialData::SpatialFileType type, const int &locations) const {
 
                 // Get the travel times raster
-                AscFile* raster = SpatialData::get_instance().get_raster(SpatialData::SpatialFileType::Travel);
+                AscFile* raster = SpatialData::get_instance().get_raster(type);
                 if (raster == nullptr) {
                     throw std::runtime_error(fmt::format("{} called without travel data loaded", __FUNCTION__));
                 }

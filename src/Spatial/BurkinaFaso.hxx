@@ -1,13 +1,14 @@
 /*
- * MarshallNudge.hxx
+ * BurkinaFaso.hxx
  * 
- * Experimental movement equation, based upon Marshall et al. (2018) with a 
- * penalty applied based upon the travel time to the nearest city. The 
+ * Tuned movement model for Burkina Faso based upon Marshall et al. (2018), 
+ * with a penalty applied based upon the travel time to the nearest city. 
+ * Intradistrict movement in capital is also penalized as well.
  * 
  * Marshall et al., 2018
  */
-#ifndef MARSHALLSURFACESM_HXX
-#define MARSHALLSURFACESM_HXX
+#ifndef BURKINAFASO_HXX
+#define BURKINAFASO_HXX
 
 #include "easylogging++.h"
 #include "Helpers/NumberHelpers.h"
@@ -16,23 +17,29 @@
 #include "yaml-cpp/yaml.h"
 
 namespace Spatial {
-    class MarshallSurfaceSM : public SpatialModel, public NudgeBase {
-        DISALLOW_COPY_AND_ASSIGN(MarshallSurfaceSM)
+    class BurkinaFaso : public SpatialModel, public NudgeBase {
+        DISALLOW_COPY_AND_ASSIGN(BurkinaFaso)
 
         VIRTUAL_PROPERTY_REF(double, tau)
         VIRTUAL_PROPERTY_REF(double, alpha)
         VIRTUAL_PROPERTY_REF(double, rho)
         VIRTUAL_PROPERTY_REF(double, scalar)
+        VIRTUAL_PROPERTY_REF(double, capital)
+        VIRTUAL_PROPERTY_REF(double, penalty)
+
+        const double CAPITAL_DISTRICT = 14;
         
         public:
-            MarshallSurfaceSM(const YAML::Node &node) { 
+            BurkinaFaso(const YAML::Node &node) { 
                 tau_ = node["tau"].as<double>();
                 alpha_ = node["alpha"].as<double>();
                 rho_ = std::pow(10, node["log_rho"].as<double>());
                 scalar_ = node["scalar"].as<double>();
+                capital_ = node["capital"].as<double>();
+                penalty_ = node["penalty"].as<double>();
             }
 
-            virtual ~MarshallSurfaceSM() { }
+            virtual ~BurkinaFaso() { }
 
             DoubleVector get_v_relative_out_movement_to_destination(
                     const int &from_location, const int &number_of_locations,
@@ -42,11 +49,9 @@ namespace Spatial {
                 // Note the population size
                 auto population = v_number_of_residents_by_location[from_location];
 
-                // Version One, Generate the normalized travel time
-                //double* surface = normalize_travel(number_of_locations);
-
-                // Version Two, Get the surface in the correct order
-                double* surface = friction_surface(number_of_locations);
+                // Get the relevent surfaces
+                double* travel = prepare_surface(SpatialData::SpatialFileType::Travel, number_of_locations);
+                double* districts = prepare_surface(SpatialData::SpatialFileType::Districts, number_of_locations);
 
                 // Prepare the vector for results
                 std::vector<double> results(number_of_locations, 0.0);
@@ -62,17 +67,21 @@ namespace Spatial {
                     // Calculate the proportional probability
                     double probability = std::pow(population, tau_) * kernel;
 
-                    // Version One adjustment
-                    //probability = std::min(probability, probability * (scalar_ - surface[destination]));
+                    // Adjust the probability by the friction surface
+                    probability = probability / (1 + travel[from_location] + travel[destination] );
 
-                    // Version Two adjustment
-                    probability = probability / (1 + surface[from_location] + surface[destination] );
+                    // If the source and the destination are both in the capital district,
+                    // penalize the travel by 50%
+                    if (districts[from_location] == capital_ && districts[destination] == capital_) {
+                            probability /= penalty_;
+                    }
 
                     results[destination] = probability;
                 }
 
                 // Free the memory used for the surface
-                delete surface;
+                delete travel;
+                delete districts;
 
                 // Done, return the results
                 return results;
