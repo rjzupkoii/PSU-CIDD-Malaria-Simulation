@@ -618,14 +618,21 @@ bool Person::inflict_bite(const unsigned int parasite_type_id) {
   // Update the overall bite count
   increase_number_of_times_bitten();
 
-  // Calculate the probability that the immune system will fight something off
-  double TRANSMISSION = Model::CONFIG->transmission_parameter();
+  // Get the probablity of infection of a naive indivudal
+  double pr = Model::CONFIG->transmission_parameter();
+  
+  // Get the current immunity and adjust probablity
+  double pr_inf = 0.0;
   double theta = immune_system()->get_current_value();
-  double pr_inf = TRANSMISSION * (1 - (theta - 0.2) / 0.8) + 0.1 * ((theta - 0.2) / 0.8);
-
-  // If the immunity is greater than 0.8, then the infection doesn't take
-  if (pr_inf > 0.8) {
-    return false;
+  if (theta > 0.8) {
+    // High immunity reduces likelihood of infection
+    pr_inf = 0.1;
+  } else if (theta < 0.2) {
+    // Low immunity sets likelihood at the probablity of infection
+    pr_inf = pr;
+  } else {
+    // 0.6 comes from range between 0.2 and 0.8
+    double pr_inf = pr * (1 - (theta - 0.2) / 0.6) + 0.1 * ((theta - 0.2) / 0.6);
   }
 
   // If pr_inf (immunity) is less than 0.2, they are going to get infected 
