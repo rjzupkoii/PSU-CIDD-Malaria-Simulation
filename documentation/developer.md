@@ -72,6 +72,8 @@ cd /build/bin
 ./MaSim -i ../../misc/input.yml
 ```
 
+Note that while care was taken in places to ensure the code is performant, the amount of RAM needed during execution can be quite high (ex., 32GB or more). When the model is run in Linux enviroments where the necessary memeory is not avalible, you may find that the program is killed without notice due to being [https://linux-mm.org/OOM_Killer](out of memory).
+
 # Building on ICDS-ACI
 To build the simulation to run on the ICDS-ACI the first time it is necessary to perform a number of configuration steps. After logging on to the interactive environment (`aci-b.aci.ics.psu.edu`) cloning this repository run `config.sh` which will prepare the build environment. As part of the process a build script will be created at `build/build.sh` that will ensure the environment is set correctly when run. 
 
