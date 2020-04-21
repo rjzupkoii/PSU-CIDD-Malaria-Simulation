@@ -618,22 +618,24 @@ bool Person::inflict_bite(const unsigned int parasite_type_id) {
   // Update the overall bite count
   increase_number_of_times_bitten();
 
-  // Get the probablity of infection of a naive indivudal
+  // Get the probability of infection of a naive individual
   double pr = Model::CONFIG->transmission_parameter();
   
-  // Get the current immunity and adjust probablity
-  double pr_inf = 0.0;
+  // Get the current immunity and calculate the baseline probability
   double theta = immune_system()->get_current_value();
+  double pr_inf = pr * (1 - (theta - 0.2) / 0.6) + 0.1 * ((theta - 0.2) / 0.6);
+
+  // High immunity reduces likelihood of infection
   if (theta > 0.8) {
-    // High immunity reduces likelihood of infection
     pr_inf = 0.1;
-  } else if (theta < 0.2) {
-    // Low immunity sets likelihood at the probablity of infection
+  } 
+  
+  // Low immunity sets likelihood at the probability of infection
+  if (theta < 0.2) {
     pr_inf = pr;
-  } else {
-    // 0.6 comes from range between 0.2 and 0.8
-    double pr_inf = pr * (1 - (theta - 0.2) / 0.6) + 0.1 * ((theta - 0.2) / 0.6);
   }
+  
+  VLOG(1) << "theta:" << theta << " pr_inf: " << pr_inf;
 
   // If pr_inf (immunity) is less than 0.2, they are going to get infected 
   // regardless. Everything else gets a random draw, if immunity is less than 
