@@ -638,10 +638,10 @@ bool Person::inflict_bite(const unsigned int parasite_type_id) {
   VLOG(1) << "theta:" << theta << " pr_inf: " << pr_inf;
 
   // If pr_inf (immunity) is less than 0.2, they are going to get infected 
-  // regardless. Everything else gets a random draw, if immunity is less than 
-  // the challenge then the infection takes hold
-  const double challenge = Model::RANDOM->random_flat(0.0, 1.0);
-  if (pr_inf < 0.2 || pr_inf < challenge) {
+  // regardless. Everything else gets a random draw, if the probability is
+  // greater than the random draw the infection takes hold
+  const double draw = Model::RANDOM->random_flat(0.0, 1.0);
+  if (pr_inf < 0.2 || draw < pr_inf) {
     if (host_state() != Person::EXPOSED && liver_parasite_type() == nullptr) {
       today_infections()->push_back(parasite_type_id);
       return true;
