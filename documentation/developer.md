@@ -65,7 +65,14 @@ make -j 4
 ```
 
 # Running
-To perform a basic model check the following can be run.
+The first step in performing a basic model check is load the genome data in the database, this must also be done whenever a new database is corrected:
+
+```base
+cd /build/bin
+./MaSim -i ../../misc/input.yml -l
+```
+
+Once the genome data has been loaded the basic input file can be run as follows:
 
 ```bash
 cd /build/bin
