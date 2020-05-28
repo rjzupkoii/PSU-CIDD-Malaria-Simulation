@@ -21,3 +21,21 @@ CREATE OR REPLACE VIEW public.v_runningstats AS
 
 ALTER TABLE public.v_runningstats
     OWNER TO postgres;
+
+
+-- View: public.v_replicates
+CREATE OR REPLACE VIEW public.v_replicates
+ AS
+ SELECT c.filename,
+    r.id,
+    r.configurationid,
+    r.seed,
+    r.starttime,
+    r.endtime,
+    r.movement,
+    r.endtime - r.starttime AS runningtime
+   FROM sim.replicate r
+     JOIN sim.configuration c ON c.id = r.configurationid;
+
+ALTER TABLE public.v_replicates
+    OWNER TO dbadmin;

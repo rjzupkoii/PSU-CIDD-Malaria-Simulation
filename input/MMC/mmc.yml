@@ -21,14 +21,14 @@ connection_string: "host=masimdb.vmhost.psu.edu dbname=masim user=sim password=s
 # ---------------------------------------------------------------
 # starting time point of the simulation (in yyyy/m/d format) 
 # which is day 0 in the simulation
-starting_date: 1990/1/1
+starting_date: 1995/1/1
 
 # the day at which the MDC will begin collecting NTF, AMU, UTL
 # This indicates the end of the burn-in period for the model
 start_of_comparison_period: 2019/12/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 2012/2/1
+ending_date: 2017/12/31
 
 # the day at which the simulation's reporting functionality begins collecting data for 
 # EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
@@ -56,7 +56,7 @@ artificial_rescaling_of_population_size: 1.0
 
 # The transmission parameter that is used for determining if a challenged immune system
 # fights off the sporozoites or not.
-transmission_parameter: 0.275
+transmission_parameter: 0.55
 
 # ---------------------------------------------------------------
 # Rasters to be used in conjunction with the location_db, note 
@@ -80,7 +80,7 @@ raster_db:
 
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
-  beta_by_location: [#BETA#]
+  beta_by_location: [0.05]
 
 # seasonality parameters for all location
 seasonal_info:
