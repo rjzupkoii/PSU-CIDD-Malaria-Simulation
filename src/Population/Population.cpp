@@ -156,7 +156,9 @@ std::size_t Population::size_residents_only(const int &location) {
 void Population::perform_infection_event() {
   PersonPtrVector today_infections;
   
+#ifdef DEBUG
   auto start = std::chrono::system_clock::now();
+#endif
 
   // Get the person index
   auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
@@ -235,11 +237,13 @@ void Population::perform_infection_event() {
     p->randomly_choose_parasite();
   }
 
+#ifdef DEBUG
   auto end = std::chrono::system_clock::now();
   std::chrono::duration<double> elapsed_seconds = end-start;
   if (elapsed_seconds.count() >= 1) {
     LOG(INFO) << "Long infection event" << elapsed_seconds.count();
   }
+#endif
 }
 
 void Population::initialize() {
