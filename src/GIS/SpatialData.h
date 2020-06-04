@@ -30,6 +30,12 @@ class SpatialData {
             // Travel time data
             Travel,
 
+            // Probability of treatment, under 5
+            PrTreatmentUnder5,
+
+            // Probability of treatment, over 5
+            PrTreatmentOver5,
+
             // Number of sequential items in the type
             Count
         };
@@ -60,6 +66,8 @@ class SpatialData {
         const std::string LOCATION_RASTER = "location_raster";
         const std::string POPULATION_RASTER = "population_raster";
         const std::string TRAVEL_RASTER = "travel_raster";
+        const std::string TREATMENT_RATE_UNDER5 = "pr_treatment_under5";
+        const std::string TREATMENT_RATE_OVER5 = "pr_treatment_over5";
 
         // Array of the ASC file data, use SpatialFileType as the index
         AscFile** data;
@@ -87,11 +95,17 @@ class SpatialData {
         // Generate the locations for the location_db
         void generate_locations();
 
-        // Load the beta values into the location_db
-        void load_beta();
+        // Load the given raster file into the spatial catalog and assign the given label
+        void load(std::string filename, SpatialFileType type);
 
-        // Load the popuation values into the location_db
-        void load_population();
+        // Load all of the spatial data from the node
+        void load_files(const YAML::Node &node);
+
+        // Load the raster indicated into the location_db; works with betas and probability of treatment
+        void load_raster(SpatialFileType type);
+
+        // Perform any clean-up operations after parsing the YAML file is complete
+        void parse_complete();
 
     public:
         // Not supported by singleton.
@@ -105,9 +119,6 @@ class SpatialData {
             static SpatialData instance;
             return instance;
         }
-
-        // Clears all of the loaded data
-        void clear();
 
         // Return the raster header or the default structure if no raster are loaded
         RasterInformation get_raster_header();
@@ -129,9 +140,6 @@ class SpatialData {
 
         // Get a reference to the AscFile raster, may be a nullptr
         AscFile* get_raster(SpatialFileType type) { return data[type]; }
-
-        // Load the given raster file into the spatial catalog and assign the given label
-        void load(std::string filename, SpatialFileType type);
 
         // Parse the YAML node provided to extract all of the relevent information for the simulation
         bool parse(const YAML::Node &node);

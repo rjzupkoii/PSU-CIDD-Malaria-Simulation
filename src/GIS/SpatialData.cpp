@@ -190,55 +190,42 @@ void SpatialData::load(std::string filename, SpatialFileType type) {
     dirty = true;
 }
 
-void SpatialData::load_beta() {
-    // Verify that we have beta values and grab the reference
-    if (data[SpatialFileType::Beta] == nullptr) {
-        throw std::runtime_error(fmt::format("{} called without a beta raster being loaded.", __FUNCTION__));
+void SpatialData::load_raster(SpatialFileType type) {
+    // Verify that that the raster data has been loaded
+    if (data[type] == nullptr) {
+        throw std::runtime_error(fmt::format("{} called without raster, type id: {}", __FUNCTION__, type));
     }
-    auto* betas = data[SpatialFileType::Beta];
-    
-    // Grab a reference to the location_db to work with
-    auto& location_db = Model::CONFIG->location_db();
-    
-    // Iterate through the raseter and locations to set the beta value
-    auto id = 0;
-    for (auto row = 0; row < betas->NROWS; row++) {
-        for (auto col = 0; col < betas->NCOLS; col++) {
-            if (betas->data[row][col] == betas->NODATA_VALUE) { continue; }
-            location_db[id].beta = betas->data[row][col];
-            id++;
-        }
-    }
-
-    // When we are done the last id value should match the number of locations, accounting for zero indexing
-    assert((unsigned)(id) == Model::CONFIG->number_of_locations());
-
-    // Log the updates
-    VLOG(1) << "Loaded beta values from raster file.";
-}
-
-void SpatialData::load_population() {
-    // Verify that we have population values and grab the reference
-    if (data[SpatialFileType::Population] == nullptr) {
-        throw std::runtime_error(fmt::format("{} called without a popuation raster being loaded.", __FUNCTION__));
-    }
-    auto* popuation = data[SpatialFileType::Population];
+    auto *values = data[type];
 
     // Grab a reference to the location_db to work with
     auto& location_db = Model::CONFIG->location_db();
 
-    // Iterate through the raster and locations to set the popuation value
+    // Iterate through the raster and locations to set the value
     auto id = 0;
-    for (auto row = 0; row < popuation->NROWS; row++) {
-        for (auto col = 0; col < popuation->NCOLS; col++) {
-            if (popuation->data[row][col] == popuation->NODATA_VALUE) { continue; }
-
-            // Verify that we aren't losing data
-            if (popuation->data[row][col] != ceil(popuation->data[row][col])) {
-                LOG(WARNING) << fmt::format("Population data lost at row {}, col {}, value {}", row, col, popuation->data[row][col]);
+    for (auto row = 0; row < values->NROWS; row++) {
+        for (auto col = 0; col < values->NCOLS; col++) {
+            if (values->data[row][col] == values->NODATA_VALUE) { continue; }
+            switch (type) {
+                case SpatialFileType::Beta: 
+                    location_db[id].beta = values->data[row][col]; 
+                    break;
+                case SpatialFileType::Population:
+                    // Verify that we aren't losing data
+                    if (values->data[row][col] != ceil(values->data[row][col])) {
+                        LOG(WARNING) << fmt::format("Population data lost at row {}, col {}, value {}", row, col, values->data[row][col]);
+                    }
+                    location_db[id].population_size = static_cast<int>(values->data[row][col]);
+                    break;
+                case SpatialFileType::PrTreatmentUnder5: 
+                    location_db[id].p_treatment_less_than_5 = values->data[row][col]; 
+                    break;
+                case SpatialFileType::PrTreatmentOver5: 
+                    location_db[id].p_treatment_more_than_5 = values->data[row][col]; 
+                    break;
+                default: 
+                    throw std::runtime_error(fmt::format("{} called with invlaid raster, type id: {}", __FUNCTION__, type)); 
+                    break;
             }
-
-            location_db[id].population_size = static_cast<int>(popuation->data[row][col]);
             id++;
         }
     }
@@ -247,12 +234,10 @@ void SpatialData::load_population() {
     assert((unsigned)(id) == Model::CONFIG->number_of_locations());
 
     // Log the updates
-    VLOG(1) << "Loaded population values from raster file.";
+    VLOG(1) << "Loaded values from raster file, type id: " << type;
 }
 
-bool SpatialData::parse(const YAML::Node &node) {
-
-    // First, start by attempting to load any rasters
+void SpatialData::load_files(const YAML::Node &node) {
     if (node[LOCATION_RASTER]) {
         load(node[LOCATION_RASTER].as<std::string>(), SpatialData::SpatialFileType::Locations);
     }
@@ -268,6 +253,18 @@ bool SpatialData::parse(const YAML::Node &node) {
     if (node[TRAVEL_RASTER]) {
         load(node[TRAVEL_RASTER].as<std::string>(), SpatialData::SpatialFileType::Travel);
     }
+    if (node[TREATMENT_RATE_UNDER5]) {
+        load(node[TREATMENT_RATE_UNDER5].as<std::string>(), SpatialData::SpatialFileType::PrTreatmentUnder5);
+    }
+    if (node[TREATMENT_RATE_OVER5]) {
+        load(node[TREATMENT_RATE_UNDER5].as<std::string>(), SpatialData::SpatialFileType::PrTreatmentOver5);
+    }
+}
+
+bool SpatialData::parse(const YAML::Node &node) {
+
+    // First, start by attempting to load any rasters
+    load_files(node);
 
     // Set the cell size
     cell_size = node["cell_size"].as<float>();
@@ -287,14 +284,18 @@ bool SpatialData::parse(const YAML::Node &node) {
         }
     }
 
-    // Load the treatment information
+    // Load the treatment information, note that if rasters were loaded via refresh() this will end up being a NOP
     for (auto loc = 0ul; loc < number_of_locations; loc++) {
-        auto input_loc = node["p_treatment_for_less_than_5_by_location"].size() < number_of_locations ? 0 : loc;
-        location_db[loc].p_treatment_less_than_5 = node["p_treatment_for_less_than_5_by_location"][input_loc].as<float>();
-    }
-    for (auto loc = 0ul; loc < number_of_locations; loc++) {
-        auto input_loc = node["p_treatment_for_more_than_5_by_location"].size() < number_of_locations ? 0 : loc;
-        location_db[loc].p_treatment_more_than_5 = node["p_treatment_for_more_than_5_by_location"][input_loc].as<float>();
+        if (!node[TREATMENT_RATE_UNDER5]) {
+            // Set the under 5 value
+            auto input_loc = node["p_treatment_for_less_than_5_by_location"].size() < number_of_locations ? 0 : loc;
+            location_db[loc].p_treatment_less_than_5 = node["p_treatment_for_less_than_5_by_location"][input_loc].as<float>();
+        }
+        if (!node[TREATMENT_RATE_OVER5]) {
+            // Set the over 5 value
+            auto input_loc = node["p_treatment_for_more_than_5_by_location"].size() < number_of_locations ? 0 : loc;
+            location_db[loc].p_treatment_more_than_5 = node["p_treatment_for_more_than_5_by_location"][input_loc].as<float>();
+        }
     }
 
     // Load the beta if we don't have a raster for it
@@ -314,7 +315,24 @@ bool SpatialData::parse(const YAML::Node &node) {
     }
 
     // Load completed successfully
+    parse_complete();
     return true;
+}
+
+void SpatialData::parse_complete() {
+    // Delete redundent rasters once they have been loaded to the location_db
+    if (data[SpatialFileType::Beta] != nullptr) {
+        delete data[SpatialFileType::Beta];
+    }
+    if (data[SpatialFileType::Population] != nullptr) {
+        delete data[SpatialFileType::Population];
+    }
+    if (data[SpatialFileType::PrTreatmentUnder5] != nullptr) {
+        delete data[SpatialFileType::PrTreatmentUnder5];
+    }
+    if (data[SpatialFileType::PrTreatmentOver5] != nullptr) {
+        delete data[SpatialFileType::PrTreatmentOver5];
+    }
 }
 
 void SpatialData::refresh() {
@@ -332,8 +350,10 @@ void SpatialData::refresh() {
     }
     
     // Load the remaining data, note this spot is a marker for adding more types
-    if (data[SpatialFileType::Beta] != nullptr) { load_beta(); }
-    if (data[SpatialFileType::Population] != nullptr) { load_population(); }
+    if (data[SpatialFileType::Beta] != nullptr) { load_raster(SpatialFileType::Beta); }
+    if (data[SpatialFileType::Population] != nullptr) { load_raster(SpatialFileType::Population); }
+    if (data[SpatialFileType::PrTreatmentUnder5] != nullptr) { load_raster(SpatialFileType::PrTreatmentUnder5); }
+    if (data[SpatialFileType::PrTreatmentOver5] != nullptr) { load_raster(SpatialFileType::PrTreatmentOver5); }
 }
 
 void SpatialData::write(std::string filename, SpatialFileType type) {
