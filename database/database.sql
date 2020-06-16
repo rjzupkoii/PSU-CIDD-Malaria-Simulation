@@ -105,6 +105,25 @@ TABLESPACE pg_default;
 
 ALTER TABLE sim.study OWNER to sim;
 
+CREATE TABLE sim.notes
+(
+    id integer NOT NULL DEFAULT nextval('sim.notes_id_seq'::regclass),
+    data character varying COLLATE pg_catalog."default" NOT NULL,
+    "user" character varying COLLATE pg_catalog."default" NOT NULL,
+    date timestamp with time zone NOT NULL,
+    studyid integer NOT NULL,
+    CONSTRAINT notes_pkey PRIMARY KEY (id),
+    CONSTRAINT notes_studyid_fk FOREIGN KEY (studyid)
+        REFERENCES sim.study (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+WITH ( OIDS = FALSE )
+TABLESPACE pg_default;
+
+ALTER TABLE sim.notes  OWNER to sim;
+
 CREATE TABLE sim.configuration
 (
     id integer NOT NULL DEFAULT nextval('sim.configuration_id_seq'::regclass),
@@ -325,6 +344,11 @@ CREATE INDEX fki_monthlygenomedata_monthlydataid_fk
 CREATE INDEX fki_movement_replicateid_fk
     ON sim.movement USING btree
     (replicateid)
+    TABLESPACE pg_default;
+
+CREATE INDEX fki_notes_studyid_fk
+    ON sim.notes USING btree
+    (studyid)
     TABLESPACE pg_default;
 
 CREATE INDEX fki_replicate_studyid_fk
