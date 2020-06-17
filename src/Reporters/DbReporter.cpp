@@ -78,6 +78,14 @@ void DbReporter::prepare_configuration() {
     result = db.exec(query);
     config_id = result[0][0].as<int>();
 
+    // Update the study id if one was provided
+    if (Model::MODEL->study_number() != -1) {
+        int study_id = Model::MODEL->study_number();
+        LOG(INFO) << "Associating study number, " << study_id << ", with configuration.";
+        query = fmt::format(UPDATE_CONFIGURATION_STUDY, config_id, study_id);
+        db.exec(query);
+    }
+
     // Check to see if districts were loaded
     auto districts = SpatialData::get_instance().has_raster(SpatialData::SpatialFileType::Districts);
 

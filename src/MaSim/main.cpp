@@ -91,20 +91,23 @@ void handle_cli(Model *model, int argc, char **argv) {
    * -c / --config - config file
    * -h / --help   - help screen
    * -i / --input  - input file
-   * --im          - record individual movement data
    * -j            - cluster job number
    * -l / --load   - load genotypes and exit
-   * --dump          - dump the movement matrix as calculated           
-   * --mc          - record the movement between cells
-   * --md          - record the movement between districts
    * -o            - path for output files
    * -r            - reporter type
+   * -s            - study to associate with the configuration, database id 
+   * 
+   * --dump        - dump the movement matrix as calculated           
+   * --im          - record individual movement data
+   * --mc          - record the movement between cells
+   * --md          - record the movement between districts
    */
   args::ArgumentParser parser("Individual-based simulation for malaria.", "Boni Lab at Penn State");
   args::Group commands(parser, "commands");
   args::HelpFlag help(commands, "help", "Display this help menu", {'h', "help"});
   args::ValueFlag<std::string> input_file(commands, "string", "The config file (YAML format). \nEx: MaSim -i input.yml", {'i', 'c', "input", "config"});
   args::ValueFlag<int> cluster_job_number(commands, "int", "Cluster job number. \nEx: MaSim -j 1", {'j'});
+  args::ValueFlag<int> study_number(commands, "int", "Study number to associate with the configuration. \nEx: MaSim -s 1", {'s'});
   args::ValueFlag<std::string> reporter(commands, "string", "Reporter Type. \nEx: MaSim -r mmc", {'r'});
   args::ValueFlag<std::string> input_path(commands, "string", "Path for output files, default is current directory. \nEx: MaSim -p out", {'o'});
   args::Flag dump_movement(commands, "dump", "Dump the movement matrix as calculated", { "dump" });
@@ -164,6 +167,10 @@ void handle_cli(Model *model, int argc, char **argv) {
   model->set_cluster_job_number(job_number);
   const auto reporter_type = reporter ? args::get(reporter) : "";
   model->set_reporter_type(reporter_type);
+
+  // Note the default to -1, not a valid sequence in the database
+  int value = study_number ? args::get(study_number) : -1;
+  model->set_study_number(value);
   
   // Flags related to how movement is recorded (or not)
   model->set_dump_movement(dump_movement);

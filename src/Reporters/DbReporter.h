@@ -52,6 +52,9 @@ class DbReporter : public Reporter {
     const std::string UPDATE_REPLICATE = 
     "UPDATE replicate SET EndTime = now() WHERE id = {};";
 
+    const std::string UPDATE_CONFIGURATION_STUDY =
+    "UPDATE configuration SET studyid = {} WHERE id = {}";
+
     // TODO Grab the study id and configuration from... somewhere
     int config_id = 1;
 

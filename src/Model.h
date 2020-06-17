@@ -38,6 +38,7 @@ class Model {
  PROPERTY_REF(std::vector<Reporter *>, reporters)
  PROPERTY_REF(std::string, config_filename)
  PROPERTY_REF(int, cluster_job_number)
+ PROPERTY_REF(int, study_number)                              // Should be -1 when not a valid study number
  PROPERTY_REF(std::string, tme_filename)
  PROPERTY_REF(std::string, override_parameter_filename)
  PROPERTY_REF(int, override_parameter_line_number) // base 1
