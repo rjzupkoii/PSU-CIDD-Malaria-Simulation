@@ -189,3 +189,13 @@ At this point you should be able to connect to the pgAdmin control panel at http
 ## Creation of Simulation Database
 
 After logging into the pgAdmin control panel, start by creating the user `sim` and ensuring they have permissions to login to the database. This is the user that will be the simulation to write results to the database during model execution. Next, run the script `database.sql` which can be found under the `/database` directory of this repository.
+
+## Cloning databases
+
+For the purposes of development or archiving it may be necessary to clone databases. The following SQL commands can be used from psql on the server to do so:
+
+```sql
+UPDATE pg_database SET datallowconn = false WHERE datname = 'masim';
+CREATE DATABASE development WITH TEMPLATE masim OWNER sim;
+UPDATE pg_database SET datallowconn = false WHERE datname = 'masim';
+```
