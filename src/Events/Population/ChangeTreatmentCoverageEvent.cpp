@@ -13,7 +13,7 @@ ChangeTreatmentCoverageEvent::~ChangeTreatmentCoverageEvent() {
 }
 
 void ChangeTreatmentCoverageEvent::execute() {
-  LOG(INFO) << date::year_month_day{scheduler->calendar_date} << ": change trreatment coverage model";
+  LOG(INFO) << date::year_month_day{scheduler->calendar_date} << ": change treatment coverage model";
   Model::MODEL->set_treatment_coverage(treatment_coverage_model);
 
   if (auto *linear_tcm = dynamic_cast<LinearTCM *>(treatment_coverage_model)) {
