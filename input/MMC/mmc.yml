@@ -21,14 +21,14 @@ connection_string: "host=masimdb.vmhost.psu.edu dbname=masim user=sim password=s
 # ---------------------------------------------------------------
 # starting time point of the simulation (in yyyy/m/d format) 
 # which is day 0 in the simulation
-starting_date: 1995/1/1
+starting_date: 1990/1/1
 
 # the day at which the MDC will begin collecting NTF, AMU, UTL
 # This indicates the end of the burn-in period for the model
 start_of_comparison_period: 2019/12/1
 
 # ending time point of the simulation (in yyyy/m/d format) 
-ending_date: 2017/12/31
+ending_date: 2012/2/1
 
 # the day at which the simulation's reporting functionality begins collecting data for 
 # EIR, # of clinical episodes, # death , # of treatment, #TF by location,...
@@ -41,6 +41,9 @@ start_collect_data_day: 365
 # on the biting that took place 11 days ago
 number_of_tracking_days: 11
 
+# probability that an infectious bite on a human causes a blood stage malaria infection
+p_infection_from_an_infectious_bite: 0.1
+
 # the simulation itself uses explicit ages and birthdays
 # but for reporting purposes and for age-specific mortality calculations, individuals are grouped into the following age classes
 number_of_age_classes: 15
@@ -50,13 +53,13 @@ age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 20, 60, 100]
 # the last four rows of the matrix below are ignored when the number of locations is 1
 initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 35, 45, 55, 65, 100]
 
+# The transmission parameter that is used for determining if a challenged immune system
+# # fights off the sporozoites or not.
+transmission_parameter: 0.55
+
 # population_size_by_location is scaled by this value to increase the total 
 # number of individuals in the model
 artificial_rescaling_of_population_size: 1.0
-
-# The transmission parameter that is used for determining if a challenged immune system
-# fights off the sporozoites or not.
-transmission_parameter: 0.55
 
 # ---------------------------------------------------------------
 # Rasters to be used in conjunction with the location_db, note 
@@ -64,7 +67,7 @@ transmission_parameter: 0.55
 # ---------------------------------------------------------------
 raster_db:
   # Raster file that contains the site specific population data
-  population_raster: "../input/MMC/mmc.asc"
+  population_raster: "mmc.asc"
   
   # Set the cell size used by raster, in sq.km
   cell_size: 5
@@ -75,12 +78,12 @@ raster_db:
   # probability that a symptomatic and infected individual seeks and receives antimalarial treatment
   #if the number of values less than number of locations, the first value will be applied for all locations
   # this is the initial value, the modification values can be change by setting in events node
-  p_treatment_for_less_than_5_by_location: [0.0]
-  p_treatment_for_more_than_5_by_location: [0.0]
+  p_treatment_for_less_than_5_by_location: [0.50]
+  p_treatment_for_more_than_5_by_location: [0.50]
 
   #transmission intensity
   #if the number of values less than number of locations, the first value will be applied for all locations
-  beta_by_location: [0.05]
+  beta_by_location: [#BETA#]
 
 # seasonality parameters for all location
 seasonal_info:
@@ -109,7 +112,7 @@ death_rate_by_age_class: [0.053979329, 0.018935757, 0.006867257, 0.001124347, 0.
 # when received treatment, this rate drop by factor of 10 in code
 mortality_when_treatment_fail_by_age_class: [0.040, 0.020,0.020,0.020,0.020,0.004,0.004,0.004,0.004,0.004,0.004, 0.001, 0.001, 0.001, 0.001]
 
-# definitions of some log parasite density levels
+# definitions of some log 10 parasite density levels
 parasite_density_level:
   log_parasite_density_cured:          -4.699    # corresponds to 100 total parasites (0.00002 per μl)
   log_parasite_density_from_liver:     -2.000    # corresponds to 50,000 total parasites (0.01 per μl)
@@ -118,7 +121,7 @@ parasite_density_level:
   log_parasite_density_clinical_from:   3.301    # corresponds to 2000 parasites per microliter of blood (total 10^10)
   log_parasite_density_clinical_to:     5.301    # corresponds to 200,000 parasites per microliter of blood (total 10^12)
   log_parasite_density_detectable:      1.000    # corresponds to 10 parasites per microliter of blood
-  log_parasite_density_detectable_pfpr: 1.000    # corresponds to 100 parasites per microliter of blood
+  log_parasite_density_detectable_pfpr: 2.000    # corresponds to 100 parasites per microliter of blood
   log_parasite_density_pyrogenic:       3.398    # corresponds to 2500 parasites per microliter of blood
 
 immune_system_information:
