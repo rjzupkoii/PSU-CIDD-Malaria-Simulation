@@ -64,6 +64,13 @@ cmake ..
 make -j 4
 ```
 
+An alternative approach is to create a script that will run the relevant commands. The following can be used for building under WLS:
+
+```bash
+cmake -DCMAKE_BUILD_TYPE=DEBUG -DBUILD_WSL:BOOL=true ..
+make -j 8
+```
+
 # Running
 The first step in performing a basic model check is load the genome data in the database, this must also be done whenever a new database is corrected:
 
