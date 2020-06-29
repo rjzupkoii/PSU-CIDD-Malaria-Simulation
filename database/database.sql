@@ -106,7 +106,7 @@ CREATE TABLE sim.study
 (
     id integer NOT NULL DEFAULT nextval('sim.study_id_seq'::regclass),
     name character varying COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT study_pkey PRIMARY KEY (id)
+    CONSTRAINT study_pkey PRIMARY KEY (id),
     CONSTRAINT study_name_key UNIQUE (name)
 )
 WITH ( OIDS = FALSE )
