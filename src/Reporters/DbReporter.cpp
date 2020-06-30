@@ -81,8 +81,8 @@ void DbReporter::prepare_configuration() {
     // Update the study id if one was provided
     if (Model::MODEL->study_number() != -1) {
         int study_id = Model::MODEL->study_number();
-        LOG(INFO) << "Associating study number, " << study_id << ", with configuration.";
-        query = fmt::format(UPDATE_CONFIGURATION_STUDY, config_id, study_id);
+        LOG(INFO) << "Associating study number " << study_id << " with configuration.";
+        query = fmt::format(UPDATE_CONFIGURATION_STUDY, study_id, config_id);
         db.exec(query);
     }
 
