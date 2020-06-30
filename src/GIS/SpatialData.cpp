@@ -20,7 +20,6 @@ SpatialData::SpatialData() {
 SpatialData::~SpatialData() {
     if (data == nullptr) { return; }
     for (auto ndx = 0; ndx!= SpatialFileType::Count; ndx++) {
-        VLOG(1) << "Pool: " << ndx;
         if (data[ndx] != nullptr) {
             delete data[ndx];
         }
