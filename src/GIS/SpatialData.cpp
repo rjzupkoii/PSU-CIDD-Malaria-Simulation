@@ -20,6 +20,7 @@ SpatialData::SpatialData() {
 SpatialData::~SpatialData() {
     if (data == nullptr) { return; }
     for (auto ndx = 0; ndx!= SpatialFileType::Count; ndx++) {
+        VLOG(1) << "Pool: " << ndx;
         if (data[ndx] != nullptr) {
             delete data[ndx];
         }
@@ -329,15 +330,19 @@ void SpatialData::parse_complete() {
     // Delete redundent rasters once they have been loaded to the location_db
     if (data[SpatialFileType::Beta] != nullptr) {
         delete data[SpatialFileType::Beta];
+        data[SpatialFileType::Beta] = nullptr;
     }
     if (data[SpatialFileType::Population] != nullptr) {
         delete data[SpatialFileType::Population];
+        data[SpatialFileType::Population] = nullptr;
     }
     if (data[SpatialFileType::PrTreatmentUnder5] != nullptr) {
         delete data[SpatialFileType::PrTreatmentUnder5];
+        data[SpatialFileType::PrTreatmentUnder5] = nullptr;
     }
     if (data[SpatialFileType::PrTreatmentOver5] != nullptr) {
         delete data[SpatialFileType::PrTreatmentOver5];
+        data[SpatialFileType::PrTreatmentOver5] = nullptr;
     }
 }
 
