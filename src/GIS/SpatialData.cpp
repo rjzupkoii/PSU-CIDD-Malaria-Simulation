@@ -92,8 +92,10 @@ void SpatialData::generate_locations() {
     }
 
     // If we didn't find one, return
-    // NOTE This might be an error case - review this code later
-    if (ndx == SpatialFileType::Count) { return; }
+    if (ndx == SpatialFileType::Count) { 
+        LOG(ERROR) << "No spaital file found to generate locations with!";
+        return; 
+    }
 
     // Start by overallocating the location_db
     auto& db = Model::CONFIG->location_db();
@@ -115,6 +117,10 @@ void SpatialData::generate_locations() {
 
     // Update the configured count
     Model::CONFIG->number_of_locations.set_value();
+    if (Model::CONFIG->number_of_locations() == 0) {
+        // This error should be redundent since the ASC loader should catch it
+        LOG(ERROR) << "Zero locations loaded while parsing ASC file.";
+    }
     VLOG(1) << "Generated " << Model::CONFIG->number_of_locations() << " locations";
 }
 

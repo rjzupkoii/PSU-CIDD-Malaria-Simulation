@@ -102,6 +102,10 @@ AscFile* AscFileManager::read(std::string fileName) {
     // Remainder of the file is the actual raster data
     for (auto ndx = 0; ndx < results->NROWS; ndx++) {
         for (auto ndy = 0; ndy < results->NCOLS; ndy++) {
+            // If the file is malformed then we may encounter the EOF before reading all the data
+            if (in.eof()) {
+                throw std::runtime_error("EOF encountered while reading data.");
+            }
             in >> value;
             results->data[ndx][ndy] = std::stof(value);
         }
