@@ -325,7 +325,9 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
   for (auto &blood_parasite : *parasites_) {
     auto* new_genotype = blood_parasite->genotype();
 
+    // Percentage is originally zero
     double percent_parasite_remove = 0;
+
     for (auto it = drugs_in_blood->drugs()->begin(); it != drugs_in_blood->drugs()->end(); ++it) {
       const auto drug = it->second;
       const auto p = Model::RANDOM->random_flat(0.0, 1.0);
@@ -361,9 +363,9 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
         blood_parasite->set_genotype(new_genotype);
       }
 
+      // Update the percentage 
       const auto p_temp = drug->get_parasite_killing_rate(blood_parasite->genotype()->genotype_id());
-
-      percent_parasite_remove = percent_parasite_remove + p_temp - percent_parasite_remove * p_temp;
+      percent_parasite_remove = (percent_parasite_remove + p_temp) - (percent_parasite_remove * p_temp);
     }
     if (percent_parasite_remove > 0) {
       blood_parasite->perform_drug_action(percent_parasite_remove);
