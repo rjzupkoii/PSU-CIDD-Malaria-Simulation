@@ -10,7 +10,7 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
-#include "Therapies/SCTherapy.h"
+#include "Therapies/SCTherapy.hxx"
 
 Genotype::Genotype(const int &id, const GenotypeInfo &genotype_info, const IntVector &weight) : genotype_id_(id) {
 

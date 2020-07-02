@@ -12,7 +12,7 @@
 #include "Config.h"
 #include "Model.h"
 #include "Core/Random.h"
-#include "Therapies/SCTherapy.h"
+#include "Therapies/SCTherapy.hxx"
 #include "easylogging++.h"
 #include "Helpers/OSHelpers.h"
 #include "Helpers/StringHelpers.h"

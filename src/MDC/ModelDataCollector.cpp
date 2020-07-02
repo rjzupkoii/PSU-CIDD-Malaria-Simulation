@@ -16,7 +16,7 @@
 #include "Population/Population.h"
 #include "Population/ImmuneSystem.h"
 #include "Population/SingleHostClonalParasitePopulations.h"
-#include "Therapies/SCTherapy.h"
+#include "Therapies/SCTherapy.hxx"
 #include "Population/ClonalParasitePopulation.h"
 #include "Constants.h"
 

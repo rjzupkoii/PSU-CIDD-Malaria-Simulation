@@ -13,7 +13,7 @@
 
 #include "TherapyBuilder.h"
 #include "Therapy.h"
-#include "SCTherapy.h"
+#include "SCTherapy.hxx"
 #include "MACTherapy.h"
 
 TherapyBuilder::TherapyBuilder() = default;
