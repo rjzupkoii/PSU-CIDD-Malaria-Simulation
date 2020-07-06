@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   main.cpp
  * Author: Merlin
@@ -38,18 +32,13 @@ INITIALIZE_EASYLOGGINGPP
 using namespace std;
 
 typedef std::vector<double> EF50Key;
-
 typedef std::map<EF50Key, double> efficacy_map;
 
 double getEfficacyForTherapy(Genotype* g, int therapy_id, Model* p_model);
-
 void create_cli_option(CLI::App &app);
-
 EF50Key get_EC50_key(SCTherapy* p_therapy, Genotype* p_genotype);
 
-
 efficacy_map efficacies;
-
 std::vector<int> therapies;
 std::vector<int> genotypes;
 
@@ -59,63 +48,44 @@ double as_ec50 = -1.0;
 
 std::string input_file = "input_DxG.yml";
 
-
 inline double round(double val) {
   if (val < 0) return ceil(val - 0.5);
   return floor(val + 0.5);
 }
 
-/*
- * 
- */
 int main(int argc, char** argv) {
+  // Parse the command line
   CLI::App app{"PKPD model"};
   create_cli_option(app);
   CLI11_PARSE(app, argc, argv);
 
-
-  //Turn off logger
+  // Turn off logger
   el::Configurations default_conf;
   default_conf.setToDefault();
   default_conf.setGlobally(el::ConfigurationType::Enabled, "false");
   el::Loggers::reconfigureLogger("default", default_conf);
   START_EASYLOGGINGPP(argc, argv);
 
-  auto* p_model = new Model();
-  p_model->set_config_filename(input_file);
-  p_model->initialize(0, "");
-
-  if(as_iov != -1) {
-      p_model->CONFIG->as_iov() = as_iov;
-  } 
-
-  if(as_iiv != -1) {
-      for (auto &sd :p_model->CONFIG->drug_db()->at(0)->age_group_specific_drug_concentration_sd()) {
-          sd = as_iiv;
-      }
-  } 
-
-  if(as_ec50 != -1) {
-      p_model->CONFIG->EC50_power_n_table()[0][0] = pow(as_ec50, p_model->CONFIG->drug_db()->at(0)->n());
-  } 
-
-  // initialEC50Table
-  std::vector<std::vector<double>> EC50_table(Model::CONFIG->genotype_db()->size(),
-                                              std::vector<double>(Model::CONFIG->drug_db()->size(), 0));
-  std::cout << std::setprecision(5);
+  // Determine which therapies to work with
   int max_therapy_id{0}, min_therapy_id{0};
-
   if (therapies.empty()) {
+    std::cout << "No therapies indicated" << std::endl;
     min_therapy_id = 0;
     max_therapy_id = 0;
   } else if (therapies.size() == 1) {
+    std::cout << "Limiting to single therapy" << std::endl;
     min_therapy_id = therapies[0];
     max_therapy_id = therapies[0];
   } else if (therapies.size() == 2) {
+    std::cout << "Limiting to range of therapies" << std::endl;
     min_therapy_id = therapies[0];
     max_therapy_id = therapies[1];
+  } else {
+    std::cerr << "Error: invalid therapy range supplied" << std::endl;
+    return 1;
   }
 
+  // Determine which genotypes to 
   int max_genotype_id{0}, min_genotype_id{0};
   if (genotypes.empty()) {
     min_genotype_id = 0;
@@ -128,6 +98,30 @@ int main(int argc, char** argv) {
     max_genotype_id = genotypes[1];
   }
 
+  // Create the model, note that we are supplying a reporter so that the default 
+  // option is disabled.
+  auto* p_model = new Model();
+  p_model->set_reporter_type("Console");
+  p_model->set_config_filename(input_file);
+  p_model->initialize(0, "");
+
+  if(as_iov != -1) {
+      p_model->CONFIG->as_iov() = as_iov;
+  } 
+  if(as_iiv != -1) {
+      for (auto &sd :p_model->CONFIG->drug_db()->at(0)->age_group_specific_drug_concentration_sd()) {
+          sd = as_iiv;
+      }
+  } 
+  if(as_ec50 != -1) {
+      p_model->CONFIG->EC50_power_n_table()[0][0] = pow(as_ec50, p_model->CONFIG->drug_db()->at(0)->n());
+  } 
+
+  // initialEC50Table
+  std::vector<std::vector<double>> EC50_table(Model::CONFIG->genotype_db()->size(),
+                                              std::vector<double>(Model::CONFIG->drug_db()->size(), 0));
+  std::cout << std::setprecision(5);
+  
 
   std::cout << "ID\tGenotype";
   for (auto therapy_id = min_therapy_id; therapy_id <= max_therapy_id; therapy_id++) {
@@ -135,18 +129,12 @@ int main(int argc, char** argv) {
   }
   std::cout << std::endl;
 
-
   for (auto genotype_id = min_genotype_id; genotype_id < max_genotype_id; genotype_id++) {
-
     std::stringstream ss;
     auto p_genotype = (*Model::CONFIG->genotype_db())[genotype_id];
-   ss << *p_genotype << "\t";
-
+    ss << *p_genotype << "\t";
     for (auto therapy_id = min_therapy_id; therapy_id <= max_therapy_id; therapy_id++) {
-
       auto* therapy = dynamic_cast<SCTherapy*>(Model::CONFIG->therapy_db()[therapy_id]);
-
-
       EF50Key key = get_EC50_key(therapy, p_genotype);
       auto search = efficacies.find(key);
       if (search == efficacies.end()) {
@@ -156,19 +144,12 @@ int main(int argc, char** argv) {
       } else {
         ss << search->second << "\t";
       }
-
-//      double efficacy = getEfficacyForTherapy(p_genotype, therapy_id, p_model);
-//      ss << efficacy << "\t";
-
     }
     std::cout << ss.str() << std::endl;
   }
 
-
-//    std::cout << p_model->CONFIG->drug_db()->at(0)->age_group_specific_drug_concentration_sd()[0] << std::endl;
+  // Free and return
   delete p_model;
-
-
   return 0;
 }
 
@@ -188,24 +169,11 @@ EF50Key get_EC50_key(SCTherapy* p_therapy, Genotype* p_genotype) {
 }
 
 void create_cli_option(CLI::App &app) {
-  app.add_option("-t",
-                 therapies,
-                 "Get efficacies for range therapies [from to]");
-
-  app.add_option("-g",
-                 genotypes,
-                 "Get efficacies for range genotypes [from to]");
-
-  app.add_option("--iov",
-                 as_iov,
-                   "AS inter-occasion-variability");
-  app.add_option("--iiv",
-                   as_iiv,
-                   "AS inter-individual-variability");
-  app.add_option("--ec50",
-                  as_ec50,
-                  "EC50 for AS on C580 only");
-
+  app.add_option("-t", therapies, "Get efficacies for range therapies [from to]");
+  app.add_option("-g", genotypes, "Get efficacies for range genotypes [from to]");
+  app.add_option("--iov", as_iov, "AS inter-occasion-variability");
+  app.add_option("--iiv", as_iiv, "AS inter-individual-variability");
+  app.add_option("--ec50", as_ec50, "EC50 for AS on C580 only");
   app.add_option("-i,--input", input_file, "Input filename for DxG");
 }
 
