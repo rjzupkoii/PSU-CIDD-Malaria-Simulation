@@ -66,10 +66,17 @@ int main(int argc, char** argv) {
   el::Loggers::reconfigureLogger("default", default_conf);
   START_EASYLOGGINGPP(argc, argv);
 
+  // Create the model, note that we are supplying a reporter so that the default 
+  // option is disabled.
+  auto* p_model = new Model();
+  p_model->set_reporter_type("Console");
+  p_model->set_config_filename(input_file);
+  p_model->initialize(0, "");
+
   // Determine which therapies to work with
   int max_therapy_id{0}, min_therapy_id{0};
   if (therapies.empty()) {
-    std::cout << "No therapies indicated" << std::endl;
+    std::cout << "All therapies considered" << std::endl;
     min_therapy_id = 0;
     max_therapy_id = 0;
   } else if (therapies.size() == 1) {
@@ -80,12 +87,9 @@ int main(int argc, char** argv) {
     std::cout << "Limiting to range of therapies" << std::endl;
     min_therapy_id = therapies[0];
     max_therapy_id = therapies[1];
-  } else {
-    std::cerr << "Error: invalid therapy range supplied" << std::endl;
-    return 1;
   }
 
-  // Determine which genotypes to 
+  // Determine which genotypes to display
   int max_genotype_id{0}, min_genotype_id{0};
   if (genotypes.empty()) {
     min_genotype_id = 0;
@@ -97,13 +101,6 @@ int main(int argc, char** argv) {
     min_genotype_id = genotypes[0];
     max_genotype_id = genotypes[1];
   }
-
-  // Create the model, note that we are supplying a reporter so that the default 
-  // option is disabled.
-  auto* p_model = new Model();
-  p_model->set_reporter_type("Console");
-  p_model->set_config_filename(input_file);
-  p_model->initialize(0, "");
 
   if(as_iov != -1) {
       p_model->CONFIG->as_iov() = as_iov;
@@ -122,7 +119,6 @@ int main(int argc, char** argv) {
                                               std::vector<double>(Model::CONFIG->drug_db()->size(), 0));
   std::cout << std::setprecision(5);
   
-
   std::cout << "ID\tGenotype";
   for (auto therapy_id = min_therapy_id; therapy_id <= max_therapy_id; therapy_id++) {
     std::cout << "\t" << *Model::CONFIG->therapy_db()[therapy_id];
@@ -147,7 +143,7 @@ int main(int argc, char** argv) {
     }
     std::cout << ss.str() << std::endl;
   }
-
+  
   // Free and return
   delete p_model;
   return 0;
@@ -155,16 +151,11 @@ int main(int argc, char** argv) {
 
 EF50Key get_EC50_key(SCTherapy* p_therapy, Genotype* p_genotype) {
   EF50Key result;
-
   for (std::size_t j = 0; j < p_therapy->drug_ids.size(); ++j) {
-//    drug_type->ec50_map()
     auto ec50 = Model::CONFIG->EC50_power_n_table()[p_genotype->genotype_id()][p_therapy->drug_ids[j]];
-//    std::cout << p_therapy->drug_ids[j] << "-" << ec50 << std::endl;
     result.push_back(p_therapy->drug_ids[j]);
     result.push_back(ec50);
   }
-
-
   return result;
 }
 
