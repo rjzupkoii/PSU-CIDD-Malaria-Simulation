@@ -24,10 +24,12 @@ OBJECTPOOL_IMPL(SingleHostClonalParasitePopulations)
 SingleHostClonalParasitePopulations::SingleHostClonalParasitePopulations(Person* person) : person_(person),
                                                                                            parasites_(nullptr),
                                                                                            relative_effective_parasite_density_(
-                                                                                             nullptr),
+                                                                                               nullptr
+                                                                                           ),
                                                                                            log10_total_relative_density_(
-                                                                                             ClonalParasitePopulation::
-                                                                                             LOG_ZERO_PARASITE_DENSITY) {}
+                                                                                               ClonalParasitePopulation::
+                                                                                               LOG_ZERO_PARASITE_DENSITY
+                                                                                           ) { }
 
 void SingleHostClonalParasitePopulations::init() {
   parasites_ = new std::vector<ClonalParasitePopulation*>();
@@ -49,10 +51,10 @@ SingleHostClonalParasitePopulations::~SingleHostClonalParasitePopulations() {
 }
 
 void SingleHostClonalParasitePopulations::clear() {
-  if (parasites_->empty()) return;
+  if (parasites_->empty()) { return; }
   remove_all_infection_force();
 
-  for (auto &parasite : *parasites_) {
+  for (auto& parasite : *parasites_) {
     delete parasite;
   }
   parasites_->clear();
@@ -71,7 +73,7 @@ void SingleHostClonalParasitePopulations::remove(ClonalParasitePopulation* blood
   remove(blood_parasite->index());
 }
 
-void SingleHostClonalParasitePopulations::remove(const int &index) {
+void SingleHostClonalParasitePopulations::remove(const int& index) {
   ClonalParasitePopulation* bp = parasites_->at(index);
   //    std::cout << parasites_.size() << std::endl;
   if (bp->index() != index) {
@@ -126,8 +128,8 @@ void SingleHostClonalParasitePopulations::add_all_infection_force() {
   change_all_infection_force(1);
 }
 
-void SingleHostClonalParasitePopulations::change_all_infection_force(const double &sign) {
-  if (person_ == nullptr) return;
+void SingleHostClonalParasitePopulations::change_all_infection_force(const double& sign) {
+  if (person_ == nullptr) { return; }
 
   if (NumberHelpers::is_equal(log10_total_relative_density_, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) {
     //do nothing
@@ -135,22 +137,11 @@ void SingleHostClonalParasitePopulations::change_all_infection_force(const doubl
   }
 
   for (auto p = 0; p < Model::CONFIG->number_of_parasite_types(); p++) {
-    person_->notify_change_in_force_of_infection(sign, p, relative_effective_parasite_density_->at(p),
-                                                 log10_total_relative_density_);
+    person_->notify_change_in_force_of_infection(
+        sign, p, relative_effective_parasite_density_->at(p),
+        log10_total_relative_density_
+    );
   }
-
-  //
-  //    for (int i = 0; i < parasites_->size(); i++) {
-  //        person_->notify_change_in_force_of_infection(sign, parasites_->at(i)->genotype()->genotype_id(), relative_parasite_density[i], log10_total_relative_density);
-  //    }
-
-
-  //    double log10_total_relative_density = get_log10_total_relative_density();
-  //
-  //    for (int i = 0; i < parasites_->size(); i++) {
-  //        person_->notify_change_in_force_of_infection(sign, parasites_->at(i)->genotype()->genotype_id(), parasites_->at(i)->get_log10_relative_density(), log10_total_relative_density);
-  //    }
-
 }
 
 void SingleHostClonalParasitePopulations::update_relative_effective_parasite_density_without_free_recombination() {
@@ -166,9 +157,9 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
   }
 
   for (auto i = 0; i < relative_parasite_density.size(); i++) {
-    if (NumberHelpers::is_equal(relative_parasite_density[i], 0.0)) continue;
+    if (NumberHelpers::is_equal(relative_parasite_density[i], 0.0)) { continue; }
     relative_effective_parasite_density_->at(
-      parasites_->at(i)->genotype()->genotype_id()) += relative_parasite_density[i];
+        parasites_->at(i)->genotype()->genotype_id()) += relative_parasite_density[i];
 
   }
 
@@ -187,9 +178,9 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
   }
 
   for (auto i = 0; i < relative_parasite_density.size(); i++) {
-    if (NumberHelpers::is_equal(relative_parasite_density[i], 0.0)) continue;
+    if (NumberHelpers::is_equal(relative_parasite_density[i], 0.0)) { continue; }
     for (auto j = i; j < relative_parasite_density.size(); j++) {
-      if (NumberHelpers::is_equal(relative_parasite_density[j], 0.0)) continue;
+      if (NumberHelpers::is_equal(relative_parasite_density[j], 0.0)) { continue; }
       if (i == j) {
         const auto weight = relative_parasite_density[i] * relative_parasite_density[i];
         relative_effective_parasite_density_->at(parasites_->at(i)->genotype()->genotype_id()) += weight;
@@ -199,22 +190,26 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
         const auto id_f = parasites_->at(i)->genotype()->genotype_id();
         const auto id_m = parasites_->at(j)->genotype()->genotype_id();
         for (auto p = 0; p < Model::CONFIG->number_of_parasite_types(); p++) {
-          if (Model::CONFIG->genotype_db()->get_offspring_density(id_f, id_m, p) == 0) continue;
+          if (Model::CONFIG->genotype_db()->get_offspring_density(id_f, id_m, p) == 0) { continue; }
           relative_effective_parasite_density_->at(p) +=
-            weight * Model::CONFIG->genotype_db()->get_offspring_density(id_f, id_m, p);
+              weight * Model::CONFIG->genotype_db()->get_offspring_density(id_f, id_m, p);
         }
       }
     }
   }
 }
 
-void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<double> &relative_parasite_density,
-                                                                 double &log10_total_relative_density) const {
+void SingleHostClonalParasitePopulations::get_parasites_profiles(
+    std::vector<double>& relative_parasite_density,
+    double& log10_total_relative_density
+) const {
   auto i = 0;
 
   while ((i < parasites_->size()) &&
-         (NumberHelpers::is_equal(parasites_->at(i)->get_log10_relative_density(),
-                                  ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY))) {
+         (NumberHelpers::is_equal(
+             parasites_->at(i)->get_log10_relative_density(),
+             ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY
+         ))) {
     relative_parasite_density[i] = 0.0;
     i++;
   }
@@ -250,8 +245,10 @@ double SingleHostClonalParasitePopulations::get_log10_total_relative_density() {
   auto i = 0;
 
   while ((i < parasites_->size()) &&
-         (NumberHelpers::is_equal(parasites_->at(i)->get_log10_relative_density(),
-                                  ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY))) {
+         (NumberHelpers::is_equal(
+             parasites_->at(i)->get_log10_relative_density(),
+             ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY
+         ))) {
     i++;
   }
 
@@ -283,7 +280,7 @@ int SingleHostClonalParasitePopulations::size() {
 
 bool SingleHostClonalParasitePopulations::contain(ClonalParasitePopulation* blood_parasite) {
 
-  for (auto &parasite : *parasites_) {
+  for (auto& parasite : *parasites_) {
     if (blood_parasite == parasite) {
       return true;
     }
@@ -292,8 +289,10 @@ bool SingleHostClonalParasitePopulations::contain(ClonalParasitePopulation* bloo
   return false;
 }
 
-void SingleHostClonalParasitePopulations::change_all_parasite_update_function(ParasiteDensityUpdateFunction* from,
-                                                                              ParasiteDensityUpdateFunction* to) const {
+void SingleHostClonalParasitePopulations::change_all_parasite_update_function(
+    ParasiteDensityUpdateFunction* from,
+    ParasiteDensityUpdateFunction* to
+) const {
   for (auto* parasite : *parasites_) {
     if (parasite->update_function() == from) {
       parasite->set_update_function(to);
@@ -322,7 +321,7 @@ void SingleHostClonalParasitePopulations::clear_cured_parasites() {
 }
 
 void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in_blood) const {
-  for (auto &blood_parasite : *parasites_) {
+  for (auto& blood_parasite : *parasites_) {
     auto* new_genotype = blood_parasite->genotype();
 
     double percent_parasite_remove = 0;
@@ -357,7 +356,17 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
       if (new_genotype != blood_parasite->genotype()) {
         //mutation occurs
         Model::DATA_COLLECTOR->record_1_mutation(person_->location(), blood_parasite->genotype(), new_genotype);
-        //                std::cout << bloodParasite->genotype()->genotype_id() << "==>" << new_genotype->genotype_id() << std::endl;
+//        std::cout
+//            << Model::SCHEDULER->current_time()
+//            << "\t"
+//            << blood_parasite->genotype()->genotype_id()
+//            << "\t"
+//            << new_genotype->genotype_id()
+//            << "\t"
+//            << blood_parasite->genotype()->get_EC50_power_n(drug->drug_type())
+//            << "\t"
+//            << new_genotype->get_EC50_power_n(drug->drug_type())
+//            << std::endl;
         blood_parasite->set_genotype(new_genotype);
       }
 
@@ -373,7 +382,7 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
 }
 
 bool SingleHostClonalParasitePopulations::has_detectable_parasite() const {
-  for (auto &parasite : *parasites_) {
+  for (auto& parasite : *parasites_) {
     if (parasite->last_update_log10_parasite_density() >=
         Model::CONFIG->parasite_density_level().log_parasite_density_detectable_pfpr) {
       return true;
@@ -383,7 +392,7 @@ bool SingleHostClonalParasitePopulations::has_detectable_parasite() const {
 }
 
 bool SingleHostClonalParasitePopulations::is_gametocytaemic() const {
-  for (auto &parasite : *parasites_) {
+  for (auto& parasite : *parasites_) {
     if (parasite->gametocyte_level() > 0) {
       return true;
     }
