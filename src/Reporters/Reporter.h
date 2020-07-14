@@ -24,7 +24,8 @@ class Reporter {
     CONSOLE,
     GUI,
     MONTHLY_REPORTER,
-    MMC_REPORTER
+    MMC_REPORTER,
+    TACT_REPORTER
   };
  public:
   static std::map<std::string, ReportType> ReportTypeMap;

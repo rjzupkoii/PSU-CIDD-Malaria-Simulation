@@ -14,13 +14,13 @@ void ModifyNestedMFTEvent::execute() {
   if (Model::TREATMENT_STRATEGY->get_type()==IStrategy::NestedMFTMultiLocation) {
     new_strategy = Model::CONFIG->strategy_db()[strategy_id];
     dynamic_cast<NestedMFTMultiLocationStrategy *>(Model::TREATMENT_STRATEGY)->strategy_list[0] = new_strategy;
-    new_strategy->adjust_started_time_point(Model::SCHEDULER->current_time());
+//    new_strategy->adjust_started_time_point(Model::SCHEDULER->current_time());
   }
 
   if (Model::TREATMENT_STRATEGY->get_type()==IStrategy::NestedMFT) {
     new_strategy = Model::CONFIG->strategy_db()[strategy_id];
     dynamic_cast<NestedMFTStrategy *>(Model::TREATMENT_STRATEGY)->strategy_list[0] = new_strategy;
-    new_strategy->adjust_started_time_point(Model::SCHEDULER->current_time());
+//    new_strategy->adjust_started_time_point(Model::SCHEDULER->current_time());
   }
 
   if (new_strategy==nullptr) {

@@ -76,6 +76,11 @@ PROPERTY_REF(DoubleVector, cumulative_discounted_NTF_by_location)
 
 PROPERTY_REF(DoubleVector, cumulative_NTF_by_location)
 
+PROPERTY_REF(LongVector, cumulative_TF_by_location)
+
+PROPERTY_REF(LongVector, cumulative_number_treatments_by_location)
+
+
 PROPERTY_REF(IntVector, today_TF_by_location)
 
 PROPERTY_REF(IntVector, today_number_of_treatments_by_location)
@@ -161,6 +166,8 @@ PROPERTY_REF(IntVector2, number_of_malaria_deaths_by_location_age_year)
 
 PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
+PROPERTY_REF(IntVector, monthly_number_of_TF_by_location);
+
 PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
 
 PROPERTY_REF(IntVector, monthly_number_of_clinical_episode_by_location);
@@ -196,6 +203,7 @@ PROPERTY_REF(IntVector2, total_tf_60_by_therapy)
 PROPERTY_REF(double, mean_moi)
 
 PROPERTY_REF(LongVector, number_of_mutation_events_by_year)
+
 PROPERTY_REF(long, current_number_of_mutation_events)
 
 
@@ -215,31 +223,33 @@ public:
 
   void monthly_update();
 
-  virtual void collect_number_of_bites(const int &location, const int &number_of_bites);
+  virtual void collect_number_of_bites(const int& location, const int& number_of_bites);
 
-  virtual void collect_1_clinical_episode(const int &location, const int &age, const int &age_class);
+  virtual void collect_1_clinical_episode(const int& location, const int& age, const int& age_class);
 
-  virtual void update_person_days_by_years(const int &location, const int &days);
+  virtual void update_person_days_by_years(const int& location, const int& days);
 
   void calculate_eir();
 
   void
-  record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten, const int &age_group,
-                 const int &age);
+  record_1_death(
+      const int& location, const int& birthday, const int& number_of_times_bitten, const int& age_group,
+      const int& age
+  );
 
-  void record_1_malaria_death(const int &location, const int &age);
+  void record_1_malaria_death(const int& location, const int& age);
 
   void calculate_percentage_bites_on_top_20();
 
-  void record_1_TF(const int &location, const bool &by_drug);
+  void record_1_TF(const int& location, const bool& by_drug);
 
-  void record_1_treatment(const int &location, const int &age, const int &therapy_id);
+  void record_1_treatment(const int& location, const int& age, const int& therapy_id);
 
-  void record_1_non_treated_case(const int &location, const int &age);
+  void record_1_non_treated_case(const int& location, const int& age);
 
-  void record_1_mutation(const int &location, Genotype* from, Genotype* to);
+  void record_1_mutation(const int& location, Genotype* from, Genotype* to);
 
-  void record_1_migration(Person* pPerson, const int &from, const int &to);
+  void record_1_migration(Person* pPerson, const int& from, const int& to);
 
   void begin_time_step();
 
@@ -248,19 +258,19 @@ public:
   void update_UTL_vector();
 
   //    void collect_1_non_resistant_treatment(const int& therapy_id);
-  void record_1_treatment_failure_by_therapy(const int &location, const int &age, const int &therapy_id);
+  void record_1_treatment_failure_by_therapy(const int& location, const int& age, const int& therapy_id);
 
-  void record_1_treatment_success_by_therapy(const int &therapy_id);
+  void record_1_treatment_success_by_therapy(const int& therapy_id);
 
   void update_after_run();
 
 
   void record_AMU_AFU(Person* person, Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite);
 
-  double get_blood_slide_prevalence(const int &location, const int &age_from, const int &age_to);
+  double get_blood_slide_prevalence(const int& location, const int& age_from, const int& age_to);
 
 private:
-  void update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten);
+  void update_average_number_bitten(const int& location, const int& birthday, const int& number_of_times_bitten);
 
 };
 
