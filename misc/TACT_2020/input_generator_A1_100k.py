@@ -22,7 +22,7 @@ data = yaml.load(stream);
 stream.close();
 
  # COMMENT IT LATER
-data['ending_date'] = '2022/1/1';
+# data['ending_date'] = '2022/1/1';
 
 location_info =  [[0, 0, 0]];
 number_of_locations = len(location_info);
