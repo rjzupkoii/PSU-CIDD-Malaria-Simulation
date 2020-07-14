@@ -132,6 +132,11 @@ events:
   - {day: 2022/1/1, mutation_probability: 0.001983}
   name: turn_on_mutation
 - info:
+  - location: 0
+    parasite_info:
+    - {duration: 10, genotype_id: -1, number_of_cases: 1, start_day: 2012/1/1}
+  name: introduce_parasites_periodically
+- info:
   - {day: 2022/1/1, strategy_id: 4}
   name: modify_nested_mft_strategy
 external_population_circulation_information:
