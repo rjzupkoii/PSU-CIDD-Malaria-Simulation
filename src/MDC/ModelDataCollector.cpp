@@ -491,8 +491,11 @@ void ModelDataCollector::calculate_eir() {
 
 void ModelDataCollector::collect_1_clinical_episode(const int& location, const int& age, const int& age_class) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
-    cumulative_clinical_episodes_by_location_[location]++;
     monthly_number_of_clinical_episode_by_location_[location] += 1;
+  }
+
+  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
+    cumulative_clinical_episodes_by_location_[location]++;
 
     if (age < 100) {
       cumulative_clinical_episodes_by_location_age_[location][age]++;
