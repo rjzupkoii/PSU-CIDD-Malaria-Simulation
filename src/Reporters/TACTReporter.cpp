@@ -48,12 +48,8 @@ void TACTReporter::monthly_report() {
     ss << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[loc] * 100 << sep;
   }
 
-  ss
-      << Model::DATA_COLLECTOR->current_number_of_mutation_events() - cumulative_number_of_mutation_events_last_month
-      << sep;
-  cumulative_number_of_mutation_events_last_month = Model::DATA_COLLECTOR->current_number_of_mutation_events();
-
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); ++loc) {
+    ss << Model::DATA_COLLECTOR->monthly_number_of_mutation_events_by_location()[loc] << sep;
     ss << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[loc] << sep;
     ss << Model::DATA_COLLECTOR->monthly_number_of_TF_by_location()[loc] << sep;
     ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;

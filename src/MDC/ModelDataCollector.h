@@ -172,6 +172,8 @@ PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
 
 PROPERTY_REF(IntVector, monthly_number_of_clinical_episode_by_location);
 
+PROPERTY_REF(IntVector, monthly_number_of_mutation_events_by_location);
+
 PROPERTY_REF(IntVector2, popsize_by_location_age)
 
 PROPERTY_REF(double, tf_at_15)
@@ -204,7 +206,7 @@ PROPERTY_REF(double, mean_moi)
 
 PROPERTY_REF(LongVector, number_of_mutation_events_by_year)
 
-PROPERTY_REF(long, current_number_of_mutation_events)
+PROPERTY_REF(long, current_number_of_mutation_events_in_this_year)
 
 
   static const int number_of_reported_MOI = 8;
