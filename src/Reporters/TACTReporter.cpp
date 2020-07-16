@@ -91,14 +91,15 @@ void TACTReporter::after_run() {
       ss << Model::DATA_COLLECTOR->EIR_by_location_year()[loc].back() << sep;
     }
     ss << Model::TREATMENT_COVERAGE->p_treatment_less_than_5[0] << sep;
-    ss << "FLT" << sep;
-    ss << "TACT" << sep;
-    ss << "importation" << sep;
     ss << Model::DATA_COLLECTOR->cumulative_number_treatments_by_location()[loc] << sep;
     ss << Model::DATA_COLLECTOR->cumulative_TF_by_location()[loc] << sep;
     ss << Model::DATA_COLLECTOR->cumulative_clinical_episodes_by_location()[loc] << sep;
+    ss << "FLT" << sep;
+    ss << "TACT" << sep;
+    ss << "importation" << sep;
   }
 
+  CLOG(INFO, "summary_reporter") << ss.str();
   ss.str("");
 }
 
