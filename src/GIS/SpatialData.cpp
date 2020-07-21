@@ -259,6 +259,9 @@ void SpatialData::load_files(const YAML::Node &node) {
     if (node[TRAVEL_RASTER]) {
         load(node[TRAVEL_RASTER].as<std::string>(), SpatialData::SpatialFileType::Travel);
     }
+    if (node[ECOCLIMATIC_RASTER]) {
+        load(node[ECOCLIMATIC_RASTER].as<std::string>(), SpatialData::SpatialFileType::Ecoclimatic);
+    }
     if (node[TREATMENT_RATE_UNDER5]) {
         load(node[TREATMENT_RATE_UNDER5].as<std::string>(), SpatialData::SpatialFileType::PrTreatmentUnder5);
     }

@@ -30,6 +30,9 @@ class SpatialData {
             // Travel time data
             Travel,
 
+            // Eco-climatic zones that are used for seasonal variation
+            Ecoclimatic,
+
             // Probability of treatment, under 5
             PrTreatmentUnder5,
 
@@ -66,6 +69,7 @@ class SpatialData {
         const std::string LOCATION_RASTER = "location_raster";
         const std::string POPULATION_RASTER = "population_raster";
         const std::string TRAVEL_RASTER = "travel_raster";
+        const std::string ECOCLIMATIC_RASTER = "ecoclimatic_raster";
         const std::string TREATMENT_RATE_UNDER5 = "pr_treatment_under5";
         const std::string TREATMENT_RATE_OVER5 = "pr_treatment_over5";
 
