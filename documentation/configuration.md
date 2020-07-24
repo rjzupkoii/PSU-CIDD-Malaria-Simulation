@@ -21,7 +21,7 @@ seasonal_info:
 ```
 
 **enable** (true | false) : enables or disables seasonality in the simulation.\
-**raster** (true | false) : (**Version 4.0**) indicates that a raster file should be used to set the correct rate for each pixel.\
+**raster** (true | false) : (*Version 4.0*) indicates that a raster file should be used to set the correct rate for each pixel.\
 **a**, **phi**, **min_value** : arrays of one to *n* `double` values that inform the seasonality period.\
   *Version 3.x*: when one value is provided, it is used for all locations, otherwise a value must be provided for each location\
   *Version 4.0*: if `raster` is true then each index in the array is used for the pixel coded with that value, otherwise the first value is used for all pixels.\
