@@ -37,7 +37,7 @@ sudo make install
 ```
 
 ## WSL on the PSU VPN
-One minor problem that may occure while on the PSU VPN is that psu.edu domains are not resolved correctly. This is usually due to the `/etc/resolv.conf` file not being updated correctly by WSL. To manually update the file, launch PowerShell and run,
+One minor problem that may occur while on the PSU VPN is that psu.edu domains are not resolved correctly. This is usually due to the `/etc/resolv.conf` file not being updated correctly by WSL. To manually update the file, launch PowerShell and run,
 
 ```PowerShell
 Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandPropert ServerAddresses
