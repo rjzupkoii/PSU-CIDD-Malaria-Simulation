@@ -1,9 +1,10 @@
 /*
  * CustomConfigItem.cpp
  * 
- * Implement the customer configuration items. 
- * 
- * Note that the compiler has a hard time determining the correct data type for iterators at times, so they may need to be manually supplied.
+ * Implement the custom configuration items. 
+ *  
+ * NOTE that the compiler has a hard time determining the correct data type for
+ *      iterators at times, so they may need to be manually supplied.
  */
 
 #define _USE_MATH_DEFINES
@@ -60,33 +61,6 @@ void spatial_distance_matrix::set_value(const YAML::Node &node) {
     }
   }
 
-}
-
-void seasonal_info::set_value(const YAML::Node &node) {
-  auto seasonal_info_node = node[name_];
-  value_.A.clear();
-  value_.B.clear();
-  value_.C.clear();
-  value_.phi.clear();
-  value_.min_value.clear();
-  value_.enable = seasonal_info_node["enable"].as<bool>();
-
-  for (auto i = 0ul; i < config_->number_of_locations(); i++) {
-    auto input_loc = seasonal_info_node["a"].size() < config_->number_of_locations() ? 0 : i;
-    value_.A.push_back(seasonal_info_node["a"][input_loc].as<double>());
-
-    const auto period = seasonal_info_node["period"].as<double>();
-    auto B = 2 * M_PI / period;
-
-    value_.B.push_back(B);
-
-    const auto phi = seasonal_info_node["phi"][input_loc].as<float>();
-    value_.phi.push_back(phi);
-    auto C = -phi * B;
-    value_.C.push_back(C);
-
-    value_.min_value.push_back(seasonal_info_node["min_value"][input_loc].as<float>());
-  }
 }
 
 spatial_model::~spatial_model() {

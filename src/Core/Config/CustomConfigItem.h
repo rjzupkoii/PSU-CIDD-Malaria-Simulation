@@ -1,3 +1,12 @@
+/*
+ * CustomConfigItem.h
+ * 
+ * Define the various custom configuration items in the YAML file.
+ * 
+ * NOTE circulate dependencies will arise if the class defintions are pulled 
+ *      out of this file. However, to keep things organized some of the 
+ *      implimeation takes place in [classname].cpp files.  
+ */
 #ifndef CUSTOMCONFIGITEM_H
 #define CUSTOMCONFIGITEM_H
 
@@ -55,30 +64,32 @@ class spatial_distance_matrix : public ConfigItem<std::vector<std::vector<double
   void set_value(const YAML::Node &node) override;
 };
 
+// This class defines how seasonality works in the model
 class seasonal_info : public IConfigItem {
- DISALLOW_COPY_AND_ASSIGN(seasonal_info)
+  DISALLOW_COPY_AND_ASSIGN(seasonal_info)
+  DISALLOW_MOVE(seasonal_info)
 
- DISALLOW_MOVE(seasonal_info)
+  public:
+    SeasonalInfo value_{};
+    explicit seasonal_info(const std::string &name, SeasonalInfo default_value, Config *config = nullptr) 
+      : IConfigItem(config, name), value_{ std::move(default_value) } {}
+    virtual ~seasonal_info() = default;
 
- public:
-  SeasonalInfo value_{};
- public:
-  //constructor
-  explicit seasonal_info(const std::string &name, SeasonalInfo default_value, Config *config = nullptr) : IConfigItem(
-      config, name),
-                                                                                                          value_{
-                                                                                                              std::move(
-                                                                                                                  default_value)
-                                                                                                          } {}
+    // Return the seasonal information
+    virtual SeasonalInfo &operator()() { return value_; }
 
-  // destructor
-  virtual ~seasonal_info() = default;
+    // Set the values from the configuration file
+    void set_value(const YAML::Node &node) override;
 
-  virtual SeasonalInfo &operator()() {
-    return value_;
-  }
+  private:
+    // Clear the current seasonal info
+    void clear();
 
-  void set_value(const YAML::Node &node) override;
+    // Set the values based upon the contents of a raster file.
+    void set_from_raster(const YAML::Node &node); 
+
+    // Set the period for a single location given the index
+    void set_seasonal_period(const YAML::Node &node, int index);
 };
 
 namespace Spatial {
