@@ -8,22 +8,22 @@ The malaria simulation (MaSim) uses [YAML](https://yaml.org/) to load configurat
 ## Nodes
 
 ### Model Operation Nodes 
-The following nodes govern how the model executes at a low level.\
+The following nodes govern how the model executes at a low level.
 
-**connection_string** (string) : (*Version 4.0*) The connection string for the PostgreSQL database that stores the simulation data.\
+**connection_string** (string) : (*Version 4.0*) The connection string for the PostgreSQL database that stores the simulation data.
 
 
 ### Model Configuration Notes
-The following nodes contain the settings for the simulation.\
+The following nodes contain the settings for the simulation.
 
 **transmission_parameter** (float) :
 
 **number_of_age_classes** (integer) : The size of the `age_structure` array.\
-**age_structure** : An array of integer values that corresponds to the oldest age that defines a break in the age structure.\
+**age_structure** : An array of integer values that corresponds to the oldest age that defines a break in the age structure.
 
 
 ### raster_db
-*Version 4.0* This node contains data related to the the spatial organization of the model to include population distributions and raster files.\
+*Version 4.0* This node contains data related to the the spatial organization of the model to include population distributions and raster files.
 
 *Usage*\
 The use of the `raster_db` node will override the use of the `location_db` and errors or inconsistences will occurs if both are used at the same time. All of the raster files must have the same header information as defined in the [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm). Furthermore, while any arbitrary value may be used for the `NODATA_VALUE` it is recommended that the standard value of `-9999` be used.
@@ -51,7 +51,7 @@ raster_db:
 **location_raster** (string) : May contain arbitrary numeric values and is used by the simulation to convert the X-Y coordinates to their linear values. Only need if it is th *only* raster file provided.\
 **population_raster** (string) : Contains the number of individuals (integer) in each cell within the simulation.\
 **travel_raster** (string) : Contains the friction surface (float) that is used for determining the likelihood of travel to a given cell.\
-**ecoclimatic_raster** (string) : Contains the ecoclimatic zone value for each cell. The ecoclimatic zone value should be a zero-indexed integer that corresponds to the `seasonal_info` value to use.\
+**ecoclimatic_raster** (string) : Contains the ecoclimatic zone value for each cell. The ecoclimatic zone value should be a zero-indexed integer that corresponds to the `seasonal_info` value to use.
 
 **cell_size** (float) : The size of each cell along one axis, in kilometers.\
 **age_distribution_by_location** : An array of arrays which contains floating point values corresponding to the age distribution (as defined by `age_structure`).\
