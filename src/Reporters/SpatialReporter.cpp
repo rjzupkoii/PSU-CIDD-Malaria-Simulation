@@ -56,7 +56,7 @@ void SpatialReporter::monthly_report() {
     monthly << Model::SCHEDULER->current_time() << Tsv::sep;
     monthly << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << Tsv::sep;
     monthly << date::format("%Y\t%m\t%d", Model::SCHEDULER->calendar_date) << Tsv::sep;
-    monthly << Model::MODEL->get_seasonal_factor(Model::SCHEDULER->calendar_date, 0) << Tsv::sep;
+    monthly << seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0) << Tsv::sep;
     monthly << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 1) << Tsv::sep;
     monthly << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 10) << Tsv::sep;
     monthly << Model::POPULATION->size() << Tsv::sep;

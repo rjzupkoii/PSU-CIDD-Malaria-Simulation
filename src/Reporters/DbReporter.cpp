@@ -146,7 +146,7 @@ void DbReporter::monthly_report() {
     // Prepare the summary query
     auto days_elapsed = Model::SCHEDULER->current_time();
     auto model_time = std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date);
-    auto seasonal_factor = Model::MODEL->get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
+    auto seasonal_factor = seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
     auto treatment_failures = 0;
     auto beta = 0;
     std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor, treatment_failures, beta);

@@ -81,6 +81,9 @@ class seasonal_info : public IConfigItem {
     // Set the values from the configuration file
     void set_value(const YAML::Node &node) override;
 
+    // Return the seasonal factor for the given day and location, based upon the loaded configuration.
+    static double get_seasonal_factor(const date::sys_days &today, const int &location);
+
   private:
     // Clear the current seasonal info
     void clear();

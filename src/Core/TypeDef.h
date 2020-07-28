@@ -70,11 +70,12 @@ typedef std::vector<IStrategy*> StrategyPtrVector;
 
 struct SeasonalInfo {
   bool enable{false};
+
   DoubleVector A;
   DoubleVector B;
-  DoubleVector C;
   DoubleVector phi;
-  DoubleVector min_value;
+  DoubleVector period;
+  DoubleVector base;
 
   friend std::ostream &operator<<(std::ostream &os, const SeasonalInfo &seasonal_info);
 };

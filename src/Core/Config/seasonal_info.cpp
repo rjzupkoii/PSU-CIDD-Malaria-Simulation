@@ -1,22 +1,46 @@
 /*
  * seasonal_info.cpp
  * 
- * Implement the loading of the seasonal_info YAML node.
+ * Implement the loading of the seasonal_info YAML node as well as the seasonal factor equation / algorihtm.
  */ 
 
 #include <cmath>
 
 #include "CustomConfigItem.h"
 #include "Config.h"
+#include "Constants.h"
 #include "GIS/AscFile.h"
 #include "GIS/SpatialData.h"
+#include "Helpers/TimeHelpers.h"
+#include "Model.h"
 
 void seasonal_info::clear() {
   value_.A.clear();
   value_.B.clear();
-  value_.C.clear();
   value_.phi.clear();
-  value_.min_value.clear();
+  value_.period.clear();
+  value_.base.clear();
+}
+
+double seasonal_info::get_seasonal_factor(const date::sys_days &today, const int &location) {
+  // If the seasonal factor has not been enabled, return one
+  if (!Model::CONFIG->seasonal_info().enable) { return 1; } 
+
+  // Note what day of the year it is
+  int day = TimeHelpers::day_of_year(today);
+
+  // Seasonal factor is determined by the algorithm:
+  // 
+  // multiplier = a + b * sin((2 * pi * (phi - t)) / period);
+  // multiplier(multiplier < 0) = 0;
+  // multiplier = base + multiplier;
+  auto multiplier = Model::CONFIG->seasonal_info().A[location] + Model::CONFIG->seasonal_info().B[location] * 
+    sin(2 * M_PI * (Model::CONFIG->seasonal_info().phi[location] - day) / Model::CONFIG->seasonal_info().period[location]);
+  multiplier = (multiplier < 0) ? 0 : multiplier;
+  multiplier += Model::CONFIG->seasonal_info().base[location];
+
+  // Return the multiplier
+  return multiplier;
 }
 
 void seasonal_info::set_value(const YAML::Node &node) {
@@ -31,8 +55,8 @@ void seasonal_info::set_value(const YAML::Node &node) {
   clear();
 
   // Verify our node data
-  if (!(seasonal_info_node["a"].size() == seasonal_info_node["phi"].size() == seasonal_info_node["min_value"].size())) {
-    throw std::invalid_argument("seasonal_info nodes 'a', 'phi', and 'min_value' are not the same size.");
+  if (!(seasonal_info_node["a"].size() == seasonal_info_node["a"].size() == seasonal_info_node["phi"].size() == seasonal_info_node["period"].size() == seasonal_info_node["base"].size())) {
+      throw std::invalid_argument("seasonal_info nodes must be the same size.");
   }
 
   value_.enable = seasonal_info_node["enable"].as<bool>();
@@ -54,8 +78,8 @@ void seasonal_info::set_from_raster(const YAML::Node &node) {
     clear();
     
     // Verify our node data, note a single size
-    if (!(seasonal_info_node["a"].size() == seasonal_info_node["phi"].size() == seasonal_info_node["min_value"].size())) {
-        throw std::invalid_argument("seasonal_info nodes 'a', 'phi', and 'min_value' are not the same size.");
+    if (!(seasonal_info_node["a"].size() == seasonal_info_node["a"].size() == seasonal_info_node["phi"].size() == seasonal_info_node["period"].size() == seasonal_info_node["base"].size())) {
+        throw std::invalid_argument("seasonal_info nodes must be the same size.");
     }
     auto size = seasonal_info_node["a"].size();
 
@@ -78,17 +102,9 @@ void seasonal_info::set_from_raster(const YAML::Node &node) {
 }
 
 void seasonal_info::set_seasonal_period(const YAML::Node &node, int index) {
-    value_.A.push_back(node["a"][index].as<double>());
-
-    const auto period = node["period"].as<double>();
-    auto B = 2 * M_PI / period;
-    value_.B.push_back(B);
-
-    const auto phi = node["phi"][index].as<float>();
-    value_.phi.push_back(phi);
-
-    auto C = -phi * B;
-    value_.C.push_back(C);
-
-    value_.min_value.push_back(node["min_value"][index].as<float>());
+  value_.A.push_back(node["a"][index].as<double>());
+  value_.B.push_back(node["b"][index].as<double>());
+  value_.phi.push_back(node["phi"][index].as<double>());
+  value_.period.push_back(node["period"][index].as<double>());
+  value_.base.push_back(node["base"][index].as<double>());
 }
