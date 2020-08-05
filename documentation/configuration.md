@@ -26,7 +26,9 @@ The following nodes contain the settings for the simulation.
 *Version 4.0* This node contains data related to the the spatial organization of the model to include population distributions and raster files.
 
 *Usage*\
-The use of the `raster_db` node will override the use of the `location_db` and errors or inconsistences will occurs if both are used at the same time. All of the raster files must have the same header information as defined in the [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm). Furthermore, while any arbitrary value may be used for the `NODATA_VALUE` it is recommended that the standard value of `-9999` be used.
+The use of the `raster_db` node will override the use of the `location_db` and errors or inconsistences will occurs if both are used at the same time. All of the raster files must have the same header information as defined in the [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm) and the same number of defined pixels. A `std::runtime_error` may be generated if the number of data pixels in a given raster exceeds, or is less than a previously loaded raster.
+
+Note that while any arbitrary value may be used for the `NODATA_VALUE` it is recommended that the standard value of `-9999` be used.
 
 ```YAML
 raster_db:
@@ -60,7 +62,6 @@ raster_db:
 **p_treatment_for_less_than_5_by_location**, **p_treatment_for_more_than_5_by_location** : (*Deprecated in Version 4.0*) Contains the access to treatment for individuals under or over (respectively) five years (60 months). If the array length is one, then the value supplied (float) is used for all locations in the model. Otherwise, each element in the array is presumed to correspond to a different location. 
 
 **beta_by_location** : (*Array deprecated in Version 4.0, single value recommended or raster*) Contains the beta value (float) to be used in the simulation. If the array length is one, then the value supplied (float) is used for all locations in the model. Otherwise, each element in the array is presumed to correspond to a different location. 
-
 
 ### location_db
 To Be Written.

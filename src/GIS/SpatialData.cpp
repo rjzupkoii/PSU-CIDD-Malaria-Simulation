@@ -205,12 +205,18 @@ void SpatialData::load_raster(SpatialFileType type) {
 
     // Grab a reference to the location_db to work with
     auto& location_db = Model::CONFIG->location_db();
+    auto count = Model::CONFIG->number_of_locations();    
 
     // Iterate through the raster and locations to set the value
     auto id = 0;
     for (auto row = 0; row < values->NROWS; row++) {
         for (auto col = 0; col < values->NCOLS; col++) {
             if (values->data[row][col] == values->NODATA_VALUE) { continue; }
+
+            if (id > count) {
+                throw std::runtime_error(fmt::format("Raster misalignment: pixel count exceeds {} expected while loading raster type {}", count, type));
+            }
+
             switch (type) {
                 case SpatialFileType::Beta: 
                     location_db[id].beta = values->data[row][col]; 
@@ -237,9 +243,8 @@ void SpatialData::load_raster(SpatialFileType type) {
     }
 
     // When we are done the last id value should match the number of locations, accounting for zero indexing
-    auto count = Model::CONFIG->number_of_locations();
     if ((unsigned)(id) != count) {
-        throw std::runtime_error(fmt::format("Raster misalignment (found {} pixels, expected {}) while loading raster type {}", id, count, type));
+        throw std::runtime_error(fmt::format("Raster misalignment: found {} pixels, expected {} while loading raster type {}", id, count, type));
     }
 
     // Log the updates
