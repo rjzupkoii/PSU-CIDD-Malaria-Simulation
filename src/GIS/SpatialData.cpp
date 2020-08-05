@@ -237,7 +237,10 @@ void SpatialData::load_raster(SpatialFileType type) {
     }
 
     // When we are done the last id value should match the number of locations, accounting for zero indexing
-    assert((unsigned)(id) == Model::CONFIG->number_of_locations());
+    auto count = Model::CONFIG->number_of_locations();
+    if ((unsigned)(id) == count) {
+        throw std::runtime_error(fmt::format("Raster misalignment (found {} pixels, expected {}) while loading raster type {}", id, count, type));
+    }
 
     // Log the updates
     VLOG(1) << "Loaded values from raster file, type id: " << type;
