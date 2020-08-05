@@ -53,13 +53,15 @@ void seasonal_info::set_value(const YAML::Node &node) {
   // Continue loading the YAML using the older approach
   auto seasonal_info_node = node[name_];
   clear();
+    
+  // Set if we are enabled or not
+  value_.enable = seasonal_info_node["enable"].as<bool>();
 
-  // Verify our node data
-  if (!(seasonal_info_node["a"].size() == seasonal_info_node["a"].size() == seasonal_info_node["phi"].size() == seasonal_info_node["period"].size() == seasonal_info_node["base"].size())) {
-      throw std::invalid_argument("seasonal_info nodes must be the same size.");
+  // Warn the user if enough nodes were not provided
+  if (value_.enable && seasonal_info_node["a"].size() > 1 && seasonal_info_node["a"].size() < config_->number_of_locations()) {
+    LOG(WARNING) << fmt::format("Only {} seasonal settings provided, but {} are needed for all locations", seasonal_info_node["a"].size(), config_->number_of_locations());
   }
 
-  value_.enable = seasonal_info_node["enable"].as<bool>();
   for (auto i = 0ul; i < config_->number_of_locations(); i++) {
     auto input_loc = seasonal_info_node["a"].size() < config_->number_of_locations() ? 0 : i;
     set_seasonal_period(seasonal_info_node, input_loc);
@@ -77,13 +79,8 @@ void seasonal_info::set_from_raster(const YAML::Node &node) {
     auto seasonal_info_node = node[name_];
     clear();
     
-    // Verify our node data, note a single size
-    if (!(seasonal_info_node["a"].size() == seasonal_info_node["a"].size() == seasonal_info_node["phi"].size() == seasonal_info_node["period"].size() == seasonal_info_node["base"].size())) {
-        throw std::invalid_argument("seasonal_info nodes must be the same size.");
-    }
-    auto size = seasonal_info_node["a"].size();
-
     // Load the values based upon the raster data
+    auto size = seasonal_info_node["a"].size();
     value_.enable = seasonal_info_node["enable"].as<bool>();
     for (int row = 0; row < raster->NROWS; row++) {
         for (int col = 0; col < raster->NCOLS; col++) {
