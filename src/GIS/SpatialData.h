@@ -18,11 +18,11 @@ class SpatialData {
             // Only use the data to define the model's location listing
             Locations,
 
-            // Transimission intensity, linked to the Entomological Inoculation Rates (EIR)
-            Beta,
-
             // Population data
             Population,
+
+            // Transimission intensity, linked to the Entomological Inoculation Rates (EIR)
+            Beta,
 
             // District location
             Districts,
