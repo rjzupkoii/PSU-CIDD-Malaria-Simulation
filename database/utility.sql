@@ -19,3 +19,12 @@ select monthlydataid, avg(pfprall)
 from sim.monthlysitedata 
 group by monthlydataid) stats on stats.monthlydataid = id
 order by id desc
+
+-- Running time per replicate
+SELECT starttime, runningtime, EXTRACT(EPOCH FROM runningtime) / days AS seconds, days
+FROM (
+SELECT starttime, now() - starttime runningtime, max(dayselapsed) AS days
+FROM sim.replicate r
+  INNER JOIN sim.monthlydata md ON md.replicateid = r.id
+WHERE r.id = 35877
+GROUP BY starttime) sq
