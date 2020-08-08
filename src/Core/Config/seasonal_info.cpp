@@ -15,11 +15,10 @@
 #include "Model.h"
 
 void seasonal_info::clear() {
+  value_.base.clear();
   value_.A.clear();
   value_.B.clear();
   value_.phi.clear();
-  value_.period.clear();
-  value_.base.clear();
 }
 
 double seasonal_info::get_seasonal_factor(const date::sys_days &today, const int &location) {
@@ -29,15 +28,18 @@ double seasonal_info::get_seasonal_factor(const date::sys_days &today, const int
   // Note what day of the year it is
   int day = TimeHelpers::day_of_year(today);
 
+  // Get the variables for the equation
+  auto base = Model::CONFIG->seasonal_info().base[location];
+  auto a = Model::CONFIG->seasonal_info().A[location];
+  auto b = Model::CONFIG->seasonal_info().B[location];
+  auto phi = Model::CONFIG->seasonal_info().phi[location];
+
   // Seasonal factor is determined by the algorithm:
   // 
-  // multiplier = a + b * sin((2 * pi * (phi - t)) / period);
-  // multiplier(multiplier < 0) = 0;
-  // multiplier = base + multiplier;
-  auto multiplier = Model::CONFIG->seasonal_info().A[location] + Model::CONFIG->seasonal_info().B[location] * 
-    sin(2 * M_PI * (Model::CONFIG->seasonal_info().phi[location] - day) / Model::CONFIG->seasonal_info().period[location]);
+  // multiplier = base + (a * sin⁺(b * pi * (phi - t) / 365))
+  auto multiplier = a * sin(b * M_PI * (phi - day) / 365);
   multiplier = (multiplier < 0) ? 0 : multiplier;
-  multiplier += Model::CONFIG->seasonal_info().base[location];
+  multiplier += base;
 
   // Return the multiplier
   return multiplier;
@@ -99,9 +101,8 @@ void seasonal_info::set_from_raster(const YAML::Node &node) {
 }
 
 void seasonal_info::set_seasonal_period(const YAML::Node &node, int index) {
+  value_.base.push_back(node["base"][index].as<double>());  
   value_.A.push_back(node["a"][index].as<double>());
   value_.B.push_back(node["b"][index].as<double>());
   value_.phi.push_back(node["phi"][index].as<double>());
-  value_.period.push_back(node["period"][index].as<double>());
-  value_.base.push_back(node["base"][index].as<double>());
 }
