@@ -34,8 +34,8 @@ public:
   void monthly_report() override;
 
 private:
-  void output_genotype_frequency3(
-      std::stringstream& ss, const int& number_of_genotypes,
+  void output_genotype_frequency_3(
+      const int& number_of_genotypes,
       PersonIndexByLocationStateAgeClass* pi
   );
 

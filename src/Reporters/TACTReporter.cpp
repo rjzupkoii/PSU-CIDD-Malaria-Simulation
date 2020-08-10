@@ -55,8 +55,8 @@ void TACTReporter::monthly_report() {
     ss << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[loc] << sep;
   }
 
-  output_genotype_frequency3(
-      ss, Model::CONFIG->number_of_parasite_types(),
+  output_genotype_frequency_3(
+      Model::CONFIG->number_of_parasite_types(),
       Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>());
 
   ss << group_sep;
@@ -103,8 +103,7 @@ void TACTReporter::begin_time_step() {
 
 }
 
-void TACTReporter::output_genotype_frequency3(
-    std::stringstream& ss,
+void TACTReporter::output_genotype_frequency_3(
     const int& number_of_genotypes,
     PersonIndexByLocationStateAgeClass* pi
 ) {
