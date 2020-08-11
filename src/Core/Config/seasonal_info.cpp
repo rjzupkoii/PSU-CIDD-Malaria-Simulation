@@ -47,13 +47,13 @@ double seasonal_info::get_seasonal_factor(const date::sys_days &today, const int
 
 void seasonal_info::set_value(const YAML::Node &node) {
   // Before doing anything, check to see if there is a raster
-  if (node["raster"] && node["raster"].as<bool>()) {
-      set_from_raster(node);
-      return;
+  auto seasonal_info_node = node[name_];
+  if (seasonal_info_node["raster"] && seasonal_info_node["raster"].as<bool>()) {
+    set_from_raster(node);
+    return;
   }
 
   // Continue loading the YAML using the older approach
-  auto seasonal_info_node = node[name_];
   clear();
     
   // Set if we are enabled or not
@@ -78,6 +78,7 @@ void seasonal_info::set_from_raster(const YAML::Node &node) {
     }
 
     // Prepare to run
+    LOG(INFO) << "Setting seasonal_info using raster data.";
     auto seasonal_info_node = node[name_];
     clear();
     
