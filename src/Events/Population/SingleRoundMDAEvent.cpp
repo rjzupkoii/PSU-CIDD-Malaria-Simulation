@@ -53,7 +53,7 @@ void SingleRoundMDAEvent::execute() {
         int days_to_receive_mda_therapy = Model::RANDOM->random_uniform(days_to_complete_all_treatments) + 1;
         ReceiveMDATherapyEvent::schedule_event(Model::SCHEDULER, p, therapy,
                                                Model::SCHEDULER->current_time() +
-                                                   days_to_complete_all_treatments);
+                                                   days_to_receive_mda_therapy);
 
       }
     }

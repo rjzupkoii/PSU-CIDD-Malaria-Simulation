@@ -316,10 +316,7 @@ initial_parasite_info:
   - location_id: -1
     parasite_info:
       #TNY__C1x
-      - {parasite_type_id: 0, prevalence: 0.025}
-      - {parasite_type_id: 8, prevalence: 0.025}
-      - {parasite_type_id: 64, prevalence: 0.025}
-      - {parasite_type_id: 72, prevalence: 0.025}
+      - {parasite_type_id: 0, prevalence: 0.1}
 
       # drug information below
 #

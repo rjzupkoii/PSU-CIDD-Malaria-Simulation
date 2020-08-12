@@ -5,6 +5,8 @@
 #include "Reporter.h"
 #include <sstream>
 
+class PersonIndexByLocationStateAgeClass;
+
 class MMCReporter : public Reporter {
 DISALLOW_COPY_AND_ASSIGN(MMCReporter)
 
@@ -33,9 +35,16 @@ public:
 
   void print_genotype_frequency();
 
+
   void monthly_report() override;
 
   void print_EIR_PfPR_by_location();
+
+private:
+  void output_genotype_frequency_3(
+      const int& number_of_genotypes,
+      PersonIndexByLocationStateAgeClass* pi
+  );
 };
 
 #endif // MMCREPORTER_H
