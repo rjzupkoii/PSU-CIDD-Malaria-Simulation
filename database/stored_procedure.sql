@@ -37,3 +37,30 @@ BEGIN
   -- Report complete
   RAISE NOTICE 'Complete';
 END $BODY$;
+
+CREATE OR REPLACE PROCEDURE public.delete_study(
+	study_id integer)
+LANGUAGE 'plpgsql'
+
+AS $BODY$
+DECLARE
+record RECORD;
+BEGIN
+	-- Delete the replicate
+    FOR record IN select distinct r.id from sim.configuration c inner join sim.replicate r on r.configurationid = c.id where studyid = study_id LOOP
+        CALL delete_replicate(record.id);
+    END LOOP;
+	
+	-- Delete the configuration
+	DELETE FROM sim.location WHERE configurationid IN (
+		SELECT id FROM sim.configuration WHERE studyid = study_id);
+	DELETE FROM sim.configuration WHERE studyid = study_id;
+	
+	-- Delete the study
+	DELETE FROM sim.notes WHERE studyid = study_id;
+	DELETE FROM sim.study WHERE id = study_id;
+	
+	-- Report complete
+  	RAISE NOTICE 'Complete';
+	
+END $BODY$;
