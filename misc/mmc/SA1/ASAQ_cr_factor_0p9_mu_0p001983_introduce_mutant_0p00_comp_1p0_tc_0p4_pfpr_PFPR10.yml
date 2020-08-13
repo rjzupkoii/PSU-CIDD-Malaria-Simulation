@@ -163,7 +163,7 @@ genotype_info:
       value: 0
     - allele_name: 76T
       can_mutate_to: [0]
-      daily_cost_of_resistance: 0.00045000000000000004
+      daily_cost_of_resistance: 0.0004456996807753466
       mutation_level: 1
       short_name: T
       value: 1
@@ -178,43 +178,43 @@ genotype_info:
       value: 0
     - allele_name: 86Y Y184 one copy of pfmdr1
       can_mutate_to: [3, 0, 5]
-      daily_cost_of_resistance: 0.00045000000000000004
+      daily_cost_of_resistance: 0.0004456996807753466
       mutation_level: 1
       short_name: YY--
       value: 1
     - allele_name: N86 184F one copy of pfmdr1
       can_mutate_to: [3, 0, 6]
-      daily_cost_of_resistance: 0.00045000000000000004
+      daily_cost_of_resistance: 0.0004456996807753466
       mutation_level: 1
       short_name: NF--
       value: 2
     - allele_name: 86Y 184F one copy of pfmdr1
       can_mutate_to: [1, 2, 7]
-      daily_cost_of_resistance: 0.000899775
+      daily_cost_of_resistance: 0.0008817205432204434
       mutation_level: 2
       short_name: YF--
       value: 3
     - allele_name: N86 Y184 2 copies of pfmdr1
       can_mutate_to: [0]
-      daily_cost_of_resistance: 0.0045000000000000005
+      daily_cost_of_resistance: 0.0038523231255213064
       mutation_level: 1
       short_name: NYNY
       value: 4
     - allele_name: 86Y Y184 2 copies of pfmdr1
       can_mutate_to: [1]
-      daily_cost_of_resistance: 0.0049499999999999995
+      daily_cost_of_resistance: 0.004136930540579842
       mutation_level: 2
       short_name: YYYY
       value: 5
     - allele_name: N86 184F 2 copies of pfmdr1
       can_mutate_to: [2]
-      daily_cost_of_resistance: 0.0049499999999999995
+      daily_cost_of_resistance: 0.004136930540579842
       mutation_level: 2
       short_name: NFNF
       value: 6
     - allele_name: 86Y 184F 2 copies of pfmdr1
       can_mutate_to: [3]
-      daily_cost_of_resistance: 0.0054
+      daily_cost_of_resistance: 0.004398854856074497
       mutation_level: 3
       short_name: YFYF
       value: 7
@@ -229,7 +229,7 @@ genotype_info:
       value: 0
     - allele_name: 580Y
       can_mutate_to: [0]
-      daily_cost_of_resistance: 0.00045000000000000004
+      daily_cost_of_resistance: 0.0004456996807753466
       mutation_level: 1
       short_name: Y
       value: 1
@@ -244,7 +244,7 @@ genotype_info:
       value: 0
     - allele_name: Plasmepsin 2-3 2 copies
       can_mutate_to: [0]
-      daily_cost_of_resistance: 0.00045000000000000004
+      daily_cost_of_resistance: 0.0004456996807753466
       mutation_level: 1
       short_name: '2'
       value: 1
@@ -259,7 +259,7 @@ genotype_info:
       value: 0
     - allele_name: mutant
       can_mutate_to: [0]
-      daily_cost_of_resistance: 0.00045000000000000004
+      daily_cost_of_resistance: 0.0004456996807753466
       mutation_level: 1
       short_name: X
       value: 1

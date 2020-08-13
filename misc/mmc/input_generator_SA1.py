@@ -48,8 +48,20 @@ cr_factors= {
     '1p2': 1.2,
     '1p3': 1.3
     }
+#%%
+# import numpy as np
 
-    
+# base_annual_cr = 1 - (1- 0.0005)**365;
+
+# new_cr = 1- (1- base_annual_cr*np.array([0.7,0.8,0.9,1.0,1.1,1.2,1.3])) ** (1/365)
+
+def cal_new_cr( old_cr, cr_factor):
+    base_annual_cr = 1 - (1- old_cr)**365;
+    new_cr = 1- (1- base_annual_cr*cr_factor) ** (1/365)
+    return new_cr
+
+
+
 #%%
 for fl, input_fn in first_line.items():            
     print(fl, input_fn);
@@ -89,7 +101,7 @@ for fl, input_fn in first_line.items():
                         
                         for locus_index,locus in enumerate(new_data['genotype_info']['loci']):
                             for allele_index, allele in enumerate(locus['alleles']):
-                                new_data['genotype_info']['loci'][locus_index]['alleles'][allele_index]['daily_cost_of_resistance'] = data['genotype_info']['loci'][locus_index]['alleles'][allele_index]['daily_cost_of_resistance'] * cr_factor
+                                new_data['genotype_info']['loci'][locus_index]['alleles'][allele_index]['daily_cost_of_resistance'] = cal_new_cr(data['genotype_info']['loci'][locus_index]['alleles'][allele_index]['daily_cost_of_resistance'], cr_factor)
                         
                         
                         new_data['p_compliance'] = comp                   
