@@ -196,25 +196,25 @@ genotype_info:
       value: 3
     - allele_name: N86 Y184 2 copies of pfmdr1
       can_mutate_to: [0]
-      daily_cost_of_resistance: !!python/complex '0.013380279933119965-0.008492147417579407j'
+      daily_cost_of_resistance: 0.012537645164565014
       mutation_level: 1
       short_name: NYNY
       value: 4
     - allele_name: 86Y Y184 2 copies of pfmdr1
       can_mutate_to: [1]
-      daily_cost_of_resistance: !!python/complex '0.008837102446464074-0.008531251980539382j'
+      daily_cost_of_resistance: 0.012537645164565014
       mutation_level: 2
       short_name: YYYY
       value: 5
     - allele_name: N86 184F 2 copies of pfmdr1
       can_mutate_to: [2]
-      daily_cost_of_resistance: !!python/complex '0.008837102446464074-0.008531251980539382j'
+      daily_cost_of_resistance: 0.012537645164565014
       mutation_level: 2
       short_name: NFNF
       value: 6
     - allele_name: 86Y 184F 2 copies of pfmdr1
       can_mutate_to: [3]
-      daily_cost_of_resistance: !!python/complex '0.007432047242392215-0.008543345734272591j'
+      daily_cost_of_resistance: 0.012537645164565014
       mutation_level: 3
       short_name: YFYF
       value: 7

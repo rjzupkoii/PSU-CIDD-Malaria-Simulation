@@ -57,7 +57,11 @@ cr_factors= {
 
 def cal_new_cr( old_cr, cr_factor):
     base_annual_cr = 1 - (1- old_cr)**365;
-    new_cr = 1- (1- base_annual_cr*cr_factor) ** (1/365)
+    if base_annual_cr*cr_factor > 1:
+        new_cr = 1- (1- 0.99) ** (1/365)
+    else:
+        new_cr = 1- (1- base_annual_cr*cr_factor) ** (1/365)
+    print(old_cr,cr_factor,new_cr)
     return new_cr
 
 
