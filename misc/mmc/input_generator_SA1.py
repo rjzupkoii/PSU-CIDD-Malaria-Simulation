@@ -23,8 +23,12 @@ first_line = {
     };
 
 mutant_introductions = {
-            0.0: '0p00',
-            };
+    0.0: '0p00',
+    0.01: '0p01',
+    0.1: '0p10',
+    0.25: '0p25',
+    0.5: '0p50'  
+};
             
 treatment_coverages = {
         0.4: {
@@ -48,6 +52,8 @@ cr_factors= {
     '1p2': 1.2,
     '1p3': 1.3
     }
+
+
 #%%
 # import numpy as np
 
