@@ -37,7 +37,7 @@ double seasonal_info::get_seasonal_factor(const date::sys_days &today, const int
   // Seasonal factor is determined by the algorithm:
   // 
   // multiplier = base + (a * sin⁺(b * pi * (phi - t) / 365))
-  auto multiplier = a * sin(b * M_PI * (phi - day) / 365);
+  auto multiplier = a * sin(b * M_PI * (phi - day) / Constants::DAYS_IN_YEAR());
   multiplier = (multiplier < 0) ? 0 : multiplier;
   multiplier += base;
 
