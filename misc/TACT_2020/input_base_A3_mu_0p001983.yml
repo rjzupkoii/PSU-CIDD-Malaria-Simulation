@@ -765,9 +765,20 @@ events:
     info:
     - location: 0
       parasite_info:
-        - duration: 10
-          # genotype_id -1: all random
-          genotype_id: -1
+        - duration: 400
+          genotype_id: 4
+          number_of_cases: 1
+          start_day: 2022/1/1
+        - duration: 400
+          genotype_id: 12
+          number_of_cases: 1
+          start_day: 2022/1/1
+        - duration: 400
+          genotype_id: 20
+          number_of_cases: 1
+          start_day: 2022/1/1
+        - duration: 400
+          genotype_id: 28
           number_of_cases: 1
           start_day: 2022/1/1
   - name: modify_nested_mft_strategy
