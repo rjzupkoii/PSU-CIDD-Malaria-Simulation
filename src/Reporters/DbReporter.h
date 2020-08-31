@@ -55,18 +55,16 @@ class DbReporter : public Reporter {
     const std::string UPDATE_CONFIGURATION_STUDY =
     "UPDATE configuration SET studyid = {} WHERE id = {}";
 
-    // TODO Grab the study id and configuration from... somewhere
+    // Configuration and replicate information
     int config_id = 1;
+    int replicate;
 
-    // TODO Shift this over to where the locations are actually stored?
+    // Used to track location information for the life of the object
     int* location_index;
     
-    int replicate;
-    pqxx::connection* conn;
-
     // Reporter specific
-    void prepare_configuration();
-    void prepare_replicate();
+    void prepare_configuration(pqxx::connection* connection);
+    void prepare_replicate(pqxx::connection* connection);
     void monthly_genome_data(int id, std::string &query);
     void monthly_site_data(int id, std::string &query);
     

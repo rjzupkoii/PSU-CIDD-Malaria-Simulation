@@ -23,19 +23,22 @@
 
 void DbReporter::initialize(int job_number, std::string path) {
     // Connect to the database
-    conn = new pqxx::connection(Model::CONFIG->connection_string());
-    LOG(INFO) << "Connected to " << conn->dbname();
+    pqxx::connection* connection = new pqxx::connection(Model::CONFIG->connection_string());
+    LOG(INFO) << "Connected to " << connection->dbname();
 
     // Ensure that the database is prepared and grab relevent ids before running
-    prepare_configuration();
-    prepare_replicate();
+    prepare_configuration(connection);
+    prepare_replicate(connection);
     
+    // Close the connection
+    connection->close();
+
     // Inform the user that we are running
     LOG(INFO) << fmt::format("Running configuration {}, replicate {}.", config_id, replicate);
 }
 
 // Make sure the relevent enteries for the configuration are in the database
-void DbReporter::prepare_configuration() {
+void DbReporter::prepare_configuration(pqxx::connection* connection) {
     // Load the text of the configuration
     std::string filename = Model::MODEL->config_filename();
     std::ifstream input(filename);
@@ -48,7 +51,7 @@ void DbReporter::prepare_configuration() {
     yaml.erase(std::remove(yaml.begin(), yaml.end(), '\n'), yaml.end());
     
     // Check to see if this is a known configuration
-    pqxx::work db(*conn);
+    pqxx::work db(*connection);
     std::string query = fmt::format(SELECT_CONFIGURATION, db.quote(yaml), db.quote(filename));
     pqxx::result result = db.exec(query);
     
@@ -110,7 +113,7 @@ void DbReporter::prepare_configuration() {
 }
 
 // Make sure the relevent enteries for this replicate are in the database
-void DbReporter::prepare_replicate() {
+void DbReporter::prepare_replicate(pqxx::connection* connection) {
     // Check to see what type of movement is being recoreded, if any
     char movement = 'X';
     if (Model::MODEL->report_movement()) {
@@ -125,7 +128,7 @@ void DbReporter::prepare_replicate() {
 
     // Insert the replicate into the database
     std::string query = fmt::format(INSERT_REPLICATE, config_id, Model::RANDOM->seed(), movement);
-    pqxx::work db(*conn);
+    pqxx::work db(*connection);
     pqxx::result result = db.exec(query);
     replicate = result[0][0].as<int>();
 
@@ -152,7 +155,8 @@ void DbReporter::monthly_report() {
     std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor, treatment_failures, beta);
 
     // Run the query and grab the id
-    pqxx::work db(*conn);
+    pqxx::connection* connection = new pqxx::connection(Model::CONFIG->connection_string());
+    pqxx::work db(*connection);
     pqxx::result result = db.exec(query);
     auto id = result[0][0].as<int>();
     
@@ -164,6 +168,7 @@ void DbReporter::monthly_report() {
     // Run then and commit everything
     db.exec(query);
     db.commit();
+    connection->close();
 }
 
 // Iterate over all the sites and prepare the query for the site specific genome data
@@ -276,10 +281,11 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
 
 void DbReporter::after_run() {
     // Report that we are done
-    pqxx::work db(*conn);
+    pqxx::connection* connection = new pqxx::connection(Model::CONFIG->connection_string());
+    pqxx::work db(*connection);
     db.exec(fmt::format(UPDATE_REPLICATE, replicate));
     db.commit();
 
     // Close the connection 
-    conn->close();
+    connection->close();
 }
