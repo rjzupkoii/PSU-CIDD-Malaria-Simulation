@@ -634,8 +634,6 @@ bool Person::inflict_bite(const unsigned int parasite_type_id) {
   if (theta < 0.2) {
     pr_inf = pr;
   }
-  
-  VLOG(1) << "theta:" << theta << " pr_inf: " << pr_inf;
 
   // If the draw is less less than pr_inf, they get infected
   const double draw = Model::RANDOM->random_flat(0.0, 1.0);
