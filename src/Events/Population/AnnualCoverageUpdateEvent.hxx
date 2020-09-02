@@ -40,8 +40,7 @@ class AnnualCoverageUpdateEvent : public Event {
       scheduler->schedule_population_event(event);
 
       // Log on demand
-      VLOG(1) << "Updated coverage for Burkina Faso, scheduling for NEXT";
-
+      VLOG(1) << "Updated coverage by " << rate_ << ", scheduled next for: " << time;
     }
 
     // Update the coverage by the given rate, round up at the third decimal place
@@ -52,7 +51,7 @@ class AnnualCoverageUpdateEvent : public Event {
     }
 
   public:
-    inline static const std::string EventName = "AnnualCoverageUpdateEvent";
+    inline static const std::string EventName = "annual_coverage_update_event";
 
     AnnualCoverageUpdateEvent(float rate, int start) : rate_(rate) { time = start; }
     ~AnnualCoverageUpdateEvent() = default;
