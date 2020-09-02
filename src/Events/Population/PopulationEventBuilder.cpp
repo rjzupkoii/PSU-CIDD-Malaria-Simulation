@@ -18,6 +18,8 @@
 #include "IntroduceAQMutantEvent.h"
 #include "IntroduceLumefantrineMutantEvent.h"
 
+#include "AnnualCoverageUpdateEvent.hxx"
+
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
@@ -213,10 +215,24 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_
   return events;
 }
 
+// Generate a new annual event that adjusts the coverage at each location within the model, assumes that
+// the YAML node contains a rate of change and start date.
+std::vector<Event*> PopulationEventBuilder::build_annual_coverage_update_event(const YAML::Node& node, Config* config) {
+  std::vector<Event*> events;
+  for (std::size_t ndx = 0; ndx < node.size(); ndx++) {
+    auto start_date = node[ndx]["date"].as<date::year_month_day>();
+    auto rate = node[ndx]["rate"].as<float>();
+    auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();;
+    
+    auto* event = new AnnualCoverageUpdateEvent(rate, time);
+    events.push_back(event);
+  }
+}
+
 std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   const auto name = node["name"].as<std::string>();
-  // std::cout << name << std::endl;
+
   if (name == "introduce_plas2_parasites") {
     events = build_introduce_plas2_parasite_events(node["info"], config);
   }
@@ -255,5 +271,10 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   if (name == "turn_off_mutation") {
     events = build_turn_off_mutation_event(node["info"], config);
   }
+
+  if (name == AnnualCoverageUpdateEvent::EventName) {
+    events = build_annual_coverage_update_event(node["info"], config);
+  }
+
   return events;
 }
