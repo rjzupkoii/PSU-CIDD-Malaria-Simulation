@@ -43,11 +43,11 @@ class AnnualCoverageUpdateEvent : public Event {
       VLOG(1) << "Updated coverage by " << rate_ << ", scheduled next for: " << time;
     }
 
-    // Update the coverage by the given rate, round up at the third decimal place
+    // Update the coverage by the given rate, round up at the third decimal place but clamped at 1.0 (100%)
     double adjust(double coverage, double rate) {
       coverage += (1 - coverage) * rate;
       coverage = int(coverage * pow(10, 3)) / pow(10, 3);
-      return coverage;
+      return (coverage < 1.0) ? coverage : 1.0;
     }
 
   public:

@@ -86,3 +86,20 @@ seasonal_info:
 &nbsp;*Version 3.x*: when one value is provided, it is used for all locations, otherwise a value must be provided for each location\
 &nbsp;*Version 4.0*: if `raster` is true then each index in the array is used for the pixel coded with that value, otherwise the first value is used for all pixels.\
 **period** : the number of days defined by the period.
+
+### events
+This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all of the data for the `info` field following will be provided to the loader function.
+
+#### annual_coverage_update_event 
+(*Version 4.0*) The annual coverage update event increases the coverage for each cell in the model by reducing the coverage gap by a fixed value provided by rate. If the model is run for a long enough period of time, the presumption should be that the coverage will reach 100%.
+
+```YAML
+events:
+  - name: annual_coverage_update_event
+    info:
+      - date: 2020/09/02
+        rate: 0.025
+```
+
+**date** (date string, YYYY/mm/dd) : the date when the update will first occur.
+**rate** (float) : the rate of reduction in the coverage for the cells.
