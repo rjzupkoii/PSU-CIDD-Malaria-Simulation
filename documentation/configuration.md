@@ -101,5 +101,5 @@ events:
         rate: 0.025
 ```
 
-**date** (date string, YYYY/mm/dd) : the date when the update will first occur.
+**date** (date string, YYYY/mm/dd) : the date when the update will first occur. \
 **rate** (float) : the rate of reduction in the coverage for the cells.
