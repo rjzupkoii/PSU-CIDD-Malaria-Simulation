@@ -150,7 +150,7 @@ void DbReporter::monthly_report() {
     auto days_elapsed = Model::SCHEDULER->current_time();
     auto model_time = std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date);
     auto seasonal_factor = seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
-    auto treatment_failures = 0;
+    auto treatment_failures = calculate_treatment_failures();
     auto beta = 0;
     std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor, treatment_failures, beta);
 
@@ -270,7 +270,7 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
             Model::DATA_COLLECTOR->popsize_by_location()[location],
             Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[location],
             Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[location],
-            -1,
+            Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location],
             eir,
             pfpr_under5,
             pfpr_2to10,
