@@ -97,7 +97,7 @@ This setting is used to list the various events that will be loaded and run duri
 events:
   - name: annual_coverage_update_event
     info:
-+      - day: 2020/09/02
+      - day: 2020/09/02
         rate: 0.025
 ```
 
