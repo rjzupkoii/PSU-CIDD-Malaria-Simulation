@@ -219,7 +219,7 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_
 // the YAML node contains a rate of change and start date.
 std::vector<Event*> PopulationEventBuilder::build_annual_coverage_update_event(const YAML::Node& node, Config* config) {
     // Build the event
-    auto start_date = node[0]["date"].as<date::year_month_day>();
+    auto start_date = node[0]["day"].as<date::year_month_day>();
     auto rate = node[0]["rate"].as<float>();
     auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();;
     auto* event = new AnnualCoverageUpdateEvent(rate, time);

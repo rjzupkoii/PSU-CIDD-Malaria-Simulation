@@ -97,9 +97,37 @@ This setting is used to list the various events that will be loaded and run duri
 events:
   - name: annual_coverage_update_event
     info:
-      - date: 2020/09/02
++      - day: 2020/09/02
         rate: 0.025
 ```
 
-**date** (date string, YYYY/mm/dd) : the date when the update will first occur. \
+**day** (date string, YYYY/mm/dd) : the date when the update will first occur. \
 **rate** (float) : the rate of reduction in the coverage for the cells.
+
+#### turn_off_mutation
+Turn off all mutations in the model, recommended during the model burn-in.
+
+```YAML
+events:
+  - name: turn_off_mutation
+    info:
+      - day: 2020/09/04
+```
+
+**day** (date string, YYYY/mm/dd) : the date when the event will occur.
+
+#### turn_on_mutation
+Turn on all mutations in the model, or the mutations for individual drugs.
+
+```YAML
+events:
+  - name: turn_on_mutation
+    info:
+      - day: 2020/09/04
+        drug_id: 0
+        mutation_probability: 0.005
+```
+
+**day** (date string, YYYY/mm/dd) : the date when the event will occur.
+**drug_id** (integer) : the id of the drug, as defined in the `drug_db` or `-1`.
+**mutation_probability** (float) : the mutation probability to use.
