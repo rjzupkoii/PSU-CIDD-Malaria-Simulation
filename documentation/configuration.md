@@ -128,6 +128,6 @@ events:
         mutation_probability: 0.005
 ```
 
-**day** (date string, YYYY/mm/dd) : the date when the event will occur.
-**drug_id** (integer) : the id of the drug, as defined in the `drug_db` or `-1`.
+**day** (date string, YYYY/mm/dd) : the date when the event will occur. \
+**drug_id** (integer) : the id of the drug, as defined in the `drug_db` or `-1`. \
 **mutation_probability** (float) : the mutation probability to use.
