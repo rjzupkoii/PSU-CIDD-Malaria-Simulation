@@ -97,7 +97,7 @@ This setting is used to list the various events that will be loaded and run duri
 events:
   - name: annual_coverage_update_event
     info:
-+      - day: 2020/09/02
+      - day: 2020/09/02
         rate: 0.025
 ```
 
@@ -128,6 +128,6 @@ events:
         mutation_probability: 0.005
 ```
 
-**day** (date string, YYYY/mm/dd) : the date when the event will occur.
-**drug_id** (integer) : the id of the drug, as defined in the `drug_db` or `-1`.
+**day** (date string, YYYY/mm/dd) : the date when the event will occur. \
+**drug_id** (integer) : the id of the drug, as defined in the `drug_db` or `-1` to apply the value to all drugs. \
 **mutation_probability** (float) : the mutation probability to use.
