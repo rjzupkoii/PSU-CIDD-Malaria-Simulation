@@ -29,10 +29,14 @@ std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
 
 // Calculate the number of treatment failures (NTF) for the model
 double Reporter::calculate_treatment_failures() {
-  const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) /
-    static_cast<double>(Constants::DAYS_IN_YEAR());
+  // If the report is generated when the comparision period starts then we could end up dividing by zero, so guard against that
+  const double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) / static_cast<double>(Constants::DAYS_IN_YEAR());
+  if (total_time_in_years == 0 || std::isnan(total_time_in_years)) {
+    LOG(WARNING) << "Treatment failures report generated at the start of the  is the start of the comparison period.";
+    return 0;
+  }
 
-  auto sum_ntf = 0.0;
+  double sum_ntf = 0.0;
   ul pop_size = 0;
   for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++)
   {
