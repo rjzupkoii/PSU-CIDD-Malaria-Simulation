@@ -34,7 +34,7 @@ double Reporter::calculate_treatment_failures() {
   // If the report is generated when the comparision period starts then we could end up dividing by zero, so guard against that
   const double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) / static_cast<double>(Constants::DAYS_IN_YEAR());
   if (total_time_in_years == 0 || std::isnan(total_time_in_years)) {
-    LOG(WARNING) << "Treatment failures report generated at the start of the  is the start of the comparison period.";
+    LOG(WARNING) << "Treatment failures report generated is the start of the comparison period.";
     return 0;
   }
 
