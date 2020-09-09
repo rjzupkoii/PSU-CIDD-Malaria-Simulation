@@ -31,6 +31,8 @@ PROPERTY_REF(DoubleVector, total_immune_by_location)
 PROPERTY_REF(DoubleVector2, total_immune_by_location_age_class)
 
 PROPERTY_REF(IntVector, popsize_by_location)
+PROPERTY_REF(IntVector, births_by_location)
+PROPERTY_REF(IntVector, deaths_by_location)
 
 PROPERTY_REF(IntVector, popsize_residence_by_location)
 
@@ -222,6 +224,9 @@ public:
   virtual void update_person_days_by_years(const int &location, const int &days);
 
   void calculate_eir();
+
+  // Record one birth at the given location index, this value will be reset each month
+  void record_1_birth(const int &location);
 
   void
   record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten, const int &age_group,

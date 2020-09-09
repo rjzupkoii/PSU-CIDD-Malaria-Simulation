@@ -14,12 +14,18 @@
 
 class Model;
 
-// Wrapper for TSV constants
+// Wrapper for TSV file constants
 namespace Tsv {
-  // Constants used when generating TSV files
   const std::string sep = "\t";
   const std::string end_line = "\n";
   const std::string extension = "tsv";
+}
+
+// Wrapper for CSV file constants
+namespace Csv {
+  const std::string sep = ",";
+  const std::string end_line = "\n";
+  const std::string extension = "csv";
 }
 
 class Reporter {
@@ -47,7 +53,8 @@ protected:
     MMC_REPORTER,
     SPATIAL_REPORTER,
     DB_REPORTER,
-    MOVEMENT_REPORTER
+    MOVEMENT_REPORTER,
+    POPULATION_REPORTER
   };
 
   static std::map<std::string, ReportType> ReportTypeMap;

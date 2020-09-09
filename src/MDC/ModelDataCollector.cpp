@@ -41,6 +41,9 @@ ModelDataCollector::~ModelDataCollector()
 void ModelDataCollector::initialize() {
   if (model_ != nullptr) {
     popsize_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    births_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    deaths_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+
     popsize_residence_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
 
     blood_slide_prevalence_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
@@ -216,6 +219,9 @@ void ModelDataCollector::perform_population_statistic() {
 
   for (auto location = 0ul; location < Model::CONFIG->number_of_locations(); location++) {
     popsize_by_location_[location] = 0;
+    births_by_location_[location] = 0;
+    deaths_by_location_[location] = 0;
+
     popsize_residence_by_location_[location] = 0;
     blood_slide_prevalence_by_location_[location] = 0.0;
     fraction_of_positive_that_are_clinical_by_location_[location] = 0.0;
@@ -463,8 +469,16 @@ void ModelDataCollector::collect_1_clinical_episode(const int &location, const i
   }
 }
 
+void ModelDataCollector::record_1_birth(const int &location) {
+  // Coarse collection, so just increment
+  births_by_location_[location]++;
+}
+
 void ModelDataCollector::record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten,
                                         const int &age_group, const int &age) {
+  // Always collect the coarse data since that could be used for calibration
+  deaths_by_location_[location]++;
+
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     update_person_days_by_years(location, -(Constants::DAYS_IN_YEAR() - Model::SCHEDULER->current_day_in_year()));
     update_average_number_bitten(location, birthday, number_of_times_bitten);

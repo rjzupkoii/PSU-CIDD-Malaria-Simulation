@@ -456,6 +456,7 @@ void Population::perform_birth_event() {
     const auto number_of_births = Model::RANDOM->random_poisson(poisson_means);
     for (int i = 0; i < number_of_births; i++) {
       give_1_birth(loc);
+      Model::DATA_COLLECTOR->record_1_birth(loc);
       Model::DATA_COLLECTOR->update_person_days_by_years(loc, Constants::DAYS_IN_YEAR() -
           Model::SCHEDULER->current_day_in_year());
     }
