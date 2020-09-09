@@ -219,8 +219,6 @@ void ModelDataCollector::perform_population_statistic() {
 
   for (auto location = 0ul; location < Model::CONFIG->number_of_locations(); location++) {
     popsize_by_location_[location] = 0;
-    births_by_location_[location] = 0;
-    deaths_by_location_[location] = 0;
 
     popsize_residence_by_location_[location] = 0;
     blood_slide_prevalence_by_location_[location] = 0.0;
@@ -802,6 +800,10 @@ void ModelDataCollector::monthly_update() {
       monthly_number_of_treatment_by_location_[loc] = 0;
       monthly_number_of_new_infections_by_location_[loc] = 0;
       monthly_number_of_clinical_episode_by_location_[loc] = 0;
+
+      // Reset the births and deaths
+      births_by_location_[loc] = 0;
+      deaths_by_location_[loc] = 0;
     }
   }
 }

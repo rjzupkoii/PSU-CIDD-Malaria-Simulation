@@ -17,7 +17,7 @@ void PopulationReporter::initialize(int job_number, std::string path) {
   reporter.setGlobally(el::ConfigurationType::ToFile, "true");
   reporter.setGlobally(el::ConfigurationType::Filename, fmt::format("{}population_data_{}.txt", path, job_number));
   reporter.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
-  reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
+  reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "10");
   el::Loggers::reconfigureLogger("population_reporter", reporter);
 }
 
@@ -33,7 +33,7 @@ void PopulationReporter::monthly_report() {
 
   // Log the entry
   ss << Model::SCHEDULER->current_time() << Csv::sep << population 
-     << Csv::sep << births << Csv::sep << deaths << Csv::end_line;
+     << Csv::sep << births << Csv::sep << deaths << Csv::sep << calculate_treatment_failures();
   CLOG(INFO, "population_reporter") << ss.str();
   ss.str("");
 }
