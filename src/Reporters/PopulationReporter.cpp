@@ -19,21 +19,25 @@ void PopulationReporter::initialize(int job_number, std::string path) {
   reporter.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
   reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "10");
   el::Loggers::reconfigureLogger("population_reporter", reporter);
+
+  // Log the headers
+  ss << "dayselapsed" << Csv::sep << "population" << Csv::sep << "births" << Csv::sep << "deaths" << Csv::sep << "malariadeaths" << Csv::end_line;
 }
 
 void PopulationReporter::monthly_report() {
-  long population = 0, births = 0, deaths = 0;
+  long population = 0, births = 0, deaths = 0, malariaDeaths = 0;
 
   // Calculate the summary data
   for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
       population += Model::DATA_COLLECTOR->popsize_by_location()[location];
       births += Model::DATA_COLLECTOR->births_by_location()[location];
       deaths += Model::DATA_COLLECTOR->deaths_by_location()[location];
+      malariaDeaths += Model::DATA_COLLECTOR->malaria_deaths_by_location()[location];
   }
 
   // Log the entry
   ss << Model::SCHEDULER->current_time() << Csv::sep << population 
-     << Csv::sep << births << Csv::sep << deaths << Csv::sep << calculate_treatment_failures();
+     << Csv::sep << births << Csv::sep << deaths << Csv::sep << malariaDeaths;
   CLOG(INFO, "population_reporter") << ss.str();
   ss.str("");
 }

@@ -43,6 +43,7 @@ void ModelDataCollector::initialize() {
     popsize_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
     births_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
     deaths_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    malaria_deaths_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
 
     popsize_residence_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
 
@@ -490,6 +491,9 @@ void ModelDataCollector::record_1_death(const int &location, const int &birthday
 }
 
 void ModelDataCollector::record_1_malaria_death(const int &location, const int &age) {
+  // Always collect the coarse data
+  malaria_deaths_by_location_[location]++;
+
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     if (age < 79) {
       number_of_malaria_deaths_by_location_age_year_[location][age] += 1;
@@ -804,6 +808,7 @@ void ModelDataCollector::monthly_update() {
       // Reset the births and deaths
       births_by_location_[loc] = 0;
       deaths_by_location_[loc] = 0;
+      malaria_deaths_by_location_[loc] = 0;
     }
   }
 }
