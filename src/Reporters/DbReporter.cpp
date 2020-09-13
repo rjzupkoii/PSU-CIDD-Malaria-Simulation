@@ -21,6 +21,9 @@
 // Macro to check to see if a value is NAN, report if it is, and update the value as needed
 #define check_nan(value) if (std::isnan(value)) LOG(WARNING) << "NaN caught: " << #value; value = std::isnan(value) ? 0 : value;
 
+// Macro to check if a value is infinite, report if it is, and update the value as needed
+#define check_inf(value) if (std::isinf(value)) LOG(WARNING) << "Inf caught " << #value; value = std::isinf(value) ? -9999 : value;
+
 void DbReporter::initialize(int job_number, std::string path) {
     // Connect to the database
     pqxx::connection* connection = new pqxx::connection(Model::CONFIG->connection_string());
@@ -266,9 +269,17 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
        
         // Make make sure we have valid bounds
         check_nan(eir);
+        check_inf(eir);
+        
         check_nan(pfpr_under5);
+        check_inf(pfpr_under5);
+
         check_nan(pfpr_2to10);
+        check_inf(pfpr_2to10);
+
         check_nan(pfpr_all);
+        check_inf(pfpr_all);
+
 
         query.append(fmt::format(INSERT_SITE,
             id,
