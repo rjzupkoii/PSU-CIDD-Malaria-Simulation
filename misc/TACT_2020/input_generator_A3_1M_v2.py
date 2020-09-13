@@ -17,7 +17,7 @@ def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
 
-stream = open('input_base_A3_mu_0p001983.yml', 'r');
+stream = open('input_base_A3_mu_0p001983_v2.yml', 'r');
 data = yaml.load(stream);
 stream.close();
 
@@ -84,7 +84,7 @@ for tc, tc_details in tcs.items():
                 if event['name'] == 'modify_nested_mft_strategy':
                     new_data['events'][index]['info'][0]['strategy_id'] = tact_id
                     
-            output_filename = 'A3_1M/TACT_%s_TC_%s_TACT_%s.yml'%(pfpr,tc_str, tact_str);
+            output_filename = 'A3_1M_v2/TACT_%s_TC_%s_TACT_%s.yml'%(pfpr,tc_str, tact_str);
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 
             output_stream.close();
