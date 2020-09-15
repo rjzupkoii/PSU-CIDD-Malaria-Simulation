@@ -255,8 +255,8 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
             query.append(fmt::format(INSERT_GENOTYPE, id, location_index[location], genotype, occurrences[genotype], 
                                      clinicalOccurrences[genotype], occurrencesZeroToFive[genotype], occurrencesTwoToTen[genotype], 
                                      (weightedOccurrences[genotype] / infectedIndividuals), weightedOccurrences[genotype]));
-            query.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infectedIndividuals, id, location_index[location]));
         }
+        query.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infectedIndividuals, id, location_index[location]));
     }
 }
 
@@ -276,18 +276,19 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         auto pfpr_all = Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100.0;
        
         // Make make sure we have valid bounds
+        //
+        // TODO odds are these can be deleted once we have robust unit testing in place to validate the MDC
         check_nan(eir);
         check_inf(eir);
-        
+
         check_nan(pfpr_under5);
         check_inf(pfpr_under5);
 
         check_nan(pfpr_2to10);
         check_inf(pfpr_2to10);
-
+        
         check_nan(pfpr_all);
         check_inf(pfpr_all);
-
 
         query.append(fmt::format(INSERT_SITE,
             id,
