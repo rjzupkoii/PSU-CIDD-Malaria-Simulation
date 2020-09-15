@@ -26,8 +26,8 @@ class DbReporter : public Reporter {
     "VALUES ({}, md5({}), {}, {}, {}, {}, {}, {}) RETURNING ID";
 
     const std::string INSERT_GENOTYPE = 
-    "INSERT INTO sim.MonthlyGenomeData (MonthlyDataId, LocationId, GenomeId, Occurrences, ClinicalOccurrences, Occurrences0to5, Occurrences2to10, WeightedFrequency) "
-    "VALUES ({}, {}, {}, {}, {}, {}, {}, {});";
+    "INSERT INTO sim.MonthlyGenomeData (MonthlyDataId, LocationId, GenomeId, Occurrences, ClinicalOccurrences, Occurrences0to5, Occurrences2to10, WeightedFrequency, WeightedOccurrences) "
+    "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {});";
 
     const std::string INSERT_LOCATION =
     "INSERT INTO sim.Location (ConfigurationId, Index, X, Y, Beta) VALUES ({}, {}, {}, {}, {});";
@@ -48,6 +48,9 @@ class DbReporter : public Reporter {
 
     const std::string SELECT_LOCATION = 
     "SELECT id, index FROM sim.location WHERE ConfigurationId = {} ORDER BY index;";
+
+    const std::string UPDATE_INFECTED_INDIVIDUALS = 
+    "UPDATE sim.MonthlySiteData SET InfectedIndividuals = {} WHERE MonthlyDataId = {} AND LocationId = {}";
 
     const std::string UPDATE_REPLICATE = 
     "UPDATE replicate SET EndTime = now() WHERE id = {};";

@@ -251,6 +251,7 @@ CREATE TABLE sim.monthlysitedata
     pfprunder5 double precision NOT NULL,
     pfpr2to10 double precision NOT NULL,
     pfprall double precision NOT NULL,
+    infectedindividuals integer NOT NULL,
     CONSTRAINT monthlysitedata_pkey PRIMARY KEY (monthlydataid, locationid),
     CONSTRAINT "MonhtlyDataId_FK" FOREIGN KEY (monthlydataid)
         REFERENCES sim.monthlydata (id) MATCH SIMPLE
@@ -301,6 +302,7 @@ CREATE TABLE sim.monthlygenomedata
     clinicaloccurrences integer NOT NULL,
     occurrences0to5 integer NOT NULL,
     occurrences2to10 integer NOT NULL,
+    weightedoccurrences double precision NOT NULL,
     weightedfrequency double precision NOT NULL,
     CONSTRAINT monthlygenomedata_pkey PRIMARY KEY (monthlydataid, genomeid, locationid),
     CONSTRAINT monthlygenomedata_genotypeid_fk FOREIGN KEY (genomeid)
