@@ -428,27 +428,30 @@ void ModelDataCollector::update_person_days_by_years(const int &location, const 
 }
 
 void ModelDataCollector::calculate_eir() {
+  
+  // Check to see if we should be collecting data or not, this will help avoid divide-by-zero errors
+  // when determining the total time in year
+  bool collect_data = (Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day());
+
   for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     if (EIR_by_location_year_[loc].empty()) {
-      //collect data for less than 1 year
-      const auto total_time_in_years =
-        (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) /
-        static_cast<double>(Constants::
-        DAYS_IN_YEAR());
-      double eir = (total_number_of_bites_by_location_year_[loc] /
-                    static_cast<double>(person_days_by_location_year_[loc
-                    ])) * Constants::DAYS_IN_YEAR();
+      
+      if (!collect_data) {
+        EIR_by_location_[loc] = 0;
+        continue;
+      }
+      
+      // Collect data for less than 1 year, note that total_time_in_years maybe <= 0 if 
+      // the model time is still before collection should take place
+      const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / static_cast<double>(Constants::DAYS_IN_YEAR());
+      double eir = (total_number_of_bites_by_location_year_[loc] / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
       eir = eir / total_time_in_years;
       EIR_by_location_[loc] = eir;
+
     } else {
       double sum_eir = std::accumulate(EIR_by_location_year_[loc].begin(), EIR_by_location_year_[loc].end(), 0.0);
       auto number_of_0 = std::count(EIR_by_location_year_[loc].begin(), EIR_by_location_year_[loc].end(), 0);
-
-      EIR_by_location_[loc] = ((EIR_by_location_year_[loc].size() - number_of_0) == 0.0)
-                              ? 0.0
-                              : sum_eir /
-                                (EIR_by_location_year_[loc].size() -
-                                 number_of_0);
+      EIR_by_location_[loc] = ((EIR_by_location_year_[loc].size() - number_of_0) == 0.0)  ? 0.0  : sum_eir / (EIR_by_location_year_[loc].size() - number_of_0);
     }
   }
 }
