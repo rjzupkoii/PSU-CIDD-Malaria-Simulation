@@ -70,6 +70,7 @@ if [ ! -d "$BUILD_ENV/vcpkg" ]; then
   cd $BUILD_ENV
   wget https://github.com/microsoft/vcpkg/archive/2019.08.tar.gz
   tar xf 2019.08.tar.gz
+  rm 2019.08.tar.gz
   mv vcpkg-2019.08 vcpkg
   cd vcpkg
   ./bootstrap-vcpkg.sh
