@@ -36,40 +36,30 @@ make
 sudo make install
 ```
 
-## WSL on the PSU VPN
-One minor problem that may occur while on the PSU VPN is that psu.edu domains are not resolved correctly. This is usually due to the `/etc/resolv.conf` file not being updated correctly by WSL. To manually update the file, launch PowerShell and run,
-
-```PowerShell
-Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandPropert ServerAddresses
-```
-
-copy the addresses to `/etc/resolv.conf` so you have something similar to 
-
-```
-nameserver 192.168.1.1
-nameserver 192.168.1.2
-nameserver 192.168.1.3
-search psu.edu
-```
-
 This may need to be done everytime you connect to the VPN, so scripting the update may be in order.
 
 # Building
-While building with `make` the `-j` switch may be used to control the number of cores used.
+
+## Local WSL Builds
+
+Before building the first time it is necessary to create the build directory:
 
 ```bash
 mkdir build
 cd build
-cmake .. 
-make -j 4
 ```
 
-An alternative approach is to create a script that will run the relevant commands. The following can be used for building under WLS:
+Afterwhich the following command can be run to build the simuation under WSL:
 
 ```bash
 cmake -DCMAKE_BUILD_TYPE=DEBUG -DBUILD_WSL:BOOL=true ..
 make -j 8
 ```
+
+Generally it is recomended to create a `build.sh` script that runs the build commands.
+
+## Building on ICDS-ACI
+To build the simulation to run on the ICDS-ACI the first time it is necessary to perform a number of configuration steps. After logging on to the interactive environment (`aci-b.aci.ics.psu.edu`) cloning this repository run `config.sh` which will prepare the build environment. As part of the process a build script will be created at `build/build.sh` that will ensure the environment is set correctly when run. 
 
 # Running
 The first step in performing a basic model check is load the genome data in the database, this must also be done whenever a new database is corrected:
@@ -87,9 +77,6 @@ cd /build/bin
 ```
 
 Note that while care was taken in places to ensure the code is performant, the amount of RAM needed during execution can be quite high (ex., 32GB or more). When the model is run in Linux enviroments where the necessary memeory is not avalible, you may find that the program is killed without notice due to being [out of memory](https://linux-mm.org/OOM_Killer).
-
-# Building on ICDS-ACI
-To build the simulation to run on the ICDS-ACI the first time it is necessary to perform a number of configuration steps. After logging on to the interactive environment (`aci-b.aci.ics.psu.edu`) cloning this repository run `config.sh` which will prepare the build environment. As part of the process a build script will be created at `build/build.sh` that will ensure the environment is set correctly when run. 
 
 # Development Tools
 
@@ -116,3 +103,21 @@ gprof2dot -f callgrind callgrind.out.* | dot -Tpng -o output.png
 This will generate a PNG file containing a node graph of where most of the simulation's time is spent during execution along with the percentage of time spent in a given function. 
 
 Note that `valgrind` adds **considerable** overhead to the execution of the simulation so it is highly recommended that profiling be limited to small simulations. 
+
+# Troubleshooting
+
+## WSL on the PSU VPN
+One minor problem that may occur while on the PSU VPN is that psu.edu domains are not resolved correctly. This is usually due to the `/etc/resolv.conf` file not being updated correctly by WSL. To manually update the file, launch PowerShell and run,
+
+```PowerShell
+Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandPropert ServerAddresses
+```
+
+copy the addresses to `/etc/resolv.conf` so you have something similar to 
+
+```
+nameserver 192.168.1.1
+nameserver 192.168.1.2
+nameserver 192.168.1.3
+search psu.edu
+```
