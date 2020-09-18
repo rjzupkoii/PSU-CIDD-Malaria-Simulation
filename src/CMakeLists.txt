@@ -4,6 +4,18 @@ set(BUILD_WARNINGS false CACHE BOOL "Enable for build warnings")
 # Enable if building on the Windows Subsystem for Linux (WSL), via the command line use -DBUILD_WSL:BOOL=true
 set(BUILD_WSL false CACHE BOOL "Enable for builds on WSL")
 
+# This function checks for the existance of a given module and sets the flag accordingly
+function(CheckHasModule Module)
+  find_package(${Module} QUIET)
+  if(NOT DEFINED ${Module}_DIR)
+    set(HAS_MODULE_${Module} TRUE PARENT_SCOPE)
+  elseif(${Module}_DIR)
+    set(HAS_MODULE_${Module} TRUE PARENT_SCOPE)
+  else()
+    set(HAS_MODULE_${Module} FALSE PARENT_SCOPE)
+  endif()
+endfunction()
+
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
 # Define the core simulation files
@@ -39,9 +51,20 @@ file(GLOB LIBRARY
 set(SRC_FILES ${SOURCE} ${LIBRARY})
 add_library(MaSimCore STATIC ${SRC_FILES})
 
-# Pull in date::date for the correct location if we are on the cluster
-if (BUILD_CLUSTER) 
-        find_package(date CONFIG REQUIRED)
+# Pull in date::date for the correct location if we are on not on WSL or are on the cluster
+if (NOT BUILD_WSL OR BUILD_CLUSTER)
+        # Depending upon when someone built for the first time, date could
+        # be under "date" or "unoffical-date"
+        CheckHasModule(date)
+        if (${HAS_MODULE_date})
+                message(STATUS "Using date::date")
+                find_package(date CONFIG REQUIRED)
+                target_link_libraries(MaSimCore PUBLIC date::date)
+        else()
+                message(STATUS "Using unofficial::date::date")
+                find_package(unofficial-date CONFIG REQUIRED)
+                target_link_libraries(MaSimCore PUBLIC unofficial::date::date)
+        endif()
 endif()
 
 if (BUILD_WSL)
