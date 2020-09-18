@@ -78,7 +78,6 @@ target_link_libraries(MaSimCore PUBLIC
         yaml-cpp
         GSL::gsl GSL::gslcblas
         fmt::fmt fmt::fmt-header-only
-        date::date
         )
 endif()
 
