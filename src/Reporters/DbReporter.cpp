@@ -24,9 +24,27 @@
 // Macro to check if a value is infinite, report if it is, and update the value as needed
 #define check_inf(value) if (std::isinf(value)) LOG(WARNING) << "Inf caught " << #value; value = std::isinf(value) ? -9999 : value;
 
+pqxx::connection* DbReporter::get_connection() {
+    // Getting a connection is straightforward, so this function is larely intended warp retry functionality
+    int RETRY_LIMIT = 10;
+    int retry_count = 0;
+
+    while (retry_count < RETRY_LIMIT) {
+        try {
+            return new pqxx::connection(Model::CONFIG->connection_string());
+        } catch (const pqxx::broken_connection &e) {
+            retry_count++;
+            LOG(WARNING) << "Unable to connect to database, try " << retry_count;
+        }
+    }
+
+    LOG(ERROR) << "Unable to connect to database, giving up.";
+    exit(-1);
+}
+
 void DbReporter::initialize(int job_number, std::string path) {
     // Connect to the database
-    pqxx::connection* connection = new pqxx::connection(Model::CONFIG->connection_string());
+    pqxx::connection* connection = get_connection();
     LOG(INFO) << "Connected to " << connection->dbname();
 
     // Ensure that the database is prepared and grab relevent ids before running
@@ -35,6 +53,7 @@ void DbReporter::initialize(int job_number, std::string path) {
     
     // Close the connection
     connection->close();
+    delete connection;
 
     // Inform the user that we are running
     LOG(INFO) << fmt::format("Running configuration {}, replicate {}.", config_id, replicate);
@@ -164,20 +183,23 @@ void DbReporter::monthly_report() {
     std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor, treatment_failures, beta);
 
     // Run the query and grab the id
-    pqxx::connection* connection = new pqxx::connection(Model::CONFIG->connection_string());
+    pqxx::connection* connection = get_connection();
     pqxx::work db(*connection);
     pqxx::result result = db.exec(query);
     auto id = result[0][0].as<int>();
     
-    // Prepare the queries to be run
+    // Prepare and run the queries to be run
     query = "";
     monthly_site_data(id, query);
-    monthly_genome_data(id, query);
-
-    // Run then and commit everything
     db.exec(query);
+    query = "";
+    monthly_genome_data(id, query);
+    db.exec(query);
+
+    // Commit the pending data and close
     db.commit();
     connection->close();
+    delete connection;
 }
 
 // Iterate over all the sites and prepare the query for the site specific genome data

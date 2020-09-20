@@ -65,6 +65,9 @@ class DbReporter : public Reporter {
     // Used to track location information for the life of the object
     int* location_index;
     
+    // Prepare a connection to the database, pointer returned must be deleted
+    pqxx::connection* get_connection();
+
     // Reporter specific
     void prepare_configuration(pqxx::connection* connection);
     void prepare_replicate(pqxx::connection* connection);
