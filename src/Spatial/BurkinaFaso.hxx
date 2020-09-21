@@ -27,6 +27,7 @@ namespace Spatial {
         VIRTUAL_PROPERTY_REF(double, penalty)
 
         const double CAPITAL_DISTRICT = 14;
+
         
         public:
             BurkinaFaso(const YAML::Node &node) { 
@@ -44,14 +45,21 @@ namespace Spatial {
                     const DoubleVector &relative_distance_vector,
                     const IntVector &v_number_of_residents_by_location) const override { 
 
+                // NOTE this variable is STATIC
+                static double* travel = nullptr;
+
                 // Note the population size
                 auto population = v_number_of_residents_by_location[from_location];
 
                 // Note the source district
                 auto source_district = SpatialData::get_instance().get_district(from_location);
 
-                // Get the relevent surfaces
-                double* travel = prepare_surface(SpatialData::SpatialFileType::Travel, number_of_locations);
+                // Get the relevent surfaces, preparing the surface is an expensive operation,
+                // so only do it once since the population should generally continue to grow
+                // proportionately for each cell
+                if (travel == nullptr) {
+                    travel = prepare_surface(SpatialData::SpatialFileType::Travel, number_of_locations);    
+                }
                 
                 // Prepare the vector for results
                 std::vector<double> results(number_of_locations, 0.0);
@@ -79,9 +87,6 @@ namespace Spatial {
 
                     results[destination] = probability;
                 }
-
-                // Free the memory used for the surface
-                delete travel;
 
                 // Done, return the results
                 return results;
