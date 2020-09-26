@@ -4,6 +4,11 @@ SELECT pg_size_pretty(pg_database_size('masim'));
 -- Free unusued disk space
 VACUUM FULL;
 
+-- Monitor the progress of a vacuum
+SELECT heap_blks_scanned / CAST(heap_blks_total AS NUMERIC) * 100 AS heap_blks_percent, progress.*, activity.query
+FROM pg_stat_progress_vacuum AS progress
+INNER JOIN pg_stat_activity AS activity ON activity.pid = progress.pid;
+
 -- Check the current size of the database
 SELECT pg_size_pretty(pg_database_size('masim')) AS "DB Size",
   months / 12 AS years, *
