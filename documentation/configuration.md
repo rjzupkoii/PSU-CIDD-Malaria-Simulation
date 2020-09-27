@@ -12,6 +12,8 @@ The following nodes govern how the model executes at a low level.
 
 **connection_string** (string) : (*Version 4.0*) The connection string for the PostgreSQL database that stores the simulation data.
 
+**record_genome_db** (boolean) : (*Version 4.0*) Indicates that genome data should be recorded to the database when using the `DbReporter` reporter class. Note that recording genomic data to the database will cause the database to quickly inflate in size. It is recommended that this setting only be used when genomic data needs to be retrieved. 
+
 
 ### Model Configuration Notes
 The following nodes contain the settings for the simulation.

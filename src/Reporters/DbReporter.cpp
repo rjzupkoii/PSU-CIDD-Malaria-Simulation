@@ -192,9 +192,11 @@ void DbReporter::monthly_report() {
     query = "";
     monthly_site_data(id, query);
     db.exec(query);
-    query = "";
-    monthly_genome_data(id, query);
-    db.exec(query);
+    if (Model::CONFIG->record_genome_db()) {
+        query = "";
+        monthly_genome_data(id, query);
+        db.exec(query);
+    }
 
     // Commit the pending data and close
     db.commit();
