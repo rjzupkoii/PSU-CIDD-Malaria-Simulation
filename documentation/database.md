@@ -9,6 +9,7 @@ The specific requirements for the server are dependent in part upon the number o
 - 4 CPUs
 - 8 GB RAM
 - 800 GB primary disk
+- Ubuntu 18.04 LTS 64-bit
 
 # Installation
 
