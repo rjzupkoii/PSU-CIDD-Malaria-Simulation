@@ -69,7 +69,7 @@ BEGIN
 	DELETE FROM sim.study WHERE id = STUDY_ID;
 	
 	-- Drop the temporary table
-  	DROP TABLE monthlydataidex;  
+  	DROP TABLE configurationindex;  
 	
 	-- Report complete
   	RAISE NOTICE 'Complete';
