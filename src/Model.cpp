@@ -136,7 +136,6 @@ void Model::initialize(int job_number, std::string std) {
 
     // TODO Review what to do with these reporters
     // add_reporter(Reporter::MakeReport(Reporter::MONTHLY_REPORTER));
-    // add_reporter(Reporter::MakeReport(Reporter::SPATIAL_REPORTER));
 
     add_reporter(Reporter::MakeReport(Reporter::DB_REPORTER));
   } else {

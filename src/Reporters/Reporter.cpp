@@ -17,13 +17,11 @@
 #include "MovementReporter.h"
 #include "MMCReporter.h"
 #include "PopulationReporter.h"
-#include "SpatialReporter.h"
 
 std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
     {"Console", CONSOLE},
     {"MonthlyReporter", MONTHLY_REPORTER},
     {"MMC", MMC_REPORTER},
-    {"SpatialReporter", SPATIAL_REPORTER},
     {"DbReporter", DB_REPORTER},
     {"MovementReporter", MOVEMENT_REPORTER},
     {"PopulationReporter", POPULATION_REPORTER}
@@ -54,7 +52,6 @@ Reporter *Reporter::MakeReport(ReportType report_type) {
     case CONSOLE:return new ConsoleReporter();
     case MONTHLY_REPORTER:return new MonthlyReporter();
     case MMC_REPORTER:return new MMCReporter();
-    case SPATIAL_REPORTER: return new SpatialReporter();
     case DB_REPORTER: return new DbReporter();
     case MOVEMENT_REPORTER: return new MovementReporter();
     case POPULATION_REPORTER: return new PopulationReporter();
