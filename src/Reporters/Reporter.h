@@ -51,10 +51,14 @@ protected:
     GUI,
     MONTHLY_REPORTER,
     MMC_REPORTER,
-    SPATIAL_REPORTER,
+
+    // Reporter(s) with database dependency
     DB_REPORTER,
+    
+    // Specialist reporters for specific experiments
     MOVEMENT_REPORTER,
-    POPULATION_REPORTER
+    POPULATION_REPORTER,
+    CELLULAR_REPORTER
   };
 
   static std::map<std::string, ReportType> ReportTypeMap;
