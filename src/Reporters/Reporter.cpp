@@ -14,7 +14,6 @@
 #include "MDC/ModelDataCollector.h"
 #include "Model.h"
 #include "MonthlyReporter.h"
-#include "MovementReporter.h"
 #include "MMCReporter.h"
 #include "Specialist/CellularReporter.h"
 #include "Specialist/MovementReporter.h"

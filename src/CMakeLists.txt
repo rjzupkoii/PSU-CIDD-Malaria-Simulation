@@ -33,7 +33,8 @@ file(GLOB SOURCE *.cpp
         Parasites/*.cpp 
         Population/*.cpp
         Population/Properties/*.cpp
-        Reporters/*.cpp 
+        Reporters/*.cpp
+        Reporters/Specialist/*.cpp
         Spatial/*.cpp 
         Strategies/*.cpp
         Therapies/*.cpp

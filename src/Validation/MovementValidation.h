@@ -7,7 +7,7 @@
 #define MOVEMENTVALIDATION_H
 
 #include "Core/PropertyMacro.h"
-#include "Reporters/MovementReporter.h"
+#include "Reporters/Specialist/MovementReporter.h"
 
 class MovementValidation {
 

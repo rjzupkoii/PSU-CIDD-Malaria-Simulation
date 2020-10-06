@@ -7,7 +7,7 @@
 #ifndef POPULATIONREPORTER_H
 #define POPULATIONREPORTER_H
 
-#include "Reporter.h"
+#include "Reporters/Reporter.h"
 
 class PopulationReporter : public Reporter {
   public:

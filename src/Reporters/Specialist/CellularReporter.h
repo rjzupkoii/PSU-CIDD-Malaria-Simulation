@@ -6,7 +6,7 @@
 #ifndef CELLULARREPORTER_H
 #define CELLULARREPORTER_H
 
-#include "Reporter.h"
+#include "Reporters/Reporter.h"
 
 class CellularReporter : public Reporter {
     private:

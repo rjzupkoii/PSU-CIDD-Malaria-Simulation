@@ -8,7 +8,7 @@
 #ifndef MOVEMENTREPORTER_H
 #define MOVEMENTREPORTER_H
 
-#include "Reporter.h"
+#include "Reporters/Reporter.h"
 
 #include <pqxx/pqxx>
 #include <vector>

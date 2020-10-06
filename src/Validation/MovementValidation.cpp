@@ -10,7 +10,7 @@
 #include "Core/Config/Config.h"
 #include "easylogging++.h"
 #include "Model.h"
-#include "Reporters/MovementReporter.h"
+#include "Reporters/Specialist/MovementReporter.h"
 #include "Spatial/SpatialModel.hxx"
 #include "GIS/SpatialData.h"
 #include "Utility/MatrixWriter.hxx"
