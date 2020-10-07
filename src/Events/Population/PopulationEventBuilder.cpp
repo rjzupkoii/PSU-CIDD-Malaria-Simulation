@@ -132,21 +132,26 @@ PopulationEventBuilder::build_modify_nested_mft_strategy_event(const YAML::Node&
 }
 
 std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const YAML::Node& node, Config* config) {
-  std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    const auto starting_date = node[i]["day"].as<date::year_month_day>();
-    auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
-    double mutation_probability = node[i]["mutation_probability"]
-                                    ? node[i]["mutation_probability"].as<double>()
-                                    : Model::CONFIG->drug_db()->at(0)->p_mutation();
+  try {
+    std::vector<Event*> events;
+    for (std::size_t i = 0; i < node.size(); i++) {
+      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+      double mutation_probability = node[i]["mutation_probability"]
+                                      ? node[i]["mutation_probability"].as<double>()
+                                      : Model::CONFIG->drug_db()->at(0)->p_mutation();
 
-    int drug_id = node[i]["drug_id"] ? node[i]["drug_id"].as<int>() : -1;
+      int drug_id = node[i]["drug_id"] ? node[i]["drug_id"].as<int>() : -1;
 
-    auto* e = new TurnOnMutationEvent(time, mutation_probability, drug_id);
-    events.push_back(e);
+      auto* e = new TurnOnMutationEvent(time, mutation_probability, drug_id);
+      events.push_back(e);
+    }
+
+    return events;
+  } catch (YAML::BadConversion &error) {
+    LOG(ERROR) << "Unrecoverable error parsing YAML value in turn_on_mutation node: " << error.msg;
+    exit(1);
   }
-
-  return events;
 }
 
 std::vector<Event*> PopulationEventBuilder::build_turn_off_mutation_event(const YAML::Node& node, Config* config) {
