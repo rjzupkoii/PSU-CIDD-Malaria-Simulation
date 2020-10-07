@@ -348,9 +348,16 @@ void Population::introduce_initial_cases() {
   if (model() == nullptr) { return; }
 
   for (const auto p_info : Model::CONFIG->initial_parasite_info()) {
+    // Make sure the parasite is in bounds
+    if (p_info.parasite_type_id >= Model::CONFIG->genotype_db()->size()) {
+      LOG(ERROR) << fmt::format("Unrecoverable error! Initial parasite id ({}) is greater or equal to the size of the genotype_db ({})", 
+        p_info.parasite_type_id, Model::CONFIG->genotype_db()->size());
+      exit(1);
+    }
+
     auto num_of_infections = Model::RANDOM->random_poisson(std::round(size(p_info.location)*p_info.prevalence));
     num_of_infections = num_of_infections <= 0 ? 1 : num_of_infections;
-
+    
     auto* genotype = Model::CONFIG->genotype_db()->at(p_info.parasite_type_id);
     VLOG(9) << fmt::format("Introducing genotype {}  with prevalence: {} : {} infections at location {}", 
       p_info.parasite_type_id, p_info.prevalence, num_of_infections,  p_info.location);
