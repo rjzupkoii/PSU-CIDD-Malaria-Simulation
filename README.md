@@ -37,3 +37,7 @@ The following commands are available from the simulation:
 
 --v=[int]         Sets the verbosity of the logging, default zero
 </pre>
+
+When the `-r` switch is not supplied the simuation defaults to the `DbReporter`; however, with the `-r` switch the following reporters can be used:
+
+CellularReporter - Generates two CSV files, one of which contains general popuation data and the second of which contains detailed data about the popuation for one year. 
