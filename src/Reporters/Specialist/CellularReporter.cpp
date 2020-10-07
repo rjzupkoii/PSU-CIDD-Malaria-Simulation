@@ -23,7 +23,7 @@ void CellularReporter::initialize(int job_number, std::string path) {
     aggregate_reporter.setToDefault();
     aggregate_reporter.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
     aggregate_reporter.setGlobally(el::ConfigurationType::ToFile, "true");
-    aggregate_reporter.setGlobally(el::ConfigurationType::Filename, fmt::format("{}_aggregate_data_{}.txt", path, job_number));
+    aggregate_reporter.setGlobally(el::ConfigurationType::Filename, fmt::format("{}_aggregate_data_{}.csv", path, job_number));
     aggregate_reporter.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
     aggregate_reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
     el::Loggers::reconfigureLogger("aggregate_reporter", aggregate_reporter);
@@ -32,7 +32,7 @@ void CellularReporter::initialize(int job_number, std::string path) {
     detail_reporter.setToDefault();
     detail_reporter.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
     detail_reporter.setGlobally(el::ConfigurationType::ToFile, "true");
-    detail_reporter.setGlobally(el::ConfigurationType::Filename, fmt::format("{}_detailed_data_{}.txt", path, job_number));
+    detail_reporter.setGlobally(el::ConfigurationType::Filename, fmt::format("{}_detailed_data_{}.csv", path, job_number));
     detail_reporter.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
     detail_reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
     el::Loggers::reconfigureLogger("detail_reporter", detail_reporter);
@@ -164,6 +164,7 @@ void CellularReporter::detailed_report() {
                         ss << 0 << Csv::sep;
                     }
                 }
+                ss << Csv::end_line;
             }
         }
     }
