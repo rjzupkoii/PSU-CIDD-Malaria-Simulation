@@ -38,7 +38,8 @@ void CellularReporter::initialize(int job_number, std::string path) {
     el::Loggers::reconfigureLogger("detail_reporter", detail_reporter);
 
     // Log the aggregate headers
-    ss << "DaysElapsed" << Csv::sep << "Population" << Csv::sep << "Infected" << Csv::sep << "580yWeighted" << Csv::sep << "508yUnweighted" << Csv::end_line;
+    ss << "DaysElapsed" << Csv::sep << "Population" << Csv::sep << "InfectedIndividuals" << Csv::sep 
+       << "ParasiteClones" << Csv::sep << "580yWeighted" << Csv::sep << "508yUnweighted" << Csv::end_line;
     CLOG(INFO, "aggregate_reporter") << ss.str();
     ss.str("");
 
@@ -55,7 +56,8 @@ void CellularReporter::initialize(int job_number, std::string path) {
 
 void CellularReporter::monthly_report() {
     int _580yCount = 0;
-    int infected = 0;
+    int infectedIndividuals = 0;
+    int parasiteClones = 0;
     int population = 0;
     float _580yWeighted = 0;
     
@@ -78,12 +80,15 @@ void CellularReporter::monthly_report() {
                 if (size == 0) { continue; }
 
                 // Update the infected count
-                infected++;
+                infectedIndividuals++;
 
                 // Examine genotypes of the parasites present and tabulate when 580Y is expressed
                 int count = 0;
                 for (std::size_t infection = 0; infection < size; infection++) {
                     auto parasite_population = (*parasites)[infection];
+
+                    // Update the total clones count
+                    parasiteClones++;
 
                     // WARNING - This is hard-coded on the assumption that the K13 Propeller locus is at index 2
                     if (parasite_population->genotype()->gene_expression()[2] == 1) {
@@ -102,7 +107,8 @@ void CellularReporter::monthly_report() {
     auto dayselapsed = Model::SCHEDULER->current_time();
     ss << Model::SCHEDULER->current_time() << Csv::sep 
        << population << Csv::sep 
-       << infected << Csv::sep 
+       << infectedIndividuals << Csv::sep 
+       << parasiteClones << Csv::sep
        << _580yWeighted << Csv::sep 
        << _580yCount << Csv::end_line;
     CLOG(INFO, "aggregate_reporter") << ss.str();
