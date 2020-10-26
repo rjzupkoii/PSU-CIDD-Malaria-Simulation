@@ -18,6 +18,7 @@
 #include "IntroduceAQMutantEvent.h"
 #include "IntroduceLumefantrineMutantEvent.h"
 
+#include "AnnualBetaUpdateEvent.hxx"
 #include "AnnualCoverageUpdateEvent.hxx"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
@@ -220,17 +221,33 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_
   return events;
 }
 
+// Generate a new annual event that adjusts the beta at each location within the model, assumes that the
+// YAML node contains a rate of change and start date.
+std::vector<Event*> PopulationEventBuilder::build_annual_beta_update_event(const YAML::Node& node, Config* config) {  
+    // Build the event
+    auto start_date = node[0]["day"].as<date::year_month_day>();
+    auto rate = node[0]["rate"].as<float>();
+    auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
+    auto * event = new AnnualBetaUpdateEvent(rate, time);
+
+    // Log and add the event to the queue, only one for the country
+    VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", rate: " << rate;
+    std::vector<Event*> events;
+    events.push_back(event);
+    return events;
+}
+
 // Generate a new annual event that adjusts the coverage at each location within the model, assumes that
 // the YAML node contains a rate of change and start date.
 std::vector<Event*> PopulationEventBuilder::build_annual_coverage_update_event(const YAML::Node& node, Config* config) {
     // Build the event
     auto start_date = node[0]["day"].as<date::year_month_day>();
     auto rate = node[0]["rate"].as<float>();
-    auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();;
+    auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
     auto* event = new AnnualCoverageUpdateEvent(rate, time);
 
     // Log and add the event to the queue, only one for the country
-    VLOG(1) << "Adding AnnualCoverageUpdateEvent start: " << start_date << ", rate: " << rate;
+    VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", rate: " << rate;
     std::vector<Event*> events;
     events.push_back(event);
     return events;
@@ -279,6 +296,9 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
     events = build_turn_off_mutation_event(node["info"], config);
   }
 
+  if (name == AnnualBetaUpdateEvent::EventName) {
+    events = build_annual_beta_update_event(node["info"], config);
+  }
   if (name == AnnualCoverageUpdateEvent::EventName) {
     events = build_annual_coverage_update_event(node["info"], config);
   }

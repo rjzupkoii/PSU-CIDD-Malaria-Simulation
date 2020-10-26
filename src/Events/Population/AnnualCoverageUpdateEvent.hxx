@@ -1,11 +1,11 @@
 /*
- * BurkinaFaso.hxx
+ * AnnualCoverageUpdateEvent.hxx
  * 
- * This events class contains events that needs to be run for Burkina Faso at 
- * the end of the calendar year.
+ * This event class provides the ability to update the treatment coverage 
+ * (i.e., access to treatment) on an annual basis.
  */
-#ifndef BURKINAFASOEVENTS_HXX
-#define BURKINAFASOEVENTS_HXX
+#ifndef ANNUALCOVERAGEUPDATEEVENT_HXX
+#define ANNUALCOVERAGEUPDATEEVENT_HXX
 
 #include <math.h>
 
@@ -21,7 +21,7 @@ class AnnualCoverageUpdateEvent : public Event {
   private:
     float rate_ = 0.0;
 
-    // Execute the annual events for Burkina Faso.
+    // Execute the annual converage update event
     void execute() override {
 
       // Grab a reference to the location_db to work with

@@ -92,6 +92,20 @@ seasonal_info:
 ### events
 This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all of the data for the `info` field following will be provided to the loader function.
 
+#### annual_beta_update_event
+(*Version 4.0*) The annual beta update event increases or decreases the beta for each cell in the model using the formula `beta' = beta + (beta * rate)` and clamps the lower bounds for the beta a zero. 
+
+```YAML
+events:
+  - name: annual_beta_update_event
+    info:
+      - day: 2020/10/26
+        rate: -0.025
+```
+
+**day** (date string, YYYY/mm/dd) : the date when the update will first occur. \
+**rate** (float) : the rate of change for the beta for the cells.
+
 #### annual_coverage_update_event 
 (*Version 4.0*) The annual coverage update event increases the coverage for each cell in the model by reducing the coverage gap by a fixed value provided by rate. If the model is run for a long enough period of time, the presumption should be that the coverage will reach 100%.
 
