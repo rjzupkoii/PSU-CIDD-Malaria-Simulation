@@ -120,6 +120,25 @@ events:
 **day** (date string, YYYY/mm/dd) : the date when the update will first occur. \
 **rate** (float) : the rate of reduction in the coverage for the cells.
 
+#### importation_periodically_random_event
+(*Version 4.0*) Introduce a new malaria infection into the model at a random location, which has been selected using a draw that is weighted by the population. After the initial event, it will be rescheduled every *n* days based upon the periodicity.
+
+```YAML
+events:
+  - name: importation_periodically_random_event
+    info:
+      - day: 2020/10/26
+        genotype_id: 1
+        periodicity: 30
+      - day: 2020/10/26
+        genotype_id: 2
+        periodicity: 365
+```
+
+**day** (date string, YYYY/mm/dd) : the date when the first event will occur. \
+**genotype_id** (int) : the id of the genotype to be introduced. \
+**periodicity** (int) : the number of days between events after the first one.
+
 #### turn_off_mutation
 Turn off all mutations in the model, recommended during the model burn-in.
 

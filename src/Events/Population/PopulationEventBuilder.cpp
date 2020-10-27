@@ -20,6 +20,7 @@
 
 #include "AnnualBetaUpdateEvent.hxx"
 #include "AnnualCoverageUpdateEvent.hxx"
+#include "ImportationPeriodicallyRandomEvent.h"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
@@ -224,6 +225,7 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_
 // Generate a new annual event that adjusts the beta at each location within the model, assumes that the
 // YAML node contains a rate of change and start date.
 std::vector<Event*> PopulationEventBuilder::build_annual_beta_update_event(const YAML::Node& node, Config* config) {  
+  try {
     // Build the event
     auto start_date = node[0]["day"].as<date::year_month_day>();
     auto rate = node[0]["rate"].as<float>();
@@ -235,11 +237,16 @@ std::vector<Event*> PopulationEventBuilder::build_annual_beta_update_event(const
     std::vector<Event*> events;
     events.push_back(event);
     return events;
+  } catch (YAML::BadConversion &error) {
+    LOG(ERROR) << "Unrecoverable error parsing YAML value in " << AnnualBetaUpdateEvent::EventName << " node: " << error.msg;
+    exit(1);
+  }
 }
 
 // Generate a new annual event that adjusts the coverage at each location within the model, assumes that
 // the YAML node contains a rate of change and start date.
 std::vector<Event*> PopulationEventBuilder::build_annual_coverage_update_event(const YAML::Node& node, Config* config) {
+  try {
     // Build the event
     auto start_date = node[0]["day"].as<date::year_month_day>();
     auto rate = node[0]["rate"].as<float>();
@@ -251,6 +258,47 @@ std::vector<Event*> PopulationEventBuilder::build_annual_coverage_update_event(c
     std::vector<Event*> events;
     events.push_back(event);
     return events;
+  } catch (YAML::BadConversion &error) {
+    LOG(ERROR) << "Unrecoverable error parsing YAML value in " << AnnualCoverageUpdateEvent::EventName << " node: " << error.msg;
+    exit(1);
+  }
+}
+
+// Generate a new importation periodically random event that uses a weighted 
+// random selection to add a new malaria infection with a specific genotype
+// to the model.
+std::vector<Event*> PopulationEventBuilder::build_importation_periodically_random_event(const YAML::Node& node, Config* config) {
+  try {
+    std::vector<Event*> events;
+    for (std::size_t ndx = 0; ndx < node.size(); ndx++) {
+      // Load the values
+      auto start_date = node[ndx]["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
+      auto genotype_id = node[ndx]["genotype_id"].as<int>();
+      auto periodicity = node[ndx]["periodicity"].as<int>();
+
+      // Double check that the genotype id is valid
+      if (genotype_id < 0) {
+        LOG(ERROR) << "Invalid genotype id supplied for " << ImportationPeriodicallyRandomEvent::EventName 
+                  << " genotype id cannot be less than zero";
+        throw std::invalid_argument("Genotype id cannot be less than zero");
+      }
+      if (genotype_id >= Model::CONFIG->genotype_db()->size()) {
+        LOG(ERROR) << "Invalid genotype id supplied for " << ImportationPeriodicallyRandomEvent::EventName 
+                  << " genotype id cannot be greater than " << Model::CONFIG->genotype_db()->size() - 1;
+        throw std::invalid_argument("Genotype id cannot be greater than genotype_db size");
+      }
+
+      // Log and add the event to the queue
+      auto* event = new ImportationPeriodicallyRandomEvent(genotype_id, time, periodicity);
+      VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", genotype_id: " << genotype_id;
+      events.push_back(event);
+    }
+    return events;
+  } catch (YAML::BadConversion &error) {
+    LOG(ERROR) << "Unrecoverable error parsing YAML value in " << ImportationPeriodicallyRandomEvent::EventName << " node: " << error.msg;
+    exit(1);
+  }
 }
 
 std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config* config) {
@@ -301,6 +349,9 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   }
   if (name == AnnualCoverageUpdateEvent::EventName) {
     events = build_annual_coverage_update_event(node["info"], config);
+  }
+  if (name == ImportationPeriodicallyRandomEvent::EventName) {
+    events = build_importation_periodically_random_event(node["info"], config);
   }
 
   return events;

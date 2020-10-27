@@ -47,6 +47,8 @@ public:
   static std::vector<Event*> build_annual_coverage_update_event(const YAML::Node& node, Config* config);
 
   static std::vector<Event*> build_annual_beta_update_event(const YAML::Node& node, Config* config);
+
+  static std::vector<Event*> build_importation_periodically_random_event(const YAML::Node& node, Config* config);
 };
 
 #endif
