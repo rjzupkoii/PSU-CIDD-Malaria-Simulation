@@ -230,7 +230,7 @@ std::vector<Event*> PopulationEventBuilder::build_annual_beta_update_event(const
     auto start_date = node[0]["day"].as<date::year_month_day>();
     auto rate = node[0]["rate"].as<float>();
     auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
-    auto * event = new AnnualBetaUpdateEvent(rate, time);
+    auto* event = new AnnualBetaUpdateEvent(rate, time);
 
     // Log and add the event to the queue, only one for the country
     VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", rate: " << rate;
