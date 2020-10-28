@@ -18,7 +18,7 @@ The following nodes govern how the model executes at a low level.
 ### Model Configuration Notes
 The following nodes contain the settings for the simulation.
 
-**transmission_parameter** (float) : Governs how likely malaira is to be transmitted to a naive individual in the sporozoite challenge.
+**transmission_parameter** (float) : Governs how likely malaria is to be transmitted to a naive individual in the sporozoite challenge.
 
 **number_of_age_classes** (integer) : The size of the `age_structure` array.\
 **age_structure** : An array of integer values that corresponds to the oldest age that defines a break in the age structure.

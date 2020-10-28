@@ -20,6 +20,8 @@ class ImportationPeriodicallyRandomEvent : public Event {
     // Execute the import event
     void execute() override;
 
+    // Get a random index to perform the importation event at, the population 
+    // is used to weight the random pull
     int get_location();
 
     // Inflict the act infection upon the individual
