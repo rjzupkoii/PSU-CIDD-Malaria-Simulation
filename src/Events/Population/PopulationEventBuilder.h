@@ -7,7 +7,7 @@
 class Config;
 
 namespace YAML {
-  class Node;
+class Node;
 }
 
 class PopulationEventBuilder {
@@ -32,6 +32,7 @@ public:
   static std::vector<Event*> build(const YAML::Node& node, Config* config);
 
   static std::vector<Event*> build_introduce_plas2_parasite_events(const YAML::Node& node, Config* config);
+
   static std::vector<Event*> build_introduce_580Y_mutant_events(const YAML::Node& node, Config* config);
 
   static std::vector<Event*> build_introduce_aq_mutant_parasite_events(const YAML::Node& node, Config* config);
@@ -39,6 +40,9 @@ public:
   static std::vector<Event*>
   build_introduce_lumefantrine_mutant_parasite_events(const YAML::Node& node, Config* config);
 
+  static std::vector<Event*> build_introduce_triple_mutant_to_dpm_parasite_events(
+      const YAML::Node& node, Config* config
+  );
 };
 
 #endif // POPULATIONEVENTBUILDER_H

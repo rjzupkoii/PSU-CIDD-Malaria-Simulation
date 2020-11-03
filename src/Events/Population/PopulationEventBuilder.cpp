@@ -18,6 +18,7 @@
 #include "Introduce580YMutantEvent.h"
 #include "IntroduceAQMutantEvent.h"
 #include "IntroduceLumefantrineMutantEvent.h"
+#include "IntroduceTripleMutantToDPMEvent.h"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
@@ -47,7 +48,7 @@ PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML
     const auto location = node[i]["location"].as<unsigned long>();
     const auto location_from = location == -1 ? 0 : location;
     const auto location_to =
-      location == -1 ? config->number_of_locations() : std::min(location + 1, config->number_of_locations());
+        location == -1 ? config->number_of_locations() : std::min(location + 1, config->number_of_locations());
 
     for (auto loc = location_from; loc < location_to; ++loc) {
       for (std::size_t j = 0; j < node[i]["parasite_info"].size(); j++) {
@@ -137,8 +138,8 @@ std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const Y
     const auto starting_date = node[i]["day"].as<date::year_month_day>();
     auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
     double mutation_probability = node[i]["mutation_probability"]
-                                    ? node[i]["mutation_probability"].as<double>()
-                                    : Model::CONFIG->drug_db()->at(0)->p_mutation();
+                                  ? node[i]["mutation_probability"].as<double>()
+                                  : Model::CONFIG->drug_db()->at(0)->p_mutation();
 
     int drug_id = node[i]["drug_id"] ? node[i]["drug_id"].as<int>() : -1;
 
@@ -178,7 +179,8 @@ PopulationEventBuilder::build_introduce_plas2_parasite_events(const YAML::Node& 
   }
   return events;
 }
-std::vector<Event*> PopulationEventBuilder::build_introduce_580Y_mutant_events(const YAML::Node &node, Config* config) {
+
+std::vector<Event*> PopulationEventBuilder::build_introduce_580Y_mutant_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     auto location = node[i]["location"].as<int>();
@@ -196,9 +198,10 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_580Y_mutant_events(c
 }
 
 
-
-std::vector<Event*> PopulationEventBuilder::build_introduce_aq_mutant_parasite_events(const YAML::Node& node,
-                                                                                      Config* config) {
+std::vector<Event*> PopulationEventBuilder::build_introduce_aq_mutant_parasite_events(
+    const YAML::Node& node,
+    Config* config
+) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     auto location = node[i]["location"].as<int>();
@@ -215,8 +218,10 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_aq_mutant_parasite_e
   return events;
 }
 
-std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_parasite_events(const YAML::Node& node,
-                                                                                                Config* config) {
+std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_parasite_events(
+    const YAML::Node& node,
+    Config* config
+) {
   std::vector<Event*> events;
   for (std::size_t i = 0; i < node.size(); i++) {
     auto location = node[i]["location"].as<int>();
@@ -232,6 +237,27 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_
   }
   return events;
 }
+
+
+std::vector<Event*> PopulationEventBuilder::build_introduce_triple_mutant_to_dpm_parasite_events(
+    const YAML::Node& node, Config* config
+) {
+  std::vector<Event*> events;
+  for (std::size_t i = 0; i < node.size(); i++) {
+    auto location = node[i]["location"].as<int>();
+    if (location < config->number_of_locations()) {
+      auto fraction = node[i]["fraction"].as<double>();
+
+      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
+
+      auto* event = new IntroduceTrippleMutantToDPMEvent(location, time, fraction);
+      events.push_back(event);
+    }
+  }
+  return events;
+}
+
 
 std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
@@ -249,6 +275,10 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
 
   if (name == "introduce_lumefantrine_mutant_parasites") {
     events = build_introduce_lumefantrine_mutant_parasite_events(node["info"], config);
+  }
+
+  if (name == "introduce_triple_mutant_to_dpm_parasites") {
+    events = build_introduce_triple_mutant_to_dpm_parasite_events(node["info"], config);
   }
 
   if (name == "introduce_parasites") {
