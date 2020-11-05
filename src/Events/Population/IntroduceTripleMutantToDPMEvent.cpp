@@ -56,7 +56,7 @@ void IntroduceTrippleMutantToDPMEvent::execute() {
         // mutate to double copy of PfMdr 2 copies
         auto mdr_gene_allele_value = new_genotype->gene_expression()[1];
         if (mdr_gene_allele_value < 4) {
-          new_genotype = old_genotype->combine_mutation_to(1, mdr_gene_allele_value + 4);
+          new_genotype = new_genotype->combine_mutation_to(1, mdr_gene_allele_value + 4);
         }
 
         pp->set_genotype(new_genotype);
