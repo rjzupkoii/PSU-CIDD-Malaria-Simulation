@@ -422,10 +422,30 @@ bool Model::verify_configuration() {
   // Flag for error so we can check the entire file
   bool valid = true;
 
+  // Make sure the arrays are aligned correctly
   if (config_->death_rate_by_age_class().size() != config_->number_of_age_classes()) {
     LOG(ERROR) << fmt::format("Number of death rates ({}) does not match the number of age classes ({})!", 
       config_->death_rate_by_age_class().size(), config_->number_of_age_classes());
     valid = false;      
+  }
+
+  // This should not be zero
+  if (config_->artificial_rescaling_of_population_size() <= 0) {
+    LOG(ERROR) << "Population scaling cannot be less than or equal to zero.";
+    valid = false;
+  }
+
+  // Issue a warning if the crude birth rate is unusually high
+  if (config_->birth_rate() > 0.05) {
+    LOG(WARNING) << fmt::format("Unusually high birth rate of {} ({}/1000 individuals)", 
+      config_->birth_rate(), config_->birth_rate() * 1000);
+  }
+
+  // Issue an error if the crude birth rate exceeds one
+  if (config_->birth_rate() >= 1) {
+    LOG(ERROR) << fmt::format("Birth rate should not exceed 1.0, did you mean {} ({}/1000 individuals)?",
+      config_->birth_rate() / 1000, config_->birth_rate());
+      valid = false;
   }
 
   return valid;
