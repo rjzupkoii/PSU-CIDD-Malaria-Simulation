@@ -350,7 +350,7 @@ void Population::introduce_initial_cases() {
   for (const auto p_info : Model::CONFIG->initial_parasite_info()) {
     // Make sure the parasite is in bounds
     if (p_info.parasite_type_id >= Model::CONFIG->genotype_db()->size()) {
-      LOG(ERROR) << fmt::format("Unrecoverable error! Initial parasite id ({}) is greater or equal to the size of the genotype_db ({})", 
+      LOG(FATAL) << fmt::format("Unrecoverable error! Initial parasite id ({}) is greater or equal to the size of the genotype_db ({})", 
         p_info.parasite_type_id, Model::CONFIG->genotype_db()->size());
       exit(1);
     }

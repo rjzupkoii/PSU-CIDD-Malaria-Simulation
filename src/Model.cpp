@@ -124,8 +124,13 @@ void Model::build_initial_treatment_coverage() {
 void Model::initialize(int job_number, std::string std) {
   LOG(INFO) << "Model initializing...";
 
+  // Read the configuration and check to make sure it is valid
   LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
   config_->read_from_file(config_filename_);
+  if (!verify_configuration()) {
+    std::cerr << "Unable to continue execution with current configuration, see error logs.\n";
+    exit(1);
+  }
   
   VLOG(1) << "Initialize Random";
   random_->initialize(config_->initial_seed_number());
@@ -411,4 +416,17 @@ void Model::report_begin_of_time_step() {
 void Model::add_reporter(Reporter* reporter) {
   reporters_.push_back(reporter);
   reporter->set_model(this);
+}
+
+bool Model::verify_configuration() {
+  // Flag for error so we can check the entire file
+  bool valid = true;
+
+  if (config_->death_rate_by_age_class().size() != config_->number_of_age_classes()) {
+    LOG(FATAL) << fmt::format("Number of death rates ({}) does not match the number of age classes ({})!", 
+      config_->death_rate_by_age_class().size(), config_->number_of_age_classes());
+    valid = false;      
+  }
+
+  return valid;
 }

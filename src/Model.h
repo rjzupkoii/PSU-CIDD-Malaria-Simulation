@@ -110,6 +110,9 @@ class Model {
  private:
   IStrategy *treatment_strategy_{nullptr};
   ITreatmentCoverageModel *treatment_coverage_{nullptr};
+
+  // Verify that the configuration is valid, returns true if it is, false otherwise
+  bool verify_configuration();
 };
 
 #endif
