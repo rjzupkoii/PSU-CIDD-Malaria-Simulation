@@ -423,7 +423,7 @@ bool Model::verify_configuration() {
   bool valid = true;
 
   if (config_->death_rate_by_age_class().size() != config_->number_of_age_classes()) {
-    LOG(FATAL) << fmt::format("Number of death rates ({}) does not match the number of age classes ({})!", 
+    LOG(ERROR) << fmt::format("Number of death rates ({}) does not match the number of age classes ({})!", 
       config_->death_rate_by_age_class().size(), config_->number_of_age_classes());
     valid = false;      
   }
