@@ -140,7 +140,7 @@ events:
     - {duration: 400, genotype_id: 28, number_of_cases: 1, start_day: 2020/1/1}
   name: introduce_parasites_periodically
 - info:
-  - {day: 2020/1/1, strategy_id: 0}
+  - {day: 2020/1/1, strategy_id: 6}
   name: modify_nested_mft_strategy
 external_population_circulation_information:
   circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01]
@@ -355,7 +355,7 @@ strategy_db:
     peak_after: 1825
     peak_distribution: [0.0, 1.0]
     start_distribution: [0.9, 0.1]
-    strategy_ids: [0, 4]
+    strategy_ids: [0, 0]
     type: NestedMFT
   7:
     name: MainStrategy

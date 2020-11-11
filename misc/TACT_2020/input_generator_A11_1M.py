@@ -98,11 +98,9 @@ for tc, tc_details in tcs.items():
                 new_data['location_db']['p_treatment_for_less_than_5_by_location'] = np.full(number_of_locations, tc).tolist()
                 new_data['location_db']['p_treatment_for_more_than_5_by_location'] = np.full(number_of_locations, tc).tolist()
                 
-                for index,event in enumerate(data['events']):                    
-                    if event['name'] == 'modify_nested_mft_strategy':
-                        new_data['events'][index]['info'][0]['strategy_id'] = tact_id
-                
+                               
                 new_data['strategy_db'][6]['peak_after'] = peak_after
+                new_data['strategy_db'][6]['strategy_ids'][1] = tact_id
                 
                 output_filename = 'A11_1M/TACT_%s_TC_%s_TACT_%s_tact_adoption_%s.yml'%( pfpr,tc_str, tact_str,ta_str);
                 output_stream = open(output_filename, 'w');

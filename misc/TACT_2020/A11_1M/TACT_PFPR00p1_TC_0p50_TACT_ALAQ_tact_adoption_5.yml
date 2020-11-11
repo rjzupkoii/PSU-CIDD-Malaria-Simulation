@@ -140,7 +140,7 @@ events:
     - {duration: 400, genotype_id: 28, number_of_cases: 1, start_day: 2020/1/1}
   name: introduce_parasites_periodically
 - info:
-  - {day: 2020/1/1, strategy_id: 4}
+  - {day: 2020/1/1, strategy_id: 6}
   name: modify_nested_mft_strategy
 external_population_circulation_information:
   circulation_percent: [0.0, 0.01, 0.01, 0.01, 0.01]
