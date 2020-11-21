@@ -16,7 +16,7 @@
 
 // Set this flag to disable Linux / Unix specific code, this should be provided
 // via CMake automatically
-// #define __DISABLE_CRIT_ERR
+#define __DISABLE_CRIT_ERR
 
 #ifndef __DISABLE_CRIT_ERR
 namespace {
