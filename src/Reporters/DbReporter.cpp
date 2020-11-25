@@ -168,40 +168,73 @@ void DbReporter::prepare_replicate(pqxx::connection* connection) {
 
 // Prepare the monthly report and insert the results in the database
 void DbReporter::monthly_report() {
-    // Get the relevent data
-    auto days_elapsed = Model::SCHEDULER->current_time();
-    auto model_time = std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date);
-    auto seasonal_factor = seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
 
-    // Only get the treatment failures when comparison starts
-    auto treatment_failures = (Model::SCHEDULER->current_time() > Model::CONFIG->start_of_comparison_period()) ? calculate_treatment_failures() : 0;
-
-    // TODO Determine if we want to capture this or not
-    auto beta = 0;
-
-    // Prepare the summary query
-    std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor, treatment_failures, beta);
-
-    // Run the query and grab the id
-    pqxx::connection* connection = get_connection();
-    pqxx::work db(*connection);
-    pqxx::result result = db.exec(query);
-    auto id = result[0][0].as<int>();
-    
-    // Prepare and run the queries to be run
-    query = "";
-    monthly_site_data(id, query);
-    db.exec(query);
-    if (Model::CONFIG->record_genome_db()) {
-        query = "";
-        monthly_genome_data(id, query);
-        db.exec(query);
+    // Core loop for attempting to store the monthly report
+    int attempt = 0;
+    while (attempt < 5) {
+        // Return from the function on success
+        if (do_monthly_report()) {
+            return;
+        }
+        attempt++;
     }
 
-    // Commit the pending data and close
-    db.commit();
-    connection->close();
-    delete connection;
+    // Something went wrong, make sure it is in the logs and end the simulation
+    LOG(ERROR) << "Unable to perform monthly report action after " << attempt << " attempts!";
+    LOG(ERROR) << "Model timestep: " << Model::SCHEDULER->current_time();
+    std::cerr << "FATAL ERROR: unable to commit monthly report!";
+    exit(-1);
+}
+
+// Perform the actual monthly report,  
+bool DbReporter::do_monthly_report() {
+    pqxx::connection* connection;
+
+    try {
+        // Get the relevent data
+        auto days_elapsed = Model::SCHEDULER->current_time();
+        auto model_time = std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date);
+        auto seasonal_factor = seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
+
+        // Only get the treatment failures when comparison starts
+        auto treatment_failures = (Model::SCHEDULER->current_time() > Model::CONFIG->start_of_comparison_period()) ? calculate_treatment_failures() : 0;
+
+        // TODO Determine if we want to capture this or not
+        auto beta = 0;
+
+        // Prepare the summary query
+        std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor, treatment_failures, beta);
+
+        // Run the query and grab the id
+        connection = get_connection();
+        pqxx::work db(*connection);
+        pqxx::result result = db.exec(query);
+        auto id = result[0][0].as<int>();
+        
+        // Prepare and run the queries to be run
+        query = "";
+        monthly_site_data(id, query);
+        db.exec(query);
+        if (Model::CONFIG->record_genome_db()) {
+            query = "";
+            monthly_genome_data(id, query);
+            db.exec(query);
+        }
+
+        // Commit the pending data and close with success
+        db.commit();
+        connection->close();
+        delete connection;
+        return true;
+
+    } catch (pqxx::broken_connection &ex) {
+        // Connection was broken, clean up and return false
+        LOG(WARNING) << "Connection to database broken!";
+        if (connection != nullptr) {
+            delete connection;
+        }
+        return false;
+    }
 }
 
 // Iterate over all the sites and prepare the query for the site specific genome data

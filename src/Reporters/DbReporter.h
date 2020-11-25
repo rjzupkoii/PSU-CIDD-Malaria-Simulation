@@ -69,6 +69,7 @@ class DbReporter : public Reporter {
     pqxx::connection* get_connection();
 
     // Reporter specific
+    bool do_monthly_report();
     void prepare_configuration(pqxx::connection* connection);
     void prepare_replicate(pqxx::connection* connection);
     void monthly_genome_data(int id, std::string &query);
