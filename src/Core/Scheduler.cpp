@@ -39,8 +39,8 @@ void Scheduler::clear_all_events() {
 }
 
 void Scheduler::initialize(const date::year_month_day &starting_date, const int &total_time) {
-  //TODO: not urgent, why +1
-  set_total_available_time(total_time + 1);
+  // 720 here is to prevent schedule birthday event at the end of simulation
+  set_total_available_time(total_time + 720);
   set_current_time(0);
 
   calendar_date = sys_days(starting_date);
@@ -77,7 +77,9 @@ void Scheduler::schedule_individual_event(Event *event) {
 }
 
 void Scheduler::schedule_population_event(Event *event) {
-  schedule_event(population_events_list_[event->time], event);
+  if (event->time < population_events_list_.size()) {
+    schedule_event(population_events_list_[event->time], event);
+  }
 }
 
 void Scheduler::schedule_event(EventPtrVector &time_events, Event *event) {
