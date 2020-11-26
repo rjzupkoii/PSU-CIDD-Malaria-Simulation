@@ -43,6 +43,7 @@ BEGIN
   RAISE NOTICE 'Complete';
 END $BODY$;
 
+
 CREATE OR REPLACE PROCEDURE public.delete_study(
 	study_id integer)
 LANGUAGE 'plpgsql'
@@ -70,6 +71,31 @@ BEGIN
 	
 	-- Drop the temporary table
   	DROP TABLE configurationindex;  
+	
+	-- Report complete
+  	RAISE NOTICE 'Complete';
+	
+END $BODY$;
+
+
+CREATE OR REPLACE PROCEDURE public.delete_configuration(
+	configuration_id integer)
+LANGUAGE 'plpgsql'
+
+AS $BODY$
+DECLARE
+record RECORD;
+BEGIN
+    RAISE NOTICE 'Culling configuration %', CONFIGURATION_ID;
+
+	-- Delete the replicates
+    FOR record IN select distinct r.id from sim.configuration c inner join sim.replicate r on r.configurationid = c.id where c.id = CONFIGURATION_ID LOOP
+        CALL delete_replicate(record.id);
+    END LOOP;
+	
+	-- Delete the configuration
+	DELETE FROM sim.location WHERE configurationid = CONFIGURATION_ID;
+	DELETE FROM sim.configuration WHERE id = CONFIGURATION_ID;
 	
 	-- Report complete
   	RAISE NOTICE 'Complete';
