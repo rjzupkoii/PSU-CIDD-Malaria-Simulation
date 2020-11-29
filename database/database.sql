@@ -253,7 +253,7 @@ CREATE TABLE sim.monthlysitedata
     pfprall double precision NOT NULL,
     infectedindividuals integer NOT NULL,
     CONSTRAINT monthlysitedata_pkey PRIMARY KEY (monthlydataid, locationid),
-    CONSTRAINT "MonhtlyDataId_FK" FOREIGN KEY (monthlydataid)
+    CONSTRAINT "monthlydataid_fk" FOREIGN KEY (monthlydataid)
         REFERENCES sim.monthlydata (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -327,42 +327,32 @@ CREATE INDEX fki_fk_configuration_studyid
     (studyid)
     TABLESPACE pg_default;
 
-CREATE INDEX fki_districtmovement_replicateid_fk
+CREATE INDEX fki_districtmovement_replicateid
     ON sim.districtmovement USING btree
     (replicateid)
     TABLESPACE pg_default;
 
-CREATE INDEX fki_location_configurationid_fk
+CREATE INDEX fki_location_configurationid
     ON sim.location USING btree
     (configurationid)
     TABLESPACE pg_default;
 
-CREATE INDEX fki_monthlydata_replicateid_fk
-    ON sim.monthlydata USING btree
+CREATE INDEX fki_monthlydata_replicateid
+    ON sim.monthlydata USING hash
     (replicateid)
     TABLESPACE pg_default;
 
-CREATE INDEX fki_g
-    ON sim.monthlygenomedata USING btree
-    (genomeid)
-    TABLESPACE pg_default;
-
-CREATE INDEX fki_monthlygenomedata_monthlydataid_fk
-    ON sim.monthlygenomedata USING btree
-    (monthlydataid)
-    TABLESPACE pg_default;
-
-CREATE INDEX fki_movement_replicateid_fk
-    ON sim.movement USING btree
+CREATE INDEX fki_movement_replicateid
+    ON sim.movement USING hash
     (replicateid)
     TABLESPACE pg_default;
 
-CREATE INDEX fki_notes_studyid_fk
+CREATE INDEX fki_notes_studyid
     ON sim.notes USING btree
     (studyid)
     TABLESPACE pg_default;
 
-CREATE INDEX fki_replicate_studyid_fk
+CREATE INDEX fki_replicate_configurationid
     ON sim.replicate USING btree
     (configurationid)
     TABLESPACE pg_default;    
