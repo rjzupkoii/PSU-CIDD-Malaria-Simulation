@@ -6,6 +6,7 @@
 #include "DbReporter.h"
 
 #include <fmt/format.h>
+#include <thread>
 
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
@@ -35,6 +36,10 @@ pqxx::connection* DbReporter::get_connection() {
         } catch (const pqxx::broken_connection &e) {
             retry_count++;
             LOG(WARNING) << "Unable to connect to database, try " << retry_count;
+
+            // Sleep for five seconds before retrying
+            std::chrono::milliseconds timespan(5000);
+            std::this_thread::sleep_for(timespan);
         }
     }
 
@@ -169,7 +174,9 @@ void DbReporter::prepare_replicate(pqxx::connection* connection) {
 // Prepare the monthly report and insert the results in the database
 void DbReporter::monthly_report() {
 
-    // Core loop for attempting to store the monthly report
+    // Core loop for attempting to store the monthly report, if a broken
+    // connection occurs, the delay in getting a new connection will 
+    // give us a chance at recovery
     int attempt = 0;
     while (attempt < 5) {
         // Return from the function on success
