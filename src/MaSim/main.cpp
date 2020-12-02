@@ -54,18 +54,38 @@ void config_logger() {
   el::Loggers::reconfigureLogger("default", default_conf);
 }
 
+void config_critical_errors() {
+  // Set the last chance error handler
+  struct sigaction sigact;
+  sigact.sa_sigaction = crit_err_hdlr;
+  sigact.sa_flags = SA_RESTART | SA_SIGINFO;
+
+  // Set the error handler for unhandled expections
+  if (sigaction(SIGABRT, &sigact, (struct sigaction *)NULL) != 0) {
+      std::cerr << "error setting handler for signal " << SIGABRT 
+                << " (" << strsignal(SIGABRT) << ")\n";
+      exit(EXIT_FAILURE);
+  }
+
+  // Set the error handler for segmentation faults
+  if (sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL) != 0) {
+      std::cerr << "error setting handler for signal " << SIGSEGV 
+                << " (" << strsignal(SIGSEGV) << ")\n";
+      exit(EXIT_FAILURE);      
+  }
+
+  // Set the error handler for bus errors
+  if (sigaction(SIGBUS, &sigact, (struct sigaction *)NULL) != 0) {
+      std::cerr << "error setting handler for signal " << SIGBUS 
+                << " (" << strsignal(SIGBUS) << ")\n";
+      exit(EXIT_FAILURE);      
+  }
+}
+
 int main(const int argc, char **argv) {
 
     #ifndef __DISABLE_CRIT_ERR
-    // Set the last chance error handler
-    struct sigaction sigact;
-    sigact.sa_sigaction = crit_err_hdlr;
-    sigact.sa_flags = SA_RESTART | SA_SIGINFO;
-    if (sigaction(SIGABRT, &sigact, (struct sigaction *)NULL) != 0) {
-        std::cerr << "error setting handler for signal " << SIGABRT 
-                  << " (" << strsignal(SIGABRT) << ")\n";
-        exit(EXIT_FAILURE);
-    }
+    config_critical_errors();
     #endif
 
     // Parse the CLI
