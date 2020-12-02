@@ -93,6 +93,12 @@ PopulationEventBuilder::build_change_treatment_strategy_event(const YAML::Node& 
     auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
     auto strategy_id = node[i]["strategy_id"].as<int>();
 
+    // Verify that the strategy id is valid, if not fail
+    if (strategy_id >= config->strategy_db.value_.size()) {
+      LOG(ERROR) << "Invalid strategy_id! " << strategy_id << " supplied, but strategy_db size is " << config->strategy_db.value_.size();
+      exit(-1);
+    }
+
     auto* e = new ChangeStrategyEvent(time, strategy_id);
     events.push_back(e);
   }
