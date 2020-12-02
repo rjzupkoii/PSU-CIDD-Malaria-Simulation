@@ -119,6 +119,7 @@ target_compile_features(DxGGenerator PRIVATE cxx_range_for)
 # Note the flags that we ran with
 message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
 message(STATUS "Library Type: " ${LIB_TYPE})
+message(STATUS "Operating System: " ${CMAKE_SYSTEM_NAME})
 message(STATUS "Compiler flags:" ${CMAKE_CXX_COMPILE_FLAGS})
 message(STATUS "Compiler cxx debug flags:" ${CMAKE_CXX_FLAGS_DEBUG})
 message(STATUS "Compiler cxx release flags:" ${CMAKE_CXX_FLAGS_RELEASE})

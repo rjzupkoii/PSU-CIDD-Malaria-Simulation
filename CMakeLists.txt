@@ -19,7 +19,7 @@ if (WIN32)
   set(CMAKE_CXX_FLAGS_DEBUG "-DNOMINMAX ${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
   # Sets the flag to disable Linux specific error handling 
-  add_definitions(-D__DISABLE_CRIT_ERR=1)
+  add_definitions(-D__DISABLE_CRIT_ERR)  
 endif ()
 
 IF(APPLE)

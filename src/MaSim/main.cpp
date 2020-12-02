@@ -14,8 +14,10 @@
 #include "Model.h"
 
 // Set this flag to disable Linux / Unix specific code, this should be provided
-// via CMake automatically
-// #define __DISABLE_CRIT_ERR
+// via CMake automatically or by the compiler for WIN32
+#ifdef _WIN32 
+#define __DISABLE_CRIT_ERR
+#endif
 
 #ifndef __DISABLE_CRIT_ERR
 namespace {
