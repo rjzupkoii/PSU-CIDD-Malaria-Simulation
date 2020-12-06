@@ -17,19 +17,20 @@
 
 using namespace date;
 
-Scheduler::Scheduler(Model *model) : current_time_(-1), total_available_time_(-1), model_(model),
-                                     is_force_stop_(false) {}
+Scheduler::Scheduler(Model* model) : current_time_(-1), total_available_time_(-1), model_(model),
+                                     is_force_stop_(false) { }
 
 Scheduler::~Scheduler() {
   clear_all_events();
 }
 
 void Scheduler::extend_total_time(int new_total_time) {
-  if (total_available_time_ < new_total_time)
+  if (total_available_time_ < new_total_time) {
     for (auto i = total_available_time_; i <= new_total_time; i++) {
       individual_events_list_.push_back(EventPtrVector());
       population_events_list_.push_back(EventPtrVector());
     }
+  }
   total_available_time_ = new_total_time;
 }
 
@@ -38,7 +39,7 @@ void Scheduler::clear_all_events() {
   clear_all_events(population_events_list_);
 }
 
-void Scheduler::initialize(const date::year_month_day &starting_date, const int &total_time) {
+void Scheduler::initialize(const date::year_month_day& starting_date, const int& total_time) {
   // 720 here is to prevent schedule birthday event at the end of simulation
   set_total_available_time(total_time + 720);
   set_current_time(0);
@@ -46,10 +47,10 @@ void Scheduler::initialize(const date::year_month_day &starting_date, const int 
   calendar_date = sys_days(starting_date);
 }
 
-void Scheduler::clear_all_events(EventPtrVector2 &events_list) const {
-  for (auto &timestep_events : events_list) {
-    for (auto *event : timestep_events) {
-      if (event->dispatcher!=nullptr) {
+void Scheduler::clear_all_events(EventPtrVector2& events_list) const {
+  for (auto& timestep_events : events_list) {
+    for (auto* event : timestep_events) {
+      if (event->dispatcher != nullptr) {
         event->dispatcher->remove(event);
       }
       ObjectHelpers::delete_pointer<Event>(event);
@@ -63,7 +64,7 @@ int Scheduler::total_available_time() const {
   return total_available_time_;
 }
 
-void Scheduler::set_total_available_time(const int &value) {
+void Scheduler::set_total_available_time(const int& value) {
   if (total_available_time_ > 0) {
     clear_all_events();
   }
@@ -72,17 +73,17 @@ void Scheduler::set_total_available_time(const int &value) {
   population_events_list_.assign(total_available_time_, EventPtrVector());
 }
 
-void Scheduler::schedule_individual_event(Event *event) {
+void Scheduler::schedule_individual_event(Event* event) {
   schedule_event(individual_events_list_[event->time], event);
 }
 
-void Scheduler::schedule_population_event(Event *event) {
+void Scheduler::schedule_population_event(Event* event) {
   if (event->time < population_events_list_.size()) {
     schedule_event(population_events_list_[event->time], event);
   }
 }
 
-void Scheduler::schedule_event(EventPtrVector &time_events, Event *event) {
+void Scheduler::schedule_event(EventPtrVector& time_events, Event* event) {
   // Schedule event in the future
   // Event time cannot exceed total time or less than current time
   if (event->time > Model::CONFIG->total_time() || event->time < current_time_) {
@@ -100,12 +101,12 @@ void Scheduler::schedule_event(EventPtrVector &time_events, Event *event) {
   }
 }
 
-void Scheduler::cancel(Event *event) {
+void Scheduler::cancel(Event* event) {
   event->executable = false;
 }
 
-void Scheduler::execute_events_list(EventPtrVector &events_list) const {
-  for (auto &event : events_list) {
+void Scheduler::execute_events_list(EventPtrVector& events_list) const {
+  for (auto& event : events_list) {
     // std::cout << event->name() << std::endl;
     event->perform_execute();
     ObjectHelpers::delete_pointer<Event>(event);
@@ -119,7 +120,7 @@ void Scheduler::run() {
   current_time_ = 0;
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
-    LOG_IF(current_time_%100==0, INFO) << "Day: " << current_time_;
+    LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
     begin_time_step();
     // population related events
     execute_events_list(population_events_list_[current_time_]);
@@ -134,7 +135,7 @@ void Scheduler::run() {
 }
 
 void Scheduler::begin_time_step() const {
-  if (model_!=nullptr) {
+  if (model_ != nullptr) {
     model_->begin_time_step();
     if (is_today_first_day_of_month()) {
       model_->monthly_update();
@@ -148,7 +149,7 @@ void Scheduler::begin_time_step() const {
 }
 
 void Scheduler::end_time_step() const {
-  if (model_!=nullptr) {
+  if (model_ != nullptr) {
     model_->daily_update(current_time_);
   }
 }
@@ -163,22 +164,22 @@ int Scheduler::current_day_in_year() const {
 
 bool Scheduler::is_today_last_day_of_year() const {
   year_month_day ymd{calendar_date};
-  return ymd.month()==month{12} && ymd.day()==day{31};
+  return ymd.month() == month{12} && ymd.day() == day{31};
 }
 
 bool Scheduler::is_today_first_day_of_month() const {
   // return true;
   year_month_day ymd{calendar_date};
-  return ymd.day()==day{1};
+  return ymd.day() == day{1};
 }
 
 bool Scheduler::is_today_first_day_of_year() const {
   year_month_day ymd{calendar_date};
-  return ymd.month()==month{1} && ymd.day()==day{1};
+  return ymd.month() == month{1} && ymd.day() == day{1};
 }
 
 bool Scheduler::is_today_last_day_of_month() const {
   const auto next_date = calendar_date + days{1};
   year_month_day ymd{next_date};
-  return ymd.day()==day{1};
+  return ymd.day() == day{1};
 }

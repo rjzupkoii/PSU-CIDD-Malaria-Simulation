@@ -48,7 +48,7 @@ IStrategy* Model::TREATMENT_STRATEGY = nullptr;
 ITreatmentCoverageModel* Model::TREATMENT_COVERAGE = nullptr;
 // std::shared_ptr<spdlog::logger> LOGGER;
 
-Model::Model(const int &object_pool_size) {
+Model::Model(const int& object_pool_size) {
   initialize_object_pool(object_pool_size);
   random_ = new Random();
   config_ = new Config(this);
@@ -89,7 +89,7 @@ Model::~Model() {
   release_object_pool();
 }
 
-void Model::set_treatment_strategy(const int &strategy_id) {
+void Model::set_treatment_strategy(const int& strategy_id) {
   treatment_strategy_ = strategy_id == -1 ? nullptr : config_->strategy_db()[strategy_id];
   TREATMENT_STRATEGY = treatment_strategy_;
 
@@ -120,7 +120,7 @@ void Model::set_treatment_coverage(ITreatmentCoverageModel* tcm) {
 
 void Model::build_initial_treatment_coverage() {
   auto* tcm = new SteadyTCM();
-  for (auto &location : config_->location_db()) {
+  for (auto& location : config_->location_db()) {
     tcm->p_treatment_less_than_5.push_back(location.p_treatment_less_than_5);
     tcm->p_treatment_more_than_5.push_back(location.p_treatment_more_than_5);
   }
@@ -191,7 +191,7 @@ void Model::initialize() {
   // }
 }
 
-void Model::initialize_object_pool(const int &size) {
+void Model::initialize_object_pool(const int& size) {
   BirthdayEvent::InitializeObjectPool(size);
   ProgressToClinicalEvent::InitializeObjectPool(size);
   EndClinicalDueToDrugResistanceEvent::InitializeObjectPool(size);
@@ -291,7 +291,7 @@ void Model::perform_population_events_daily() const {
   population_->perform_circulation_event();
 }
 
-void Model::daily_update(const int &current_time) {
+void Model::daily_update(const int& current_time) {
   //for safety remove all dead by calling perform_death_event
   population_->perform_death_event();
 
@@ -377,7 +377,7 @@ void Model::add_reporter(Reporter* reporter) {
   reporter->set_model(this);
 }
 
-double Model::get_seasonal_factor(const date::sys_days &today, const int &location) const {
+double Model::get_seasonal_factor(const date::sys_days& today, const int& location) const {
   if (!Model::CONFIG->seasonal_info().enable) {
     return 1;
   }
@@ -392,8 +392,10 @@ double Model::get_seasonal_factor(const date::sys_days &today, const int &locati
 
   return (is_rainy_period)
          ? (Model::CONFIG->seasonal_info().A[location] - Model::CONFIG->seasonal_info().min_value[location]) *
-           sin(Model::CONFIG->seasonal_info().B[location] * day_of_year +
-               Model::CONFIG->seasonal_info().C[location]) +
+           sin(
+               Model::CONFIG->seasonal_info().B[location] * day_of_year +
+               Model::CONFIG->seasonal_info().C[location]
+           ) +
            Model::CONFIG->seasonal_info().min_value[location]
          : Model::CONFIG->seasonal_info().min_value[location];
 }
