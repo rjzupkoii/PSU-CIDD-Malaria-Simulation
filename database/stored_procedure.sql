@@ -21,10 +21,13 @@ BEGIN
   SELECT id FROM sim.monthlydata WHERE replicateid = REPLICATE_ID;
 
   -- Delete the genome data
-  DELETE FROM sim.monthlygenomedata WHERE monthlydataid IN (SELECT id FROM monthlydataidex);
+  DELETE FROM sim.monthlygenomedata USING monthlydataidex mdi WHERE monthlydataid = mdi.id;
 
   -- Delete the site data
-  DELETE FROM sim.monthlysitedata WHERE monthlydataid IN (SELECT id FROM monthlydataidex);
+  DELETE FROM sim.monthlysitedata USING monthlydataidex mdi WHERE monthlydataid = mdi.id;
+  
+  -- Drop the temporary table
+  DROP TABLE monthlydataidex;    
 
   -- Delete the monthly data
   DELETE FROM sim.monthlydata WHERE replicateid = REPLICATE_ID;
@@ -35,10 +38,7 @@ BEGIN
   
   -- Delete the replicate entry
   DELETE FROM sim.replicate WHERE id = REPLICATE_ID;
-  
-  -- Drop the temporary table
-  DROP TABLE monthlydataidex;  
-  
+    
   -- Report complete
   RAISE NOTICE 'Complete';
 END $BODY$;
