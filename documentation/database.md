@@ -13,7 +13,11 @@ The specific requirements for the server are dependent in part upon the number o
 
 # Installation
 
-## Installation of PostGreSQL
+## Upgrading pgAdmin
+
+Note that in upgrading to Ubuntu 20.04.1 LTS, pgAdmin4 was also updated to version 4.29 in the process of doing so it was observed that much of the installation directions were out of date. The biggest issue appears to be with file permissions and most, if not all, of the pgadmin4 files and directories need to be assigned to `www-data` to work correctly. Also, be sure that paths have the correct Python version since operating system upgrades may result in the minor Python version changing.
+
+## Installation of PostgreSQL
 
 1. Connect to the server
 
