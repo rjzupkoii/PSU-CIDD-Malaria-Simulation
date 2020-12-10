@@ -27,7 +27,6 @@
 
 pqxx::connection* DbReporter::get_connection() {
     // Getting a connection is straightforward, so this function is larely intended warp retry functionality
-    int RETRY_LIMIT = 10;
     int retry_count = 0;
 
     while (retry_count < RETRY_LIMIT) {
@@ -37,12 +36,13 @@ pqxx::connection* DbReporter::get_connection() {
             retry_count++;
             LOG(WARNING) << "Unable to connect to database, try " << retry_count;
 
-            // Sleep for five seconds before retrying
-            std::chrono::milliseconds timespan(5000);
+            // Sleep for ten seconds before retrying
+            std::chrono::milliseconds timespan(WAIT_TIMESPAN);
             std::this_thread::sleep_for(timespan);
         }
     }
 
+    std::cerr << "FATAL ERROR: unable to commit to the database after " << retry_count << " tries!";
     LOG(ERROR) << "Unable to connect to database, giving up.";
     exit(-1);
 }
@@ -178,7 +178,7 @@ void DbReporter::monthly_report() {
     // connection occurs, the delay in getting a new connection will 
     // give us a chance at recovery
     int attempt = 0;
-    while (attempt < 5) {
+    while (attempt < RETRY_LIMIT) {
         // Return from the function on success
         if (do_monthly_report()) {
             return;

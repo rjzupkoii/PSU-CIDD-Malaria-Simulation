@@ -58,6 +58,12 @@ class DbReporter : public Reporter {
     const std::string UPDATE_CONFIGURATION_STUDY =
     "UPDATE configuration SET studyid = {} WHERE id = {}";
 
+    // Number of times various retry events should be tried
+    int RETRY_LIMIT = 10;
+
+    // Time to wait between trying to reconnect to the database, 10 seconds in miliseconds
+    int WAIT_TIMESPAN = 10000;
+
     // Configuration and replicate information
     int config_id = 1;
     int replicate;
