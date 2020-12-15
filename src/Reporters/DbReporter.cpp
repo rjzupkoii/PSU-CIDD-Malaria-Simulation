@@ -29,7 +29,7 @@ pqxx::connection* DbReporter::get_connection() {
     // Getting a connection is straightforward, so this function is larely intended warp retry functionality
     int retry_count = 0;
 
-    while (retry_count < RETRY_LIMIT) {
+    while (retry_count <= RETRY_LIMIT) {
         try {
             return new pqxx::connection(Model::CONFIG->connection_string());
         } catch (const pqxx::broken_connection &e) {
@@ -37,7 +37,8 @@ pqxx::connection* DbReporter::get_connection() {
             LOG(WARNING) << "Unable to connect to database, try " << retry_count;
 
             // Sleep for ten seconds before retrying
-            std::chrono::milliseconds timespan(WAIT_TIMESPAN);
+            LOG(WARNING) << "Waiting " << (WAIT_TIMESPAN * retry_count) / 1000 << " seconds to retry...";
+            std::chrono::milliseconds timespan(WAIT_TIMESPAN * retry_count);
             std::this_thread::sleep_for(timespan);
         }
     }
