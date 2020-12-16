@@ -20,10 +20,10 @@
 #include "GIS/SpatialData.h"
 
 // Macro to check to see if a value is NAN, report if it is, and update the value as needed
-#define check_nan(value) if (std::isnan(value)) LOG(WARNING) << "NaN caught: " << #value; value = std::isnan(value) ? 0 : value;
+#define check_nan(value) if (std::isnan(value)) VLOG(1) << "NaN caught: " << #value; value = std::isnan(value) ? 0 : value;
 
 // Macro to check if a value is infinite, report if it is, and update the value as needed
-#define check_inf(value) if (std::isinf(value)) LOG(WARNING) << "Inf caught " << #value; value = std::isinf(value) ? -9999 : value;
+#define check_inf(value) if (std::isinf(value)) VLOG(1) << "Inf caught " << #value; value = std::isinf(value) ? -9999 : value;
 
 pqxx::connection* DbReporter::get_connection() {
     // Getting a connection is straightforward, so this function is larely intended warp retry functionality
