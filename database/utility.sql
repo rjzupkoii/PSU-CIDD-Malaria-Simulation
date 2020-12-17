@@ -1,6 +1,10 @@
 -- Check the disk usage
 SELECT pg_size_pretty(pg_database_size('masim'));
 
+-- Check number of rows in key tables
+SELECT relname, reltuples::BIGINT as approximate_row_count 
+FROM pg_class WHERE relname in ('monthlydata', 'monthlygenomedata', 'monthlysitedata')
+
 -- Free unusued disk space
 VACUUM FULL;
 
