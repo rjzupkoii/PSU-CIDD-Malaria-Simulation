@@ -282,6 +282,7 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
       auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
       auto genotype_id = node[ndx]["genotype_id"].as<int>();
       auto periodicity = node[ndx]["periodicity"].as<int>();
+      auto log_parasite_density = node[ndx]["log_parasite_density"].as<double>();
 
       // Double check that the genotype id is valid
       if (genotype_id < 0) {
@@ -295,9 +296,16 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
         throw std::invalid_argument("Genotype id cannot be greater than genotype_db size");
       }
 
+      // Make sure the log parasite density makes sense
+      if (log_parasite_density == 0) {
+        LOG(ERROR) << "Invalid log parasite density supplied for " << ImportationPeriodicallyRandomEvent::EventName
+                   << "Log10 of zero is undefined.";
+        throw std::invalid_argument("Log10 of zero is undefined.");
+      }
+
       // Log and add the event to the queue
-      auto* event = new ImportationPeriodicallyRandomEvent(genotype_id, time, periodicity);
-      VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", genotype_id: " << genotype_id;
+      auto* event = new ImportationPeriodicallyRandomEvent(genotype_id, time, periodicity, log_parasite_density);
+      VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", genotype_id: " << genotype_id << ", log_parasite_density: " << log_parasite_density;
       events.push_back(event);
     }
     return events;
