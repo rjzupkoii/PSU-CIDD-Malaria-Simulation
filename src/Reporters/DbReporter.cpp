@@ -315,12 +315,17 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
         //
         // NOTE since the database was updated to store the weighted occurrences and infected individuals, 
         // the weighted frequency is redundent.
+        query.append(INSERT_GENOTYPE_PREFIX);
         for (unsigned int genotype = 0; genotype < genotypes; genotype++) {
             if (weightedOccurrences[genotype] == 0) { continue; }
-            query.append(fmt::format(INSERT_GENOTYPE, id, location_index[location], genotype, occurrences[genotype], 
+            query.append(fmt::format(INSERT_GENOTYPE_ROW, id, location_index[location], genotype, occurrences[genotype], 
                                      clinicalOccurrences[genotype], occurrencesZeroToFive[genotype], occurrencesTwoToTen[genotype], 
                                      (weightedOccurrences[genotype] / infectedIndividuals), weightedOccurrences[genotype]));
         }
+        // Replace last character with a semicolon to properly terminate the query
+        query[query.length() - 1] = ';';
+
+        // Append the infected count update
         query.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infectedIndividuals, id, location_index[location]));
     }
 }

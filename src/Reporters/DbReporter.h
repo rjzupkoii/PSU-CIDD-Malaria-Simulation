@@ -11,7 +11,6 @@
 
 #include <pqxx/pqxx>
 
-// TODO Add the yaml file name as a field in the configuration table
 class DbReporter : public Reporter {
   private:
     const std::string INSERT_COMMON = 
@@ -25,9 +24,11 @@ class DbReporter : public Reporter {
     "INSERT INTO sim.Configuration (Yaml, MD5, FileName, ncols, nrows, xllcorner, yllcorner, cellsize) "
     "VALUES ({}, md5({}), {}, {}, {}, {}, {}, {}) RETURNING ID;";
 
-    const std::string INSERT_GENOTYPE = 
-    "INSERT INTO sim.MonthlyGenomeData (MonthlyDataId, LocationId, GenomeId, Occurrences, ClinicalOccurrences, Occurrences0to5, Occurrences2to10, WeightedFrequency, WeightedOccurrences) "
-    "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {});";
+    const std::string INSERT_GENOTYPE_PREFIX = 
+    "INSERT INTO sim.MonthlyGenomeData (MonthlyDataId, LocationId, GenomeId, Occurrences, ClinicalOccurrences, Occurrences0to5, Occurrences2to10, WeightedFrequency, WeightedOccurrences) VALUES ";
+
+    // To be appended to prefix, note that the last character must be replaced with a semicolon
+    const std::string INSERT_GENOTYPE_ROW = "({}, {}, {}, {}, {}, {}, {}, {}, {}),";
 
     const std::string INSERT_LOCATION =
     "INSERT INTO sim.Location (ConfigurationId, Index, X, Y, Beta) VALUES ({}, {}, {}, {}, {});";
