@@ -35,7 +35,7 @@ void ImportationPeriodicallyRandomEvent::execute() {
 
   // Schedule the next time to run
   auto time = scheduler->current_time() + periodicity_;
-  ImportationPeriodicallyRandomEvent* event = new ImportationPeriodicallyRandomEvent(genotypeId_, time, periodicity_);
+  ImportationPeriodicallyRandomEvent* event = new ImportationPeriodicallyRandomEvent(genotypeId_, time, periodicity_, log_parasite_density_);
   scheduler->schedule_population_event(event);
 
   // Log on demand
@@ -88,8 +88,7 @@ void ImportationPeriodicallyRandomEvent::infect(Person* person, int genotypeId) 
 
   // Inflict the infection
   auto* blood_parasite = person->add_new_parasite_to_blood(genotype);
-  auto size = Model::CONFIG->parasite_density_level().log_parasite_density_asymptomatic;
   blood_parasite->set_gametocyte_level(Model::CONFIG->gametocyte_level_full());
-  blood_parasite->set_last_update_log10_parasite_density(size);
+  blood_parasite->set_last_update_log10_parasite_density(log_parasite_density_);
   blood_parasite->set_update_function(Model::MODEL->immunity_clearance_update_function());
 }

@@ -137,6 +137,7 @@ events:
 
 **day** (date string, YYYY/mm/dd) : the date when the first event will occur. \
 **genotype_id** (int) : the id of the genotype to be introduced. \
+**log_parasite_density** (double) : the log density of the parasite to be imported. \
 **periodicity** (int) : the number of days between events after the first one.
 
 #### turn_off_mutation
