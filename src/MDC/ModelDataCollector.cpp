@@ -50,9 +50,6 @@ void ModelDataCollector::initialize() {
     deaths_by_location_ = Vector_by_Locations(IntVector);
     malaria_deaths_by_location_ = Vector_by_Locations(IntVector);
     
-    nontreatment_by_location_ = Vector_by_Locations(IntVector);
-    nontreatment_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
-
     popsize_residence_by_location_ = Vector_by_Locations(IntVector);
 
     blood_slide_prevalence_by_location_ = Vector_by_Locations(DoubleVector);
@@ -152,6 +149,8 @@ void ModelDataCollector::initialize() {
     monthly_number_of_treatment_by_location_ = Vector_by_Locations(IntVector);
     monthly_number_of_new_infections_by_location_ = Vector_by_Locations(IntVector);
     monthly_number_of_clinical_episode_by_location_ = Vector_by_Locations(IntVector);
+    monthly_nontreatment_by_location_ = Vector_by_Locations(IntVector);
+    monthly_nontreatment_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
 
     current_number_of_mutation_events_ = 0;
     number_of_mutation_events_by_year_ = LongVector();
@@ -392,9 +391,9 @@ void ModelDataCollector::calculate_percentage_bites_on_top_20() {
 }
 
 void ModelDataCollector::record_1_non_treated_case(const int &location, const int &age_class) {
-  nontreatment_by_location_[location]++;
+  monthly_nontreatment_by_location_[location]++;
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
-    nontreatment_by_location_age_class_[location][age_class]++;
+    monthly_nontreatment_by_location_age_class_[location][age_class]++;
   }
 }
 
@@ -614,9 +613,14 @@ void ModelDataCollector::monthly_update() {
     zero_fill(monthly_number_of_treatment_by_location_);
     zero_fill(monthly_number_of_new_infections_by_location_);
     zero_fill(monthly_number_of_clinical_episode_by_location_);
+    zero_fill(monthly_nontreatment_by_location_);
     zero_fill(births_by_location_);
     zero_fill(deaths_by_location_);
     zero_fill(malaria_deaths_by_location_);
+
+    for (auto location = 0ul; location < Model::CONFIG->number_of_locations(); location++) {
+      zero_fill(monthly_nontreatment_by_location_age_class_[location]);
+    }
   }
 }
 
@@ -629,8 +633,7 @@ void ModelDataCollector::zero_population_statistics() {
   zero_fill(total_immune_by_location_);
   zero_fill(total_parasite_population_by_location_);
   zero_fill(number_of_positive_by_location_);
-  zero_fill(nontreatment_by_location_);
-
+  
   // Matrices based on number of locations to be zeroed
   for (auto location = 0ul; location < Model::CONFIG->number_of_locations(); location++) {
     zero_fill(popsize_by_location_hoststate_[location]);
@@ -646,6 +649,5 @@ void ModelDataCollector::zero_population_statistics() {
     zero_fill(blood_slide_prevalence_by_location_age_group_by_5_[location]);
     zero_fill(blood_slide_number_by_location_age_group_by_5_[location]);
     zero_fill(multiple_of_infection_by_location_[location]);
-    zero_fill(nontreatment_by_location_age_class_[location]);
   }
 }
