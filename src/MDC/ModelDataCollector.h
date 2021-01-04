@@ -150,8 +150,6 @@ PROPERTY_REF(IntVector2, number_of_treatments_by_location_age_year)
 
 PROPERTY_REF(IntVector2, number_of_deaths_by_location_age_year)
 
-PROPERTY_REF(IntVector2, number_of_malaria_deaths_by_location_age_year)
-
 PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
 PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);

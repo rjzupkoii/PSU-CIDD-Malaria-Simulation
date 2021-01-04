@@ -136,7 +136,6 @@ void ModelDataCollector::initialize() {
     number_of_untreated_cases_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
     number_of_treatments_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
     number_of_deaths_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
-    number_of_malaria_deaths_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
 
     tf_at_15_ = 0;
     single_resistance_frequency_at_15_ = 0;
@@ -290,8 +289,6 @@ void ModelDataCollector::perform_yearly_update() {
         number_of_untreated_cases_by_location_age_year_[loc][age] = 0;
         number_of_treatments_by_location_age_year_[loc][age] = 0;
         number_of_deaths_by_location_age_year_[loc][age] = 0;
-        number_of_malaria_deaths_by_location_age_year_[loc][age] = 0;
-
       }
     }
     if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
@@ -365,17 +362,9 @@ void ModelDataCollector::record_1_death(const int &location, const int &birthday
   }
 }
 
+// TODO update to age class
 void ModelDataCollector::record_1_malaria_death(const int &location, const int &age) {
-  // Always collect the coarse data
   malaria_deaths_by_location_[location]++;
-
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
-    if (age <= MAX_INDIVIDUAL_AGE) {
-      number_of_malaria_deaths_by_location_age_year_[location][age] += 1;
-    } else {
-      number_of_malaria_deaths_by_location_age_year_[location][MAX_INDIVIDUAL_AGE + 1] += 1;
-    }
-  }
 }
 
 void ModelDataCollector::update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten) {
