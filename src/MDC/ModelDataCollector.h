@@ -146,8 +146,6 @@ PROPERTY_REF(IntVector2, number_of_death_by_location_age_group)
 
 PROPERTY_REF(IntVector2, number_of_untreated_cases_by_location_age_year)
 
-PROPERTY_REF(IntVector2, number_of_treatments_by_location_age_year)
-
 PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
 PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
@@ -224,7 +222,7 @@ public:
 
   void record_1_TF(const int &location, const bool &by_drug);
 
-  void record_1_treatment(const int &location, const int &age, const int &therapy_id);
+  void record_1_treatment(const int &location, const int &therapy_id);
 
   // Records one case in which the individual did not receive treatment
   void record_1_non_treated_case(const int &location, const int &age);

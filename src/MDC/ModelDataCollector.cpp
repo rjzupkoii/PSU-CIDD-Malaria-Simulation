@@ -134,7 +134,6 @@ void ModelDataCollector::initialize() {
     // Note we are tracking at the age level until we reach the given threshold after which the results are binned. 
     // Note that the allocation is MAX_INDIVIDUAL_AGE + 2 to account for zero indexing and the array element for binning
     number_of_untreated_cases_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
-    number_of_treatments_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
 
     tf_at_15_ = 0;
     single_resistance_frequency_at_15_ = 0;
@@ -286,7 +285,6 @@ void ModelDataCollector::perform_yearly_update() {
       total_number_of_bites_by_location_year_[loc] = 0;
       for (auto age = 0; age < 80; age++) {
         number_of_untreated_cases_by_location_age_year_[loc][age] = 0;
-        number_of_treatments_by_location_age_year_[loc][age] = 0;
       }
     }
     if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
@@ -465,24 +463,17 @@ void ModelDataCollector::end_of_time_step() {
       }
 
       current_tf_by_therapy_[therapy_id] = (t_treatment60 == 0) ? 0 : static_cast<double>(t_tf60) / t_treatment60;
-      current_tf_by_therapy_[therapy_id] =
-        (current_tf_by_therapy_[therapy_id]) > 1 ? 1 : current_tf_by_therapy_[therapy_id];
+      current_tf_by_therapy_[therapy_id] = (current_tf_by_therapy_[therapy_id]) > 1 ? 1 : current_tf_by_therapy_[therapy_id];
     }
   }
 }
 
-void ModelDataCollector::record_1_treatment(const int &location, const int &age, const int &therapy_id) {
+void ModelDataCollector::record_1_treatment(const int &location, const int &therapy_id) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     today_number_of_treatments_by_location_[location] += 1;
     today_number_of_treatments_by_therapy_[therapy_id] += 1;
     number_of_treatments_with_therapy_ID_[therapy_id] += 1;
     monthly_number_of_treatment_by_location_[location] += 1;
-
-    if (age <= MAX_INDIVIDUAL_AGE) {
-      number_of_treatments_by_location_age_year_[location][age] += 1;
-    } else {
-      number_of_treatments_by_location_age_year_[location][MAX_INDIVIDUAL_AGE + 1] += 1;
-    }
   }
 }
 
