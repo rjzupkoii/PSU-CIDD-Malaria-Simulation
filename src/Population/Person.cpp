@@ -127,9 +127,7 @@ void Person::set_host_state(const HostStates &value) {
       all_clonal_parasite_populations_->clear();
       clear_events();
 
-      //
-      //            Model::STATISTIC->update_person_days_by_years(location_, -(Constants::DAYS_IN_YEAR() - Model::SCHEDULER->current_day_in_year()));
-      Model::DATA_COLLECTOR->record_1_death(location_, birthday_, number_of_times_bitten_, age_class_, age_);
+      Model::DATA_COLLECTOR->record_1_death(location_, birthday_, number_of_times_bitten_, age_class_);
     }
 
     host_state_ = value;

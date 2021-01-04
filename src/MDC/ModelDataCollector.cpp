@@ -135,7 +135,6 @@ void ModelDataCollector::initialize() {
     // Note that the allocation is MAX_INDIVIDUAL_AGE + 2 to account for zero indexing and the array element for binning
     number_of_untreated_cases_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
     number_of_treatments_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
-    number_of_deaths_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
 
     tf_at_15_ = 0;
     single_resistance_frequency_at_15_ = 0;
@@ -288,7 +287,6 @@ void ModelDataCollector::perform_yearly_update() {
       for (auto age = 0; age < 80; age++) {
         number_of_untreated_cases_by_location_age_year_[loc][age] = 0;
         number_of_treatments_by_location_age_year_[loc][age] = 0;
-        number_of_deaths_by_location_age_year_[loc][age] = 0;
       }
     }
     if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
@@ -341,24 +339,15 @@ void ModelDataCollector::collect_1_clinical_episode(const int &location, const i
 }
 
 void ModelDataCollector::record_1_birth(const int &location) {
-  // Coarse collection, so just increment
   births_by_location_[location]++;
 }
 
-void ModelDataCollector::record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten,
-                                        const int &age_group, const int &age) {
-  // Always collect the coarse data since that could be used for calibration
+void ModelDataCollector::record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten, const int &age_group) {
   deaths_by_location_[location]++;
-
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     update_person_days_by_years(location, -(Constants::DAYS_IN_YEAR() - Model::SCHEDULER->current_day_in_year()));
     update_average_number_bitten(location, birthday, number_of_times_bitten);
     number_of_death_by_location_age_group_[location][age_group] += 1;
-    if (age <= MAX_INDIVIDUAL_AGE) {
-      number_of_deaths_by_location_age_year_[location][age] += 1;
-    } else {
-      number_of_deaths_by_location_age_year_[location][MAX_INDIVIDUAL_AGE + 1] += 1;
-    }
   }
 }
 

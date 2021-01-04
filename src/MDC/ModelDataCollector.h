@@ -148,8 +148,6 @@ PROPERTY_REF(IntVector2, number_of_untreated_cases_by_location_age_year)
 
 PROPERTY_REF(IntVector2, number_of_treatments_by_location_age_year)
 
-PROPERTY_REF(IntVector2, number_of_deaths_by_location_age_year)
-
 PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
 PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
@@ -218,9 +216,7 @@ public:
   // Record one birth at the given location index, this value will be reset each month
   void record_1_birth(const int &location);
 
-  void
-  record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten, const int &age_group,
-                 const int &age);
+  void record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten, const int &age_group);
 
   void record_1_malaria_death(const int &location, const int &age);
 
