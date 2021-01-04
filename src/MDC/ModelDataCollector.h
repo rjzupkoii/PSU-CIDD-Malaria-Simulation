@@ -234,6 +234,7 @@ public:
 
   void record_1_treatment(const int &location, const int &age, const int &therapy_id);
 
+  // Records one case in which the individual did not receive treatment
   void record_1_non_treated_case(const int &location, const int &age);
 
   void record_1_mutation(const int &location, Genotype* from, Genotype* to);

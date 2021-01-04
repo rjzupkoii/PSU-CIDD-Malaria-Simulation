@@ -20,6 +20,8 @@
 #include "Constants.h"
 
 // Define some macros to make the code a bit easier to follow
+#define Vector_by_Locations(template) template(Model::CONFIG->number_of_locations(), 0)
+
 #define DoubleMatrix_Locations_by_AgeClasses() DoubleVector2(Model::CONFIG->number_of_locations(), DoubleVector(Model::CONFIG->number_of_age_classes(), 0.0))
 #define IntMatrix_Locations_by_AgeClasses() IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->number_of_age_classes(), 0))
 
@@ -43,53 +45,53 @@ ModelDataCollector::ModelDataCollector(Model* model) : model_(model), current_ut
 
 void ModelDataCollector::initialize() {
   if (model_ != nullptr) {
-    popsize_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
-    births_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
-    deaths_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
-    malaria_deaths_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    popsize_by_location_ = Vector_by_Locations(IntVector);
+    births_by_location_ = Vector_by_Locations(IntVector);
+    deaths_by_location_ = Vector_by_Locations(IntVector);
+    malaria_deaths_by_location_ = Vector_by_Locations(IntVector);
+    
+    popsize_residence_by_location_ = Vector_by_Locations(IntVector);
 
-    popsize_residence_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
-
-    blood_slide_prevalence_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
+    blood_slide_prevalence_by_location_ = Vector_by_Locations(DoubleVector);
     blood_slide_prevalence_by_location_age_group_ = DoubleMatrix_Locations_by_AgeClasses();
     blood_slide_number_by_location_age_group_ = DoubleMatrix_Locations_by_AgeClasses();
     blood_slide_prevalence_by_location_age_group_by_5_ = DoubleMatrix_Locations_by_AgeClasses();
     blood_slide_number_by_location_age_group_by_5_ = DoubleMatrix_Locations_by_AgeClasses();
-    fraction_of_positive_that_are_clinical_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
+    fraction_of_positive_that_are_clinical_by_location_ = Vector_by_Locations(DoubleVector);
     popsize_by_location_hoststate_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(Person::NUMBER_OF_STATE, 0));
     popsize_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
     popsize_by_location_age_class_by_5_ = IntMatrix_Locations_by_AgeClasses();
 
-    total_immune_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
+    total_immune_by_location_ = Vector_by_Locations(DoubleVector);
     total_immune_by_location_age_class_ = DoubleMatrix_Locations_by_AgeClasses();
 
-    total_number_of_bites_by_location_ = LongVector(Model::CONFIG->number_of_locations(), 0);
-    total_number_of_bites_by_location_year_ = LongVector(Model::CONFIG->number_of_locations(), 0);
-    person_days_by_location_year_ = LongVector(Model::CONFIG->number_of_locations(), 0);
+    total_number_of_bites_by_location_ = Vector_by_Locations(LongVector);
+    total_number_of_bites_by_location_year_ = Vector_by_Locations(LongVector);
+    person_days_by_location_year_ = Vector_by_Locations(LongVector);
 
     EIR_by_location_year_ = DoubleVector2(Model::CONFIG->number_of_locations(), DoubleVector());
-    EIR_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
+    EIR_by_location_ = Vector_by_Locations(DoubleVector);
 
-    cumulative_clinical_episodes_by_location_ = LongVector(Model::CONFIG->number_of_locations(), 0);
+    cumulative_clinical_episodes_by_location_ = Vector_by_Locations(LongVector);
 
     average_number_biten_by_location_person_ = DoubleVector2(Model::CONFIG->number_of_locations(), DoubleVector());
-    percentage_bites_on_top_20_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
+    percentage_bites_on_top_20_by_location_ = Vector_by_Locations(DoubleVector);
 
-    cumulative_discounted_NTF_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
-    cumulative_NTF_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
+    cumulative_discounted_NTF_by_location_ = Vector_by_Locations(DoubleVector);
+    cumulative_NTF_by_location_ = Vector_by_Locations(DoubleVector);
 
-    today_TF_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
-    today_number_of_treatments_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
-    today_RITF_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    today_TF_by_location_ = Vector_by_Locations(IntVector);
+    today_number_of_treatments_by_location_ = Vector_by_Locations(IntVector);
+    today_RITF_by_location_ = Vector_by_Locations(IntVector);
 
     total_number_of_treatments_60_by_location_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->tf_window_size(), 0));
     total_RITF_60_by_location_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->tf_window_size(), 0));
     total_TF_60_by_location_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->tf_window_size(), 0));
 
-    current_RITF_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
-    current_TF_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
+    current_RITF_by_location_ = Vector_by_Locations(DoubleVector);
+    current_TF_by_location_ = Vector_by_Locations(DoubleVector);
 
-    cumulative_mutants_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    cumulative_mutants_by_location_ = Vector_by_Locations(IntVector);
 
     current_utl_duration_ = 0;
     UTL_duration_ = IntVector();
@@ -112,16 +114,16 @@ void ModelDataCollector::initialize() {
 
     multiple_of_infection_by_location_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(NUMBER_OF_REPORTED_MOI, 0));
 
-    current_EIR_by_location_ = DoubleVector(Model::CONFIG->number_of_locations(), 0.0);
-    last_update_total_number_of_bites_by_location_ = LongVector(Model::CONFIG->number_of_locations(), 0);
+    current_EIR_by_location_ = Vector_by_Locations(DoubleVector);
+    last_update_total_number_of_bites_by_location_ = Vector_by_Locations(LongVector);
 
     last_10_blood_slide_prevalence_by_location_ = DoubleVector2(Model::CONFIG->number_of_locations(), DoubleVector(10, 0.0));
     last_10_fraction_positive_that_are_clinical_by_location_ = DoubleVector2(Model::CONFIG->number_of_locations(), DoubleVector(10, 0.0));
     last_10_fraction_positive_that_are_clinical_by_location_age_class_ = DoubleVector3(Model::CONFIG->number_of_locations(), DoubleVector2(Model::CONFIG->number_of_age_classes(), DoubleVector(10, 0.0)));
     last_10_fraction_positive_that_are_clinical_by_location_age_class_by_5_ = DoubleVector3(Model::CONFIG->number_of_locations(), DoubleVector2(Model::CONFIG->number_of_age_classes(), DoubleVector(10, 0.0)));
 
-    total_parasite_population_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
-    number_of_positive_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    total_parasite_population_by_location_ = Vector_by_Locations(IntVector);
+    number_of_positive_by_location_ = Vector_by_Locations(IntVector);
 
     total_parasite_population_by_location_age_group_ = IntMatrix_Locations_by_AgeClasses();
     number_of_positive_by_location_age_group_ = IntMatrix_Locations_by_AgeClasses();
@@ -152,9 +154,9 @@ void ModelDataCollector::initialize() {
     today_tf_by_therapy_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
     today_number_of_treatments_by_therapy_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
 
-    monthly_number_of_treatment_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
-    monthly_number_of_new_infections_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
-    monthly_number_of_clinical_episode_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
+    monthly_number_of_treatment_by_location_ = Vector_by_Locations(IntVector);
+    monthly_number_of_new_infections_by_location_ = Vector_by_Locations(IntVector);
+    monthly_number_of_clinical_episode_by_location_ = Vector_by_Locations(IntVector);
 
     current_number_of_mutation_events_ = 0;
     number_of_mutation_events_by_year_ = LongVector();
