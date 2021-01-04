@@ -108,8 +108,6 @@ void Person::set_location(const int &value) {
       Model::DATA_COLLECTOR->update_person_days_by_years(value, day_diff);
     }
 
-    Model::DATA_COLLECTOR->record_1_migration(this, location_, value);
-
     NotifyChange(LOCATION, &location_, &value);
 
     location_ = value;

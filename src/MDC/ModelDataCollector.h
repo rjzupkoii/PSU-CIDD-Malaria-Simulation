@@ -1,8 +1,7 @@
-/* 
- * File:   Statistic.h
- * Author: Merlin
- *
- * Created on July 9, 2013, 2:28 PM
+/*
+ * ModelDataCollector.cpp
+ * 
+ * Definition of the model data collector class.
  */
 
 #ifndef MODELDATACOLLECTOR_H
@@ -12,13 +11,9 @@
 #include "Core/TypeDef.h"
 
 class Model;
-
 class Genotype;
-
 class Person;
-
 class Therapy;
-
 class ClonalParasitePopulation;
 
 class ModelDataCollector {
@@ -67,9 +62,9 @@ PROPERTY_REF(DoubleVector, EIR_by_location)
 
 PROPERTY_REF(LongVector, cumulative_clinical_episodes_by_location)
 
-PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age)
-
-PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age_group)
+// TODO Check to see if these can be removed
+// PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age)
+// PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age_group)
 
 PROPERTY_REF(DoubleVector2, average_number_biten_by_location_person)
 
@@ -128,7 +123,6 @@ PROPERTY_REF(IntVector2, multiple_of_infection_by_location)
 PROPERTY_REF(DoubleVector, current_EIR_by_location)
 
 PROPERTY_REF(LongVector, last_update_total_number_of_bites_by_location)
-
 
 PROPERTY_REF(DoubleVector2, last_10_blood_slide_prevalence_by_location)
 
@@ -201,14 +195,17 @@ PROPERTY_REF(double, mean_moi)
 PROPERTY_REF(LongVector, number_of_mutation_events_by_year)
 PROPERTY_REF(long, current_number_of_mutation_events)
 
-
-  static const int number_of_reported_MOI = 8;
-
 public:
+
+  // The maximum individual age that is tracked in the for some statistics, afterwhich the results are aggregated
+  static const int MAX_INDIVIDUAL_AGE = 79;
+
+  // The number of reported multiple of infection (MOI)
+  static const int NUMBER_OF_REPORTED_MOI = 8;
+
   explicit ModelDataCollector(Model* model = nullptr);
 
-  //    Statistic(const Statistic& orig);
-  virtual ~ModelDataCollector();
+  virtual ~ModelDataCollector() = default;
 
   void initialize();
 
@@ -245,30 +242,29 @@ public:
 
   void record_1_mutation(const int &location, Genotype* from, Genotype* to);
 
-  void record_1_migration(Person* pPerson, const int &from, const int &to);
-
   void begin_time_step();
 
   void end_of_time_step();
 
   void update_UTL_vector();
 
-  //    void collect_1_non_resistant_treatment(const int& therapy_id);
   void record_1_treatment_failure_by_therapy(const int &location, const int &age, const int &therapy_id);
 
   void record_1_treatment_success_by_therapy(const int &therapy_id);
 
   void update_after_run();
 
-
   void record_AMU_AFU(Person* person, Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite);
 
   double get_blood_slide_prevalence(const int &location, const int &age_from, const int &age_to);
 
 private:
+
   void update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten);
 
+  // Zero out the population statistics tracked by perform_population_statistic()
+  void zero_population_statistics();
 };
 
-#endif /* MODELDATACOLLECTOR_H */
+#endif
 
