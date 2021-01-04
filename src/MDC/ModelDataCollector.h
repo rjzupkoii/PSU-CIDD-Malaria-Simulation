@@ -32,8 +32,8 @@ PROPERTY_REF(IntVector, malaria_deaths_by_location)
 
 PROPERTY_REF(IntVector, popsize_residence_by_location)
 
+// Also used to calculate the blood slide prevalence
 PROPERTY_REF(IntVector2, popsize_by_location_age_class)
-
 PROPERTY_REF(IntVector2, popsize_by_location_age_class_by_5)
 
 PROPERTY_REF(IntVector2, popsize_by_location_hoststate)
@@ -157,8 +157,6 @@ PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
 
 PROPERTY_REF(IntVector, monthly_number_of_clinical_episode_by_location);
-
-PROPERTY_REF(IntVector2, popsize_by_location_age)
 
 PROPERTY_REF(double, tf_at_15)
 

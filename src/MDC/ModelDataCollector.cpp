@@ -137,7 +137,6 @@ void ModelDataCollector::initialize() {
     number_of_treatments_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
     number_of_deaths_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
     number_of_malaria_deaths_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
-    popsize_by_location_age_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
 
     tf_at_15_ = 0;
     single_resistance_frequency_at_15_ = 0;
@@ -224,12 +223,6 @@ void ModelDataCollector::perform_population_statistic() {
             if (moi <= NUMBER_OF_REPORTED_MOI) {
               multiple_of_infection_by_location_[loc][moi - 1]++;
             }
-          }
-
-          if (p->age() <= MAX_INDIVIDUAL_AGE) {
-            popsize_by_location_age_[loc][p->age()] += 1;
-          } else {
-            popsize_by_location_age_[loc][MAX_INDIVIDUAL_AGE + 1] += 1;
           }
         }
       }
@@ -689,7 +682,6 @@ void ModelDataCollector::zero_population_statistics() {
     zero_fill(blood_slide_number_by_location_age_group_[location]);
     zero_fill(blood_slide_prevalence_by_location_age_group_by_5_[location]);
     zero_fill(blood_slide_number_by_location_age_group_by_5_[location]);
-    zero_fill(popsize_by_location_age_[location]);
     zero_fill(multiple_of_infection_by_location_[location])
   }
 }
