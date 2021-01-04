@@ -62,10 +62,6 @@ PROPERTY_REF(DoubleVector, EIR_by_location)
 
 PROPERTY_REF(LongVector, cumulative_clinical_episodes_by_location)
 
-// TODO Check to see if these can be removed
-// PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age)
-// PROPERTY_REF(LongVector2, cumulative_clinical_episodes_by_location_age_group)
-
 PROPERTY_REF(DoubleVector2, average_number_biten_by_location_person)
 
 PROPERTY_REF(DoubleVector, percentage_bites_on_top_20_by_location)
