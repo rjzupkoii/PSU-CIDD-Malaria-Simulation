@@ -30,6 +30,9 @@ PROPERTY_REF(IntVector, births_by_location)
 PROPERTY_REF(IntVector, deaths_by_location)
 PROPERTY_REF(IntVector, malaria_deaths_by_location)
 
+PROPERTY_REF(IntVector, nontreatment_by_location)
+PROPERTY_REF(IntVector2, nontreatment_by_location_age_class)
+
 PROPERTY_REF(IntVector, popsize_residence_by_location)
 
 // Also used to calculate the blood slide prevalence
@@ -144,8 +147,6 @@ PROPERTY_REF(IntVector2, number_of_clinical_by_location_age_group_by_5)
 
 PROPERTY_REF(IntVector2, number_of_death_by_location_age_group)
 
-PROPERTY_REF(IntVector2, number_of_untreated_cases_by_location_age_year)
-
 PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
 PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
@@ -184,10 +185,6 @@ PROPERTY_REF(LongVector, number_of_mutation_events_by_year)
 PROPERTY_REF(long, current_number_of_mutation_events)
 
 public:
-
-  // The maximum individual age that is tracked in the for some statistics, afterwhich the results are aggregated
-  static const int MAX_INDIVIDUAL_AGE = 79;
-
   // The number of reported multiple of infection (MOI)
   static const int NUMBER_OF_REPORTED_MOI = 8;
 
@@ -225,7 +222,7 @@ public:
   void record_1_treatment(const int &location, const int &therapy_id);
 
   // Records one case in which the individual did not receive treatment
-  void record_1_non_treated_case(const int &location, const int &age);
+  void record_1_non_treated_case(const int &location, const int &age_class);
 
   void record_1_mutation(const int &location, Genotype* from, Genotype* to);
 

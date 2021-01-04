@@ -114,10 +114,10 @@ void ProgressToClinicalEvent::execute() {
                                                   therapy->id());
 
   } else {
-    //not recieve treatment
+    // Did not receieve treatment
     //Statistic store NTF
     Model::DATA_COLLECTOR->record_1_TF(person->location(), false);
-    Model::DATA_COLLECTOR->record_1_non_treated_case(person->location(), person->age());
+    Model::DATA_COLLECTOR->record_1_non_treated_case(person->location(), person->age_class());
 
     receive_no_treatment_routine(person);
     if (person->host_state()==Person::DEAD) {

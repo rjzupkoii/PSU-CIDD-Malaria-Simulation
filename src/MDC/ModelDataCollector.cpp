@@ -50,6 +50,9 @@ void ModelDataCollector::initialize() {
     deaths_by_location_ = Vector_by_Locations(IntVector);
     malaria_deaths_by_location_ = Vector_by_Locations(IntVector);
     
+    nontreatment_by_location_ = Vector_by_Locations(IntVector);
+    nontreatment_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
+
     popsize_residence_by_location_ = Vector_by_Locations(IntVector);
 
     blood_slide_prevalence_by_location_ = Vector_by_Locations(DoubleVector);
@@ -130,10 +133,6 @@ void ModelDataCollector::initialize() {
     number_of_clinical_by_location_age_group_ = IntMatrix_Locations_by_AgeClasses();
     number_of_clinical_by_location_age_group_by_5_ = IntMatrix_Locations_by_AgeClasses();
     number_of_death_by_location_age_group_ = IntMatrix_Locations_by_AgeClasses();
-
-    // Note we are tracking at the age level until we reach the given threshold after which the results are binned. 
-    // Note that the allocation is MAX_INDIVIDUAL_AGE + 2 to account for zero indexing and the array element for binning
-    number_of_untreated_cases_by_location_age_year_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(MAX_INDIVIDUAL_AGE + 2, 0));
 
     tf_at_15_ = 0;
     single_resistance_frequency_at_15_ = 0;
@@ -283,9 +282,6 @@ void ModelDataCollector::perform_yearly_update() {
       // and also when the individual change location
       person_days_by_location_year_[loc] = Model::POPULATION->size(loc) * Constants::DAYS_IN_YEAR();
       total_number_of_bites_by_location_year_[loc] = 0;
-      for (auto age = 0; age < 80; age++) {
-        number_of_untreated_cases_by_location_age_year_[loc][age] = 0;
-      }
     }
     if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
       number_of_mutation_events_by_year_.push_back(current_number_of_mutation_events_);
@@ -395,13 +391,10 @@ void ModelDataCollector::calculate_percentage_bites_on_top_20() {
   }
 }
 
-void ModelDataCollector::record_1_non_treated_case(const int &location, const int &age) {
+void ModelDataCollector::record_1_non_treated_case(const int &location, const int &age_class) {
+  nontreatment_by_location_[location]++;
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
-    if (age <= MAX_INDIVIDUAL_AGE) {
-      number_of_untreated_cases_by_location_age_year_[location][age] += 1;
-    } else {
-      number_of_untreated_cases_by_location_age_year_[location][MAX_INDIVIDUAL_AGE + 1] += 1;
-    }
+    nontreatment_by_location_age_class_[location][age_class]++;
   }
 }
 
@@ -636,6 +629,7 @@ void ModelDataCollector::zero_population_statistics() {
   zero_fill(total_immune_by_location_);
   zero_fill(total_parasite_population_by_location_);
   zero_fill(number_of_positive_by_location_);
+  zero_fill(nontreatment_by_location_);
 
   // Matrices based on number of locations to be zeroed
   for (auto location = 0ul; location < Model::CONFIG->number_of_locations(); location++) {
@@ -651,6 +645,7 @@ void ModelDataCollector::zero_population_statistics() {
     zero_fill(blood_slide_number_by_location_age_group_[location]);
     zero_fill(blood_slide_prevalence_by_location_age_group_by_5_[location]);
     zero_fill(blood_slide_number_by_location_age_group_by_5_[location]);
-    zero_fill(multiple_of_infection_by_location_[location])
+    zero_fill(multiple_of_infection_by_location_[location]);
+    zero_fill(nontreatment_by_location_age_class_[location]);
   }
 }
