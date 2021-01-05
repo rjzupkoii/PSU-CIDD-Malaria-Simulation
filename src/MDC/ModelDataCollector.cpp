@@ -271,11 +271,7 @@ void ModelDataCollector::perform_yearly_update() {
   } else if (Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) {
     for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
       auto eir = (total_number_of_bites_by_location_year_[loc] / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
-
-      //only record year have positive EIR
-      //            if (EIR > 0) {
       EIR_by_location_year_[loc].push_back(eir);
-      //            }
 
       //this number will be changed whenever a birth or a death occurs
       // and also when the individual change location
@@ -350,8 +346,6 @@ void ModelDataCollector::record_1_malaria_death(const int &location, const int &
 }
 
 void ModelDataCollector::update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten) {
-
-  //TODO: check here
   const auto time_living_from_start_collect_data_day = 
     (birthday < Model::CONFIG->start_collect_data_day()) ? 1 : Model::SCHEDULER->current_time() + 1 - Model::CONFIG->start_collect_data_day();
 
@@ -378,8 +372,7 @@ void ModelDataCollector::calculate_percentage_bites_on_top_20() {
     double t20 = 0;
     const auto size20 = static_cast<int>(std::round(average_number_biten_by_location_person_[location].size() / 100.0 * 20));
 
-    // TODO: research about size_t and int comparison
-    for (auto i = 0; static_cast<size_t>(i) < average_number_biten_by_location_person_[location].size(); i++) {
+    for (std::size_t i = 0; i < average_number_biten_by_location_person_[location].size(); i++) {
       total += average_number_biten_by_location_person_[location][i];
 
       if (i <= size20) {
@@ -410,12 +403,13 @@ void ModelDataCollector::begin_time_step() {
   }
 }
 
-//TODO: review
 void ModelDataCollector::end_of_time_step() {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
 
+    // Note the current index for reporting
     auto report_index = Model::SCHEDULER->current_time() % Model::CONFIG->tf_window_size();
 
+    // Calculate the current treatment failures by location along with the average treatment failures
     double avg_tf = 0;
     for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
       total_number_of_treatments_60_by_location_[location][report_index] = today_number_of_treatments_by_location_[location];
@@ -430,16 +424,16 @@ void ModelDataCollector::end_of_time_step() {
         t_ritf60 += total_RITF_60_by_location_[location][i];
         t_tf60 += total_TF_60_by_location_[location][i];
       }
-      current_RITF_by_location_[location] = (t_treatment60 == 0) ? 0 : static_cast<double>(t_ritf60) / t_treatment60;
       current_TF_by_location_[location] = (t_treatment60 == 0) ? 0 : static_cast<double>(t_tf60) / t_treatment60;
-
       current_TF_by_location_[location] = (current_TF_by_location_[location]) > 1 ? 1 : current_TF_by_location_[location];
+
+      current_RITF_by_location_[location] = (t_treatment60 == 0) ? 0 : static_cast<double>(t_ritf60) / t_treatment60;
       current_RITF_by_location_[location] = (current_RITF_by_location_[location]) > 1 ? 1 : current_RITF_by_location_[location];
 
       avg_tf += current_TF_by_location_[location];
     }
 
-    //update UTL
+    // Update the useful therapeutic life (UTL)
     if ((avg_tf / static_cast<double>(Model::CONFIG->number_of_locations())) <= Model::CONFIG->tf_rate()) {
       current_utl_duration_ += 1;
     }

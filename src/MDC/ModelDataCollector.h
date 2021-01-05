@@ -38,7 +38,7 @@ PROPERTY_REF(IntVector, malaria_deaths_by_location)
 PROPERTY_REF(IntVector, monthly_nontreatment_by_location)
 PROPERTY_REF(IntVector2, monthly_nontreatment_by_location_age_class)
 
-// Also used to calculate the blood slide prevalence
+// Used to calculate the blood slide prevalence
 PROPERTY_REF(IntVector2, popsize_by_location_age_class)
 PROPERTY_REF(IntVector2, popsize_by_location_age_class_by_5)
 
@@ -233,6 +233,7 @@ public:
 
   void end_of_time_step();
 
+  // Update the useful therapeutic life (UTL) verctor
   void update_UTL_vector();
 
   void record_1_treatment_failure_by_therapy(const int &location, const int &age, const int &therapy_id);
