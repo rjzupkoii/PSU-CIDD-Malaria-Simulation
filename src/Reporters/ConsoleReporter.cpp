@@ -98,14 +98,18 @@ void ConsoleReporter::after_run() {
   for (std::size_t t_id = 0; t_id < Model::CONFIG->therapy_db().size(); t_id++) {
 
     int nTreaments = Model::DATA_COLLECTOR->number_of_treatments_with_therapy_ID()[t_id];
-    int nSuccess = Model::DATA_COLLECTOR->number_of_treatments_success_with_therapy_ID()[t_id];
     int nFail = Model::DATA_COLLECTOR->number_of_treatments_fail_with_therapy_ID()[t_id];
-    double pSuccess = (nTreaments == 0) ? 0 : nSuccess * 100.0 / nTreaments;
+
+    // Note that this is just an estimate since treatments given close to model completion
+    // may still fail
+    int success = (nTreaments - nFail);
+
+    double pSuccess = (nTreaments == 0) ? 0 : success * 100.0 / nTreaments;
 
     std::cout << "Number of patients (with non-resistant parasite) treated with therapy " << t_id
               << " (% success) = "
               << nTreaments << " (" << pSuccess << "%)" << std::endl;
-    std::cout << "Number Failed: " << nFail << "-" << nSuccess << "-" << nTreaments << std::endl;
+    std::cout << "Number Failed: " << nFail << "-" << success << "-" << nTreaments << std::endl;
 
   }
 

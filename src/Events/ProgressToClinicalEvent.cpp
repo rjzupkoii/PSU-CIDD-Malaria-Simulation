@@ -100,9 +100,9 @@ void ProgressToClinicalEvent::execute() {
 
       person->cancel_all_events_except(nullptr);
       person->set_host_state(Person::DEAD);
-      Model::DATA_COLLECTOR->record_1_malaria_death(person->location(), person->age());
+      Model::DATA_COLLECTOR->record_1_malaria_death(person->location(), person->age_class());
       Model::DATA_COLLECTOR->record_1_TF(person->location(), true);
-      Model::DATA_COLLECTOR->record_1_treatment_failure_by_therapy(person->location(), person->age(),
+      Model::DATA_COLLECTOR->record_1_treatment_failure_by_therapy(person->location(), person->age_class(),
                                                                    therapy->id());
       return;
     }
@@ -121,7 +121,7 @@ void ProgressToClinicalEvent::execute() {
 
     receive_no_treatment_routine(person);
     if (person->host_state()==Person::DEAD) {
-      Model::DATA_COLLECTOR->record_1_malaria_death(person->location(), person->age());
+      Model::DATA_COLLECTOR->record_1_malaria_death(person->location(), person->age_class());
       return;
     }
     //

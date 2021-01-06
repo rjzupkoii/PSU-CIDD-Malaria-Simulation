@@ -350,7 +350,7 @@ void Model::monthly_update() {
   monthly_report();
 
   //reset monthly variables
-  data_collector()->monthly_update();
+  data_collector()->monthly_reset();
 
   //
   treatment_strategy_->monthly_update();

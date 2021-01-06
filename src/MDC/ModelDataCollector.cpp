@@ -49,6 +49,7 @@ void ModelDataCollector::initialize() {
     births_by_location_ = Vector_by_Locations(IntVector);
     deaths_by_location_ = Vector_by_Locations(IntVector);
     malaria_deaths_by_location_ = Vector_by_Locations(IntVector);
+    malaria_deaths_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
     
     popsize_residence_by_location_ = Vector_by_Locations(IntVector);
 
@@ -97,7 +98,6 @@ void ModelDataCollector::initialize() {
     UTL_duration_ = IntVector();
 
     number_of_treatments_with_therapy_ID_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
-    number_of_treatments_success_with_therapy_ID_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
     number_of_treatments_fail_with_therapy_ID_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
 
     AMU_per_parasite_pop_ = 0;
@@ -151,6 +151,8 @@ void ModelDataCollector::initialize() {
     monthly_number_of_clinical_episode_by_location_ = Vector_by_Locations(IntVector);
     monthly_nontreatment_by_location_ = Vector_by_Locations(IntVector);
     monthly_nontreatment_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
+    monthly_treatment_failure_by_location_ = Vector_by_Locations(IntVector);
+    monthly_treatment_failure_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
 
     current_number_of_mutation_events_ = 0;
     number_of_mutation_events_by_year_ = LongVector();
@@ -332,17 +334,25 @@ void ModelDataCollector::record_1_birth(const int &location) {
 }
 
 void ModelDataCollector::record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten, const int &age_group) {
-  deaths_by_location_[location]++;
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+    deaths_by_location_[location]++;
     update_person_days_by_years(location, -(Constants::DAYS_IN_YEAR() - Model::SCHEDULER->current_day_in_year()));
     update_average_number_bitten(location, birthday, number_of_times_bitten);
     number_of_death_by_location_age_group_[location][age_group] += 1;
   }
 }
 
-// TODO update to age class
-void ModelDataCollector::record_1_malaria_death(const int &location, const int &age) {
-  malaria_deaths_by_location_[location]++;
+void ModelDataCollector::record_1_infection(const int &location) { 
+  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+    monthly_number_of_new_infections_by_location_[location]++; 
+  }
+}
+
+void ModelDataCollector::record_1_malaria_death(const int &location, const int &age_class) {
+  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+    malaria_deaths_by_location_[location]++;
+    malaria_deaths_by_location_age_class_[location][age_class]++;
+  }
 }
 
 void ModelDataCollector::update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten) {
@@ -384,8 +394,8 @@ void ModelDataCollector::calculate_percentage_bites_on_top_20() {
 }
 
 void ModelDataCollector::record_1_non_treated_case(const int &location, const int &age_class) {
-  monthly_nontreatment_by_location_[location]++;
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+    monthly_nontreatment_by_location_[location]++;
     monthly_nontreatment_by_location_age_class_[location][age_class]++;
   }
 }
@@ -492,13 +502,17 @@ void ModelDataCollector::record_1_TF(const int &location, const bool &by_drug) {
   }
 }
 
-void ModelDataCollector::record_1_treatment_failure_by_therapy(const int &location, const int &age, const int &therapy_id) {
+void ModelDataCollector::record_1_treatment_failure_by_therapy(const int &location, const int &age_class, const int &therapy_id) {
+
+  // NOTE These are old variables that stored data for the given therapy
   number_of_treatments_fail_with_therapy_ID_[therapy_id] += 1;
   today_tf_by_therapy_[therapy_id] += 1;
-}
 
-void ModelDataCollector::record_1_treatment_success_by_therapy(const int &therapy_id) {
-  number_of_treatments_success_with_therapy_ID_[therapy_id] += 1;
+  // Update the monthly treatment failure count, note that we aren't tracking the therapy
+  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+    monthly_treatment_failure_by_location_[location]++;
+    monthly_treatment_failure_by_location_age_class_[location][age_class]++;
+  }
 }
 
 void ModelDataCollector::update_after_run() {
@@ -602,18 +616,24 @@ double ModelDataCollector::get_blood_slide_prevalence(const int &location, const
   return (popsize == 0) ? 0 : blood_slide_numbers / popsize;
 }
 
-void ModelDataCollector::monthly_update() {
+void ModelDataCollector::monthly_reset() {
+  // Clear variables needed by reporters
+  zero_fill(births_by_location_);
+  zero_fill(deaths_by_location_);
+
+  // Clear variables that start after the data collection day
   if (Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) {
     zero_fill(monthly_number_of_treatment_by_location_);
     zero_fill(monthly_number_of_new_infections_by_location_);
     zero_fill(monthly_number_of_clinical_episode_by_location_);
     zero_fill(monthly_nontreatment_by_location_);
-    zero_fill(births_by_location_);
-    zero_fill(deaths_by_location_);
     zero_fill(malaria_deaths_by_location_);
-
+    zero_fill(monthly_treatment_failure_by_location_);
+    
     for (auto location = 0ul; location < Model::CONFIG->number_of_locations(); location++) {
       zero_fill(monthly_nontreatment_by_location_age_class_[location]);
+      zero_fill(malaria_deaths_by_location_age_class_[location]);
+      zero_fill(monthly_treatment_failure_by_location_age_class_[location]);
     }
   }
 }

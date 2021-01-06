@@ -233,7 +233,7 @@ void Population::perform_infection_event() {
 
   for (auto* p : today_infections) {
     if (!p->today_infections()->empty()) {
-      Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[p->location()] += 1;
+      Model::DATA_COLLECTOR->record_1_infection(p->location());
     }
     p->randomly_choose_parasite();
   }

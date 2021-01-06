@@ -2,6 +2,8 @@
  * ModelDataCollector.cpp
  * 
  * Definition of the model data collector class.
+ * 
+ * NOTE That age_class and age_group are used fairly interchangably.
  */
 
 #ifndef MODELDATACOLLECTOR_H
@@ -31,12 +33,11 @@ PROPERTY_REF(IntVector, popsize_by_location)
 // Population size accounting for residence
 PROPERTY_REF(IntVector, popsize_residence_by_location)
 
+// Number of briths by location; reset by monthly_update
 PROPERTY_REF(IntVector, births_by_location)
-PROPERTY_REF(IntVector, deaths_by_location)
-PROPERTY_REF(IntVector, malaria_deaths_by_location)
 
-PROPERTY_REF(IntVector, monthly_nontreatment_by_location)
-PROPERTY_REF(IntVector2, monthly_nontreatment_by_location_age_class)
+// Number of deaths by location; reset by monthly_update
+PROPERTY_REF(IntVector, deaths_by_location)
 
 // Used to calculate the blood slide prevalence
 PROPERTY_REF(IntVector2, popsize_by_location_age_class)
@@ -98,10 +99,14 @@ PROPERTY_REF(int, current_utl_duration)
 
 PROPERTY_REF(IntVector, UTL_duration)
 
+// The total number of treatment given for the given therpay id
 PROPERTY_REF(IntVector, number_of_treatments_with_therapy_ID)
 
-PROPERTY_REF(IntVector, number_of_treatments_success_with_therapy_ID)
-
+// The total number of treatment failures with the given therapy
+// NOTE we are not tracking the number of successes since it is generally
+//      safe to assume that successes = (treatments - failures); however,
+//      some error may be introduced for the treatments given close to 
+//      model completion
 PROPERTY_REF(IntVector, number_of_treatments_fail_with_therapy_ID)
 
 PROPERTY_REF(double, AMU_per_parasite_pop)
@@ -150,12 +155,6 @@ PROPERTY_REF(IntVector2, number_of_clinical_by_location_age_group_by_5)
 
 PROPERTY_REF(IntVector2, number_of_death_by_location_age_group)
 
-PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
-
-PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
-
-PROPERTY_REF(IntVector, monthly_number_of_clinical_episode_by_location);
-
 PROPERTY_REF(double, tf_at_15)
 
 PROPERTY_REF(double, single_resistance_frequency_at_15)
@@ -187,6 +186,36 @@ PROPERTY_REF(double, mean_moi)
 PROPERTY_REF(LongVector, number_of_mutation_events_by_year)
 PROPERTY_REF(long, current_number_of_mutation_events)
 
+// NOTE The tracking for the following variables begins after 
+// NOTE start_collect_data_day and they are reset by monthly_update 
+
+// Monthly number of malaria deaths by location
+PROPERTY_REF(IntVector, malaria_deaths_by_location)
+
+// Monthly number of malaria daeths by location, binned by age class
+PROPERTY_REF(IntVector2, malaria_deaths_by_location_age_class)
+
+// Monthly number of non-treatments by location
+PROPERTY_REF(IntVector, monthly_nontreatment_by_location)
+
+// Monthly number of non-treatments by location binned by age class
+PROPERTY_REF(IntVector2, monthly_nontreatment_by_location_age_class)
+
+// Monthly number of clinical episodes by location
+PROPERTY_REF(IntVector, monthly_number_of_clinical_episode_by_location);
+
+// Monthly number of new treatments by location
+PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
+
+// Monthly treatments by location
+PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
+
+// Monthly number of treatment failures (i.e., treatment unsuccessfully adminsitred) by location
+PROPERTY_REF(IntVector, monthly_treatment_failure_by_location);
+
+// Monthly number of treatment failures by location and age class
+PROPERTY_REF(IntVector2, monthly_treatment_failure_by_location_age_class);
+
 public:
   // The number of reported multiple of infection (MOI)
   static const int NUMBER_OF_REPORTED_MOI = 8;
@@ -201,7 +230,8 @@ public:
 
   void perform_yearly_update();
 
-  void monthly_update();
+  // Reset monthly tracking variables after the reporters had a chance to access them.
+  void monthly_reset();
 
   virtual void collect_number_of_bites(const int &location, const int &number_of_bites);
 
@@ -214,12 +244,19 @@ public:
   // Record one birth at the given location index, this value will be reset each month
   void record_1_birth(const int &location);
 
+  // Record one death, note that this is independent of recording a malaria death
   void record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten, const int &age_group);
 
-  void record_1_malaria_death(const int &location, const int &age);
+  // Record one infection at the given location
+  void record_1_infection(const int &location);
+
+  // Record one malaria death, note that this only records the cause (i.e., malaria) and record_1_death 
+  // still needs to be called to ensure proper metrics
+  void  record_1_malaria_death(const int &location, const int &age_class);
 
   void calculate_percentage_bites_on_top_20();
 
+  // Indicates a combined "treatment failure" due to either 1) failure to treat or 2) the treatment not being successful
   void record_1_TF(const int &location, const bool &by_drug);
 
   void record_1_treatment(const int &location, const int &therapy_id);
@@ -236,9 +273,8 @@ public:
   // Update the useful therapeutic life (UTL) verctor
   void update_UTL_vector();
 
-  void record_1_treatment_failure_by_therapy(const int &location, const int &age, const int &therapy_id);
-
-  void record_1_treatment_success_by_therapy(const int &therapy_id);
+  // Records one case in which a treatment was administred but failed due to patient death or failure to clear
+  void record_1_treatment_failure_by_therapy(const int &location, const int &age_class, const int &therapy_id);
 
   void update_after_run();
 
