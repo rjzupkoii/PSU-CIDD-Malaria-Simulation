@@ -278,6 +278,8 @@ public:
 
   void update_after_run();
 
+  // Calculate the artemisinin mono-therapy use (AMU) and artemisinin combination therapy failure rate (ATF)
+  [[deprecated ("Last used in Lancet publication")]]
   void record_AMU_AFU(Person* person, Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite);
 
   double get_blood_slide_prevalence(const int &location, const int &age_from, const int &age_to);

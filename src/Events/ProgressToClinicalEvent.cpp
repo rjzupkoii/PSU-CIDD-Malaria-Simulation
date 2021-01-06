@@ -84,9 +84,8 @@ void ProgressToClinicalEvent::execute() {
     clinical_caused_parasite_->set_update_function(Model::MODEL->having_drug_update_function());
 
     // calculate EAMU
-    Model::DATA_COLLECTOR->record_AMU_AFU(person, therapy, clinical_caused_parasite_);
-    //        calculateEAMU(therapy);
-    //
+    // DEPRECATED CALL
+    //Model::DATA_COLLECTOR->record_AMU_AFU(person, therapy, clinical_caused_parasite_);
 
     // death is 90% lower than no treatment
     if (person->will_progress_to_death_when_recieve_treatment()) {
