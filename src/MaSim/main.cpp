@@ -12,6 +12,7 @@
 #include "Helpers/OSHelpers.h"
 #include "Helpers/DbLoader.hxx"
 #include "Model.h"
+#include "Reporters/Reporter.h"
 
 // Set this flag to disable Linux / Unix specific code, this should be provided
 // via CMake automatically or by the compiler for WIN32
@@ -119,7 +120,8 @@ void handle_cli(Model *model, int argc, char **argv) {
    * -r            - reporter type
    * -s            - study to associate with the configuration, database id 
    * 
-   * --dump        - dump the movement matrix as calculated           
+   * --dump        - dump the movement matrix as calculated 
+   * --lr          - list the possible reporters          
    * --im          - record individual movement data
    * --mc          - record the movement between cells
    * --md          - record the movement between districts
@@ -130,9 +132,10 @@ void handle_cli(Model *model, int argc, char **argv) {
   args::ValueFlag<std::string> input_file(commands, "string", "The config file (YAML format). \nEx: MaSim -i input.yml", {'i', 'c', "input", "config"});
   args::ValueFlag<int> cluster_job_number(commands, "int", "Cluster job number. \nEx: MaSim -j 1", {'j'});
   args::ValueFlag<int> study_number(commands, "int", "Study number to associate with the configuration. \nEx: MaSim -s 1", {'s'});
-  args::ValueFlag<std::string> reporter(commands, "string", "Reporter Type. \nEx: MaSim -r mmc", {'r'});
+  args::ValueFlag<std::string> reporter(commands, "string", "Reporter Type. \nEx: MaSim -r MMC", {'r'});
   args::ValueFlag<std::string> input_path(commands, "string", "Path for output files, default is current directory. \nEx: MaSim -p out", {'o'});
   args::Flag dump_movement(commands, "dump", "Dump the movement matrix as calculated", { "dump" });
+  args::Flag list_reporters(commands, "lr", "List the possible reporters", { "lr" });
   args::Flag individual_movement(commands, "im", "Record individual movement detail", { "im" });
   args::Flag cell_movement(commands, "mc", "Record the movement between cells, cannot run with --md", { "mc" });
   args::Flag district_movement(commands, "md", "Record the movement between districts, cannot run with --mc", { "md" });
@@ -144,6 +147,16 @@ void handle_cli(Model *model, int argc, char **argv) {
 
   try {
     parser.ParseCLI(argc, argv);
+
+    // Check to see if we are listing reporters, do that and exit
+    if (list_reporters) {
+      std::cout << "Possible reporters for use with -r switch:\n\n";
+      for (auto const& report : Reporter::ReportTypeMap) {
+        std::cout << '\t' << report.first << std::endl;
+      }
+      std::cout << std::endl << "Note that names are case sensitive!\n";
+      exit(EXIT_SUCCESS);
+    }
 
     // Check to if both --mc and --md are set, if so, generate an error
     if (cell_movement == true && district_movement == true) {

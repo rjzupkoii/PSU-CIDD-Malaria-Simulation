@@ -128,24 +128,23 @@ void Model::initialize(int job_number, std::string std) {
   LOG(INFO) << fmt::format("Read input file: {}", config_filename_);
   config_->read_from_file(config_filename_);
   if (!verify_configuration()) {
-    std::cerr << "Unable to continue execution with current configuration, see error logs.\n";
-    exit(1);
+    std::cerr << "ERROR! Unable to continue execution with current configuration, see error logs.\n";
+    exit(EXIT_FAILURE);
   }
   
   VLOG(1) << "Initialize Random";
   random_->initialize(config_->initial_seed_number());
 
-  VLOG(1) << "Initialing reports";
   // MARKER add reporter here
+  VLOG(1) << "Initialing reports";
   if (reporter_type_.empty()) {
-
-    // TODO Review what to do with these reporters
-    // add_reporter(Reporter::MakeReport(Reporter::MONTHLY_REPORTER));
-
     add_reporter(Reporter::MakeReport(Reporter::DB_REPORTER));
   } else {
     if (Reporter::ReportTypeMap.find(reporter_type_) != Reporter::ReportTypeMap.end()) {
       add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));
+    } else {
+      std::cerr << "ERROR! Unknown reporter type: " << reporter_type_ << std::endl;
+      exit(EXIT_FAILURE);
     }
   }
   for (auto* reporter : reporters_) {
