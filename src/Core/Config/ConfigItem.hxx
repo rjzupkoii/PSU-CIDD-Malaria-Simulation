@@ -62,12 +62,18 @@ T &ConfigItem<T>::operator()() {
 
 template<typename T>
 void ConfigItem<T>::set_value(const YAML::Node &node) {
-  {
-    if (node[name_]) {
-      value_ = node[name_].template as<T>();
-    } else {
-      LOG(WARNING) << name_ << " used default value of " << value_;
-    }
+  // Store the value if there is one
+  if (node[name_]) {
+    value_ = node[name_].template as<T>();
+    return;
+  }
+
+  // Otherwise log relevent warnings
+  if (name_ == "initial_seed_number") {
+    // Random seed is rarely set through YAML so only display this as a VLOG
+    VLOG(1) << name_ << "set to defaut value of " << value_;
+  } else {
+    LOG(WARNING) << name_ << " used default value of " << value_;
   }
 }
 
