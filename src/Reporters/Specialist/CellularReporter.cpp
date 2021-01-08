@@ -39,6 +39,7 @@ void CellularReporter::initialize(int job_number, std::string path) {
 
     // Log the aggregate headers
     ss << "DaysElapsed" << Csv::sep << "Population" << Csv::sep << "InfectedIndividuals" << Csv::sep 
+       << "NewInfections" << Csv::sep << "NonTreatment" << Csv::sep << "TreatmentFailure" << Csv::sep
        << "ParasiteClones" << Csv::sep << "580yWeighted" << Csv::sep << "508yUnweighted" << Csv::end_line;
     CLOG(INFO, "aggregate_reporter") << ss.str();
     ss.str("");
@@ -108,6 +109,9 @@ void CellularReporter::monthly_report() {
     ss << Model::SCHEDULER->current_time() << Csv::sep 
        << population << Csv::sep 
        << infectedIndividuals << Csv::sep 
+       << Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[0] << Csv::sep
+       << Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[0] << Csv::sep
+       << Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[0] << Csv::sep
        << parasiteClones << Csv::sep
        << _580yWeighted << Csv::sep 
        << _580yCount << Csv::end_line;
