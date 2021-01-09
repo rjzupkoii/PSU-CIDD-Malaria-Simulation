@@ -322,6 +322,7 @@ void ModelDataCollector::calculate_eir() {
   }
 }
 
+// TODO Do something with the age and age_class or remove them
 void ModelDataCollector::collect_1_clinical_episode(const int &location, const int &age, const int &age_class) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
     cumulative_clinical_episodes_by_location_[location]++;
