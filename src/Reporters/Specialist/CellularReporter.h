@@ -10,6 +10,7 @@
 
 class CellularReporter : public Reporter {
     private:
+        void blood_density_report();
         void detailed_report();
 
     public:

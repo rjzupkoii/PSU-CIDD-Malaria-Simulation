@@ -37,6 +37,15 @@ void CellularReporter::initialize(int job_number, std::string path) {
     detail_reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
     el::Loggers::reconfigureLogger("detail_reporter", detail_reporter);
 
+    el::Configurations blood_reporter;
+    blood_reporter.setToDefault();
+    blood_reporter.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
+    blood_reporter.setGlobally(el::ConfigurationType::ToFile, "true");
+    blood_reporter.setGlobally(el::ConfigurationType::Filename, fmt::format("{}_blood_data_{}.csv", path, job_number));
+    blood_reporter.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
+    blood_reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
+    el::Loggers::reconfigureLogger("blood_reporter", blood_reporter);
+
     // Log the aggregate headers
     ss << "DaysElapsed" << Csv::sep << "Population" << Csv::sep << "InfectedIndividuals" << Csv::sep 
        << "ClinicalIndividuals" << Csv::sep << "NewInfections" << Csv::sep << "NonTreatment" << Csv::sep << "TreatmentFailure" << Csv::sep
@@ -52,6 +61,12 @@ void CellularReporter::initialize(int job_number, std::string path) {
     }
     ss << Csv::end_line;
     CLOG(INFO, "detail_reporter") << ss.str();
+    ss.str("");
+
+    // Log the blood density headers
+    ss << "DaysElapsed" << Csv::sep << "Individual" << Csv::sep << "ParasitePopulation" << Csv::sep
+       << "C580Y" << Csv::sep << "Density" << Csv::end_line;
+    CLOG(INFO, "blood_reporter") << ss.str();
     ss.str("");
 }
 
@@ -126,6 +141,56 @@ void CellularReporter::monthly_report() {
     if (dayselapsed > (22 * 365 + 4) && dayselapsed < (23 * 365 + 5)) {
         detailed_report();
     }
+
+    // For the blood density we want the last 20 years of the model, so 2018-01-01 onwards
+    if (dayselapsed > (11 * 365 + 3)) {
+        blood_density_report();
+    }
+}
+
+// Generate a detailed report of the C580Y blood density for all infected individuals in the model.
+void CellularReporter::blood_density_report() {
+    // Hold on to some values
+    PersonIndexByLocationStateAgeClass* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+    auto dayselapsed = Model::SCHEDULER->current_time();
+    auto genotypes = Model::CONFIG->genotype_db()->size();
+
+    // Iterate over the population
+    for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
+        for (std::size_t ac = 0; ac < index->vPerson()[0][0].size(); ac++) {
+            // Iterate over all of the genotypes, there should only be one location (i.e., index 0)
+            auto age_class = index->vPerson()[0][hs][ac];
+            for (std::size_t ndx = 0; ndx < age_class.size(); ndx++) {
+                // Pass if the individual is not infected
+                auto parasites = age_class[ndx]->all_clonal_parasite_populations()->parasites();
+                auto size = parasites->size();
+                if (size == 0) { continue; }
+
+                // Log each of the parasites, mutation, and blood density
+                for (std::size_t infection = 0; infection < size; infection++) {
+                    auto parasite_population = (*parasites)[infection];
+
+                    // WARNING - This is hard-coded on the assumption that the K13 Propeller locus is at index 2
+                    //           thus allele zero is C and one would be Y 
+                    auto mutation = (parasite_population->genotype()->gene_expression()[2] == 0) ? 'C' : 'Y';
+
+                    // Get the current blood density in log10
+                    auto blood_density = parasite_population->get_current_parasite_density(dayselapsed);
+
+                    // Write line
+                    ss << dayselapsed << Csv::sep 
+                       << &age_class[ndx] << Csv::sep
+                       << &parasites[infection] << Csv::sep
+                       << mutation << Csv::sep
+                       << blood_density << Csv::end_line;
+                }
+            }
+        }
+    }
+
+    // Store the data
+    CLOG(INFO, "blood_reporter") << ss.str();
+    ss.str("");
 }
 
 // Generate a detailed report by recording the infection status of all individuals 
