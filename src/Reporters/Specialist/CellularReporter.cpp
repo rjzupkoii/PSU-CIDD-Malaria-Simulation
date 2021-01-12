@@ -172,15 +172,15 @@ void CellularReporter::blood_density_report() {
 
                     // WARNING - This is hard-coded on the assumption that the K13 Propeller locus is at index 2
                     //           thus allele zero is C and one would be Y 
-                    auto mutation = (parasite_population->genotype()->gene_expression()[2] == 0) ? 'C' : 'Y';
+                    auto mutation = !(parasite_population->genotype()->gene_expression()[2] == 0);
 
                     // Get the current blood density in log10
                     auto blood_density = parasite_population->get_current_parasite_density(dayselapsed);
 
                     // Write line
                     ss << dayselapsed << Csv::sep 
-                       << &age_class[ndx] << Csv::sep
-                       << &parasites[infection] << Csv::sep
+                       << age_class[ndx]->get_uid() << Csv::sep
+                       << parasite_population->get_uid() << Csv::sep
                        << mutation << Csv::sep
                        << blood_density << Csv::end_line;
                 }
@@ -211,7 +211,7 @@ void CellularReporter::detailed_report() {
             for (std::size_t ndx = 0; ndx < age_class.size(); ndx++) {
 
                 // Add the lead to the buffer
-                ss << dayselapsed << Csv::sep << &age_class[ndx] << Csv::sep;
+                ss << dayselapsed << Csv::sep << age_class[ndx]->get_uid() << Csv::sep;
                 
                 // Get the person and count them, if they aren't infected zero out the row
                 auto parasites = age_class[ndx]->all_clonal_parasite_populations()->parasites();

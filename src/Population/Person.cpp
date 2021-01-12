@@ -66,6 +66,9 @@ Person::Person() :
 void Person::init() {
   Dispatcher::init();
 
+  // Refresh the UID
+  _uid = UniqueId::get_instance().get_uid();
+
   immune_system_ = new ImmuneSystem(this);
 
   all_clonal_parasite_populations_ = new SingleHostClonalParasitePopulations(this);

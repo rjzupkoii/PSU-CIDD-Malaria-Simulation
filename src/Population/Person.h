@@ -15,6 +15,7 @@
 #include "Properties/PersonIndexByLocationBittingLevelHandler.hxx"
 #include "Properties/PersonIndexByLocationMovingLevelHandler.hxx"
 #include "ClonalParasitePopulation.h"
+#include "Helpers/UniqueId.hxx"
 
 class Population;
 
@@ -122,6 +123,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
  PROPERTY_REF(std::vector<double>, prob_present_at_mda_by_age)
 
+ private:
+  ul_uid _uid;
+
  public:
   Person();
   virtual ~Person();
@@ -227,6 +231,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
   double prob_present_at_mda();
 
   bool has_effective_drug_in_blood() const;
+
+  ul_uid get_uid() { return _uid; }
+
 };
 
 #endif

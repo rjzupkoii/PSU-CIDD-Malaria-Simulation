@@ -1,8 +1,8 @@
 /* 
- * File:   BloodParasite.h
- * Author: Merlin
+ * ColonalParasitePopulation.h
  *
- * Created on July 11, 2013, 2:21 PM
+ * Define the ClonalParasitePopulation class which allows a single parasite 
+ * colony to be tracked in an individual.
  */
 
 #ifndef CLONALPARASITEPOPULATION_H
@@ -13,6 +13,7 @@
 #include "Properties/IndexHandler.hxx"
 #include "Therapies/DrugType.h"
 #include "Core/ObjectPool.h"
+#include "Helpers/UniqueId.hxx"
 
 class Therapy;
 
@@ -22,19 +23,23 @@ class SingleHostClonalParasitePopulations;
 
 class ClonalParasitePopulation : public IndexHandler {
  OBJECTPOOL(ClonalParasitePopulation);
+
  DISALLOW_COPY_AND_ASSIGN(ClonalParasitePopulation)
 
  PROPERTY_HEADER(double, last_update_log10_parasite_density)
 
  PROPERTY_HEADER(double, gametocyte_level)
-//    PROPERTY_REF(double, clearance_rate)
+
  PROPERTY_REF(int, first_date_in_blood)
 
  POINTER_PROPERTY(SingleHostClonalParasitePopulations, parasite_population)
-  //    PROPERTY(int, parasite_type_id);
+
  POINTER_PROPERTY_HEADER(Genotype, genotype)
 
  POINTER_PROPERTY(ParasiteDensityUpdateFunction, update_function)
+
+ private:
+  ul_uid _uid;
 
  public:
   static const double LOG_ZERO_PARASITE_DENSITY;
@@ -42,7 +47,6 @@ class ClonalParasitePopulation : public IndexHandler {
  public:
   ClonalParasitePopulation(Genotype *genotype = nullptr);
 
-  //    BloodParasite(const BloodParasite& orig);
   virtual ~ClonalParasitePopulation();
 
   double get_current_parasite_density(const int &current_time);
@@ -61,7 +65,9 @@ class ClonalParasitePopulation : public IndexHandler {
 
   void perform_drug_action(const double &percent_parasite_remove);
 
+  ul_uid get_uid() { return _uid; }
+
 };
 
-#endif    /* CLONALPARASITEPOPULATION_H */
+#endif
 
