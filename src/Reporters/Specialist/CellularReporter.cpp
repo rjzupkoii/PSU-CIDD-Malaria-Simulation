@@ -8,6 +8,7 @@
 #include "Core/Config/Config.h"
 #include "MDC/ModelDataCollector.h"
 #include "Model.h"
+#include "Population/ImmuneSystem.h"
 #include "Population/Population.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include "easylogging++.h"
@@ -65,7 +66,7 @@ void CellularReporter::initialize(int job_number, std::string path) {
 
     // Log the blood density headers
     ss << "DaysElapsed" << Csv::sep << "Individual" << Csv::sep << "ParasitePopulation" << Csv::sep
-       << "C580Y" << Csv::sep << "Density" << Csv::end_line;
+       << "C580Y" << Csv::sep << "Density" << Csv::sep << "Theta" << Csv::end_line;
     CLOG(INFO, "blood_reporter") << ss.str();
     ss.str("");
 }
@@ -166,6 +167,9 @@ void CellularReporter::blood_density_report() {
                 auto size = parasites->size();
                 if (size == 0) { continue; }
 
+                // Get the theta value for the individual
+                auto theta = age_class[ndx]->immune_system()->get_current_value();
+
                 // Log each of the parasites, mutation, and blood density
                 for (std::size_t infection = 0; infection < size; infection++) {
                     auto parasite_population = (*parasites)[infection];
@@ -182,7 +186,8 @@ void CellularReporter::blood_density_report() {
                        << age_class[ndx]->get_uid() << Csv::sep
                        << parasite_population->get_uid() << Csv::sep
                        << mutation << Csv::sep
-                       << blood_density << Csv::end_line;
+                       << blood_density << Csv::sep
+                       << theta << Csv::end_line;
                 }
             }
         }
