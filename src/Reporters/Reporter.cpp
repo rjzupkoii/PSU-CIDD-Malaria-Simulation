@@ -30,6 +30,7 @@ std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
 };
 
 // Calculate the number of treatment failures (NTF) for the model
+[[deprecated("Use treatment failure count and nontreatments instead.")]]
 double Reporter::calculate_treatment_failures() {
   // If the report is generated when the comparision period starts then we could end up dividing by zero, so guard against that
   const double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) / static_cast<double>(Constants::DAYS_IN_YEAR());
