@@ -25,6 +25,7 @@ file(GLOB SOURCE *.cpp
         Core/Config/Decoders/*.cpp
         Core/Index/*.cpp 
         Events/*.cpp 
+        Events/Environment/*.cpp
         Events/Population/*.cpp 
         GIS/*.cpp
         Helpers/*.cpp 

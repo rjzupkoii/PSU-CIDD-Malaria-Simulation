@@ -49,6 +49,7 @@ class Scheduler {
 
   virtual void schedule_individual_event(Event *event);
 
+  // TODO Update references for "population" to "global" since it better reflects the type of event
   virtual void schedule_population_event(Event *event);
 
   virtual void schedule_event(EventPtrVector &time_events, Event *event);

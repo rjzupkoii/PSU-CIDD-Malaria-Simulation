@@ -167,3 +167,19 @@ events:
 **day** (date string, YYYY/mm/dd) : the date when the event will occur. \
 **drug_id** (integer) : the id of the drug, as defined in the `drug_db` or `-1` to apply the value to all drugs. \
 **mutation_probability** (float) : the mutation probability to use.
+
+##### update_ecozone_event
+(*Version 4.0*) Update all of the cells matching the original ecozone to the new ecozone.
+
+```YAML
+events:
+  - name: update_ecozone_event
+    info:
+      - day: 2021/01/23
+        from: 0
+        to: 1
+```
+
+**day** (date string, YYYY/mm/dd) : the date when the event will occur. \
+**from** (integer) : the id of the ecozone, defined in `seasonal_info`, that is the original ecozone. \
+**to** (integer) : the id of the new ecozone, defined in `seasonal_info`, that will be applied to matching cells.

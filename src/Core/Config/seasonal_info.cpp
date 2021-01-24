@@ -99,6 +99,14 @@ void seasonal_info::set_from_raster(const YAML::Node &node) {
             set_seasonal_period(seasonal_info_node, index);
         }
     }
+
+    // Update the reference values as well
+    for (std::size_t ndx = 0; ndx < size; ndx++) {
+      value_.reference_base.push_back(seasonal_info_node["base"][ndx].as<double>());
+      value_.reference_A.push_back(seasonal_info_node["a"][ndx].as<double>());
+      value_.reference_B.push_back(seasonal_info_node["b"][ndx].as<double>());
+      value_.reference_phi.push_back(seasonal_info_node["phi"][ndx].as<double>());
+    }
 }
 
 void seasonal_info::set_seasonal_period(const YAML::Node &node, int index) {

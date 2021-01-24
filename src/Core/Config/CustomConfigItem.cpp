@@ -429,13 +429,6 @@ void moving_level_generator::set_value(const YAML::Node &node) {
   value_.level_density = config_->circulation_info().v_moving_level_density;
 }
 
-void preconfig_population_events::set_value(const YAML::Node &node) {
-  for (std::size_t i = 0; i < node["events"].size(); ++i) {
-    auto events = PopulationEventBuilder::build(node["events"][i], config_);
-    value_.insert(value_.end(), events.begin(), events.end());
-  }
-}
-
 void start_of_comparison_period::set_value(const YAML::Node &node) {
   const auto ymd = node[name_].as<date::year_month_day>();
   value_ = (date::sys_days{ymd} - date::sys_days(config_->starting_date())).count();

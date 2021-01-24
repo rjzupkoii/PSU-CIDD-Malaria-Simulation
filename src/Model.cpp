@@ -173,8 +173,8 @@ void Model::initialize(int job_number, std::string std) {
   VLOG(1) << "Introducing initial cases";
   population_->introduce_initial_cases();
 
-  VLOG(1) << "Schedule for population event";
-  for (auto* event : config_->preconfig_population_events()) {
+  VLOG(1) << "Schedule for environment / population events";
+  for (auto* event : config_->PreconfigEvents()) {
     scheduler_->schedule_population_event(event);
   }
 

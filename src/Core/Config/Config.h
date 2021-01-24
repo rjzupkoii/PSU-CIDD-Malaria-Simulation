@@ -12,6 +12,7 @@
 #include "Core/TypeDef.h"
 #include "CustomConfigItem.h"
 #include "ConfigItem.hxx"
+#include "PreconfigEvents.hxx"
 #include "Spatial/Location.h"
 #include "Core/MultinomialDistributionGenerator.h"
 #include <string>
@@ -143,7 +144,7 @@ class Config {
 
   CUSTOM_CONFIG_ITEM(initial_parasite_info, std::vector<InitialParasiteInfo>())
 
-  CUSTOM_CONFIG_ITEM(preconfig_population_events, std::vector<Event *>())
+  CUSTOM_CONFIG_ITEM(PreconfigEvents, std::vector<Event *>())
 
   CUSTOM_CONFIG_ITEM(bitting_level_generator, MultinomialDistributionGenerator())
   CUSTOM_CONFIG_ITEM(moving_level_generator, MultinomialDistributionGenerator())

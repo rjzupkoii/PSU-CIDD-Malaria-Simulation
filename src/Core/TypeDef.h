@@ -76,6 +76,13 @@ struct SeasonalInfo {
   DoubleVector B;
   DoubleVector phi;
 
+  // The reference values contain the inputs from the YAML so the UpdateEcozoneEvent
+  // can change the ecozone (i.e., seasonal information) during model execution
+  DoubleVector reference_base;
+  DoubleVector reference_A;
+  DoubleVector reference_B;
+  DoubleVector reference_phi;
+
   friend std::ostream &operator<<(std::ostream &os, const SeasonalInfo &seasonal_info);
 };
 

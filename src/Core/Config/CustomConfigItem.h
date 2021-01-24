@@ -394,29 +394,6 @@ class moving_level_generator : public IConfigItem {
   void set_value(const YAML::Node &node) override;
 };
 
-class preconfig_population_events : public IConfigItem {
- DISALLOW_COPY_AND_ASSIGN(preconfig_population_events)
-
- DISALLOW_MOVE(preconfig_population_events)
-
- public:
-  std::vector<Event *> value_;
- public:
-  //constructor
-  explicit preconfig_population_events(const std::string &name, std::vector<Event *> default_value,
-                                       Config *config = nullptr) : IConfigItem(config, name),
-                                                                   value_{std::move(default_value)} {}
-
-  // destructor
-  virtual ~preconfig_population_events() = default;
-
-  virtual std::vector<Event *> &operator()() {
-    return value_;
-  }
-
-  void set_value(const YAML::Node &node) override;
-};
-
 class start_of_comparison_period : public ConfigItem<int> {
  public:
   start_of_comparison_period(const std::string &name, const int &default_value, Config *config) : ConfigItem<int>(
