@@ -20,7 +20,7 @@ class UpdateEcozoneEvent : public Event {
     void execute() override {
       
       // Scan all of the locations, if they match the old values, then replace them with the new
-      VLOG(1) << "Updating ecozone " << from_ << " to " << to_;
+      LOG(INFO) << date::year_month_day{scheduler->calendar_date} << " Updating ecozone " << from_ << " to " << to_;
       
       // Get a pointer to the seasonal information used by the model
       auto& seasons = Model::CONFIG->seasonal_info();
