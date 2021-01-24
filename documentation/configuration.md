@@ -168,7 +168,7 @@ events:
 **drug_id** (integer) : the id of the drug, as defined in the `drug_db` or `-1` to apply the value to all drugs. \
 **mutation_probability** (float) : the mutation probability to use.
 
-##### update_ecozone_event
+#### update_ecozone_event
 (*Version 4.0*) Update all of the cells matching the original ecozone to the new ecozone.
 
 ```YAML
