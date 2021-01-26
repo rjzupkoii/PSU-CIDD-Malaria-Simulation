@@ -225,7 +225,6 @@ CREATE TABLE sim.monthlydata
     dayselapsed integer NOT NULL,
     modeltime bigint NOT NULL,
     seasonalfactor integer NOT NULL,
-    treatmentfailures double precision NOT NULL,
     entrytime timestamp with time zone,
     CONSTRAINT monthlydata_pkey PRIMARY KEY (id),
     CONSTRAINT monthlydata_replicateid_fk FOREIGN KEY (replicateid)
