@@ -226,7 +226,6 @@ CREATE TABLE sim.monthlydata
     modeltime bigint NOT NULL,
     seasonalfactor integer NOT NULL,
     treatmentfailures double precision NOT NULL,
-    beta double precision NOT NULL,
     entrytime timestamp with time zone,
     CONSTRAINT monthlydata_pkey PRIMARY KEY (id),
     CONSTRAINT monthlydata_replicateid_fk FOREIGN KEY (replicateid)
@@ -252,6 +251,7 @@ CREATE TABLE sim.monthlysitedata
     pfpr2to10 double precision NOT NULL,
     pfprall double precision NOT NULL,
     infectedindividuals integer NOT NULL,
+    nontreatment integer NOT NULL,
     CONSTRAINT monthlysitedata_pkey PRIMARY KEY (monthlydataid, locationid),
     CONSTRAINT "monthlydataid_fk" FOREIGN KEY (monthlydataid)
         REFERENCES sim.monthlydata (id) MATCH SIMPLE

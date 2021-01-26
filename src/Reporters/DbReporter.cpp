@@ -204,14 +204,8 @@ bool DbReporter::do_monthly_report() {
         auto model_time = std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date);
         auto seasonal_factor = seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
 
-        // Only get the treatment failures when comparison starts
-        auto treatment_failures = (Model::SCHEDULER->current_time() > Model::CONFIG->start_of_comparison_period()) ? calculate_treatment_failures() : 0;
-
-        // TODO Determine if we want to capture this or not
-        auto beta = 0;
-
         // Prepare the summary query
-        std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor, treatment_failures, beta);
+        std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor);
 
         // Run the query and grab the id
         connection = get_connection();
@@ -219,13 +213,19 @@ bool DbReporter::do_monthly_report() {
         pqxx::result result = db.exec(query);
         auto id = result[0][0].as<int>();
         
-        // Prepare and run the queries to be run
+        // Add the monthly site data
         query = "";
         monthly_site_data(id, query);
         db.exec(query);
+
+        query = "";
         if (Model::CONFIG->record_genome_db()) {
-            query = "";
+            // Add the genome information, this will also update infected individuals
             monthly_genome_data(id, query);
+            db.exec(query);
+        } else {
+            // If we aren't recording genome data still update the infected individuals
+            update_infected_individuals(id, query)            ;
             db.exec(query);
         }
 
@@ -366,12 +366,43 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
             Model::DATA_COLLECTOR->popsize_by_location()[location],
             Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[location],
             Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[location],
-            Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location],
             eir,
             pfpr_under5,
             pfpr_2to10,
-            pfpr_all
+            pfpr_all,
+            Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[location],
+            Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location]
         ));
+    }
+}
+
+void DbReporter::update_infected_individuals(int id, std::string &query) {
+    // Cache some values
+    PersonIndexByLocationStateAgeClass* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+    auto age_classes = index->vPerson()[0][0].size();
+
+    // Iterate overall of the possible locations
+    for (unsigned int location = 0; location < index->vPerson().size(); location++) {
+        int infected_individuals = 0;
+
+        // Iterate over all of the possible states
+        for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
+            // Iterate over all of the age classes
+            for (unsigned int ac = 0; ac < age_classes; ac++) {
+                // Iterate over all of the genotypes
+                auto age_class = index->vPerson()[location][hs][ac];
+                for (auto i = 0ull; i < age_class.size(); i++) {
+
+                    // Update the count if the individual is infected
+                    if (age_class[i]->all_clonal_parasite_populations()->parasites()->size() > 0) {
+                        infected_individuals++;
+                    }
+                }
+            }
+        }
+
+        // Append the infected count update
+        query.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infected_individuals, id, location_index[location]));
     }
 }
 

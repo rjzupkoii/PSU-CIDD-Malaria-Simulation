@@ -14,8 +14,8 @@
 class DbReporter : public Reporter {
   private:
     const std::string INSERT_COMMON = 
-    "INSERT INTO sim.MonthlyData (ReplicateId, DaysElapsed, ModelTime, SeasonalFactor, TreatmentFailures, Beta, EntryTime) "
-    "VALUES ({}, {}, {}, {}, {}, {}, now()) RETURNING id;";
+    "INSERT INTO sim.MonthlyData (ReplicateId, DaysElapsed, ModelTime, SeasonalFactor, EntryTime) "
+    "VALUES ({}, {}, {}, {}, now()) RETURNING id;";
 
     const std::string INSERT_CONFIGURATION = 
     "INSERT INTO sim.Configuration (Yaml, MD5, FileName) VALUES ({}, md5({}), {}) RETURNING ID;";
@@ -41,8 +41,8 @@ class DbReporter : public Reporter {
 
     const std::string INSERT_SITE = 
     "INSERT INTO sim.MonthlySiteData "
-    "(MonthlyDataId, LocationId, Population, ClinicalEpisodes, Treatments, TreatmentFailures, EIR, PfPrUnder5, PfPr2to10, PfPrAll) "
-    "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {});";
+    "(MonthlyDataId, LocationId, Population, ClinicalEpisodes, Treatments, EIR, PfPrUnder5, PfPr2to10, PfPrAll, TreatmentFailures, NonTreatment) "
+    "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});";
 
     const std::string SELECT_CONFIGURATION =
     "SELECT id FROM sim.Configuration WHERE md5 = md5({}) AND filename = {};";
@@ -77,6 +77,7 @@ class DbReporter : public Reporter {
 
     // Reporter specific
     bool do_monthly_report();
+    void update_infected_individuals(int id, std::string &query);
     void prepare_configuration(pqxx::connection* connection);
     void prepare_replicate(pqxx::connection* connection);
     void monthly_genome_data(int id, std::string &query);
