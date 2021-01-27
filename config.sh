@@ -5,8 +5,9 @@ function check_version() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" !=
 # Define some paths
 BUILD_ENV="$HOME/work/build_env"
 
-# Load gcc
-module load gcc/7.3.1
+# Load gcc and cmake
+module load gcc/8.3.1
+module load cmake/3.18.4
 
 # Create the directory to work in
 source=$(pwd)
@@ -23,17 +24,6 @@ if check_version $required $current; then
   ./configure --prefix=/home
   make all
   export PATH="`pwd`:$PATH"
-fi
-
-# If the version of cmake is too old, load a newer one
-required="3.15"
-current=$(cmake --version | sed "s/cmake version //g")
-if check_version $required $current; then
-  cd $BUILD_ENV
-  wget https://cmake.org/files/v3.15/cmake-3.15.0-Linux-x86_64.tar.gz
-  tar xf cmake-3.15.0-Linux-x86_64.tar.gz
-  rm cmake-3.15.0-Linux-x86_64.tar.gz
-  export PATH="`pwd`/cmake-3.15.0-Linux-x86_64/bin/:$PATH"
 fi
 
 # If PostgreSQL isn't present, download and install it to the user directory
@@ -57,9 +47,10 @@ if [ ! -d "$BUILD_ENV/postgres" ]; then
   export PKG_CONFIG_PATH="$BUILD_ENV/postgres/lib/pkgconfig:$PKG_CONFIG_PATH"
   export LIBRARY_PATH="$BUILD_ENV/postgres/lib:$LIBRARY_PATH"
 
-  # Prepare the libpqxx library
+  # Prepare the libpqxx library, limit to version 7.0.0
   git clone https://github.com/jtv/libpqxx.git
   cd libpqxx
+  git checkout 7.0.0
   ./configure --disable-documentation --prefix=$BUILD_ENV/lib
   make -j 8
   make install
@@ -88,7 +79,8 @@ if [ ! -d "build" ]; then
   mkdir -p build
   cd build
   toolchain="$BUILD_ENV/vcpkg/scripts/buildsystems/vcpkg.cmake"
-  echo "module load gcc/7.3.1" > build.sh
+  echo "module load gcc/8.3.1" > build.sh
+  echo "module load cmake/3.18.4" >> build.sh
   echo "export PATH=$PATH" >> build.sh
   echo "export LIBRARY_PATH=$BUILD_ENV/postgres/lib:$BUILD_ENV/lib/lib:$LIBRARY_PATH" >> build.sh
   echo "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$toolchain -DBUILD_CLUSTER:BOOL=true .." >> build.sh

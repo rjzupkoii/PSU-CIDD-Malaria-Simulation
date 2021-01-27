@@ -31,12 +31,13 @@ sudo apt install postgresql-10
 sudo apt upgrade
 git clone https://github.com/jtv/libpqxx.git
 cd libpqxx
+git checkout 7.0.0
 ./configure --disable-documentation
 make
 sudo make install
 ```
 
-This may need to be done everytime you connect to the VPN, so scripting the update may be in order.
+This may need to be done every time you connect to the VPN, so scripting the update may be in order.
 
 # Building
 
@@ -49,7 +50,7 @@ mkdir build
 cd build
 ```
 
-Afterwhich the following command can be run to build the simuation under WSL:
+After which the following command can be run to build the simulation under WSL:
 
 ```bash
 cmake -DCMAKE_BUILD_TYPE=DEBUG -DBUILD_WSL:BOOL=true ..
@@ -76,7 +77,7 @@ cd /build/bin
 ./MaSim -i ../../misc/input.yml
 ```
 
-Note that while care was taken in places to ensure the code is performant, the amount of RAM needed during execution can be quite high (ex., 32GB or more). When the model is run in Linux enviroments where the necessary memeory is not avalible, you may find that the program is killed without notice due to being [out of memory](https://linux-mm.org/OOM_Killer).
+Note that while care was taken in places to ensure the code is performant, the amount of RAM needed during execution can be quite high (ex., 32GB or more). When the model is run in Linux environments where the necessary memory is not available, you may find that the program is killed without notice due to being [out of memory](https://linux-mm.org/OOM_Killer).
 
 # Development Tools
 
