@@ -43,6 +43,10 @@ ModelDataCollector::ModelDataCollector(Model* model) : model_(model), current_ut
                                                        art_resistance_frequency_at_15_(0),
                                                        total_resistance_frequency_at_15_(0), mean_moi_(0) {}
 
+bool ModelDataCollector::recording_data() { 
+  return Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day(); 
+}
+
 void ModelDataCollector::initialize() {
   if (model_ != nullptr) {
     popsize_by_location_ = Vector_by_Locations(IntVector);
@@ -259,7 +263,7 @@ void ModelDataCollector::perform_population_statistic() {
 }
 
 void ModelDataCollector::collect_number_of_bites(const int &location, const int &number_of_bites) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     total_number_of_bites_by_location_[location] += number_of_bites;
     total_number_of_bites_by_location_year_[location] += number_of_bites;
   }
@@ -288,7 +292,7 @@ void ModelDataCollector::perform_yearly_update() {
 }
 
 void ModelDataCollector::update_person_days_by_years(const int &location, const int &days) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     person_days_by_location_year_[location] += days;
   }
 }
@@ -324,7 +328,7 @@ void ModelDataCollector::calculate_eir() {
 
 // TODO Do something with the age and age_class or remove them
 void ModelDataCollector::collect_1_clinical_episode(const int &location, const int &age, const int &age_class) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     cumulative_clinical_episodes_by_location_[location]++;
     monthly_number_of_clinical_episode_by_location_[location] += 1;
   }
@@ -335,7 +339,7 @@ void ModelDataCollector::record_1_birth(const int &location) {
 }
 
 void ModelDataCollector::record_1_death(const int &location, const int &birthday, const int &number_of_times_bitten, const int &age_group) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     deaths_by_location_[location]++;
     update_person_days_by_years(location, -(Constants::DAYS_IN_YEAR() - Model::SCHEDULER->current_day_in_year()));
     update_average_number_bitten(location, birthday, number_of_times_bitten);
@@ -344,13 +348,13 @@ void ModelDataCollector::record_1_death(const int &location, const int &birthday
 }
 
 void ModelDataCollector::record_1_infection(const int &location) { 
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     monthly_number_of_new_infections_by_location_[location]++; 
   }
 }
 
 void ModelDataCollector::record_1_malaria_death(const int &location, const int &age_class) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     malaria_deaths_by_location_[location]++;
     malaria_deaths_by_location_age_class_[location][age_class]++;
   }
@@ -395,7 +399,7 @@ void ModelDataCollector::calculate_percentage_bites_on_top_20() {
 }
 
 void ModelDataCollector::record_1_non_treated_case(const int &location, const int &age_class) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     monthly_nontreatment_by_location_[location]++;
     monthly_nontreatment_by_location_age_class_[location][age_class]++;
   }
@@ -415,7 +419,7 @@ void ModelDataCollector::begin_time_step() {
 }
 
 void ModelDataCollector::end_of_time_step() {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
 
     // Note the current index for reporting
     auto report_index = Model::SCHEDULER->current_time() % Model::CONFIG->tf_window_size();
@@ -466,7 +470,7 @@ void ModelDataCollector::end_of_time_step() {
 }
 
 void ModelDataCollector::record_1_treatment(const int &location, const int &therapy_id) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     today_number_of_treatments_by_location_[location] += 1;
     today_number_of_treatments_by_therapy_[therapy_id] += 1;
     number_of_treatments_with_therapy_ID_[therapy_id] += 1;
@@ -475,7 +479,7 @@ void ModelDataCollector::record_1_treatment(const int &location, const int &ther
 }
 
 void ModelDataCollector::record_1_mutation(const int &location, Genotype* from, Genotype* to) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     cumulative_mutants_by_location_[location] += 1;
   }
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
@@ -489,7 +493,7 @@ void ModelDataCollector::update_UTL_vector() {
 }
 
 void ModelDataCollector::record_1_TF(const int &location, const bool &by_drug) {
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     //if treatment failure due to drug (both resistance or not clear)
     if (by_drug) {
       today_TF_by_location_[location] += 1;
@@ -510,7 +514,7 @@ void ModelDataCollector::record_1_treatment_failure_by_therapy(const int &locati
   today_tf_by_therapy_[therapy_id] += 1;
 
   // Update the monthly treatment failure count, note that we aren't tracking the therapy
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day()) {
+  if (recording_data()) {
     monthly_treatment_failure_by_location_[location]++;
     monthly_treatment_failure_by_location_age_class_[location][age_class]++;
   }

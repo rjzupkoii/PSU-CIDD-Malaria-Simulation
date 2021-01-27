@@ -284,6 +284,9 @@ public:
 
   double get_blood_slide_prevalence(const int &location, const int &age_from, const int &age_to);
 
+  // Return true if data is being recorded, false otherwise.
+  bool recording_data();
+
 private:
 
   void update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten);

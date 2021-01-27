@@ -219,15 +219,14 @@ bool DbReporter::do_monthly_report() {
         db.exec(query);
 
         query = "";
-        if (Model::CONFIG->record_genome_db()) {
+        if (Model::CONFIG->record_genome_db() && Model::DATA_COLLECTOR->recording_data()) {
             // Add the genome information, this will also update infected individuals
             monthly_genome_data(id, query);
-            db.exec(query);
         } else {
             // If we aren't recording genome data still update the infected individuals
-            update_infected_individuals(id, query)            ;
-            db.exec(query);
+            update_infected_individuals(id, query);
         }
+        db.exec(query);
 
         // Commit the pending data and close with success
         db.commit();
@@ -319,8 +318,8 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
         for (unsigned int genotype = 0; genotype < genotypes; genotype++) {
             if (weightedOccurrences[genotype] == 0) { continue; }
             query.append(fmt::format(INSERT_GENOTYPE_ROW, id, location_index[location], genotype, occurrences[genotype], 
-                                     clinicalOccurrences[genotype], occurrencesZeroToFive[genotype], occurrencesTwoToTen[genotype], 
-                                     (weightedOccurrences[genotype] / infectedIndividuals), weightedOccurrences[genotype]));
+                                    clinicalOccurrences[genotype], occurrencesZeroToFive[genotype], occurrencesTwoToTen[genotype], 
+                                    (weightedOccurrences[genotype] / infectedIndividuals), weightedOccurrences[genotype]));
         }
         // Replace last character with a semicolon to properly terminate the query
         query[query.length() - 1] = ';';
