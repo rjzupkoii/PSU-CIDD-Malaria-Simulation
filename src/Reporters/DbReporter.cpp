@@ -265,7 +265,7 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
         std::vector<int> occurrencesZeroToFive(genotypes, 0);       // discrete count of the occurrences of the parasite genotype in individuals 0 - 5
         std::vector<int> occurrencesTwoToTen(genotypes, 0);         // discrete count of the occurrences of the parasite genotype in individuals 2 - 10
         std::vector<double> weightedOccurrences(genotypes, 0.0);    // weighted occurrences of the genotype
-        auto infectedIndividuals = 0.0;                             // discrete count of infected individuals in the location
+        int infectedIndividuals = 0;                               // discrete count of infected individuals in the location
 
         // Iterate over all of the possible states
         for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
@@ -310,19 +310,21 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
             }
         }
 
-        // Prepare and append the query, pass if the genotype was not seen
+        // Prepare and append the query, pass if the genotype was not seen or no infections were seen
         //
         // NOTE since the database was updated to store the weighted occurrences and infected individuals, 
         // the weighted frequency is redundent.
-        query.append(INSERT_GENOTYPE_PREFIX);
-        for (unsigned int genotype = 0; genotype < genotypes; genotype++) {
-            if (weightedOccurrences[genotype] == 0) { continue; }
-            query.append(fmt::format(INSERT_GENOTYPE_ROW, id, location_index[location], genotype, occurrences[genotype], 
-                                    clinicalOccurrences[genotype], occurrencesZeroToFive[genotype], occurrencesTwoToTen[genotype], 
-                                    (weightedOccurrences[genotype] / infectedIndividuals), weightedOccurrences[genotype]));
+        if (infectedIndividuals != 0) {
+            query.append(INSERT_GENOTYPE_PREFIX);
+            for (unsigned int genotype = 0; genotype < genotypes; genotype++) {
+                if (weightedOccurrences[genotype] == 0) { continue; }
+                query.append(fmt::format(INSERT_GENOTYPE_ROW, id, location_index[location], genotype, occurrences[genotype], 
+                                        clinicalOccurrences[genotype], occurrencesZeroToFive[genotype], occurrencesTwoToTen[genotype], 
+                                        (weightedOccurrences[genotype] / infectedIndividuals), weightedOccurrences[genotype]));
+            }
+            // Replace last character with a semicolon to properly terminate the query
+            query[query.length() - 1] = ';';
         }
-        // Replace last character with a semicolon to properly terminate the query
-        query[query.length() - 1] = ';';
 
         // Append the infected count update
         query.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infectedIndividuals, id, location_index[location]));
