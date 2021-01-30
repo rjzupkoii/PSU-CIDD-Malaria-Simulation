@@ -17,7 +17,7 @@ def kFormatter(num):
     return str(num) if num <=999 else str(round(num/1000)) +'k';
 
 first_line = {
-    'DHA-PPQ' : 'input_mmc_A4_mu_0p001983.yml',
+    'DHA-PPQ' : 'input_mmc_S_A4_mu_0p001983.yml',
     'ASAQ': 'input_mmc_A5b_mu_0p001983.yml',
     'AL': 'input_mmc_A6b_mu_0p001983.yml'
     };

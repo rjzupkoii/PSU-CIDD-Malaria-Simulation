@@ -275,7 +275,10 @@ initial_age_structure: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 3
 initial_parasite_info:
 - location_id: -1
   parasite_info:
-  - {parasite_type_id: 0, prevalence: 0.1}
+  - {parasite_type_id: 0, prevalence: 0.025}
+  - {parasite_type_id: 8, prevalence: 0.025}
+  - {parasite_type_id: 64, prevalence: 0.025}
+  - {parasite_type_id: 72, prevalence: 0.025}
 initial_strategy_id: 1
 location_db:
   age_distribution_by_location:

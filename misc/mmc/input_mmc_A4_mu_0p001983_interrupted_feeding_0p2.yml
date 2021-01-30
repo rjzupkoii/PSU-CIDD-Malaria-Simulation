@@ -315,10 +315,12 @@ initial_parasite_info:
   #if location id is -1 all location will have the same initial parasites
   - location_id: -1
     parasite_info:
-      #TNY__C1x
-      - {parasite_type_id: 0, prevalence: 0.1}
+    - {parasite_type_id: 0, prevalence: 0.025}
+    - {parasite_type_id: 8, prevalence: 0.025}
+    - {parasite_type_id: 64, prevalence: 0.025}
+    - {parasite_type_id: 72, prevalence: 0.025}
 
-      # drug information below
+# drug information below
 #
 # maximum_parasite_killing_rate: 
 #       e.g. 0.999 means the drug can kill 99.9% of parasites in 1 day if a person has 
