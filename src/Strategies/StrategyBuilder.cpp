@@ -29,30 +29,34 @@ StrategyBuilder::StrategyBuilder() = default;
 StrategyBuilder::~StrategyBuilder() = default;
 
 IStrategy* StrategyBuilder::build(const YAML::Node &ns, const int &strategy_id, Config* config) {
-  const auto type = IStrategy::StrategyTypeMap[ns["type"].as<std::string>()];
-  switch (type) {
-    case IStrategy::SFT:
-      return buildSFTStrategy(ns, strategy_id, config);
-    case IStrategy::Cycling:
-      return buildCyclingStrategy(ns, strategy_id, config);
-    case IStrategy::AdaptiveCycling:
-      return buildAdaptiveCyclingStrategy(ns, strategy_id, config);
-    case IStrategy::MFT:
-      return buildMFTStrategy(ns, strategy_id, config);
-    case IStrategy::MFTRebalancing:
-      return buildMFTRebalancingStrategy(ns, strategy_id, config);
-    case IStrategy::NestedMFT:
-      return buildNestedSwitchingStrategy(ns, strategy_id, config);
-    case IStrategy::MFTMultiLocation:
-      return buildMFTMultiLocationStrategy(ns, strategy_id, config);
-    case IStrategy::NestedMFTMultiLocation:
-      return buildNestedMFTDifferentDistributionByLocationStrategy(ns,
-                                                                   strategy_id,
-                                                                   config);
-    case IStrategy::NovelDrugSwitching:
-      return buildNovelDrugSwitchingStrategy(ns, strategy_id, config);
-    default:
-      return nullptr;
+  try {
+    const auto type = IStrategy::StrategyTypeMap[ns["type"].as<std::string>()];
+    switch (type) {
+      case IStrategy::SFT:
+        return buildSFTStrategy(ns, strategy_id, config);
+      case IStrategy::Cycling:
+        return buildCyclingStrategy(ns, strategy_id, config);
+      case IStrategy::AdaptiveCycling:
+        return buildAdaptiveCyclingStrategy(ns, strategy_id, config);
+      case IStrategy::MFT:
+        return buildMFTStrategy(ns, strategy_id, config);
+      case IStrategy::MFTRebalancing:
+        return buildMFTRebalancingStrategy(ns, strategy_id, config);
+      case IStrategy::NestedMFT:
+        return buildNestedSwitchingStrategy(ns, strategy_id, config);
+      case IStrategy::MFTMultiLocation:
+        return buildMFTMultiLocationStrategy(ns, strategy_id, config);
+      case IStrategy::NestedMFTMultiLocation:
+        return buildNestedMFTDifferentDistributionByLocationStrategy(ns, strategy_id, config);
+      case IStrategy::NovelDrugSwitching:
+        return buildNovelDrugSwitchingStrategy(ns, strategy_id, config);
+      default:
+        LOG(WARNING) << "Unknown strategy type: " << ns["type"].as<std::string>();
+        return nullptr;
+    }
+  } catch (YAML::InvalidNode &error) {
+    LOG(ERROR) << "Unrecoverable error parsing strategy YAML value:\n\t" << error.msg;
+    exit(1);
   }
 }
 
