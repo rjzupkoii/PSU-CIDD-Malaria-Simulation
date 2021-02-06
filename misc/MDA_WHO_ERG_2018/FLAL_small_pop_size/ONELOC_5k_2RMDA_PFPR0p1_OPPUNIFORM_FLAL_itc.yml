@@ -130,8 +130,8 @@ events:
   name: introduce_parasites_periodically
 - info:
   - from_day: 2020/1/1
-    p_treatment_for_less_than_5_by_location_to: [0.8]
-    p_treatment_for_more_than_5_by_location_to: [0.8]
+    p_treatment_for_less_than_5_by_location_to: [0.65]
+    p_treatment_for_more_than_5_by_location_to: [0.65]
     to_day: 2020/6/1
     type: LinearTCM
   name: change_treatment_coverage
