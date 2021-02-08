@@ -48,11 +48,14 @@ data['sd_prob_individual_present_at_mda'] = sd_prob_individual_present_at_mda
 data['location_db']['p_treatment_for_less_than_5_by_location'] = [0.8]
 data['location_db']['p_treatment_for_more_than_5_by_location'] = [0.8]
 
+for index,event in enumerate(data['events']):
+    if event['name'] == 'change_treatment_coverage':
+        data['events'][index]['info']= []
+
 
 betas = [0.0585, 0.061, 0.065]
 
-pfpr = { 
-        
+pfpr = {         
         0.0585: 'PFPR0p25',
         0.061: 'PFPR0p5',
         0.065: 'PFPR1p0'
