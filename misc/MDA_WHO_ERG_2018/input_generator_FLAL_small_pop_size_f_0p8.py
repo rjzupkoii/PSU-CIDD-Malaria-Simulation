@@ -34,7 +34,7 @@ data['location_db']['location_info']= location_info;
 
 
 #population size 
-popsize = 5000
+popsize = 3378
 data['location_db']['population_size_by_location'] = [popsize];       
 
 #3RMDA
@@ -82,7 +82,7 @@ for mda_round in number_MDA_round:
                     if event['name'] == 'introduce_parasites_periodically':
                         new_data['events'][index]['info']= []     
         
-            output_filename = 'FLAL_small_pop_size_f_0p8/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%(kFormatter(popsize),mda_round,pfpr_str,imp);
+            output_filename = 'FLAL_small_pop_size_f_0p8/ONELOC_%s_%dRMDA_%s_OPPUNIFORM_FLAL%s.yml'%('5k',mda_round,pfpr_str,imp);
             output_stream = open(output_filename, 'w');
             yaml.dump(new_data, output_stream); 
             output_stream.close();
