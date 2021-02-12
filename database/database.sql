@@ -250,7 +250,7 @@ CREATE TABLE sim.monthlysitedata
     pfpr2to10 double precision NOT NULL,
     pfprall double precision NOT NULL,
     infectedindividuals integer,
-    nontreatment integer,
+    nontreatment integer NOT NULL,
     CONSTRAINT monthlysitedata_pkey PRIMARY KEY (monthlydataid, locationid),
     CONSTRAINT "monthlydataid_fk" FOREIGN KEY (monthlydataid)
         REFERENCES sim.monthlydata (id) MATCH SIMPLE
