@@ -295,8 +295,8 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
                         occurrencesZeroToFive[id] += (age <= 5);
                         occurrencesTwoToTen[id] += (age >= 2 && age <= 10);
                         individual[id]++;
-                        
-                        // TODO Double check how we are counting these
+                    
+                        // Count a clinical occurrence if the individual has clinical symptoms
                         clinicalOccurrences[id] += clinical;
                     }
 
