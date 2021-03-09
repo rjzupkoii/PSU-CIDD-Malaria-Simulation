@@ -50,7 +50,10 @@ void CellularReporter::initialize(int job_number, std::string path) {
     // Log the aggregate headers
     ss << "DaysElapsed" << Csv::sep << "Population" << Csv::sep << "InfectedIndividuals" << Csv::sep 
        << "ClinicalIndividuals" << Csv::sep << "NewInfections" << Csv::sep << "NonTreatment" << Csv::sep << "TreatmentFailure" << Csv::sep
-       << "ParasiteClones" << Csv::sep << "580yWeighted" << Csv::sep << "508yUnweighted" << Csv::end_line;
+       << "ParasiteClones" << Csv::sep 
+       << "580yWeighted" << Csv::sep << "508yUnweighted" << Csv::sep
+       << "Plasmepsin2xCopyWeighted" << Csv::sep << "Plasmepsin2xCopyUnweighted" << Csv::sep
+       << Csv::end_line;
     CLOG(INFO, "aggregate_reporter") << ss.str();
     ss.str("");
 
@@ -74,9 +77,11 @@ void CellularReporter::initialize(int job_number, std::string path) {
 void CellularReporter::monthly_report() {
     int _580yCount = 0;
     int infectedIndividuals = 0;
+    int plasmepsinDoubleCopy = 0;
     int parasiteClones = 0;
     int population = 0;
-    float _580yWeighted = 0;
+    float _580yWeighted = 0.0;
+    float plasmepsinDoubleCopyWeighted = 0.0;
     
     // Hold onto the age class index
     PersonIndexByLocationStateAgeClass* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
@@ -110,12 +115,15 @@ void CellularReporter::monthly_report() {
                     // WARNING - This is hard-coded on the assumption that the K13 Propeller locus is at index 2
                     if (parasite_population->genotype()->gene_expression()[2] == 1) {
                         _580yCount++;
-                        count++;
+                        _580yWeighted += (1 / static_cast<double>(size));
+                    }
+
+                    // WARNING - This is hard-coded on the assumption that the Plasmepsin locus is at index 3
+                    if (parasite_population->genotype()->gene_expression()[3] == 1) {
+                        plasmepsinDoubleCopy++;
+                        plasmepsinDoubleCopyWeighted += (1 / static_cast<double>(size));
                     }
                 }
-
-                // Update the weighted occurrences
-                _580yWeighted += (count / static_cast<double>(size));
             }
         }
     }
@@ -131,7 +139,10 @@ void CellularReporter::monthly_report() {
        << Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[0] << Csv::sep
        << parasiteClones << Csv::sep
        << _580yWeighted << Csv::sep 
-       << _580yCount << Csv::end_line;
+       << _580yCount << Csv::sep
+       << plasmepsinDoubleCopyWeighted << Csv::sep
+       << plasmepsinDoubleCopy << Csv::sep
+       << Csv::end_line;       
     CLOG(INFO, "aggregate_reporter") << ss.str();
     ss.str("");
 
