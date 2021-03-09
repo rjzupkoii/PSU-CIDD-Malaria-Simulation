@@ -122,6 +122,7 @@ void handle_cli(Model *model, int argc, char **argv) {
    * 
    * --dump        - dump the movement matrix as calculated 
    * --lr          - list the possible reporters          
+   * --lg          - list the possible genotypes and their ids
    * --im          - record individual movement data
    * --mc          - record the movement between cells
    * --md          - record the movement between districts
@@ -136,6 +137,7 @@ void handle_cli(Model *model, int argc, char **argv) {
   args::ValueFlag<std::string> input_path(commands, "string", "Path for output files, default is current directory. \nEx: MaSim -p out", {'o'});
   args::Flag dump_movement(commands, "dump", "Dump the movement matrix as calculated", { "dump" });
   args::Flag list_reporters(commands, "lr", "List the possible reporters", { "lr" });
+  args::Flag list_genotypes(commands, "lg", "List the possible genotypes", { "lg" });
   args::Flag individual_movement(commands, "im", "Record individual movement detail", { "im" });
   args::Flag cell_movement(commands, "mc", "Record the movement between cells, cannot run with --md", { "mc" });
   args::Flag district_movement(commands, "md", "Record the movement between districts, cannot run with --mc", { "md" });
@@ -185,6 +187,18 @@ void handle_cli(Model *model, int argc, char **argv) {
   }
   model->set_config_filename(input);
   
+  // Check to see if we are listing genotypes, do that and exit
+  if (list_genotypes) {
+    std::cout << "Genotypes present in configuration and their ids:" << std::endl;
+    Config* config = new Config();
+    config->read_from_file(model->config_filename());
+    for (auto id = 0ul; id < config->number_of_parasite_types(); id++) {
+        auto genotype = (*config->genotype_db())[id];
+        std::cout << id << ":\t" << genotype->to_string(config) << std::endl;
+    }
+    exit(EXIT_SUCCESS);
+  }
+
   // Check to see if we are doing a genotype load, do that and exit
   if (load_genotypes) {
     std::cout << "Loading genotypes..." << std::endl;
