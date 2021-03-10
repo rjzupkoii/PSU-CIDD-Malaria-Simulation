@@ -38,6 +38,7 @@ void CellularReporter::initialize(int job_number, std::string path) {
     detail_reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
     el::Loggers::reconfigureLogger("detail_reporter", detail_reporter);
 
+#ifdef ENABLE_BLOOD_REPORTER
     el::Configurations blood_reporter;
     blood_reporter.setToDefault();
     blood_reporter.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
@@ -46,6 +47,7 @@ void CellularReporter::initialize(int job_number, std::string path) {
     blood_reporter.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
     blood_reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
     el::Loggers::reconfigureLogger("blood_reporter", blood_reporter);
+#endif
 
     // Log the aggregate headers
     ss << "DaysElapsed" << Csv::sep << "Population" << Csv::sep << "InfectedIndividuals" << Csv::sep 
@@ -67,11 +69,13 @@ void CellularReporter::initialize(int job_number, std::string path) {
     CLOG(INFO, "detail_reporter") << ss.str();
     ss.str("");
 
+#ifdef ENABLE_BLOOD_REPORTER
     // Log the blood density headers
     ss << "DaysElapsed" << Csv::sep << "Individual" << Csv::sep << "ParasitePopulation" << Csv::sep
        << "C580Y" << Csv::sep << "Density" << Csv::sep << "Theta" << Csv::end_line;
     CLOG(INFO, "blood_reporter") << ss.str();
     ss.str("");
+#endif
 }
 
 void CellularReporter::monthly_report() {
@@ -154,10 +158,12 @@ void CellularReporter::monthly_report() {
         detailed_report();
     }
 
+#ifdef ENABLE_BLOOD_REPORTER
     // For the blood density we want the last 20 years of the model, so 2018-01-01 onwards
     if (dayselapsed > (11 * 365 + 3)) {
         blood_density_report();
     }
+#endif
 }
 
 // Generate a detailed report of the C580Y blood density for all infected individuals in the model.

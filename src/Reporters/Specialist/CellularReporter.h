@@ -8,6 +8,8 @@
 
 #include "Reporters/Reporter.h"
 
+//#define ENABLE_BLOOD_REPORTER
+
 class CellularReporter : public Reporter {
     private:
         void blood_density_report();
