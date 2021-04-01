@@ -232,7 +232,9 @@ CREATE TABLE sim.monthlydata
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH ( OIDS = FALSE )
+WITH ( 
+    OIDS = FALSE,
+    parallel_workers = 4 )
 TABLESPACE pg_default;
 
 ALTER TABLE sim.monthlydata OWNER to sim;
@@ -257,7 +259,9 @@ CREATE TABLE sim.monthlysitedata
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH ( OIDS = FALSE )
+WITH ( 
+    OIDS = FALSE,
+    parallel_workers = 4 )
 TABLESPACE pg_default;
 
 ALTER TABLE sim.monthlysitedata OWNER to sim;
@@ -276,7 +280,9 @@ CREATE TABLE sim.movement
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH ( OIDS = FALSE )
+WITH ( 
+    OIDS = FALSE,
+    parallel_workers = 4 )
 TABLESPACE pg_default;
 
 ALTER TABLE sim.movement OWNER to sim;
