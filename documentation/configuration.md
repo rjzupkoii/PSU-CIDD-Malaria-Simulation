@@ -89,6 +89,32 @@ seasonal_info:
 &nbsp;*Version 4.0*: if `raster` is true then each index in the array is used for the pixel coded with that value, otherwise the first value is used for all pixels.\
 **period** : the number of days defined by the period.
 
+### parasite_density_level
+The `parasite_density_level` setting contains several sub-values that govern indivdiual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per μl is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/μl) while 50 per μl is the lower bounds for detection under field conditions (50 - 100 parasites/μl) ([Wongsrichanalai et al. 2007](Wongsrichanalai2007)). Generally, a higher detection limit for the <em>Pf</em>PR will require a higher tranmission for a given <em>Pf</em>PR than a lower detection level. 
+
+```YAML
+parasite_density_level:
+  log_parasite_density_cured:          -4.699    # corresponds to 100 total parasites (0.00002 per μl)
+  log_parasite_density_from_liver:     -2.000    # corresponds to 50,000 total parasites (0.01 per μl)
+  log_parasite_density_asymptomatic:    3        # corresponds to 1,000 parasites per microliter of blood
+  log_parasite_density_clinical:        4.301    # corresponds to 20,000 parasites per microliter of blood (total 10^11)
+  log_parasite_density_clinical_from:   3.301    # corresponds to 2,000 parasites per microliter of blood (total 10^10)
+  log_parasite_density_clinical_to:     5.301    # corresponds to 200,000 parasites per microliter of blood (total 10^12)
+  log_parasite_density_detectable:      1.000    # corresponds to 10 parasites per microliter of blood
+  log_parasite_density_detectable_pfpr: 1.699    # corresponds to 50 parasites per microliter of blood
+  log_parasite_density_pyrogenic:       3.398    # corresponds to 2,500 parasites per microliter of blood
+```
+
+**log_parasite_density_cured** (double) : When an indivdiual is considered to be **cured** of a specific parasite colony. \
+**log_parasite_density_from_liver** (double) : Governs the lower bound for the number of parasites following the inital infection. \
+**log_parasite_density_asymptomatic** (double) : Thereshold at which an indivdiual is asymtomatic of malaria. \
+**log_parasite_density_clinical** (double) : Governs the upper bound for the number of parasites following the initial infection. \
+**log_parasite_density_clinical_from** (double) : Governs the lower bound of parasites that an indivdiual may be inflicted with when progressing to clinical via the `ProgressToClinicalEvent` event. \
+**log_parasite_density_clinical_to** (double) : Governs the upper bound of parasites that an indivdiual may be inflicted with when progressing to clinical via the `ProgressToClinicalEvent` event. \
+**log_parasite_density_detectable** (double) : Sets the threshold for the number of parasties that an indivdiual may have present in their blood when tested to check if the perscribed treatment failed. \
+**log_parasite_density_detectable_pfpr** (double) : Sets the threshold for the number of parasites that an indivdual may have present in their blood when tested to see if a _detectable_ level is presented. This value is used to inform calculations for the <em>Pf</em>PR in the simuation. \
+**log_parasite_density_pyrogenic** (double) : (**UNUSED**) Sets the threshold for when fever may present as a symptom.
+
 ### events
 This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all of the data for the `info` field following will be provided to the loader function.
 
@@ -183,3 +209,6 @@ events:
 **day** (date string, YYYY/mm/dd) : the date when the event will occur. \
 **from** (integer) : the id of the ecozone, defined in `seasonal_info`, that is the original ecozone. \
 **to** (integer) : the id of the new ecozone, defined in `seasonal_info`, that will be applied to matching cells.
+
+## References
+<a name="Wongsrichanalai2008"></a>Wongsrichanalai C, Barcus MJ, Muth S, et al. A Review of Malaria Diagnostic Tools: Microscopy and Rapid Diagnostic Test (RDT) In: Breman JG, Alilio MS, White NJ, editors. Defining and Defeating the Intolerable Burden of Malaria III: Progress and Perspectives: Supplement to Volume 77(6) of American Journal of Tropical Medicine and Hygiene. Northbrook (IL): American Society of Tropical Medicine and Hygiene; 2007 Dec. Available from: https://www.ncbi.nlm.nih.gov/books/NBK1695/
