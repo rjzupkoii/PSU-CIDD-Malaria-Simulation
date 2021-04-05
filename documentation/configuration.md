@@ -211,4 +211,4 @@ events:
 **to** (integer) : the id of the new ecozone, defined in `seasonal_info`, that will be applied to matching cells.
 
 ## References
-<a name="Wongsrichanalai2008"></a>Wongsrichanalai C, Barcus MJ, Muth S, et al. A Review of Malaria Diagnostic Tools: Microscopy and Rapid Diagnostic Test (RDT) In: Breman JG, Alilio MS, White NJ, editors. Defining and Defeating the Intolerable Burden of Malaria III: Progress and Perspectives: Supplement to Volume 77(6) of American Journal of Tropical Medicine and Hygiene. Northbrook (IL): American Society of Tropical Medicine and Hygiene; 2007 Dec. Available from: https://www.ncbi.nlm.nih.gov/books/NBK1695/
+<a name="Wongsrichanalai2007"></a>Wongsrichanalai C, Barcus MJ, Muth S, et al. A Review of Malaria Diagnostic Tools: Microscopy and Rapid Diagnostic Test (RDT) In: Breman JG, Alilio MS, White NJ, editors. Defining and Defeating the Intolerable Burden of Malaria III: Progress and Perspectives: Supplement to Volume 77(6) of American Journal of Tropical Medicine and Hygiene. Northbrook (IL): American Society of Tropical Medicine and Hygiene; 2007 Dec. Available from: https://www.ncbi.nlm.nih.gov/books/NBK1695/
