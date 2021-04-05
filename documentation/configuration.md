@@ -90,7 +90,7 @@ seasonal_info:
 **period** : the number of days defined by the period.
 
 ### parasite_density_level
-The `parasite_density_level` setting contains several sub-values that govern indivdiual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per μl is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/μl) while 50 per μl is the lower bounds for detection under field conditions (50 - 100 parasites/μl) ([Wongsrichanalai et al. 2007](Wongsrichanalai2007)). Generally, a higher detection limit for the <em>Pf</em>PR will require a higher tranmission for a given <em>Pf</em>PR than a lower detection level. 
+The `parasite_density_level` setting contains several sub-values that govern indivdiual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per μl is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/μl) while 50 per μl is the lower bounds for detection under field conditions (50 - 100 parasites/μl) ([Wongsrichanalai et al. 2007](#Wongsrichanalai2007)). Generally, a higher detection limit for the <em>Pf</em>PR will require a higher tranmission for a given <em>Pf</em>PR than a lower detection level. 
 
 ```YAML
 parasite_density_level:
