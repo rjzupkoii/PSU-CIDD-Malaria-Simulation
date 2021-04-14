@@ -134,8 +134,8 @@ immune_system_information:
   sd_initial_condition: 0.1
 
   # Probability bounds for clinical symptoms
-  min_clinical_probability: 0.05    # Minimum probability of clinical symptoms as a result of a new infection
-  max_clinical_probability: 0.99    # Maximum probability of clinical symptoms as a result of a new infection  
+  min_clinical_probability: 0.05
+  max_clinical_probability: 0.99
 
   # Immunity acquisition parameters
   immune_inflation_rate: 0.01
@@ -258,5 +258,6 @@ events:
 **to** (integer) : the id of the new ecozone, defined in `seasonal_info`, that will be applied to matching cells.
 
 ## References
-<a name="Nguyen2015"></a>Nguyen, TD, Olliaro, P, Dondorp, AM, Baird, JK, Lam, HM, Farrar, J, Thwaites, GE, White, NJ, & Boni, MF. (2015). Optimum population-level use of artemisinin combination therapies: A modelling study. *The Lancet Global Health*, 3(12), e758–e766. https://doi.org/10.1016/S2214-109X(15)00162-X \
+<a name="Nguyen2015"></a>Nguyen, TD, Olliaro, P, Dondorp, AM, Baird, JK, Lam, HM, Farrar, J, Thwaites, GE, White, NJ, & Boni, MF. (2015). Optimum population-level use of artemisinin combination therapies: A modelling study. *The Lancet Global Health*, 3(12), e758–e766. https://doi.org/10.1016/S2214-109X(15)00162-X
+
 <a name="Wongsrichanalai2007"></a>Wongsrichanalai C, Barcus MJ, Muth S, et al. A Review of Malaria Diagnostic Tools: Microscopy and Rapid Diagnostic Test (RDT) In: Breman JG, Alilio MS, White NJ, editors. Defining and Defeating the Intolerable Burden of Malaria III: Progress and Perspectives: Supplement to Volume 77(6) of American Journal of Tropical Medicine and Hygiene. Northbrook (IL): American Society of Tropical Medicine and Hygiene; 2007 Dec. Available from: https://www.ncbi.nlm.nih.gov/books/NBK1695/
