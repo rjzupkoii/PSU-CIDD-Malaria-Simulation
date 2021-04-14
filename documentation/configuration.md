@@ -159,7 +159,7 @@ immune_system_information:
 **age_mature_immunity** (double) : Age at which the immune function is mature, i.e., age at which the immune acquisition model switches from child to adult. \
 **factor_effect_age_mature_immunity** (double) :  Adjustment to the curve of immune acquiziatoin under the age indicated by `age_mature_immunity`, parameter kappa in supplement to Nguyen et al. (2015). \
 **immune_effect_on_progression_to_clinical** (double) : Slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)). \
-**midpoint** (double) : Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)).
+**midpoint** (double) : (*Version 4.0*) Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)).
 
 
 ### events
