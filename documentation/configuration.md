@@ -115,6 +115,53 @@ parasite_density_level:
 **log_parasite_density_detectable_pfpr** (double) : Sets the threshold for the number of parasites that an indivdual may have present in their blood when tested to see if a _detectable_ level is presented. This value is used to inform calculations for the <em>Pf</em>PR in the simuation. \
 **log_parasite_density_pyrogenic** (double) : (**UNUSED**) Sets the threshold for when fever may present as a symptom.
 
+
+### immune_system_information
+The `immune_system_information` node contains parameters that are used to control the response of the individual immune system and is one of the mechanisms by which the simulation can be calibrated to match a given country.  
+
+```YAML
+immune_system_information:
+  # Immune function parameters
+  b1: 0.00125
+  b2: 0.0025
+
+  # Duration of infection parameters
+  duration_for_naive: 300
+  duration_for_fully_immune: 60
+
+  # Population initialization parameters
+  mean_initial_condition: 0.1
+  sd_initial_condition: 0.1
+
+  # Probability bounds for clinical symptoms
+  min_clinical_probability: 0.05    # Minimum probability of clinical symptoms as a result of a new infection
+  max_clinical_probability: 0.99    # Maximum probability of clinical symptoms as a result of a new infection  
+
+  # Immunity acquisition parameters
+  immune_inflation_rate: 0.01
+  age_mature_immunity: 10
+  factor_effect_age_mature_immunity: 0.3
+
+  # Immunity function parameters
+  immune_effect_on_progression_to_clinical: 12
+  midpoint: 0.4  
+```
+  
+**b1** (double) : Rate of immune function increase when parasitaemic \
+**b2** (double) : Rate of immune function decrease when not parasitaemic \
+**duration_for_naive** (double) : Duration, in days, of infection when naive. \
+**duration_for_fully_immune** (double) : Duration, in days, of infection when fully immune. \
+**mean_initial_condition** (double) : Mean initial immune function of population at initialization. \
+**sd_initial_condition** (double) : Standard deviation of initial immune function of population at initiation. \
+**min_clinical_probability** (double) : Minimum probability of clinical symptoms as a result of a new infection. \
+**max_clinical_probability** (double) : Maximum probability of clinical symptoms as a result of a new infection. \
+**immune_inflation_rate** (double) : Yearly age-dependent faster acquisition of immunity between ages 1 to 10. \
+**age_mature_immunity** (double) : Age at which the immune function is mature, i.e., age at which the immune acquisition model switches from child to adult. \
+**factor_effect_age_mature_immunity** (double) :  Adjustment to the curve of immune acquiziatoin under the age indicated by `age_mature_immunity`, parameter kappa in supplement to Nguyen et al. (2015). \
+**immune_effect_on_progression_to_clinical** (double) : Slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. (2015). \
+**midpoint** (double) : Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. (2015).
+
+
 ### events
 This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all of the data for the `info` field following will be provided to the loader function.
 
@@ -211,4 +258,5 @@ events:
 **to** (integer) : the id of the new ecozone, defined in `seasonal_info`, that will be applied to matching cells.
 
 ## References
+<a name="Nguyen2015"></a>Nguyen, TD, Olliaro, P, Dondorp, AM, Baird, JK, Lam, HM, Farrar, J, Thwaites, GE, White, NJ, & Boni, MF. (2015). Optimum population-level use of artemisinin combination therapies: A modelling study. *The Lancet Global Health*, 3(12), e758–e766. https://doi.org/10.1016/S2214-109X(15)00162-X \
 <a name="Wongsrichanalai2007"></a>Wongsrichanalai C, Barcus MJ, Muth S, et al. A Review of Malaria Diagnostic Tools: Microscopy and Rapid Diagnostic Test (RDT) In: Breman JG, Alilio MS, White NJ, editors. Defining and Defeating the Intolerable Burden of Malaria III: Progress and Perspectives: Supplement to Volume 77(6) of American Journal of Tropical Medicine and Hygiene. Northbrook (IL): American Society of Tropical Medicine and Hygiene; 2007 Dec. Available from: https://www.ncbi.nlm.nih.gov/books/NBK1695/

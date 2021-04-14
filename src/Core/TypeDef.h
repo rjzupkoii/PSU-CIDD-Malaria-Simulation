@@ -99,15 +99,16 @@ struct ImmuneSystemInformation {
   double duration_for_fully_immune{-1};
   double duration_for_naive{-1};
 
-  //    double mean_initial_condition;
-  //    double sd_initial_condition;
-
   double immune_inflation_rate{-1};
 
   double min_clinical_probability{-1};
   double max_clinical_probability{-1};
 
+  // Slope of the sigmoidal prob-v-immunity function, z-value
   double immune_effect_on_progression_to_clinical{-1};
+
+  // The midpoint of the sigmoidal prob-v-immunity function, recommended default 0.4
+  double midpoint{-1};
 
   double c_min{-1};
   double c_max{-1};
@@ -116,6 +117,8 @@ struct ImmuneSystemInformation {
   double beta_immune{-1};
 
   double age_mature_immunity{-1};
+
+  // Parameter kappa in supplement of 2015 LGH paper
   double factor_effect_age_mature_immunity{-1};
 };
 
