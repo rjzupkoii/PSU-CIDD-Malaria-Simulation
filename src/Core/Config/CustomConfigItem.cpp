@@ -77,15 +77,15 @@ void spatial_model::set_value(const YAML::Node &node) {
 }
 
 void immune_system_information::set_value(const YAML::Node &node) {
-  auto is_node = node[name_];
-  value_.acquire_rate = is_node["b1"].as<double>();
-  value_.decay_rate = is_node["b2"].as<double>();
+  auto is_node = node[name_];  
+  value_.acquire_rate = read_node<double>(is_node, "b1");
+  value_.decay_rate = read_node<double>(is_node, "b2");
 
-  value_.duration_for_fully_immune = is_node["duration_for_fully_immune"].as<double>();
-  value_.duration_for_naive = is_node["duration_for_naive"].as<double>();
+  value_.duration_for_fully_immune = read_node<double>(is_node, "duration_for_fully_immune");
+  value_.duration_for_naive = read_node<double>(is_node, "duration_for_naive");
 
-  const auto mean_initial_condition = is_node["mean_initial_condition"].as<double>();
-  const auto sd_initial_condition = is_node["sd_initial_condition"].as<double>();
+  const auto mean_initial_condition = read_node<double>(is_node, "mean_initial_condition");
+  const auto sd_initial_condition = read_node<double>(is_node, "sd_initial_condition");
 
   if (NumberHelpers::is_equal(sd_initial_condition, 0.0)) {
     value_.alpha_immune = mean_initial_condition;
@@ -98,16 +98,17 @@ void immune_system_information::set_value(const YAML::Node &node) {
                          value_.alpha_immune;
   }
 
-  value_.immune_inflation_rate = is_node["immune_inflation_rate"].as<double>();
+  value_.immune_inflation_rate = read_node<double>(is_node, "immune_inflation_rate");
 
-  value_.min_clinical_probability = is_node["min_clinical_probability"].as<double>();
-  value_.max_clinical_probability = is_node["max_clinical_probability"].as<double>();
+  value_.min_clinical_probability = read_node<double>(is_node, "min_clinical_probability");
+  value_.max_clinical_probability = read_node<double>(is_node, "max_clinical_probability");
 
-  value_.immune_effect_on_progression_to_clinical = is_node[
-    "immune_effect_on_progression_to_clinical"].as<double>();
+  value_.immune_effect_on_progression_to_clinical = read_node<double>(is_node, "immune_effect_on_progression_to_clinical");
 
-  value_.age_mature_immunity = is_node["age_mature_immunity"].as<double>();
-  value_.factor_effect_age_mature_immunity = is_node["factor_effect_age_mature_immunity"].as<double>();
+  value_.age_mature_immunity = read_node<double>(is_node, "age_mature_immunity");
+  value_.factor_effect_age_mature_immunity = read_node<double>(is_node, "factor_effect_age_mature_immunity");
+
+  value_.midpoint = read_node<double>(is_node, "midpoint");
 
   // implement inlation rate
   double acR = value_.acquire_rate;

@@ -38,9 +38,13 @@ void Config::read_from_file(const std::string &config_file_name) {
     LOG(FATAL) << "error: " << ex.msg << " at line " << ex.mark.line + 1 << ":" << ex.mark.column + 1;
   }
 
-  for (auto &config_item : config_items) {
-    VLOG(1) << "Reading config item: " << config_item->name();
-    config_item->set_value(config);
+  try {
+    for (auto &config_item : config_items) {
+      VLOG(1) << "Reading config item: " << config_item->name();
+      config_item->set_value(config);
+    }
+  } catch (std::invalid_argument &error) {
+    LOG(FATAL) << error.what();
   }
 }
 
