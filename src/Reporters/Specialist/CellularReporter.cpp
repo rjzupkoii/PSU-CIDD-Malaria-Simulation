@@ -19,7 +19,7 @@ void CellularReporter::initialize(int job_number, std::string path) {
         throw std::runtime_error("CellularReporter can only be used with one location configurations.");
     }
 
-    // Prepare the loggers to record the data
+    // Prepare the aggregate logger to record the data
     el::Configurations aggregate_reporter;
     aggregate_reporter.setToDefault();
     aggregate_reporter.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
@@ -29,6 +29,17 @@ void CellularReporter::initialize(int job_number, std::string path) {
     aggregate_reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
     el::Loggers::reconfigureLogger("aggregate_reporter", aggregate_reporter);
 
+    // Log the aggregate headers
+    ss << "DaysElapsed" << Csv::sep << "Population" << Csv::sep << "InfectedIndividuals" << Csv::sep 
+       << "ClinicalIndividuals" << Csv::sep << "NewInfections" << Csv::sep << "NonTreatment" << Csv::sep << "TreatmentFailure" << Csv::sep
+       << "ParasiteClones" << Csv::sep 
+       << "580yWeighted" << Csv::sep << "508yUnweighted" << Csv::sep
+       << "Plasmepsin2xCopyWeighted" << Csv::sep << "Plasmepsin2xCopyUnweighted" << Csv::sep
+       << Csv::end_line;
+    CLOG(INFO, "aggregate_reporter") << ss.str();
+    ss.str("");    
+
+#ifdef ENABLE_GENOTYPE_REPORTER
     el::Configurations detail_reporter;
     detail_reporter.setToDefault();
     detail_reporter.set(el::Level::Info, el::ConfigurationType::Format, "%msg");
@@ -37,6 +48,16 @@ void CellularReporter::initialize(int job_number, std::string path) {
     detail_reporter.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
     detail_reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
     el::Loggers::reconfigureLogger("detail_reporter", detail_reporter);
+
+    ss << "DaysElapsed" << Csv::sep << "Individual" << Csv::sep;
+    for (std::size_t id = 0; id < Model::CONFIG->genotype_db()->size(); id++) {
+        auto genotype = (*Model::CONFIG->genotype_db())[id];
+        ss << genotype->to_string() << Csv::sep;
+    }
+    ss << Csv::end_line;
+    CLOG(INFO, "detail_reporter") << ss.str();
+    ss.str("");
+#endif
 
 #ifdef ENABLE_BLOOD_REPORTER
     el::Configurations blood_reporter;
@@ -47,30 +68,7 @@ void CellularReporter::initialize(int job_number, std::string path) {
     blood_reporter.setGlobally(el::ConfigurationType::ToStandardOutput, "false");
     blood_reporter.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
     el::Loggers::reconfigureLogger("blood_reporter", blood_reporter);
-#endif
 
-    // Log the aggregate headers
-    ss << "DaysElapsed" << Csv::sep << "Population" << Csv::sep << "InfectedIndividuals" << Csv::sep 
-       << "ClinicalIndividuals" << Csv::sep << "NewInfections" << Csv::sep << "NonTreatment" << Csv::sep << "TreatmentFailure" << Csv::sep
-       << "ParasiteClones" << Csv::sep 
-       << "580yWeighted" << Csv::sep << "508yUnweighted" << Csv::sep
-       << "Plasmepsin2xCopyWeighted" << Csv::sep << "Plasmepsin2xCopyUnweighted" << Csv::sep
-       << Csv::end_line;
-    CLOG(INFO, "aggregate_reporter") << ss.str();
-    ss.str("");
-
-    // Log the detailed headers
-    ss << "DaysElapsed" << Csv::sep << "Individual" << Csv::sep;
-    for (std::size_t id = 0; id < Model::CONFIG->genotype_db()->size(); id++) {
-        auto genotype = (*Model::CONFIG->genotype_db())[id];
-        ss << genotype->to_string() << Csv::sep;
-    }
-    ss << Csv::end_line;
-    CLOG(INFO, "detail_reporter") << ss.str();
-    ss.str("");
-
-#ifdef ENABLE_BLOOD_REPORTER
-    // Log the blood density headers
     ss << "DaysElapsed" << Csv::sep << "Individual" << Csv::sep << "ParasitePopulation" << Csv::sep
        << "C580Y" << Csv::sep << "Density" << Csv::sep << "Theta" << Csv::end_line;
     CLOG(INFO, "blood_reporter") << ss.str();
@@ -154,9 +152,11 @@ void CellularReporter::monthly_report() {
     //
     // WARNING - this is hard coded for now, assuming the model starts in 2007-01-01 mutations should be enabled 
     //           starting in 2018-01-10, so we want ten years of mutations (i.e., 2028-01-01) for capturing detailed data
+#ifdef ENABLE_GENOTYPE_REPORTER    
     if (dayselapsed > (22 * 365 + 4) && dayselapsed < (23 * 365 + 5)) {
         detailed_report();
     }
+#endif
 
 #ifdef ENABLE_BLOOD_REPORTER
     // For the blood density we want the last 20 years of the model, so 2018-01-01 onwards

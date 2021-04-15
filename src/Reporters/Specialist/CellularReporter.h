@@ -9,6 +9,7 @@
 #include "Reporters/Reporter.h"
 
 //#define ENABLE_BLOOD_REPORTER
+//#define ENABLE_GENOTYPE_REPORTER
 
 class CellularReporter : public Reporter {
     private:
