@@ -29,6 +29,8 @@ VIRTUAL_PROPERTY_REF(double, maximum_parasite_killing_rate)
 
 VIRTUAL_PROPERTY_REF(DoubleVector, age_group_specific_drug_concentration_sd);
 
+VIRTUAL_PROPERTY_REF(DoubleVector, age_specific_drug_absorption);
+
 VIRTUAL_PROPERTY_REF(double, p_mutation)
 
 VIRTUAL_PROPERTY_REF(double, k)
