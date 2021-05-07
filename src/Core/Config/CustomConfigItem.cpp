@@ -193,6 +193,13 @@ void drug_db::set_value(const YAML::Node &node) {
     for (std::size_t i = 0; i < dt_node["age_specific_drug_concentration_sd"].size(); i++) {
       dt->age_group_specific_drug_concentration_sd().push_back(
         dt_node["age_specific_drug_concentration_sd"][i].as<double>());
+      dt->age_specific_drug_absorption().push_back(1.0);
+    }
+
+    if ( dt_node["age_specific_drug_absorption"]){
+      for (std::size_t i = 0; i < dt_node["age_specific_drug_absorption"].size(); i++) {
+        dt->age_specific_drug_absorption()[i] = dt_node["age_specific_drug_absorption"][i].as<double>();
+      }
     }
 
     dt->set_p_mutation(dt_node["mutation_probability"].as<double>());
