@@ -1,21 +1,20 @@
 
 # MaSim Configuration File
 
-## Introduction
+### Introduction
 
 The malaria simulation (MaSim) uses [YAML](https://yaml.org/) to load configuration settings for the simulation. While the configuration was previously forward compatible (i.e., older files would work with newer versions) With the transition to version 4.0 new nodes were added or deprecated that have resulted in a divergence between 3.x and 4.0 onwards. While the absence of nodes implies version 4.0 or greater, care should be taken to ensure it is clear which version a given configuration is intended for.
 
-## Nodes
+# Nodes
 
-### Model Operation Nodes 
+## Model Operation Nodes 
 The following nodes govern how the model executes at a low level.
 
 **connection_string** (string) : (*Version 4.0*) The connection string for the PostgreSQL database that stores the simulation data.
 
 **record_genome_db** (boolean) : (*Version 4.0*) Indicates that genome data should be recorded to the database when using the `DbReporter` reporter class. Note that recording genomic data to the database will cause the database to quickly inflate in size. It is recommended that this setting only be used when genomic data needs to be retrieved. 
 
-
-### Model Configuration Notes
+## Model Configuration Notes
 The following nodes contain the settings for the simulation.
 
 **transmission_parameter** (float) : Governs how likely malaria is to be transmitted to a naive individual in the sporozoite challenge.
@@ -162,7 +161,45 @@ immune_system_information:
 **midpoint** (double) : (*Version 4.0*) Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)).
 
 
-### events
+### drug_db
+This setting is used to configure the various drugs used in the configuration and is structured as an array of drugs, which contain the specific setting for that particular compound. **Note** that while the simuation assumes that the compounds will be ordered from 0 to *n*, it is the reponsilbity of the user to ensure that they are assigned and ordered correctly.
+
+```YAML
+drug_db:
+  0:
+    name: "ART"       # Artemisinin
+    half_life: 0.0
+    maximum_parasite_killing_rate: 0.999
+    n: 25
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
+    age_specific_drug_absorption: [0.7,0.7,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,1.0,1.0,1.0,1.0,1.0]
+    mutation_probability: 0.005
+    affecting_loci: [2]
+    selecting_alleles: [[1]]
+    k: 4
+    EC50:
+      ..0..: 0.75
+      ..1..: 1.2
+```      
+
+**name** (string) : The name of the compound. \
+**half_life** (double) : The compound's half-life in the body, in days. \
+**maximum_parasite_killing_rate** (double) : The percentage of parasites that the compound will kill in one day if an individual has the highest possible drug concentration. \
+**n** (integer) : The slope of the linear porition of the concentration-effect curve. \
+**age_specific_drug_concentration_sd** (double array) : The actual drug concentration, per individual, that will be drawn from a normal distribution with an mean of one and this standard deviation. \
+**age_specific_drug_absorption** (double array) : (*Version 4.0*) The percentage of the drug that is absorbed into the bloodstream, based upon the age of the individual. When not supplied the default value is one for all age groups. \
+**mutation_probability** (double) : The probablity that exposure to the drug will result in a muatation in the parasite to resist it. \
+**affecting_loci** (integer array) : The index of the loci of alleles where drug resistnace may form (see [genotype_info](#genotype_info)). \
+**selecting_alleles** (integer matrix) : The index of the alleles where drug resistance may form (see [genotype_info](#genotype_info)). \
+**k** (double) : Controls the change in the mutation probability when drug levels are intermediate. For example, k=0.5 is a simple linear model where mutation probability decreases linearly with drug concentration; where as k=2 or k=4 are a piecewise-linear model where mutation probability increases from high concentrations to intermediate concentrations, and then decreases linearly from intermediate concentrations to zero. \
+**EC50** (array of key-value pairs) : The drug concentration which produces 50% of the parasite killing achieved at maximum-concentration, format is is a string that descives the relevent genotypes (see [genotype_info](#genotype_info)), followed by the concentration where 1.0 is the expected starting concentration.
+
+
+### genotype_info<a name="genotype_info"></a>
+To Be Written.
+
+
+# events
 This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all of the data for the `info` field following will be provided to the loader function.
 
 #### annual_beta_update_event
