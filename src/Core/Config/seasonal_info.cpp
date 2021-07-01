@@ -59,6 +59,14 @@ void seasonal_info::set_value(const YAML::Node &node) {
   // Set if we are enabled or not
   value_.enable = seasonal_info_node["enable"].as<bool>();
 
+  // Check to make sure the nodes exist
+  if (seasonal_info_node["base"].IsNull()  || seasonal_info_node["a"].IsNull() || seasonal_info_node["b"].IsNull() || seasonal_info_node["phi"].IsNull()) {
+    throw std::invalid_argument("One or more of the seasonality paramters is missing.");
+  }  
+  if (seasonal_info_node["base"].size() == 0  || seasonal_info_node["a"].size() == 0 || seasonal_info_node["b"].size() == 0 || seasonal_info_node["phi"].size() == 0) {
+    throw std::invalid_argument("One or more of the seasonality paramters is an empty array.");
+  }
+
   // Warn the user if enough nodes were not provided
   if (value_.enable && seasonal_info_node["a"].size() > 1 && seasonal_info_node["a"].size() < config_->number_of_locations()) {
     LOG(WARNING) << fmt::format("Only {} seasonal settings provided, but {} are needed for all locations", seasonal_info_node["a"].size(), config_->number_of_locations());

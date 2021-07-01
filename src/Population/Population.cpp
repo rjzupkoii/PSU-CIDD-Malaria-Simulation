@@ -352,7 +352,7 @@ void Population::introduce_initial_cases() {
     if (p_info.parasite_type_id >= Model::CONFIG->genotype_db()->size()) {
       LOG(FATAL) << fmt::format("Unrecoverable error! Initial parasite id ({}) is greater or equal to the size of the genotype_db ({})", 
         p_info.parasite_type_id, Model::CONFIG->genotype_db()->size());
-      exit(1);
+      exit(EXIT_FAILURE);
     }
 
     auto num_of_infections = Model::RANDOM->random_poisson(std::round(size(p_info.location)*p_info.prevalence));

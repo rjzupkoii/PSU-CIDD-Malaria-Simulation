@@ -28,7 +28,7 @@ namespace {
 #endif
 
 // Version information
-const std::string VERSION = "3.3, experimental";
+const std::string VERSION = "4.0, experimental";
 
 // Settings read from the CLI
 int job_number = 0;
@@ -40,6 +40,9 @@ void handle_cli(Model *model, int argc, char **argv);
 
 void config_logger() {
   const std::string OUTPUT_FORMAT = "[%level] [%logger] [%host] [%func] [%loc] %msg";
+
+  // Set global logging flags
+  el::Loggers::addFlag(el::LoggingFlag::DisableApplicationAbortOnFatalLog);
 
   // Create the default configuration
   el::Configurations default_conf;
