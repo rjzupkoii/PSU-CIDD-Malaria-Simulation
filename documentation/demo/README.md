@@ -2,7 +2,7 @@
 
 The configuration in this directory (`demo.yml`) is configured for a single cell and derives the majority of the settings from the Burkina Faso project, allowing it to emulate a realistic starting point for a model. In addition to the configuration file, there is also a basic raster file (`population.asc`) which informs the model on how to create a single cell with 1,000 individuals in it. The raster files used by the simulation are compliant with the [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm) and can be edited using a text editor, or appropriate geographic information system (GIS) software.
 
-In order to use this demonstration code you first need to build the simulation using the directions outlined in developer.md, after which is recommended that you copy the binary (`MaSim`) and contents of this directory (e.g., `demo.yml`, `population.asc`) into the same location. The simulation can then be executed using the following command:
+In order to use this demonstration code you first need to build the simulation using the [directions outlined in developer.md](../developer.md#building), after which is recommended that you copy the binary (`MaSim`) and contents of this directory (e.g., `demo.yml`, `population.asc`) into the same location. The simulation can then be executed using the following command:
 
 `./MaSim -i demo.yml -r CellularReporter`
 
