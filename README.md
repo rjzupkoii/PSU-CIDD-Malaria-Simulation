@@ -20,24 +20,23 @@ The HRSpatial branch of the Malaria Simulation (MaSim) marks a significant upgra
 
 The following commands are available from the simulation:
 <pre>
--c / --config     Configuration file       
--i / --input
-
--l / --load       Load genotypes to the database and exit
-
+-c / --config     Configuration file, variant flag 
 -h / --help       Display this help menu
+-i / --input      Configuration file, preferred flag
 -j                The job number for this replicate
+-l / --load       Load genotypes to the database and exit
+-o                The path for output files, default is the current directory
 -r                The reporter type to use
--s                The study number to assoicate with the configuration
+-s                The study number to associate with the configuration
 
 --dump            Dump the movement matrix as calculated
 --im              Record individual movement detail
+--lg              List the possible genotypes and their internal id values
+--lr              List the possible data reporters
 --mc              Record the movement between cells, cannot run with --md
 --md              Record the movement between districts, cannot run with --mc
 
 --v=[int]         Sets the verbosity of the logging, default zero
 </pre>
 
-When the `-r` switch is not supplied the simuation defaults to the `DbReporter`; however, with the `-r` switch the following reporters can be used:
-
-CellularReporter - Generates two CSV files, one of which contains general popuation data and the second of which contains detailed data about the popuation for one year. 
+Use of either the `-c` or `-i` switch with an appropriate YAML file is required. When the `-r` switch is not supplied the simulation defaults to the `DbReporter`; however, with the `-r` switch the reporters listed using the `--lr` switch can be used instead.
