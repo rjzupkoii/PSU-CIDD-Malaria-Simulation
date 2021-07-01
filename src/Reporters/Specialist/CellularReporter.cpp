@@ -30,11 +30,22 @@ void CellularReporter::initialize(int job_number, std::string path) {
     el::Loggers::reconfigureLogger("aggregate_reporter", aggregate_reporter);
 
     // Log the aggregate headers
-    ss << "DaysElapsed" << Csv::sep << "Population" << Csv::sep << "InfectedIndividuals" << Csv::sep 
-       << "ClinicalIndividuals" << Csv::sep << "NewInfections" << Csv::sep << "NonTreatment" << Csv::sep << "TreatmentFailure" << Csv::sep
+    ss << "DaysElapsed" << Csv::sep 
+       << "Population" << Csv::sep 
+       << "PfPR2to10" << Csv::sep
+       << "InfectedIndividuals" << Csv::sep 
+       << "ClinicalIndividuals" << Csv::sep 
+       << "ClinicalU5" << Csv::sep
+       << "ClinicalO5" << Csv::sep
+       << "NewInfections" << Csv::sep 
+       << "NonTreatment" << Csv::sep 
+       << "TreatmentFailure" << Csv::sep
        << "ParasiteClones" << Csv::sep 
-       << "580yWeighted" << Csv::sep << "508yUnweighted" << Csv::sep
-       << "Plasmepsin2xCopyWeighted" << Csv::sep << "Plasmepsin2xCopyUnweighted" << Csv::sep
+       << "Theta" << Csv::sep       
+       << "580yWeighted" << Csv::sep 
+       << "508yUnweighted" << Csv::sep
+       << "Plasmepsin2xCopyWeighted" << Csv::sep 
+       << "Plasmepsin2xCopyUnweighted" << Csv::sep
        << Csv::end_line;
     CLOG(INFO, "aggregate_reporter") << ss.str();
     ss.str("");    
@@ -130,16 +141,27 @@ void CellularReporter::monthly_report() {
         }
     }
 
+    // Note some values
+    auto clinical_all = Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[0];
+    auto clinical_u5 = 0;
+    for (auto ndx = 0; ndx < 5; ndx++) {
+        clinical_u5 += Model::DATA_COLLECTOR->number_of_clinical_by_location_age_group()[0][ndx];
+    }
+
     // Store the data
     auto dayselapsed = Model::SCHEDULER->current_time();
     ss << Model::SCHEDULER->current_time() << Csv::sep 
        << population << Csv::sep 
+       << Model::DATA_COLLECTOR->get_blood_slide_prevalence(0, 2, 10) * 100.0 << Csv::sep
        << infectedIndividuals << Csv::sep 
-       << Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[0] << Csv::sep
+       << clinical_all << Csv::sep
+       << clinical_u5 << Csv::sep
+       << (clinical_all - clinical_u5) << Csv::sep
        << Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[0] << Csv::sep
        << Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[0] << Csv::sep
        << Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[0] << Csv::sep
        << parasiteClones << Csv::sep
+       << population_mean_theta() << Csv::sep
        << _580yWeighted << Csv::sep 
        << _580yCount << Csv::sep
        << plasmepsinDoubleCopyWeighted << Csv::sep
@@ -270,4 +292,27 @@ void CellularReporter::detailed_report() {
     // Store the data
     CLOG(INFO, "detail_reporter") << ss.str();
     ss.str("");
+}
+
+double CellularReporter::population_mean_theta() {
+    auto theta = 0.0;
+    auto population = 0;
+
+    // Get the index
+    PersonIndexByLocationStateAgeClass* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+
+    // Iterate over the population
+    for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
+        for (std::size_t ac = 0; ac < index->vPerson()[0][0].size(); ac++) {
+            // Iterate over all of the genotypes, there should only be one location (i.e., index 0)
+            auto age_class = index->vPerson()[0][hs][ac];
+            for (std::size_t ndx = 0; ndx < age_class.size(); ndx++) {
+                theta += age_class[ndx]->immune_system()->get_current_value();
+                population++;
+            }
+        }
+    }
+
+    // Return the mean theta
+    return (theta / population);
 }

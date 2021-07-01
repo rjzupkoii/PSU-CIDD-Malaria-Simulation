@@ -14,6 +14,7 @@
 class CellularReporter : public Reporter {
     private:
         void blood_density_report();
+        double population_mean_theta();
         void detailed_report();
 
     public:
