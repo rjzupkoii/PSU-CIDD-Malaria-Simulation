@@ -6,7 +6,31 @@ In order to use this demonstration code you first need to build the simulation u
 
 `./MaSim -i demo.yml -r CellularReporter`
 
-Using the `CellularReporter` will generate a comma separated values (CSV) file in the directory containing model output for select parameters such as population, *Pf*PR<sub>2-10</sub>, and infected individuals to name a few. Running the simulation a second time will cause this file to be overwritten unless the job number (`-j`) switch is used.
+Using the `CellularReporter` will generate a comma separated values (CSV) file in the directory containing model output for select parameters such as population, *Pf*PR<sub>2-10</sub>, and infected individuals to name a few. Running the simulation a second time will cause this file to be overwritten unless the job number (`-j`) switch is used. The `CellularReporter` is intended for models with only one location (i.e., cell) and will generate an error if mulitple cells are present in the configuration.
+
+## Column Descriptions
+
+The following tables are present in the output from the `CellularReporter`:
+
+| Column | Description |
+| --- | --- |
+| DaysElapsed	| Model days elapsted, should correspond to the length of months. |
+| Population | Total population in the simulation. |
+| PfPR2to10	| The *Plasmodium Falciparum* parasite prevelence for individuals aged 2 to 10 years. |
+| InfectedIndividuals	| The number of indivdiuals in the simuation who have *any* level of parasitemia. |
+| ClinicalIndividuals	| The number of individuals in the simuation who have a parasitemia level of clinical symptoms to manifest. |
+| ClinicalU5 | The number of clinical indivdiuals under the age of 5. |
+| ClinicalO5 | The number of clinical indivdiauls over the age of 5. |
+| NewInfections	| The number of new infections in the past month. |
+| NonTreatment | The number of clinical indivdiuals who did not seek treatment. |
+| TreatmentFailure | The number of clinical individuals who sought treatment and the treatment did not clear the infection in the configured amount of time. |
+| ParasiteClones | The number of parasite clones present in the simulation, one individual may be infected by multiple clones. |
+| Theta	| The mean measure of immunity to the parasite in the simulation, zero means no immunity. |
+| 580yWeighted | The weighted number of occurances of the 580Y genotype, such that the sum of all clones in an individual equals one. | 
+| 508yUnweighted | The total number of occurances of the 580Y genotype in the simulation. |
+| Plasmepsin2xCopyWeighted | The weighted number of occurances of the Plasmepsin double copy mutation, such that the sum of all clones in an individual equals one. |
+| Plasmepsin2xCopyUnweighted | The total number of occurnces of the Plasmepsin double copy mutation in the simulation. |
+
 
 ## Example Console Output
 
