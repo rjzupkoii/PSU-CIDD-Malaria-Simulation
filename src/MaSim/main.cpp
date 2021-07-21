@@ -28,7 +28,7 @@ namespace {
 #endif
 
 // Version information
-const std::string VERSION = "4.0, experimental";
+const std::string VERSION = "4.0, stable";
 
 // Settings read from the CLI
 int job_number = 0;
