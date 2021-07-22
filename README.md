@@ -4,18 +4,6 @@
 
 ---
 
-## About
-
-The HRSpatial branch of the Malaria Simulation (MaSim) marks a significant upgrade from previous versions, although backwards comparability has been maintained where possible. The three key changes with this version of the model are:
-
-1. Increased spatial support - models can now use a [ESRI ASCII Raster](http://resources.esri.com/help/9.3/arcgisengine/java/GP_ToolRef/spatial_analyst_tools/esri_ascii_raster_format.htm) for geographic data such as population distribution or a country's political organization.
-
-2. Reporting of fine grained information to a PostgreSQL database.
-
-3. Reporting of agent movement during model execution.
-
----
-
 ## Documentation
 
 The simuation has been tested to run on Windows 10, Windows Subsystem for Linux (Ubuntu), and Red Hat 7.9. Instructions for installing the toolchains required for development can be found under [documentation/developer.md](documentation/developer.md) and basic instructions for running the simuation can be found in [documentation/demo/](documentation/demo/). While basic simuations are possible on desktop comuting enviornemnts, regional and national scale simuations require advanced computing enviorments with access to 64 GB of RAM or more.
@@ -44,3 +32,18 @@ The following commands are available from the simulation:
 </pre>
 
 Use of either the `-c` or `-i` switch with an appropriate YAML file is required. When the `-r` switch is not supplied the simulation defaults to the `DbReporter`; however, with the `-r` switch the reporters listed using the `--lr` switch can be used instead.
+
+
+---
+
+## About
+
+### 4.x.main
+
+The 4.x.main branch of the Malaria Simulation (MaSim) marks a significant upgrade from previous versions, although backwards comparability has been maintained where possible. The three key changes with this version of the model are:
+
+1. Increased spatial support - models can now use a [ESRI ASCII Raster](http://resources.esri.com/help/9.3/arcgisengine/java/GP_ToolRef/spatial_analyst_tools/esri_ascii_raster_format.htm) for geographic data such as population distribution or a country's political organization.
+
+2. Reporting of fine grained information to a PostgreSQL database.
+
+3. Reporting of agent movement during model execution.
