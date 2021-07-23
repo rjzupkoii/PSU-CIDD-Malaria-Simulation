@@ -15,6 +15,8 @@
 #include "Model.h"
 #include "Reporters/Reporter.h"
 
+#include "Core/ParallelJobs.h"
+
 // Set this flag to disable Linux / Unix specific code, this should be provided
 // via CMake automatically or by the compiler for WIN32
 #ifdef _WIN32 
@@ -103,11 +105,18 @@ int main(const int argc, char **argv) {
     config_logger();
     START_EASYLOGGINGPP(argc, argv);
     LOG(INFO) << fmt::format("MaSim version {0}", VERSION);
+
     LOG(INFO) << "Processor Count: " << std::thread::hardware_concurrency();
+    LOG(INFO) << "Starting " << ParallelJobs::get_instance().start() << " thread(s)";
+    ParallelJobs::get_instance().add_job({ [] { std::cout << "[THREAD] First thread job!\n"; }});
 
     // Run the model
     m->initialize(job_number, path);
+    ParallelJobs::get_instance().add_job({ [] { std::cout << "[THREAD] Second thread job!\n"; }});
     m->run();
+
+    ParallelJobs::get_instance().add_job({ [] { std::cout << "[THREAD] Last thread job!\n"; }});
+    ParallelJobs::get_instance().stop();
 
     // Clean-up and return
     delete m;

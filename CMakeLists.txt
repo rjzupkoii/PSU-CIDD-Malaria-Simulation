@@ -4,6 +4,7 @@ project(POMS)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FALGS} -pthread")
 
 # Enable if building on the cluster, via the command line use -DBUILD_CLUSTER:BOOL=true
 set(BUILD_CLUSTER false CACHE BOOL "Enable for builds on the cluster")
