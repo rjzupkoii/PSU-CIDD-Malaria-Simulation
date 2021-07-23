@@ -6,6 +6,7 @@
 #include <args.hxx>
 #include <iostream>
 #include <fmt/format.h>
+#include <thread>
 
 #include "easylogging++.h"
 #include "error_handler.hxx"
@@ -28,7 +29,7 @@ namespace {
 #endif
 
 // Version information
-const std::string VERSION = "4.0, stable";
+const std::string VERSION = "4.0.1, development";
 
 // Settings read from the CLI
 int job_number = 0;
@@ -102,6 +103,7 @@ int main(const int argc, char **argv) {
     config_logger();
     START_EASYLOGGINGPP(argc, argv);
     LOG(INFO) << fmt::format("MaSim version {0}", VERSION);
+    LOG(INFO) << "Processor Count: " << std::thread::hardware_concurrency();
 
     // Run the model
     m->initialize(job_number, path);
