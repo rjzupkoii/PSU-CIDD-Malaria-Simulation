@@ -1,6 +1,0 @@
-
-// ASC files can get really big - exclude them by default
-*.asc
-
-// Ignore the sample directory for now
-sample/
