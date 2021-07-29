@@ -1,12 +1,7 @@
-# YAML 1.2
----
-authors: 
-  -
-    family-names: 
-    given-names: 
-cff-version: "1.1.0"
-license: "BSD-3-Clause"
+cff-version: 1.2.0
 message: "If you use source code from this repository, please cite it using these metadata. Otherwise, please cite one of the manuscripts associated with the simulation."
+authors: 
+title: "Malaira Simuation (MaSim)"
+version: 4.0.0
+license: "BSD-3-Clause"
 repository-code: "https://github.com/rjzupkoii/PSU-CIDD-Malaria-Simulation"
-version: "4.0.0"
-...
