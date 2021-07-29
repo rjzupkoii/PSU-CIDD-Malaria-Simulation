@@ -81,9 +81,9 @@ cd /build/bin
 Note that while care was taken in places to ensure the code is performant, the amount of RAM needed during execution can be quite high (ex., 32GB or more). When the model is run in Linux environments where the necessary memory is not available, you may find that the program is killed without notice due to being [out of memory](https://linux-mm.org/OOM_Killer).
 
 ## Cluster Runs
-The [Roar Supercomputer Users' Guide](https://www.icds.psu.edu/computing-services/roar-user-guide/) providers a good overview for running single replicates on the cluster; however, when running batchs it is recomended to script out the process. When replicates need to be run with a varity of settings (e.g., sensitivity analysis) some of the scripts present in [PSU-CIDD-MaSim-Support](https://github.com/bonilab/PSU-CIDD-MaSim-Support) under the `bash` directory can be used to parse a CSV formatted list of replicates to be run. In addtion to the [`calibrationLib.sh`](https://github.com/bonilab/PSU-CIDD-MaSim-Support/tree/master/bash) file the support repository, the following files need to be created for this:
+The [Roar Supercomputer Users' Guide](https://www.icds.psu.edu/computing-services/roar-user-guide/) providers a good overview for running single replicates on the cluster; however, when running batches it is recommended to script out the process. When replicates need to be run with a variety of settings (e.g., sensitivity analysis) some of the scripts present in [PSU-CIDD-MaSim-Support](https://github.com/bonilab/PSU-CIDD-MaSim-Support) under the `bash` directory can be used to parse a CSV formatted list of replicates to be run. In addition to the [`calibrationLib.sh`](https://github.com/bonilab/PSU-CIDD-MaSim-Support/tree/master/bash) file the support repository, the following files need to be created for this:
 
-1. A runner script which will be queued on the cluster as a job, typcially named `run.sh` or similar in project repositories:
+1. A runner script which will be queued on the cluster as a job, typically named `run.sh` or similar in project repositories:
 ```bash
 #!/bin/bash
 source ./calibrationLib.sh
@@ -105,7 +105,7 @@ cd $PBS_O_WORKDIR
 ./run.sh
 ```
 
-When defining the PBS file note the low memory usage (`pmem`) and high `walltime`. Since the job will only be repsonible for running this script, only a lmited amount of resources are needed. However, the total batch of jobs may run for quite some time, so the wall clock time is likely to be quite high. 
+When defining the PBS file note the low memory usage (`pmem`) and high `walltime`. Since the job will only be responsible for running this script, only a limited amount of resources are needed. However, the total batch of jobs may run for quite some time, so the wall clock time is likely to be quite high. 
 
 3. The CSV file that defines the replicates to be run, where the first column is the PBS file for the replicate and the second column is the count:
 ```CSV
