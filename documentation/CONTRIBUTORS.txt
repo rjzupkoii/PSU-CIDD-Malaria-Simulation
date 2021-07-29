@@ -1,2 +1,15 @@
-The Malaria Simulation (MaSim) Team:
+Boni Lab Malaria Simulation (MaSim) Contributors
+
+Primary Invesigator:
+  Maciej Boni
   
+Reserachers:
+  Đặng Duy Hoàng Giang
+  Eric Lee
+  Haojun Li
+  Trần Đăng Nguyên
+  Thư Tran
+  Robert Zupko II
+
+Other Contributors:
+  Pakhi Agarwal
