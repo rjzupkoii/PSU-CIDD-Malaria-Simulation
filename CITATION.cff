@@ -1,9 +1,15 @@
 cff-version: 1.2.0
 message: "If you use source code from this repository, please cite it using these metadata. Otherwise, please cite one of the manuscripts associated with the simulation."
 authors: 
-- family-names:
-  given-names:
-title: "Malaira Simuation (MaSim)"
+- family-names: Boni
+  given-names: Maciej
+- family-names: Trần Đăng
+  given-names: Nguyên
+- family-names: Tran
+  given-names: Thư
+- family-names: Zupko
+  given-names: Robert
+title: "Malaria Simulation (MaSim)"
 version: 4.0.0
 license: "BSD-3-Clause"
 repository-code: "https://github.com/rjzupkoii/PSU-CIDD-Malaria-Simulation"
