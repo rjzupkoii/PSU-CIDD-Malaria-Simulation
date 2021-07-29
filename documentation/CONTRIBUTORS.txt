@@ -1,15 +1,17 @@
 Boni Lab Malaria Simulation (MaSim) Contributors
 
-Primary Invesigator:
+Pricipal Invesigator:
   Maciej Boni
   
-Reserachers:
-  Đặng Duy Hoàng Giang
-  Eric Lee
-  Haojun Li
+Lead Scientists:
+  Kien Tran
   Trần Đăng Nguyên
   Thư Tran
   Robert Zupko II
 
 Other Contributors:
   Pakhi Agarwal
+  Đặng Duy Hoàng Giang
+  Eric Lee
+  Haojun Li
+  
