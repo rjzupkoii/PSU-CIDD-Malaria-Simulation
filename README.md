@@ -4,16 +4,13 @@
 
 ---
 
-## Introduction
+## Overview
 
-This repository contains the working codebase for the Malaria Simulation (MaSim) under development by the Boni Lab at Penn State. While efforts are made to keep releases organized, stable code specific to publications are maintained in repositories under the [Boni Lab on GitHub](https://github.com/bonilab). 
+This repository contains the working codebase for the Malaria Simulation (MaSim) under development by the Boni Lab at Penn State. While efforts are made to keep releases organized, stable code specific to publications are maintained in repositories under the [Boni Lab on GitHub](https://github.com/bonilab). Instructions for installing the tool chains required for development can be found under [documentation/developer.md](documentation/developer.md) and basic instructions for running the simulation can be found in [documentation/demo/](documentation/demo/).
 
+The simulation has been tested to run on Windows 10, Windows Subsystem for Linux (Ubuntu), and Red Hat 7.9. The majority of development is performed on under Linux so building and running under Windows may be impacted.  While basic simulations are possible on desktop computing environments, regional and national scale simulations require advanced computing environments with access to 64 GB of RAM or more. Sample configuration files can be found under [documentation/input/](documentation/input), and examination of `simple.yml` or `spatial.yml` is recommended after working with the demonstration configuration in [documentation/demo/](documentation/demo/).
 
-## Documentation
-
-The simulation has been tested to run on Windows 10, Windows Subsystem for Linux (Ubuntu), and Red Hat 7.9. The majority of development is performed on under Linux so building and running under Windows may be impacted. Instructions for installing the tool chains required for development can be found under [documentation/developer.md](documentation/developer.md) and basic instructions for running the simulation can be found in [documentation/demo/](documentation/demo/). While basic simulations are possible on desktop computing environments, regional and national scale simulations require advanced computing environments with access to 64 GB of RAM or more. Sample configuration files can be found under [documentation/input/](documentation/input), and examination of `simple.yml` or `spatial.yml` is recommended after working with the demonstration configuration in [documentation/demo/](documentation/demo/).
-
----
+## Command Line Switches
 
 The following commands are available from the simulation:
 <pre>
@@ -38,12 +35,9 @@ The following commands are available from the simulation:
 
 Use of either the `-c` or `-i` switch with an appropriate YAML file is required. When the `-r` switch is not supplied the simulation defaults to the `DbReporter`; however, with the `-r` switch the reporters listed using the `--lr` switch can be used instead.
 
-
----
-
 ## About
 
-### 4.0.0
+### Version 4.0.0
 
 The 4.0.0 release of MaSim marks a significant upgrade from previous versions, although backwards comparability has been maintained where possible. The major changes with this version of the model are:
 
