@@ -26,7 +26,7 @@
 #define check_inf(value) if (std::isinf(value)) VLOG(1) << "Inf caught " << #value; value = std::isinf(value) ? -9999 : value;
 
 pqxx::connection* DbReporter::get_connection() {
-    // Getting a connection is straightforward, so this function is larely intended warp retry functionality
+    // Getting a connection is straightforward, so this function is largely intended warp retry functionality
     int retry_count = 0;
 
     while (retry_count <= RETRY_LIMIT) {
@@ -53,7 +53,7 @@ void DbReporter::initialize(int job_number, std::string path) {
     pqxx::connection* connection = get_connection();
     LOG(INFO) << "Connected to " << connection->dbname();
 
-    // Ensure that the database is prepared and grab relevent ids before running
+    // Ensure that the database is prepared and grab relevant ids before running
     prepare_configuration(connection);
     prepare_replicate(connection);
     
@@ -65,7 +65,7 @@ void DbReporter::initialize(int job_number, std::string path) {
     LOG(INFO) << fmt::format("Running configuration {}, replicate {}.", config_id, replicate);
 }
 
-// Make sure the relevent enteries for the configuration are in the database
+// Make sure the relevant entries for the configuration are in the database
 void DbReporter::prepare_configuration(pqxx::connection* connection) {
     // Load the text of the configuration
     std::string filename = Model::MODEL->config_filename();
@@ -140,9 +140,9 @@ void DbReporter::prepare_configuration(pqxx::connection* connection) {
     db.commit();
 }
 
-// Make sure the relevent enteries for this replicate are in the database
+// Make sure the relevant entries for this replicate are in the database
 void DbReporter::prepare_replicate(pqxx::connection* connection) {
-    // Check to see what type of movement is being recoreded, if any
+    // Check to see what type of movement is being recorded, if any
     char movement = 'X';
     if (Model::MODEL->report_movement()) {
         if (Model::MODEL->individual_movement()) {
@@ -199,7 +199,7 @@ bool DbReporter::do_monthly_report() {
     pqxx::connection* connection;
 
     try {
-        // Get the relevent data
+        // Get the relevant data
         auto days_elapsed = Model::SCHEDULER->current_time();
         auto model_time = std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date);
         auto seasonal_factor = seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
@@ -258,7 +258,7 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
     PersonIndexByLocationStateAgeClass* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
     auto age_classes = index->vPerson()[0][0].size();
 
-    // Iterate over all of the possible locations
+    // Iterate over all the possible locations
     for (unsigned int location = 0; location < index->vPerson().size(); location++) {
         std::vector<int> occurrences(genotypes, 0);                 // discrete count of occurrences of the parasite genotype
         std::vector<int> clinicalOccurrences(genotypes, 0);         // discrete count of clinical occurrences of the parasite genotype
@@ -267,11 +267,11 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
         std::vector<double> weightedOccurrences(genotypes, 0.0);    // weighted occurrences of the genotype
         int infectedIndividuals = 0;                               // discrete count of infected individuals in the location
 
-        // Iterate over all of the possible states
+        // Iterate over all the possible states
         for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
-            // Iterate over all of the age classes
+            // Iterate over all the age classes
             for (unsigned int ac = 0; ac < age_classes; ac++) {
-                // Iterate over all of the genotypes
+                // Iterate over all the genotypes
                 auto age_class = index->vPerson()[location][hs][ac];
                 for (auto i = 0ull; i < age_class.size(); i++) {
 
@@ -313,14 +313,13 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
         // Prepare and append the query, pass if the genotype was not seen or no infections were seen
         //
         // NOTE since the database was updated to store the weighted occurrences and infected individuals, 
-        // the weighted frequency is redundent.
+        // the weighted frequency is redundant.
         if (infectedIndividuals != 0) {
             query.append(INSERT_GENOTYPE_PREFIX);
             for (unsigned int genotype = 0; genotype < genotypes; genotype++) {
                 if (weightedOccurrences[genotype] == 0) { continue; }
                 query.append(fmt::format(INSERT_GENOTYPE_ROW, id, location_index[location], genotype, occurrences[genotype], 
-                                        clinicalOccurrences[genotype], occurrencesZeroToFive[genotype], occurrencesTwoToTen[genotype], 
-                                        (weightedOccurrences[genotype] / infectedIndividuals), weightedOccurrences[genotype]));
+                                        clinicalOccurrences[genotype], occurrencesZeroToFive[genotype], occurrencesTwoToTen[genotype], weightedOccurrences[genotype]));
             }
             // Replace last character with a semicolon to properly terminate the query
             query[query.length() - 1] = ';';
@@ -386,11 +385,11 @@ void DbReporter::update_infected_individuals(int id, std::string &query) {
     for (unsigned int location = 0; location < index->vPerson().size(); location++) {
         int infected_individuals = 0;
 
-        // Iterate over all of the possible states
+        // Iterate over all the possible states
         for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
-            // Iterate over all of the age classes
+            // Iterate over all the age classes
             for (unsigned int ac = 0; ac < age_classes; ac++) {
-                // Iterate over all of the genotypes
+                // Iterate over all the genotypes
                 auto age_class = index->vPerson()[location][hs][ac];
                 for (auto i = 0ull; i < age_class.size(); i++) {
 

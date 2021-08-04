@@ -1,8 +1,14 @@
 # Simulation Database Infrastructure
 
-The following document is intended provide a walk through of how to get the Malaria Simulation (MaSim) database up and running. While the document is kept as general as opposed, there may be some differences that you encounter due to your local IT requirements. The following guide assumes that the server is running a clean installation of Ubuntu 18.04 LTS 64-bit with ports 80, 443, and 5432 open.
+Due to the complexity of data storage requirements for simulations involving multiple cells, a database is provided through the `dbreporter` reporter class. The schema is outlined below and was developed against PostgreSQL due to the high storage requirements. Note that the `notes` table presume the usage of the [MaSimLIMS](https://github.com/rjzupkoii/MaSimLIMS) and can be removed if not needed with no impact upon the simulation.     
 
-# Hardware Requirements
+![schema](diagrams/schema.png)
+
+## Installation
+
+The following guide is intended provide a walk through of how to get the Malaria Simulation (MaSim) database up and running. While the document is kept as general as opposed, there may be some differences that you encounter due to your local IT requirements. The following guide assumes that the server is running a clean installation of Ubuntu 18.04 LTS 64-bit with ports 80, 443, and 5432 open.
+
+### Hardware Requirements
 
 The specific requirements for the server are dependent in part upon the number of instances that will be connecting to it while a simulation is running. However, as a baseline the following is a reasonable starting point for a virtual machine:
 
@@ -11,7 +17,7 @@ The specific requirements for the server are dependent in part upon the number o
 - 800 GB primary disk
 - Ubuntu 18.04 LTS 64-bit
 
-# Installing PostgreSQL
+### Installing PostgreSQL
 
 1. Connect to the server
 
@@ -108,7 +114,7 @@ max_parallel_workers_per_gather = 4
 max_parallel_workers = 8
 ```
 
-# Installation of pgAdmin
+## Installation of pgAdmin
 
 1. Install Apache
 

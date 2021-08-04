@@ -37,10 +37,16 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 
 ## About
 
+### Version 4.1.0 (unstable)
+
+The current head of the 4.x.main branch is version 4.1.0, and should not be considered stable code. The current features in the model are:
+
+1. Weighted frequency has been removed from the genotype table (`sim.monthlygenomedata.weightedfrequency`), this will break code written for the 4.0.0 schema, but will reduce the storage requirements studies with many replicates and genotypes. 
+
 ### Version 4.0.0
 
 The 4.0.0 release of MaSim marks a significant upgrade from previous versions, although backwards comparability has been maintained where possible. The major changes with this version of the model are:
 
 1. Increased spatial support - models can now use a [ESRI ASCII Raster](http://resources.esri.com/help/9.3/arcgisengine/java/GP_ToolRef/spatial_analyst_tools/esri_ascii_raster_format.htm) for geographic data such as population distribution or a country's political organization.
-2. Reporting of fine grained information to a PostgreSQL database.
+2. Reporting of fine-grained information to a PostgreSQL database.
 3. Reporting of agent movement during model execution.

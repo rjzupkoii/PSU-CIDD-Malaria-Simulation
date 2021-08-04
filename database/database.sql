@@ -308,7 +308,6 @@ CREATE TABLE sim.monthlygenomedata
     occurrences0to5 integer NOT NULL,
     occurrences2to10 integer NOT NULL,
     weightedoccurrences double precision NOT NULL,
-    weightedfrequency double precision NOT NULL,
     CONSTRAINT monthlygenomedata_pkey PRIMARY KEY (monthlydataid, genomeid, locationid),
     CONSTRAINT monthlygenomedata_genotypeid_fk FOREIGN KEY (genomeid)
         REFERENCES sim.genotype (id) MATCH SIMPLE
