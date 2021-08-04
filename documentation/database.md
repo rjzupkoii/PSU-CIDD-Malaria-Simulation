@@ -84,36 +84,6 @@ update pg_database set datistemplate=true where datname='template1';
 \q
 ```
 
-## Performance Tuning
-
-The following settings from [PGTune](https://pgtune.leopard.in.ua/) where applied to the server:
-
-```ini
-# DB Version: 11
-# OS Type: linux
-# DB Type: dw
-# Total Memory (RAM): 32 GB
-# CPUs num: 8
-# Connections num: 100
-# Data Storage: san
-
-max_connections = 100
-shared_buffers = 8GB
-effective_cache_size = 24GB
-maintenance_work_mem = 2GB
-checkpoint_completion_target = 0.9
-wal_buffers = 16MB
-default_statistics_target = 500
-random_page_cost = 1.1
-effective_io_concurrency = 300
-work_mem = 10485kB
-min_wal_size = 4GB
-max_wal_size = 8GB
-max_worker_processes = 8
-max_parallel_workers_per_gather = 4
-max_parallel_workers = 8
-```
-
 ## Installation of pgAdmin
 
 1. Install Apache
@@ -239,4 +209,35 @@ For the purposes of development or archiving it may be necessary to clone databa
 UPDATE pg_database SET datallowconn = false WHERE datname = 'masim';
 CREATE DATABASE development WITH TEMPLATE masim OWNER sim;
 UPDATE pg_database SET datallowconn = false WHERE datname = 'masim';
+```
+
+
+## Performance Tuning
+
+The following settings from [PGTune](https://pgtune.leopard.in.ua/) where applied to the server:
+
+```ini
+# DB Version: 11
+# OS Type: linux
+# DB Type: dw
+# Total Memory (RAM): 32 GB
+# CPUs num: 8
+# Connections num: 100
+# Data Storage: san
+
+max_connections = 100
+shared_buffers = 8GB
+effective_cache_size = 24GB
+maintenance_work_mem = 2GB
+checkpoint_completion_target = 0.9
+wal_buffers = 16MB
+default_statistics_target = 500
+random_page_cost = 1.1
+effective_io_concurrency = 300
+work_mem = 10485kB
+min_wal_size = 4GB
+max_wal_size = 8GB
+max_worker_processes = 8
+max_parallel_workers_per_gather = 4
+max_parallel_workers = 8
 ```
