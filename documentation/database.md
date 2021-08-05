@@ -84,36 +84,6 @@ update pg_database set datistemplate=true where datname='template1';
 \q
 ```
 
-## Performance Tuning
-
-The following settings from [PGTune](https://pgtune.leopard.in.ua/) where applied to the server:
-
-```ini
-# DB Version: 11
-# OS Type: linux
-# DB Type: dw
-# Total Memory (RAM): 32 GB
-# CPUs num: 8
-# Connections num: 100
-# Data Storage: san
-
-max_connections = 100
-shared_buffers = 8GB
-effective_cache_size = 24GB
-maintenance_work_mem = 2GB
-checkpoint_completion_target = 0.9
-wal_buffers = 16MB
-default_statistics_target = 500
-random_page_cost = 1.1
-effective_io_concurrency = 300
-work_mem = 10485kB
-min_wal_size = 4GB
-max_wal_size = 8GB
-max_worker_processes = 8
-max_parallel_workers_per_gather = 4
-max_parallel_workers = 8
-```
-
 ## Installation of pgAdmin
 
 1. Install Apache
@@ -190,7 +160,7 @@ sudo chown -R www-data:www-data /var/lib/pgadmin4/
 sudo chown -R www-data:www-data /var/log/pgadmin4/
 ```
 
-## Configuration of Apache for pgAdmin
+### Configuration of Apache for pgAdmin
 
 Start in the root (`/`) directory, create the file `/etc/apache2/sites-available/pgadmin4.conf`, and add the following lines:
 
@@ -221,7 +191,7 @@ sudo systemctl restart apache2
 
 At this point you should be able to connect to the pgAdmin control panel at http://[SERVER IP ADDRESS]. Login to the control panel using the credentials supplied in [Step 6](#Step6). One logged in, you should be able to add the localhost via "Add New Server" and proceed with administration of the databases using pgAdmin.
 
-## Upgrading pgAdmin
+### Upgrading pgAdmin
 
 Note that in upgrading to Ubuntu 20.04.1 LTS, pgAdmin4 was also updated to version 4.29 in the process of doing so it was observed that much of the installation directions were out of date. The biggest issue appears to be with file permissions and most, if not all, of the pgadmin4 files and directories need to be assigned to `www-data` to work correctly. Also, be sure that paths have the correct Python version since operating system upgrades may result in the minor Python version changing.
 
@@ -239,4 +209,35 @@ For the purposes of development or archiving it may be necessary to clone databa
 UPDATE pg_database SET datallowconn = false WHERE datname = 'masim';
 CREATE DATABASE development WITH TEMPLATE masim OWNER sim;
 UPDATE pg_database SET datallowconn = false WHERE datname = 'masim';
+```
+
+
+## Performance Tuning
+
+The following settings from [PGTune](https://pgtune.leopard.in.ua/) where applied to the server:
+
+```ini
+# DB Version: 11
+# OS Type: linux
+# DB Type: dw
+# Total Memory (RAM): 32 GB
+# CPUs num: 8
+# Connections num: 100
+# Data Storage: san
+
+max_connections = 100
+shared_buffers = 8GB
+effective_cache_size = 24GB
+maintenance_work_mem = 2GB
+checkpoint_completion_target = 0.9
+wal_buffers = 16MB
+default_statistics_target = 500
+random_page_cost = 1.1
+effective_io_concurrency = 300
+work_mem = 10485kB
+min_wal_size = 4GB
+max_wal_size = 8GB
+max_worker_processes = 8
+max_parallel_workers_per_gather = 4
+max_parallel_workers = 8
 ```
