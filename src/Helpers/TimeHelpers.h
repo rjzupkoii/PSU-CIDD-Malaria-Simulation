@@ -1,9 +1,10 @@
-//
-// Created by Nguyen Tran on 6/21/18.
-//
-
-#ifndef PCMS_TIMEHELPERS_H
-#define PCMS_TIMEHELPERS_H
+/*
+ * TimeHelpers.h
+ *
+ * Defines and implements the static TimeHelpers class which contains some useful functions for working with dates
+ */
+#ifndef TIMEHELPERS_H
+#define TIMEHELPERS_H
 
 #include <sstream>
 #include "date/date.h"
@@ -14,43 +15,43 @@ inline std::ostream &operator<<(std::ostream &stream, const date::sys_days &o_da
 }
 
 class TimeHelpers {
- public:
-  static int number_of_days(
-      const int &y1, const unsigned int &m1, const unsigned int &d1,
-      const int &y2, const unsigned int &m2, const unsigned int &d2);
+  public:
+    static int number_of_days(const date::sys_days &first, const date::sys_days &last);
 
-  static int number_of_days(const date::sys_days &first, const date::sys_days &last);
+    static int number_of_days_to_next_year(const date::sys_days &today);
 
-  template<typename T>
-  static T convert_to(const std::string &input);
+    static int get_simulation_time_birthday(const int &days_to_next_birthday, const int &age, const date::sys_days &starting_day);
 
-  static int number_of_days_to_next_year(const date::sys_days &today);
+    static int day_of_year(const date::sys_days &day);
 
-  static int get_simulation_time_birthday(const int &days_to_next_birthday, const int &age, const date::sys_days &
-  starting_day);
+    // Return true if the given year is a leap year, false otherwise.
+    static bool is_leap_year(const int year) {
+      return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+    }
 
-  static int day_of_year(const int &y, const unsigned &m, const unsigned &d);
+    static unsigned int days_in_month(const int year, const int month) {
+      if (month == 4 || month == 6 || month == 9 || month == 11) {
+        // Thirty days has September,
+        // April, June, and November,
+        return 30;
+      } else if (month != 2) {
+        // All the rest have thirty-one,
+        return 31;
+      }
 
-  static int day_of_year(const date::sys_days &day);
+      // But February's twenty-eight,
+      if (!is_leap_year(year)) {
+        return 28;
+      }
 
+      // The leap year, which comes once in four,
+      // Gives February one day more.
+      return 29;
+    }
 };
-
-inline int TimeHelpers::number_of_days(const int &y1, const unsigned int &m1, const unsigned int &d1, const int &y2,
-                                       const unsigned int &m2, const unsigned int &d2) {
-  using namespace date;
-  return (sys_days{year{y2}/month{m2}/day{d2}} - sys_days{year{y1}/month{m1}/day{d1}}).count();
-}
 
 inline int TimeHelpers::number_of_days(const date::sys_days &first, const date::sys_days &last) {
   return (last - first).count();
-}
-
-template<typename T>
-T TimeHelpers::convert_to(const std::string &input) {
-  T result{};
-  std::stringstream ss(input);
-  date::from_stream(ss, "%Y/%m/%d", result);
-  return result;
 }
 
 inline int TimeHelpers::number_of_days_to_next_year(const date::sys_days &today) {
@@ -68,18 +69,9 @@ inline int TimeHelpers::get_simulation_time_birthday(const int &days_to_next_bir
 
 }
 
-inline int TimeHelpers::day_of_year(const int &y, const unsigned &m, const unsigned &d) {
-  using namespace date;
-
-  if (m < 1 || m > 12 || d < 1 || d > 31) return 0;
-
-  return (sys_days{year{y}/month{m}/day{d}} -
-      sys_days{year{y}/jan/0}).count();
-}
-
 inline int TimeHelpers::day_of_year(const date::sys_days &day) {
   date::year_month_day ymd{day};
   return number_of_days(date::sys_days{ymd.year()/1/0}, day);
 }
 
-#endif //PCMS_TIMEHELPERS_H
+#endif

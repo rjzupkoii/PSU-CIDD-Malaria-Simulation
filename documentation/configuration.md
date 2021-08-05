@@ -231,24 +231,26 @@ events:
 **rate** (float) : the rate of reduction in the coverage for the cells.
 
 #### importation_periodically_random_event
-(*Version 4.0*) Introduce a new malaria infection into the model at a random location, which has been selected using a draw that is weighted by the population. After the initial event, it will be rescheduled every *n* days based upon the periodicity.
+(*Version 4.1*) Over the course of the month indicated (January:1 - December:12) introduce the infection into the model at a random location, selected by a draw that is weighted by the population. Each day an infection is introduced based upon a uniform draw against `count / [days in month]`. Once started, this event continues until model termination.
 
 ```YAML
 events:
   - name: importation_periodically_random_event
     info:
-      - day: 2020/10/26
+      - day: 2021/08/01
         genotype_id: 1
-        periodicity: 30
-      - day: 2020/10/26
+        count: 10
+        log_parasite_density: 4.301
+      - day: 2021/09/01
         genotype_id: 2
-        periodicity: 365
+        count: 20
+        log_parasite_density: 3.0
 ```
 
-**day** (date string, YYYY/mm/dd) : the date when the first event will occur. \
-**genotype_id** (int) : the id of the genotype to be introduced. \
-**log_parasite_density** (double) : the log density of the parasite to be imported. \
-**periodicity** (int) : the number of days between events after the first one.
+**day** (date string, YYYY/mm/01) : The first day of the month for which the event will occur. \
+**genotype_id** (int) : The id of the genotype to be introduced. \
+**count** (int) : The number of cases to be introduced in the month. \
+**log_parasite_density** (double) : the log density of the parasite to be imported. 
 
 #### turn_off_mutation
 Turn off all mutations in the model, recommended during the model burn-in.

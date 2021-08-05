@@ -281,19 +281,31 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
       auto start_date = node[ndx]["day"].as<date::year_month_day>();
       auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
       auto genotype_id = node[ndx]["genotype_id"].as<int>();
-      auto periodicity = node[ndx]["periodicity"].as<int>();
+      auto count = node[ndx]["count"].as<int>();
       auto log_parasite_density = node[ndx]["log_parasite_density"].as<double>();
+
+      // Check to make sure the date is valid
+      if (start_date.day() != date::day{1}) {
+        LOG(ERROR) << "Event must start on the first of the month for " << ImportationPeriodicallyRandomEvent::EventName;
+        throw std::invalid_argument("Event must start on the first of the month");
+      }
 
       // Double check that the genotype id is valid
       if (genotype_id < 0) {
         LOG(ERROR) << "Invalid genotype id supplied for " << ImportationPeriodicallyRandomEvent::EventName 
-                  << " genotype id cannot be less than zero";
+                   << " genotype id cannot be less than zero";
         throw std::invalid_argument("Genotype id cannot be less than zero");
       }
       if (genotype_id >= Model::CONFIG->genotype_db()->size()) {
         LOG(ERROR) << "Invalid genotype id supplied for " << ImportationPeriodicallyRandomEvent::EventName 
-                  << " genotype id cannot be greater than " << Model::CONFIG->genotype_db()->size() - 1;
+                   << " genotype id cannot be greater than " << Model::CONFIG->genotype_db()->size() - 1;
         throw std::invalid_argument("Genotype id cannot be greater than genotype_db size");
+      }
+
+      // Make sure the count makes sense
+      if (count < 1) {
+        LOG(ERROR) << "The count of importations must be greater than zero for " << ImportationPeriodicallyRandomEvent::EventName;
+        throw std::invalid_argument("Count must be greater than zero");
       }
 
       // Make sure the log parasite density makes sense
@@ -304,7 +316,7 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
       }
 
       // Log and add the event to the queue
-      auto* event = new ImportationPeriodicallyRandomEvent(genotype_id, time, periodicity, log_parasite_density);
+      auto* event = new ImportationPeriodicallyRandomEvent(genotype_id, time, count, log_parasite_density);
       VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", genotype_id: " << genotype_id << ", log_parasite_density: " << log_parasite_density;
       events.push_back(event);
     }
