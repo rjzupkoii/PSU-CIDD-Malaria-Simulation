@@ -1,7 +1,7 @@
 /*
- * SpaitalData.cpp
+ * SpatialData.cpp
  * 
- * Implemention of SpatialData functions.
+ * Implementation of SpatialData functions.
  */
 #include "SpatialData.h"
 
@@ -148,17 +148,41 @@ int SpatialData::get_district_count() {
     if (district_count != 0) { return district_count; }
 
     // Determine the count
+    auto first = INT_MAX;
     for (auto ndx = 0; ndx <  data[SpatialFileType::Districts]->NROWS; ndx++) {
         for (auto ndy = 0; ndy <  data[SpatialFileType::Districts]->NCOLS; ndy++) {
             if ( data[SpatialFileType::Districts]->data[ndx][ndy] ==  data[SpatialFileType::Districts]->NODATA_VALUE) { continue; }
             if ( data[SpatialFileType::Districts]->data[ndx][ndy] > district_count) {
                 district_count = data[SpatialFileType::Districts]->data[ndx][ndy];
             }
+
+            // Update the label for the first index
+            if (data[SpatialFileType::Districts]->data[ndx][ndy] < first) {
+              first = data[SpatialFileType::Districts]->data[ndx][ndy];
+            }
         }
     }
 
+    // Verify that the first index is zero or one
+    if (!(first == 0 || first == 1)) {
+      LOG(ERROR) << "Index of first district must be zero or one, found " << first;
+      throw std::invalid_argument("District raster must be zero or one indexed.");
+    }
+    first_district = first;
+
     // Return the result
     return district_count;
+}
+
+int SpatialData::get_first_district() {
+  // Do we already have a value, implied by a district count
+  if (district_count != 0) {
+    return first_district;
+  }
+
+  // Generate the district count and first district index
+  get_district_count();
+  return first_district;
 }
 
 SpatialData::RasterInformation SpatialData::get_raster_header() {

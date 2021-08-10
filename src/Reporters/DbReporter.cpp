@@ -15,9 +15,7 @@
 #include "Model.h"
 #include "Population/ClonalParasitePopulation.h"
 #include "Population/Population.h"
-#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
-#include "GIS/SpatialData.h"
 
 // Macro to check to see if a value is NAN, report if it is, and update the value as needed
 #define check_nan(value) if (std::isnan(value)) VLOG(1) << "NaN caught: " << #value; value = std::isnan(value) ? 0 : value;
@@ -155,7 +153,7 @@ void DbReporter::prepare_replicate(pqxx::connection* connection) {
     }
 
     // Insert the replicate into the database
-    std::string query = fmt::format(INSERT_REPLICATE, config_id, Model::RANDOM->seed(), movement);
+    std::string query = fmt::format(INSERT_REPLICATE, config_id, Model::RANDOM->seed(), movement, get_genotype_level());
     pqxx::work db(*connection);
     pqxx::result result = db.exec(query);
     replicate = result[0][0].as<int>();

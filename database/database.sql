@@ -301,14 +301,14 @@ ALTER TABLE sim.genotype OWNER to sim;
 CREATE TABLE sim.monthlygenomedata
 (
     monthlydataid integer NOT NULL,
-    locationid integer NOT NULL,
+    location integer NOT NULL,
     genomeid integer NOT NULL,
     occurrences integer NOT NULL,
     clinicaloccurrences integer NOT NULL,
     occurrences0to5 integer NOT NULL,
     occurrences2to10 integer NOT NULL,
     weightedoccurrences double precision NOT NULL,
-    CONSTRAINT monthlygenomedata_pkey PRIMARY KEY (monthlydataid, genomeid, locationid),
+    CONSTRAINT monthlygenomedata_pkey PRIMARY KEY (monthlydataid, genomeid, location),
     CONSTRAINT monthlygenomedata_genotypeid_fk FOREIGN KEY (genomeid)
         REFERENCES sim.genotype (id) MATCH SIMPLE
         ON UPDATE NO ACTION
