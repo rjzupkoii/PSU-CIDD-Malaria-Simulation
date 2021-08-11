@@ -1,9 +1,11 @@
 
 # MaSim Configuration File
 
-### Introduction
+# Introduction
 
-The malaria simulation (MaSim) uses [YAML](https://yaml.org/) to load configuration settings for the simulation. While the configuration was previously forward compatible (i.e., older files would work with newer versions) With the transition to version 4.0 new nodes were added or deprecated that have resulted in a divergence between 3.x and 4.0 onwards. While the absence of nodes implies version 4.0 or greater, care should be taken to ensure it is clear which version a given configuration is intended for.
+The malaria simulation (MaSim) uses [YAML](https://yaml.org/) to load configuration settings for the simulation. While the configuration was previously forward compatible (i.e., older files would work with newer versions), with the transition to version 4.0 new nodes were added or deprecated that have resulted in a divergence between 3.x and 4.0 onwards. While the absence of nodes implies version 4.0 or greater, care should be taken to ensure it is clear which version a given configuration is intended for.
+
+As a matter of convention, the YAML key is generally indicated with **bold** text. The data type (e.g., integer, string, etc.) or the possible values are indicated in parentheses following the key name. If there is a default value, then it will be given in _italic_ text. Generally this document is organized such that keys are organized by operational impact upon the simulation, followed by simple key-value pairs as the first entry in each section, followed by more complex entities as subheadings.   
 
 # Nodes
 
@@ -22,12 +24,13 @@ The following nodes contain the settings for the simulation.
 **number_of_age_classes** (integer) : The size of the `age_structure` array.\
 **age_structure** : An array of integer values that corresponds to the oldest age that defines a break in the age structure.
 
+## Simulation Geography
 
 ### raster_db
-*Version 4.0* This node contains data related to the the spatial organization of the model to include population distributions and raster files.
+*Version 4.0* This node contains data related to the spatial organization of the model to include population distributions and raster files.
 
 *Usage*\
-The use of the `raster_db` node will override the use of the `location_db` and errors or inconsistences will occurs if both are used at the same time. All of the raster files must have the same header information as defined in the [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm) and the same number of defined pixels. A `std::runtime_error` may be generated if the number of data pixels in a given raster exceeds, or is less than a previously loaded raster.
+The use of the `raster_db` node will override the use of the `location_db` and errors or inconsistencies will occur if both are used at the same time. All the raster files must have the same header information as defined in the [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm) and the same number of defined pixels. A `std::runtime_error` may be generated if the number of data pixels in a given raster exceeds, or is less than a previously loaded raster.
 
 Note that while any arbitrary value may be used for the `NODATA_VALUE` it is recommended that the standard value of `-9999` be used.
 
@@ -88,8 +91,12 @@ seasonal_info:
 &nbsp;*Version 4.0*: if `raster` is true then each index in the array is used for the pixel coded with that value, otherwise the first value is used for all pixels.\
 **period** : the number of days defined by the period.
 
+## Individual Immunity and Infection Response
+
+**allow_new_coinfection_to_cause_symtoms** (_true_ | false) : Flag to indicate if an asymptomatic host that is bitten and infected by a new parasite clone may present with new symptoms. Note the spelling of `symtoms` in the configuration.\
+
 ### parasite_density_level
-The `parasite_density_level` setting contains several sub-values that govern indivdiual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per μl is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/μl) while 50 per μl is the lower bounds for detection under field conditions (50 - 100 parasites/μl) ([Wongsrichanalai et al. 2007](#Wongsrichanalai2007)). Generally, a higher detection limit for the <em>Pf</em>PR will require a higher tranmission for a given <em>Pf</em>PR than a lower detection level. 
+The `parasite_density_level` setting contains several sub-values that govern individual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per μl is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/μl) while 50 per μl is the lower bounds for detection under field conditions (50 - 100 parasites/μl) ([Wongsrichanalai et al. 2007](#Wongsrichanalai2007)). Generally, a higher detection limit for the <em>Pf</em>PR will require a higher transmission for a given <em>Pf</em>PR than a lower detection level. 
 
 ```YAML
 parasite_density_level:
@@ -104,16 +111,15 @@ parasite_density_level:
   log_parasite_density_pyrogenic:       3.398    # corresponds to 2,500 parasites per microliter of blood
 ```
 
-**log_parasite_density_cured** (double) : When an indivdiual is considered to be **cured** of a specific parasite colony. \
-**log_parasite_density_from_liver** (double) : Governs the lower bound for the number of parasites following the inital infection. \
-**log_parasite_density_asymptomatic** (double) : Thereshold at which an indivdiual is asymtomatic of malaria. \
+**log_parasite_density_cured** (double) : When an individual is considered to be **cured** of a specific parasite colony. \
+**log_parasite_density_from_liver** (double) : Governs the lower bound for the number of parasites following the initial infection. \
+**log_parasite_density_asymptomatic** (double) : Threshold at which an individual is asymptomatic of malaria. \
 **log_parasite_density_clinical** (double) : Governs the upper bound for the number of parasites following the initial infection. \
-**log_parasite_density_clinical_from** (double) : Governs the lower bound of parasites that an indivdiual may be inflicted with when progressing to clinical via the `ProgressToClinicalEvent` event. \
-**log_parasite_density_clinical_to** (double) : Governs the upper bound of parasites that an indivdiual may be inflicted with when progressing to clinical via the `ProgressToClinicalEvent` event. \
-**log_parasite_density_detectable** (double) : Sets the threshold for the number of parasties that an indivdiual may have present in their blood when tested to check if the perscribed treatment failed. \
-**log_parasite_density_detectable_pfpr** (double) : Sets the threshold for the number of parasites that an indivdual may have present in their blood when tested to see if a _detectable_ level is presented. This value is used to inform calculations for the <em>Pf</em>PR in the simuation. \
+**log_parasite_density_clinical_from** (double) : Governs the lower bound of parasites that an individual may be inflicted with when progressing to clinical via the `ProgressToClinicalEvent` event. \
+**log_parasite_density_clinical_to** (double) : Governs the upper bound of parasites that an individual may be inflicted with when progressing to clinical via the `ProgressToClinicalEvent` event. \
+**log_parasite_density_detectable** (double) : Sets the threshold for the number of parasites that an individual may have present in their blood when tested to check if the prescribed treatment failed. \
+**log_parasite_density_detectable_pfpr** (double) : Sets the threshold for the number of parasites that an individual may have present in their blood when tested to see if a _detectable_ level is presented. This value is used to inform calculations for the <em>Pf</em>PR in the simulation. \
 **log_parasite_density_pyrogenic** (double) : (**UNUSED**) Sets the threshold for when fever may present as a symptom.
-
 
 ### immune_system_information
 The `immune_system_information` node contains parameters that are used to control the response of the individual immune system and is one of the mechanisms by which the simulation can be calibrated to match a given country.  
@@ -156,13 +162,14 @@ immune_system_information:
 **max_clinical_probability** (double) : Maximum probability of clinical symptoms as a result of a new infection. \
 **immune_inflation_rate** (double) : Yearly age-dependent faster acquisition of immunity between ages 1 to 10. \
 **age_mature_immunity** (double) : Age at which the immune function is mature, i.e., age at which the immune acquisition model switches from child to adult. \
-**factor_effect_age_mature_immunity** (double) :  Adjustment to the curve of immune acquiziatoin under the age indicated by `age_mature_immunity`, parameter kappa in supplement to Nguyen et al. (2015). \
+**factor_effect_age_mature_immunity** (double) :  Adjustment to the curve of immune acquisition under the age indicated by `age_mature_immunity`, parameter kappa in supplement to Nguyen et al. (2015). \
 **immune_effect_on_progression_to_clinical** (double) : Slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)). \
 **midpoint** (double) : (*Version 4.0*) Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)).
 
+## Treatments
 
 ### drug_db
-This setting is used to configure the various drugs used in the configuration and is structured as an array of drugs, which contain the specific setting for that particular compound. **Note** that while the simuation assumes that the compounds will be ordered from 0 to *n*, it is the reponsilbity of the user to ensure that they are assigned and ordered correctly.
+This setting is used to configure the various drugs used in the configuration and is structured as an array of drugs, which contain the specific setting for that particular compound. **Note** that while the simulation assumes that the compounds will be ordered from 0 to *n*, it is the responsibility of the user to ensure that they are assigned and ordered correctly.
 
 ```YAML
 drug_db:
@@ -185,24 +192,24 @@ drug_db:
 **name** (string) : The name of the compound. \
 **half_life** (double) : The compound's half-life in the body, in days. \
 **maximum_parasite_killing_rate** (double) : The percentage of parasites that the compound will kill in one day if an individual has the highest possible drug concentration. \
-**n** (integer) : The slope of the linear porition of the concentration-effect curve. \
-**age_specific_drug_concentration_sd** (double array) : The actual drug concentration, per individual, that will be drawn from a normal distribution with an mean of one and this standard deviation. \
+**n** (integer) : The slope of the linear portion of the concentration-effect curve. \
+**age_specific_drug_concentration_sd** (double array) : The actual drug concentration, per individual, that will be drawn from a normal distribution with a mean of one and this standard deviation. \
 **age_specific_drug_absorption** (double array) : (*Version 4.0*) The percentage of the drug that is absorbed into the bloodstream, based upon the age of the individual. When not supplied the default value is one for all age groups. \
-**mutation_probability** (double) : The probablity that exposure to the drug will result in a muatation in the parasite to resist it. \
-**affecting_loci** (integer array) : The index of the loci of alleles where drug resistnace may form (see [genotype_info](#genotype_info)). \
+**mutation_probability** (double) : The probability that exposure to the drug will result in a mutation in the parasite to resist it. \
+**affecting_loci** (integer array) : The index of the loci of alleles where drug resistance may form (see [genotype_info](#genotype_info)). \
 **selecting_alleles** (integer matrix) : The index of the alleles where drug resistance may form (see [genotype_info](#genotype_info)). \
-**k** (double) : Controls the change in the mutation probability when drug levels are intermediate. For example, k=0.5 is a simple linear model where mutation probability decreases linearly with drug concentration; where as k=2 or k=4 are a piecewise-linear model where mutation probability increases from high concentrations to intermediate concentrations, and then decreases linearly from intermediate concentrations to zero. \
-**EC50** (array of key-value pairs) : The drug concentration which produces 50% of the parasite killing achieved at maximum-concentration, format is is a string that descives the relevent genotypes (see [genotype_info](#genotype_info)), followed by the concentration where 1.0 is the expected starting concentration.
+**k** (double) : Controls the change in the mutation probability when drug levels are intermediate. For example, k=0.5 is a simple linear model where mutation probability decreases linearly with drug concentration; whereas k=2 or k=4 are a piecewise-linear model where mutation probability increases from high concentrations to intermediate concentrations, and then decreases linearly from intermediate concentrations to zero. \
+**EC50** (array of key-value pairs) : The drug concentration which produces 50% of the parasite killing achieved at maximum-concentration, format is a string that describes the relevant genotypes (see [genotype_info](#genotype_info)), followed by the concentration where 1.0 is the expected starting concentration.
 
+## Genotype Information
 
 ### genotype_info<a name="genotype_info"></a>
 To Be Written.
 
+## events
+This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all the data for the `info` field following will be provided to the loader function.
 
-# events
-This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all of the data for the `info` field following will be provided to the loader function.
-
-#### annual_beta_update_event
+### annual_beta_update_event
 (*Version 4.0*) The annual beta update event increases or decreases the beta for each cell in the model using the formula `beta' = beta + (beta * rate)` and clamps the lower bounds for the beta a zero. 
 
 ```YAML
@@ -216,7 +223,7 @@ events:
 **day** (date string, YYYY/mm/dd) : the date when the update will first occur. \
 **rate** (float) : the rate of change for the beta for the cells.
 
-#### annual_coverage_update_event 
+### annual_coverage_update_event 
 (*Version 4.0*) The annual coverage update event increases the coverage for each cell in the model by reducing the coverage gap by a fixed value provided by rate. If the model is run for a long enough period of time, the presumption should be that the coverage will reach 100%.
 
 ```YAML
@@ -230,7 +237,7 @@ events:
 **day** (date string, YYYY/mm/dd) : the date when the update will first occur. \
 **rate** (float) : the rate of reduction in the coverage for the cells.
 
-#### importation_periodically_random_event
+### importation_periodically_random_event
 (*Version 4.1*) Over the course of the month indicated (January:1 - December:12) introduce the infection into the model at a random location, selected by a draw that is weighted by the population. Each day an infection is introduced based upon a uniform draw against `count / [days in month]`. Once started, this event continues until model termination.
 
 ```YAML
@@ -281,7 +288,7 @@ events:
 **mutation_probability** (float) : the mutation probability to use.
 
 #### update_ecozone_event
-(*Version 4.0*) Update all of the cells matching the original ecozone to the new ecozone.
+(*Version 4.0*) Update all the cells matching the original ecozone to the new ecozone.
 
 ```YAML
 events:
@@ -296,7 +303,7 @@ events:
 **from** (integer) : the id of the ecozone, defined in `seasonal_info`, that is the original ecozone. \
 **to** (integer) : the id of the new ecozone, defined in `seasonal_info`, that will be applied to matching cells.
 
-## References
+# References
 <a name="Nguyen2015"></a>Nguyen, TD, Olliaro, P, Dondorp, AM, Baird, JK, Lam, HM, Farrar, J, Thwaites, GE, White, NJ, & Boni, MF. (2015). Optimum population-level use of artemisinin combination therapies: A modelling study. *The Lancet Global Health*, 3(12), e758–e766. https://doi.org/10.1016/S2214-109X(15)00162-X
 
 <a name="Wongsrichanalai2007"></a>Wongsrichanalai C, Barcus MJ, Muth S, et al. A Review of Malaria Diagnostic Tools: Microscopy and Rapid Diagnostic Test (RDT) In: Breman JG, Alilio MS, White NJ, editors. Defining and Defeating the Intolerable Burden of Malaria III: Progress and Perspectives: Supplement to Volume 77(6) of American Journal of Tropical Medicine and Hygiene. Northbrook (IL): American Society of Tropical Medicine and Hygiene; 2007 Dec. Available from: https://www.ncbi.nlm.nih.gov/books/NBK1695/
