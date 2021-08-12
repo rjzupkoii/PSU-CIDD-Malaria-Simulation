@@ -56,7 +56,7 @@ class DbReporter : public Reporter {
     int replicate;
 
     // Prepare a connection to the database, pointer returned must be deleted
-    pqxx::connection* get_connection();
+    pqxx::connection* get_connection() const;
 
     // Reporter specific
     bool do_monthly_report();

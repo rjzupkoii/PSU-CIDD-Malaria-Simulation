@@ -23,7 +23,7 @@
 // Macro to check if a value is infinite, report if it is, and update the value as needed
 #define check_inf(value) if (std::isinf(value)) VLOG(1) << "Inf caught " << #value; value = std::isinf(value) ? -9999 : value;
 
-pqxx::connection* DbReporter::get_connection() {
+pqxx::connection* DbReporter::get_connection() const {
     // Getting a connection is straightforward, so this function is largely intended warp retry functionality
     int retry_count = 0;
 
@@ -90,7 +90,7 @@ void DbReporter::prepare_configuration(pqxx::connection* connection) {
     // Check for a MD5 collision (unlikely given use case)
     if (result.size() > 1) {
         LOG(ERROR) << "MD5 hash collision adding the configuration file!";
-        throw new std::runtime_error("MD5 hash collision");
+        throw std::runtime_error("MD5 hash collision");
     }
 
     // Prepare the correct query depending on if there is a raster or not
@@ -120,10 +120,10 @@ void DbReporter::prepare_configuration(pqxx::connection* connection) {
 
     // Prepare the loader query
     query = "";
-    for (unsigned int ndx = 0; ndx < Model::CONFIG->number_of_locations(); ndx++) {
+    for (auto ndx = 0; ndx < Model::CONFIG->number_of_locations(); ndx++) {
         auto location = Model::CONFIG->location_db()[ndx];
-        auto x = (int)location.coordinate.get()->latitude;
-        auto y = (int)location.coordinate.get()->longitude;
+        auto x = (int)location.coordinate->latitude;
+        auto y = (int)location.coordinate->longitude;
 
         if (districts) {
             auto district = SpatialData::get_instance().get_district(ndx);
@@ -159,7 +159,7 @@ void DbReporter::prepare_replicate(pqxx::connection* connection) {
     replicate = result[0][0].as<int>();
 
     // Load the location information
-    int locations = Model::CONFIG->number_of_locations();
+    auto locations = Model::CONFIG->number_of_locations();
     location_index = new int[locations];
     pqxx::result results = db.exec(fmt::format(SELECT_LOCATION, config_id));
     for (auto ndx = 0; ndx < locations; ndx++) {
@@ -187,7 +187,7 @@ void DbReporter::monthly_report() {
 
     // Something went wrong, make sure it is in the logs and end the simulation
     LOG(ERROR) << "Unable to perform monthly report action after " << attempt << " attempts!";
-    LOG(ERROR) << "Model timestep: " << Model::SCHEDULER->current_time();
+    LOG(ERROR) << "Model time step: " << Model::SCHEDULER->current_time();
     std::cerr << "FATAL ERROR: unable to commit monthly report!";
     exit(-1);
 }
@@ -235,9 +235,7 @@ bool DbReporter::do_monthly_report() {
     } catch (pqxx::broken_connection &ex) {
         // Connection was broken, clean up and return false
         LOG(WARNING) << "Connection to database broken!";
-        if (connection != nullptr) {
-            delete connection;
-        }
+        delete connection;
         return false;
     }
 }
@@ -253,7 +251,7 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
     std::vector<int> individual(genotypes, 0);
 
     // Cache some values
-    PersonIndexByLocationStateAgeClass* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+    auto* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
     auto age_classes = index->vPerson()[0][0].size();
 
     // Iterate over all the possible locations
@@ -271,16 +269,16 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
             for (unsigned int ac = 0; ac < age_classes; ac++) {
                 // Iterate over all the genotypes
                 auto age_class = index->vPerson()[location][hs][ac];
-                for (auto i = 0ull; i < age_class.size(); i++) {
+                for (auto& person : age_class) {
 
                     // Get the person, press on if they are not infected (i.e., no parasites)
-                    auto parasites = age_class[i]->all_clonal_parasite_populations()->parasites();
+                    auto parasites = person->all_clonal_parasite_populations()->parasites();
                     auto size = parasites->size();
                     if (size == 0) { continue; }
 
                     // Note the age and clinical status of the person
-                    auto age = age_class[i]->age();
-                    auto clinical = (int)(age_class[i]->host_state() == Person::HostStates::CLINICAL);
+                    auto age = person->age();
+                    auto clinical = (int)(person->host_state() == Person::HostStates::CLINICAL);
 
                     // Update count of infected individuals
                     infectedIndividuals += 1;
@@ -288,14 +286,14 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
                     // Count the genotypes present in the individuals
                     for (unsigned int ndx = 0; ndx < size; ndx++) {
                         auto parasite_population = (*parasites)[ndx];
-                        auto id = parasite_population->genotype()->genotype_id();
-                        occurrences[id]++;
-                        occurrencesZeroToFive[id] += (age <= 5);
-                        occurrencesTwoToTen[id] += (age >= 2 && age <= 10);
-                        individual[id]++;
+                        auto genotype_id = parasite_population->genotype()->genotype_id();
+                        occurrences[genotype_id]++;
+                        occurrencesZeroToFive[genotype_id] += (age <= 5);
+                        occurrencesTwoToTen[genotype_id] += (age >= 2 && age <= 10);
+                        individual[genotype_id]++;
                     
                         // Count a clinical occurrence if the individual has clinical symptoms
-                        clinicalOccurrences[id] += clinical;
+                        clinicalOccurrences[genotype_id] += clinical;
                     }
 
                     // Update the weighted occurrences and reset the individual count
@@ -330,7 +328,7 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
 
 // Iterate over all the sites and prepare the query for the site specific data
 void DbReporter::monthly_site_data(int id, std::string &query) {
-    for (unsigned int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+    for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
         // Check the population, if there is nobody there, press on
         if (Model::DATA_COLLECTOR->popsize_by_location()[location] == 0) {
             continue;
@@ -376,7 +374,7 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
 
 void DbReporter::update_infected_individuals(int id, std::string &query) {
     // Cache some values
-    PersonIndexByLocationStateAgeClass* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+    auto* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
     auto age_classes = index->vPerson()[0][0].size();
 
     // Iterate overall of the possible locations
@@ -389,10 +387,10 @@ void DbReporter::update_infected_individuals(int id, std::string &query) {
             for (unsigned int ac = 0; ac < age_classes; ac++) {
                 // Iterate over all the genotypes
                 auto age_class = index->vPerson()[location][hs][ac];
-                for (auto i = 0ull; i < age_class.size(); i++) {
+                for (auto& person : age_class) {
 
                     // Update the count if the individual is infected
-                    if (age_class[i]->all_clonal_parasite_populations()->parasites()->size() > 0) {
+                    if (!person->all_clonal_parasite_populations()->parasites()->empty()) {
                         infected_individuals++;
                     }
                 }
@@ -406,7 +404,7 @@ void DbReporter::update_infected_individuals(int id, std::string &query) {
 
 void DbReporter::after_run() {
     // Report that we are done
-    pqxx::connection* connection = new pqxx::connection(Model::CONFIG->connection_string());
+    auto* connection = new pqxx::connection(Model::CONFIG->connection_string());
     pqxx::work db(*connection);
     db.exec(fmt::format(UPDATE_REPLICATE, replicate));
     db.commit();
