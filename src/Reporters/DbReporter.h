@@ -31,12 +31,7 @@ class DbReporter : public Reporter {
     "INSERT INTO sim.Location (ConfigurationId, Index, X, Y, Beta, District) VALUES ({}, {}, {}, {}, {}, {});";
 
     const std::string INSERT_REPLICATE = 
-    "INSERT INTO replicate (ConfigurationId, Seed, StartTime, Movement, GenotypeLevel) VALUES ({}, {}, now(), '{}', '{}') RETURNING id;";
-
-    const std::string INSERT_SITE = 
-    "INSERT INTO sim.MonthlySiteData "
-    "(MonthlyDataId, LocationId, Population, ClinicalEpisodes, Treatments, EIR, PfPrUnder5, PfPr2to10, PfPrAll, TreatmentFailures, NonTreatment) "
-    "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});";
+    "INSERT INTO replicate (ConfigurationId, Seed, StartTime, Movement, AggregationLevel) VALUES ({}, {}, now(), '{}', '{}') RETURNING id;";
 
     const std::string SELECT_CONFIGURATION =
     "SELECT id FROM sim.Configuration WHERE md5 = md5({}) AND filename = {};";
@@ -68,7 +63,6 @@ class DbReporter : public Reporter {
     void update_infected_individuals(int id, std::string &query);
     void prepare_configuration(pqxx::connection* connection);
     void prepare_replicate(pqxx::connection* connection);
-    void monthly_site_data(int id, std::string &query);
 
   protected:
     const std::string INSERT_GENOTYPE_PREFIX =
@@ -77,8 +71,13 @@ class DbReporter : public Reporter {
     // To be appended to INSERT_GENOTYPE_PREFIX, note that the last character must be replaced with a semicolon
     const std::string INSERT_GENOTYPE_ROW = "({}, {}, {}, {}, {}, {}, {}, {}),";
 
+    const std::string INSERT_SITE =
+    "INSERT INTO sim.MonthlySiteData "
+    "(MonthlyDataId, Location, Population, ClinicalEpisodes, Treatments, EIR, PfPrUnder5, PfPr2to10, PfPrAll, TreatmentFailures, NonTreatment) "
+    "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});";
+
     const std::string UPDATE_INFECTED_INDIVIDUALS =
-    "UPDATE sim.MonthlySiteData SET InfectedIndividuals = {} WHERE MonthlyDataId = {} AND LocationId = {};";
+    "UPDATE sim.MonthlySiteData SET InfectedIndividuals = {} WHERE MonthlyDataId = {} AND Location = {};";
 
     // Used to track location information for the life of the object
     int* location_index;
@@ -87,6 +86,7 @@ class DbReporter : public Reporter {
     virtual char get_genotype_level() { return 'C'; }
 
     virtual void monthly_genome_data(int id, std::string &query);
+    virtual void monthly_site_data(int id, std::string &query);
 
   public:
     DbReporter() = default;

@@ -41,7 +41,7 @@ pqxx::connection* DbReporter::get_connection() {
         }
     }
 
-    std::cerr << "FATAL ERROR: unable to commit to the database after " << retry_count << " tries!";
+    LOG(ERROR) << "Unable to commit to the database after " << retry_count << " tries!";
     LOG(ERROR) << "Unable to connect to database, giving up.";
     exit(-1);
 }
