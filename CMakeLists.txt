@@ -41,10 +41,6 @@ if (NOT BUILD_CLUSTER)
 endif()
 include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${ARGS_INCLUDE_DIR} ${EXT_PROJECTS_DIR}/CLI11)
 
-# Make sure date and args download and build before doing anything else, this really only impacts clean builds
-add_dependencies(date date)
-add_dependencies(args args)
-
 # Add the source subdirectory
 add_subdirectory(src)
 

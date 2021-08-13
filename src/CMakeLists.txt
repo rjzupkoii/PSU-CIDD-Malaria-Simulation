@@ -52,6 +52,7 @@ file(GLOB LIBRARY
 # Set the source files
 set(SRC_FILES ${SOURCE} ${LIBRARY})
 add_library(MaSimCore STATIC ${SRC_FILES})
+add_dependencies(MaSimCore date args)
 
 # Pull in date::date for the correct location if we are on not on WSL or are on the cluster
 if (NOT BUILD_WSL OR BUILD_CLUSTER)
