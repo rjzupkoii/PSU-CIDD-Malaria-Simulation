@@ -166,12 +166,13 @@ void handle_cli(Model *model, int argc, char **argv) {
     }
 
     // Check to if both --mc and --md are set, if so, generate an error
-    if (cell_movement == true && district_movement == true) {
+    if (cell_movement && district_movement == true) {
       std::cerr << "--mc and --md are mutual exclusive and may not be run together.\n";
       exit(EXIT_FAILURE);
     }
   }
   catch (const args::Help &e) {
+    std::cout << "MaSim v. " << VERSION << std::endl;
     std::cout << e.what() << parser;
     exit(EXIT_SUCCESS);
   }
