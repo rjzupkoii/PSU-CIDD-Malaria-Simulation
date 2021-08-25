@@ -63,6 +63,7 @@ Generally it is recomended to create a `build.sh` script that runs the build com
 To build the simulation to run on the ICDS-ACI the first time it is necessary to perform a number of configuration steps. After logging on to the interactive environment (`aci-b.aci.ics.psu.edu`) cloning this repository run `config.sh` which will prepare the build environment. As part of the process a build script will be created at `build/build.sh` that will ensure the environment is set correctly when run. 
 
 # Running
+## Local Runs
 The first step in performing a basic model check is load the genome data in the database, this must also be done whenever a new database is corrected:
 
 ```base
@@ -79,8 +80,43 @@ cd /build/bin
 
 Note that while care was taken in places to ensure the code is performant, the amount of RAM needed during execution can be quite high (ex., 32GB or more). When the model is run in Linux environments where the necessary memory is not available, you may find that the program is killed without notice due to being [out of memory](https://linux-mm.org/OOM_Killer).
 
-# Development Tools
+## Cluster Runs
+The [Roar Supercomputer Users' Guide](https://www.icds.psu.edu/computing-services/roar-user-guide/) providers a good overview for running single replicates on the cluster; however, when running batches it is recommended to script out the process. When replicates need to be run with a variety of settings (e.g., sensitivity analysis) some of the scripts present in [PSU-CIDD-MaSim-Support](https://github.com/bonilab/PSU-CIDD-MaSim-Support) under the `bash` directory can be used to parse a CSV formatted list of replicates to be run. In addition to the [`calibrationLib.sh`](https://github.com/bonilab/PSU-CIDD-MaSim-Support/tree/master/bash) file the support repository, the following files need to be created for this:
 
+1. A runner script which will be queued on the cluster as a job, typically named `run.sh` or similar in project repositories:
+```bash
+#!/bin/bash
+source ./calibrationLib.sh
+runReplicates 'replicates.csv' '[USERNAME]'
+```
+
+2. The Portable Batch System (PBS) file that defines the job for `run.sh`:
+```bash
+#!/bin/bash
+
+#PBS -A [ALLOCATION]
+#PBS -l nodes=1:ppn=1:rhel7:stmem
+#PBS -l pmem=4gb
+#PBS -l walltime=120:00:00
+
+#PBS -m ea
+
+cd $PBS_O_WORKDIR
+./run.sh
+```
+
+When defining the PBS file note the low memory usage (`pmem`) and high `walltime`. Since the job will only be responsible for running this script, only a limited amount of resources are needed. However, the total batch of jobs may run for quite some time, so the wall clock time is likely to be quite high. 
+
+3. The CSV file that defines the replicates to be run, where the first column is the PBS file for the replicate and the second column is the count:
+```CSV
+bfa-slow-no-asaq.job,1
+bfa-fast-no-asaq.job,1
+bfa-rapid.job,1
+```
+
+While the `runReplicates` command executes, the number of jobs per user account is limited to the `LIMIT` defined in `calibrationLib.sh` (99 by default). When the limit is reached the script will sleep and periodically awaken to check to see if more jobs can be queued.
+
+# Development Tools
 ## Isolating Segmentation Faults in Linux
 When developing new functionality in the model it is sometimes necessary to isolate segmentation faults. One of the easier ways to do this is through the use of `gdb` in a Linux environment. First, compile the program with the `debug` flag set, this will ensure that there are debug symbols in the binary. Then use `gdb` to open the gdb console:
 

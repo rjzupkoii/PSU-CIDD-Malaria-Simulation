@@ -1,7 +1,7 @@
 /*
  * SpatialData.h
  * 
- * Defitions of the thread-safe singleton pattern spatial class which manages the spatial aspects of the model from a high level. 
+ * Definitions of the thread-safe singleton pattern spatial class which manages the spatial aspects of the model from a high level.
  */
 #ifndef SPATIALDATA_H
 #define SPATIALDATA_H
@@ -21,7 +21,7 @@ class SpatialData {
             // Population data
             Population,
 
-            // Transimission intensity, linked to the Entomological Inoculation Rates (EIR)
+            // Transmission intensity, linked to the Entomological Inoculation Rates (EIR)
             Beta,
 
             // District location
@@ -83,8 +83,10 @@ class SpatialData {
         // written when we were using 5x5 km cells
         float cell_size = 0;
 
-        // Count of district loaded in the map, default zero, lazy initialization to actual value when 
-        // requested the first time
+        // First district index, default -1, lazy initialization to actual value
+        int first_district = -1;
+
+        // Count of district loaded in the map, default zero, lazy initialization to actual value
         int district_count = 0;
 
         // Constructor
@@ -102,7 +104,7 @@ class SpatialData {
         // Load the given raster file into the spatial catalog and assign the given label
         void load(std::string filename, SpatialFileType type);
 
-        // Load all of the spatial data from the node
+        // Load all the spatial data from the node
         void load_files(const YAML::Node &node);
 
         // Load the raster indicated into the location_db; works with betas and probability of treatment
@@ -133,7 +135,7 @@ class SpatialData {
         // Return true if a raster file has been loaded, false otherwise
         bool has_raster(SpatialFileType type) { return data[type] != nullptr; }
 
-        // Generate the Euclidian distances for the location_db
+        // Generate the Euclidean distances for the location_db
         void generate_distances();
 
         // Get the district id that corresponds to the cell id
@@ -142,16 +144,21 @@ class SpatialData {
         // Get the count of districts loaded, or -1 if they have not been loaded
         int get_district_count();
 
+        // Returns the index of the first district.
+        // Note that the index may be one (ArcGIS default) or zero; however, a delayed error is generated if the value
+        // is not one of the two.
+        int get_first_district();
+
         // Get a reference to the AscFile raster, may be a nullptr
         AscFile* get_raster(SpatialFileType type) { return data[type]; }
 
-        // Parse the YAML node provided to extract all of the relevent information for the simulation
+        // Parse the YAML node provided to extract all the relevant information for the simulation
         bool parse(const YAML::Node &node);
 
-        // Refresh the data from the model (i.e., Location DB) to the spaital data
+        // Refresh the data from the model (i.e., Location DB) to the spatial data
         void refresh();
 
-        // Write the current spaital data to the filename and path indicated, output will be an ASC file
+        // Write the current spatial data to the filename and path indicated, output will be an ASC file
         void write(std::string filename, SpatialFileType type);
 
 };

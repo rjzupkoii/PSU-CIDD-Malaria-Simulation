@@ -54,6 +54,7 @@ protected:
 
     // Reporter(s) with database dependency
     DB_REPORTER,
+    DB_REPORTER_DISTRICT,
     
     // Specialist reporters for specific experiments
     MOVEMENT_REPORTER,

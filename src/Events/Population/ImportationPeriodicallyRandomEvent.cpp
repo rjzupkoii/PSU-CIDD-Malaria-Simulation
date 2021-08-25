@@ -8,49 +8,65 @@
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "Core/Scheduler.h"
+#include "Helpers/TimeHelpers.h"
 #include "Model.h"
 #include "Population/ImmuneSystem.h"
-#include "Population/ClonalParasitePopulation.h"
 #include "Population/Population.h"
 #include "Population/Properties/PersonIndexAll.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 
 void ImportationPeriodicallyRandomEvent::execute() {
-  // Get the location and person index
-  int location = get_location();
-  auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
-  // Get the age classes for the suspetable individuals
-  unsigned long age_class = 0;
-  do {
-    age_class = Model::RANDOM->random_uniform(static_cast<unsigned long>(pi->vPerson()[location][Person::HostStates::SUSCEPTIBLE].size()));
-  } while (pi->vPerson()[location][0][age_class].empty()) ;
+  // Start by finding the number of infections to inflict
+  auto date = static_cast<date::year_month_day>(Model::SCHEDULER->calendar_date);
+  auto days = TimeHelpers::days_in_month(static_cast<int>(date.year()), static_cast<unsigned int>(date.month()));
+  auto infections = Model::RANDOM->random_poisson((double)count_ / days);
 
-  // Get the individual
-  unsigned long index = Model::RANDOM->random_uniform(pi->vPerson()[location][Person::HostStates::SUSCEPTIBLE][age_class].size());
-  auto* person = pi->vPerson()[location][Person::HostStates::SUSCEPTIBLE][age_class][index];
+  // Inflict the infections
+  for (auto ndx = 0; ndx < infections; ndx++) {
+    // Get the location and person index
+    auto location = get_location();
+    auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
-  // Inflict the infection
-  infect(person, genotypeId_);
+    // Get the age classes for the susceptible individuals
+    unsigned long age_class;
+    do {
+      age_class = Model::RANDOM->random_uniform(static_cast<unsigned long>(pi->vPerson()[location][Person::HostStates::SUSCEPTIBLE].size()));
+    } while (pi->vPerson()[location][0][age_class].empty()) ;
 
-  // Schedule the next time to run
-  auto time = scheduler->current_time() + periodicity_;
-  ImportationPeriodicallyRandomEvent* event = new ImportationPeriodicallyRandomEvent(genotypeId_, time, periodicity_, log_parasite_density_);
+    // Get the individual
+    unsigned long index = Model::RANDOM->random_uniform(pi->vPerson()[location][Person::HostStates::SUSCEPTIBLE][age_class].size());
+    auto* person = pi->vPerson()[location][Person::HostStates::SUSCEPTIBLE][age_class][index];
+
+    // Inflict the infection
+    infect(person, genotypeId_);
+
+    // Log on demand
+    VLOG(1) << date << " - Introduced infection at " << location;
+  }
+
+  // Minimum schedule update is one day
+  auto time = Model::SCHEDULER->current_time() + 1;
+  if (static_cast<unsigned int>(date.day()) == days) {
+    // If it is the last day of the month, schedule for the first of the month, next year
+    auto nextRun = date::year_month_day(date.year() + date::years{1}, date.month(), date::day{1});
+    time = (date::sys_days{nextRun} - date::sys_days{Model::CONFIG->starting_date()}).count();
+  }
+
+  // Generate and schedule the event
+  auto* event = new ImportationPeriodicallyRandomEvent(genotypeId_, time, count_, log_parasite_density_);
   scheduler->schedule_population_event(event);
-
-  // Log on demand
-  VLOG(1) << "Introduced infection at " << location;
 }
 
 // The following is based upon a fitness proportionate selection (roulette wheel selection) 
-int ImportationPeriodicallyRandomEvent::get_location() {
+std::size_t ImportationPeriodicallyRandomEvent::get_location() {
 
   // Note the common values
-  auto locations = Model::CONFIG->number_of_locations();  
+  auto locations = Model::CONFIG->number_of_locations();
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
   auto age_classes = pi->vPerson()[0][Person::HostStates::SUSCEPTIBLE].size();
 
-  // Start by finding the total suspetable population
+  // Start by finding the total susceptible population
   auto population = 0ul;
   for (std::size_t location = 0; location < locations; location++) {
     for (std::size_t age_class = 0; age_class < age_classes; age_class++) {
@@ -78,8 +94,8 @@ int ImportationPeriodicallyRandomEvent::get_location() {
   throw std::runtime_error("Failed to find a random location for genotype import");
 }
 
-void ImportationPeriodicallyRandomEvent::infect(Person* person, int genotypeId) {
-  // Prepare the immune system    
+void ImportationPeriodicallyRandomEvent::infect(Person* person, int genotypeId) const {
+  // Prepare the immune system
   person->immune_system()->set_increase(true);
   person->set_host_state(Person::ASYMPTOMATIC);
 

@@ -31,7 +31,7 @@ namespace {
 #endif
 
 // Version information
-const std::string VERSION = "4.0.1, development";
+const std::string VERSION = "4.1.0, development";
 
 // Settings read from the CLI
 int job_number = 0;
@@ -42,7 +42,7 @@ INITIALIZE_EASYLOGGINGPP
 void handle_cli(Model *model, int argc, char **argv);
 
 void config_logger() {
-  const std::string OUTPUT_FORMAT = "[%level] [%logger] [%host] [%func] [%loc] %msg";
+  const std::string OUTPUT_FORMAT = "[%level] [%func] [%loc] %msg";
 
   // Set global logging flags
   el::Loggers::addFlag(el::LoggingFlag::DisableApplicationAbortOnFatalLog);
@@ -54,9 +54,9 @@ void config_logger() {
   default_conf.set(el::Level::Error, el::ConfigurationType::Format, OUTPUT_FORMAT);
   default_conf.set(el::Level::Fatal, el::ConfigurationType::Format, OUTPUT_FORMAT);
   default_conf.set(el::Level::Trace, el::ConfigurationType::Format, OUTPUT_FORMAT);
-  default_conf.set(el::Level::Info, el::ConfigurationType::Format, "[%level] [%logger] %msg");
-  default_conf.set(el::Level::Warning, el::ConfigurationType::Format, "[%level] [%logger] %msg");
-  default_conf.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] [%logger] %msg");
+  default_conf.set(el::Level::Info, el::ConfigurationType::Format, "[%level] %msg");
+  default_conf.set(el::Level::Warning, el::ConfigurationType::Format, "[%level] %msg");
+  default_conf.set(el::Level::Verbose, el::ConfigurationType::Format, "[%level-%vlevel] %msg");
   default_conf.setGlobally(el::ConfigurationType::ToFile, "false");
   default_conf.setGlobally(el::ConfigurationType::ToStandardOutput, "true");
   default_conf.setGlobally(el::ConfigurationType::LogFlushThreshold, "100");
@@ -175,12 +175,13 @@ void handle_cli(Model *model, int argc, char **argv) {
     }
 
     // Check to if both --mc and --md are set, if so, generate an error
-    if (cell_movement == true && district_movement == true) {
+    if (cell_movement && district_movement == true) {
       std::cerr << "--mc and --md are mutual exclusive and may not be run together.\n";
       exit(EXIT_FAILURE);
     }
   }
   catch (const args::Help &e) {
+    std::cout << "MaSim v. " << VERSION << std::endl;
     std::cout << e.what() << parser;
     exit(EXIT_SUCCESS);
   }

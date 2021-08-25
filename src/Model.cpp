@@ -137,21 +137,26 @@ void Model::initialize(int job_number, std::string std) {
 
   // MARKER add reporter here
   VLOG(1) << "Initialing reports";
-  if (reporter_type_.empty()) {
-    add_reporter(Reporter::MakeReport(Reporter::DB_REPORTER));
-  } else {
-    if (Reporter::ReportTypeMap.find(reporter_type_) != Reporter::ReportTypeMap.end()) {
-      add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));
+  try {
+    if (reporter_type_.empty()) {
+      add_reporter(Reporter::MakeReport(Reporter::DB_REPORTER));
     } else {
-      std::cerr << "ERROR! Unknown reporter type: " << reporter_type_ << std::endl;
-      exit(EXIT_FAILURE);
+      if (Reporter::ReportTypeMap.find(reporter_type_) != Reporter::ReportTypeMap.end()) {
+        add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));
+      } else {
+        std::cerr << "ERROR! Unknown reporter type: " << reporter_type_ << std::endl;
+        exit(EXIT_FAILURE);
+      }
     }
-  }
-  for (auto* reporter : reporters_) {
-    reporter->initialize(job_number, std);
+    for (auto* reporter : reporters_) {
+      reporter->initialize(job_number, std);
+    }
+  } catch (std::invalid_argument &ex) {
+    LOG(ERROR) << "Initialing reporter generated exception: " << ex.what();
+    exit(EXIT_FAILURE);
   }
 
-  VLOG(1) << "Initialzing scheduler";
+  VLOG(1) << "Initializing scheduler...";
   LOG(INFO) << "Starting day is " << CONFIG->starting_date();
   scheduler_->initialize(CONFIG->starting_date(), config_->total_time());
   scheduler_->set_days_between_notifications(config_->days_between_notifications());
