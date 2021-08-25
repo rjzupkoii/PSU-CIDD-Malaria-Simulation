@@ -24,7 +24,7 @@
 #define check_inf(value) if (std::isinf(value)) VLOG(1) << "Inf caught " << #value; value = std::isinf(value) ? -9999 : value;
 
 pqxx::connection* DbReporter::get_connection() const {
-    // Getting a connection is straightforward, so this function is largely intended warp retry functionality
+    // Getting a connection is straightforward, so this function is largely intended to warp retry functionality
     int retry_count = 0;
 
     while (retry_count <= RETRY_LIMIT) {
@@ -211,12 +211,9 @@ bool DbReporter::do_monthly_report() {
         pqxx::result result = db.exec(query);
         auto id = result[0][0].as<int>();
         
-        // Add the monthly site data
+        // Build the queries that contain the site data
         query = "";
         monthly_site_data(id, query);
-        db.exec(query);
-
-        query = "";
         if (Model::CONFIG->record_genome_db() && Model::DATA_COLLECTOR->recording_data()) {
             // Add the genome information, this will also update infected individuals
             monthly_genome_data(id, query);
@@ -224,9 +221,9 @@ bool DbReporter::do_monthly_report() {
             // If we aren't recording genome data still update the infected individuals
             update_infected_individuals(id, query);
         }
-        db.exec(query);
 
         // Commit the pending data and close with success
+        db.exec(query);
         db.commit();
         connection->close();
         delete connection;
@@ -242,7 +239,7 @@ bool DbReporter::do_monthly_report() {
 
 // Iterate over all the sites and prepare the query for the site specific genome data
 //
-// WARNING This function updates the monthlysitedata with the total count of infected individuals so it MUST 
+// WARNING This function updates the monthlysitedata with the total count of infected individuals, so it MUST
 //         be invoked after monthly_site_data to ensure the data is inserted correctly.
 void DbReporter::monthly_genome_data(int id, std::string &query) {
 
@@ -348,7 +345,7 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         check_inf(eir);
 
         check_nan(pfpr_under5);
-        check_inf(pfpr_under5);
+        check_inf(pfpr_under5)
 
         check_nan(pfpr_2to10);
         check_inf(pfpr_2to10);
