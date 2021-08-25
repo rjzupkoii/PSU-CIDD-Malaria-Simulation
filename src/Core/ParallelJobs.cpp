@@ -5,18 +5,27 @@
  */
 #include "ParallelJobs.h"
 
+#include <cmath>
+
 #include "easylogging++.h"
 
 ParallelJobs::ParallelJobs() { }
 
 ParallelJobs::~ParallelJobs() { }
 
-int ParallelJobs::start() {
-  worker = std::thread(do_work);
-  return 1;
+unsigned long ParallelJobs::start() {
+
+  // Start floor(n / 2) threads
+  auto processors = std::thread::hardware_concurrency();
+  for (auto ndx = 0; ndx < (int)floor(processors / 2.0); ndx++) {
+    workers.emplace_back(do_work);
+  }
+
+  // Return the number of workers
+  return workers.size();
 }
 
-int ParallelJobs::add_job(task job) {
+unsigned long ParallelJobs::add_job(const task& job) {
   auto size = jobs.size();
   jobs.push(job);
   return (size + 1);
@@ -24,8 +33,10 @@ int ParallelJobs::add_job(task job) {
 
 void ParallelJobs::stop() {
   stopFlag = true;
-  if (worker.joinable()) {
+  for (auto& worker : workers) {
+    if (worker.joinable()) {
       worker.join();
+    }
   }
 }
 
@@ -36,19 +47,26 @@ void ParallelJobs::do_work() {
     // If we are told to stop, then stop
     if (instance.stopFlag) {
       LOG(INFO) << "Stopping worker thread";
-      if (instance.jobs.size() != 0) {
+      if (!instance.jobs.empty()) {
         LOG(INFO) << instance.jobs.size() << " job(s) remain in worker thread";
       }
       break;
     }
 
-    // Otherwise check for work
+    // Prepare the jobs variable since we run after unlocking
+    task job;
+
+    // Otherwise, check for work
+    instance.jobs_lock.lock();
     if (!instance.jobs.empty()) {
       // Get the task from the queue
-      task job = instance.jobs.front();
+      job = instance.jobs.front();
       instance.jobs.pop();
+    }
+    instance.jobs_lock.unlock();
 
-      // Run the function
+    // Run the function
+    if (job.function != nullptr) {
       job.function();
     }
   }

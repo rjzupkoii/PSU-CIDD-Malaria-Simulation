@@ -7,6 +7,7 @@
 #define PARALLELJOBS_H
 
 #include <functional>
+#include <mutex>
 #include <thread>
 #include <queue>
 
@@ -18,10 +19,11 @@ class ParallelJobs {
 
   private:
     // Queue for the jobs
+    std::mutex jobs_lock;
     std::queue<task> jobs;
 
-    // Worker thread
-    std::thread worker;
+    // Worker threads
+    std::vector<std::thread> workers;
 
     // Flag to stop the worker thread
     bool stopFlag = false;
@@ -50,10 +52,10 @@ class ParallelJobs {
 
     // Starts the parallel jobs thread and allows work to be queued, returns
     // the number of threads that was started
-    int start();
+    unsigned long start();
 
     // Add a job to the work queue, it will be run in FIFO order
-    int add_job(task job);
+    unsigned long add_job(const task& job);
 
     // Gracefully stops the parallel job queue
     void stop();
