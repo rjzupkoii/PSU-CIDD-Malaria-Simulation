@@ -106,8 +106,10 @@ int main(const int argc, char **argv) {
     START_EASYLOGGINGPP(argc, argv);
     LOG(INFO) << fmt::format("MaSim version {0}", VERSION);
 
-    LOG(INFO) << "Processor Count: " << std::thread::hardware_concurrency();
-    LOG(INFO) << "Thread Count: " << ParallelJobs::get_instance().start();
+    auto processors = std::thread::hardware_concurrency();
+    LOG(INFO) << "Processor Count: " << processors;
+    auto threads = (unsigned int)(processors / 2);
+    LOG(INFO) << "Thread Count: " << ParallelJobs::get_instance().start(threads);
     ParallelJobs::get_instance().add_job({ [] { std::cout << "[THREAD] First thread job!\n"; }});
 
     // Run the model

@@ -5,23 +5,26 @@
  */
 #include "ParallelJobs.h"
 
-#include <cmath>
-
 #include "easylogging++.h"
 
 ParallelJobs::ParallelJobs() { }
 
 ParallelJobs::~ParallelJobs() { }
 
-unsigned long ParallelJobs::start() {
+unsigned long ParallelJobs::start(unsigned int count) {
 
-  // Start floor(n / 2) threads
-  auto processors = std::thread::hardware_concurrency();
-  for (auto ndx = 0; ndx < (int)floor(processors / 2.0); ndx++) {
-    workers.emplace_back(do_work);
+  // Verify that the count makes sense
+  if (count == 0) {
+    throw std::invalid_argument("Count of threads must be greater than zero.");
+  }
+  if (count > std::thread::hardware_concurrency()) {
+    throw std::invalid_argument("Count of threads should not exceed hardware limits.");
   }
 
-  // Return the number of workers
+  // Start the threads and return the count as a validation check
+  for (auto ndx = 0; ndx < count; ndx++) {
+    workers.emplace_back(do_work);
+  }
   return workers.size();
 }
 
@@ -29,6 +32,11 @@ unsigned long ParallelJobs::add_job(const task& job) {
   auto size = jobs.size();
   jobs.push(job);
   return (size + 1);
+}
+
+bool ParallelJobs::work_pending() {
+  std::scoped_lock lock(jobs_mutex);
+  return !jobs.empty();
 }
 
 void ParallelJobs::stop() {
@@ -41,6 +49,8 @@ void ParallelJobs::stop() {
 }
 
 void ParallelJobs::do_work() {
+  task job;
+
   while(true) {
     auto& instance = get_instance();
 
@@ -54,20 +64,23 @@ void ParallelJobs::do_work() {
     }
 
     // Prepare the jobs variable since we run after unlocking
-    task job;
-
-    // Otherwise, check for work
-    instance.jobs_lock.lock();
-    if (!instance.jobs.empty()) {
-      // Get the task from the queue
-      job = instance.jobs.front();
-      instance.jobs.pop();
-    }
-    instance.jobs_lock.unlock();
-
-    // Run the function
-    if (job.function != nullptr) {
+    if (instance.get_job(job)) {
       job.function();
     }
   }
+}
+
+bool ParallelJobs::get_job(task &job) {
+  // Hold the mutex for this function
+  std::scoped_lock lock(jobs_mutex);
+
+  // Return if there is nothing to
+  if (jobs.empty()) {
+    return false;
+  }
+
+  // Move the first job to the memory location and return
+  job = std::move(jobs.front());
+  jobs.pop();
+  return true;
 }

@@ -19,7 +19,7 @@ class ParallelJobs {
 
   private:
     // Queue for the jobs
-    std::mutex jobs_lock;
+    mutable std::mutex jobs_mutex;
     std::queue<task> jobs;
 
     // Worker threads
@@ -37,6 +37,8 @@ class ParallelJobs {
     // Check the jobs and run them if one exists
     static void do_work();
 
+    bool get_job(task& job);
+
   public:
     // Not supported by singleton
     ParallelJobs(ParallelJobs const&) = delete;
@@ -52,10 +54,13 @@ class ParallelJobs {
 
     // Starts the parallel jobs thread and allows work to be queued, returns
     // the number of threads that was started
-    unsigned long start();
+    unsigned long start(unsigned int count);
 
     // Add a job to the work queue, it will be run in FIFO order
     unsigned long add_job(const task& job);
+
+    // Check to see if there is work pending in the job queue
+    bool work_pending();
 
     // Gracefully stops the parallel job queue
     void stop();
