@@ -17,6 +17,9 @@
 
 #include "Core/ParallelJobs.h"
 
+// TODO Migrate this into CMakeLists?
+#define PARALLEL
+
 // Set this flag to disable Linux / Unix specific code, this should be provided
 // via CMake automatically or by the compiler for WIN32
 #ifdef _WIN32 
@@ -116,18 +119,20 @@ int main(const int argc, char **argv) {
 
     auto processors = std::thread::hardware_concurrency();
     LOG(INFO) << "Processor Count: " << processors;
+
+  #ifdef PARALLEL
     auto threads = (unsigned int)(processors / 2);
+    LOG(INFO) << "Parallel code enabled";
     LOG(INFO) << "Thread Count: " << ParallelJobs::get_instance().start(threads);
-    ParallelJobs::get_instance().submit(print, 1);
-    ParallelJobs::get_instance().submit(print_nothing);
+  #endif
 
     // Run the model
     m->initialize(job_number, path);
-    ParallelJobs::get_instance().submit(print, 2);
     m->run();
 
-    ParallelJobs::get_instance().submit(print, 3);
+  #ifdef PARALLEL
     ParallelJobs::get_instance().stop();
+  #endif
 
     // Clean-up and return
     delete m;
