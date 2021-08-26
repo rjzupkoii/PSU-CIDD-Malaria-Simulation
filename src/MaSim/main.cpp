@@ -91,6 +91,14 @@ void config_critical_errors() {
   }
 }
 
+void print(int value) {
+  std::cout << "[THREAD] " << value << std::endl;
+}
+
+void print_nothing() {
+  std::cout << "[THREAD] Nothing." << std::endl;
+}
+
 int main(const int argc, char **argv) {
 
     #ifndef __DISABLE_CRIT_ERR
@@ -110,14 +118,15 @@ int main(const int argc, char **argv) {
     LOG(INFO) << "Processor Count: " << processors;
     auto threads = (unsigned int)(processors / 2);
     LOG(INFO) << "Thread Count: " << ParallelJobs::get_instance().start(threads);
-    ParallelJobs::get_instance().add_job({ [] { std::cout << "[THREAD] First thread job!\n"; }});
+    ParallelJobs::get_instance().submit(print, 1);
+    ParallelJobs::get_instance().submit(print_nothing);
 
     // Run the model
     m->initialize(job_number, path);
-    ParallelJobs::get_instance().add_job({ [] { std::cout << "[THREAD] Second thread job!\n"; }});
+    ParallelJobs::get_instance().submit(print, 2);
     m->run();
 
-    ParallelJobs::get_instance().add_job({ [] { std::cout << "[THREAD] Last thread job!\n"; }});
+    ParallelJobs::get_instance().submit(print, 3);
     ParallelJobs::get_instance().stop();
 
     // Clean-up and return

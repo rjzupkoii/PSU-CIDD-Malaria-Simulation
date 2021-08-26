@@ -28,12 +28,6 @@ unsigned long ParallelJobs::start(unsigned int count) {
   return workers.size();
 }
 
-unsigned long ParallelJobs::add_job(const task& job) {
-  auto size = jobs.size();
-  jobs.push(job);
-  return (size + 1);
-}
-
 bool ParallelJobs::work_pending() {
   std::scoped_lock lock(jobs_mutex);
   return !jobs.empty();
@@ -49,7 +43,7 @@ void ParallelJobs::stop() {
 }
 
 void ParallelJobs::do_work() {
-  task job;
+  std::function<void()> job;
 
   while(true) {
     auto& instance = get_instance();
@@ -65,12 +59,12 @@ void ParallelJobs::do_work() {
 
     // Prepare the jobs variable since we run after unlocking
     if (instance.get_job(job)) {
-      job.function();
+      job();
     }
   }
 }
 
-bool ParallelJobs::get_job(task &job) {
+bool ParallelJobs::get_job(std::function<void()> &job) {
   // Hold the mutex for this function
   std::scoped_lock lock(jobs_mutex);
 

@@ -3,7 +3,7 @@
  * 
  * Tuned movement model for Burkina Faso based upon Marshall et al. (2018), 
  * with a penalty applied based upon the travel time to the nearest city. 
- * Intradistrict movement in capital is also penalized as well.
+ * Intra-district movement in capital is also penalized as well.
  * 
  * Marshall et al., 2018
  */
@@ -26,11 +26,8 @@ namespace Spatial {
         VIRTUAL_PROPERTY_REF(double, capital)
         VIRTUAL_PROPERTY_REF(double, penalty)
 
-        const double CAPITAL_DISTRICT = 14;
-
-        
         public:
-            BurkinaFaso(const YAML::Node &node) { 
+            explicit BurkinaFaso(const YAML::Node &node) {
                 tau_ = node["tau"].as<double>();
                 alpha_ = node["alpha"].as<double>();
                 rho_ = std::pow(10, node["log_rho"].as<double>());
@@ -38,7 +35,7 @@ namespace Spatial {
                 penalty_ = node["penalty"].as<double>();
             }
 
-            virtual ~BurkinaFaso() { }
+            ~BurkinaFaso() override = default;
 
             DoubleVector get_v_relative_out_movement_to_destination(
                     const int &from_location, const int &number_of_locations,
@@ -54,7 +51,7 @@ namespace Spatial {
                 // Note the source district
                 auto source_district = SpatialData::get_instance().get_district(from_location);
 
-                // Get the relevent surfaces, preparing the surface is an expensive operation,
+                // Get the relevant surfaces, preparing the surface is an expensive operation,
                 // so only do it once since the population should generally continue to grow
                 // proportionately for each cell
                 if (travel == nullptr) {
