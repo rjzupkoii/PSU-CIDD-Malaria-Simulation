@@ -17,9 +17,6 @@
 
 #include "Core/ParallelJobs.h"
 
-// TODO Migrate this into CMakeLists?
-#define PARALLEL
-
 // Set this flag to disable Linux / Unix specific code, this should be provided
 // via CMake automatically or by the compiler for WIN32
 #ifdef _WIN32 
@@ -34,7 +31,11 @@ namespace {
 #endif
 
 // Version information
-const std::string VERSION = "4.1.0, development";
+#ifdef PARALLEL
+const std::string VERSION = "4.1.0, parallel (development)";
+#else
+const std::string VERSION = "4.1.0 (development)";
+#endif
 
 // Settings read from the CLI
 int job_number = 0;

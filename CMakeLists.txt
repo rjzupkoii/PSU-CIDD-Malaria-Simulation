@@ -29,6 +29,10 @@ IF(APPLE)
   INCLUDE_DIRECTORIES(/usr/local/include)
 ENDIF()
 
+IF(PARALLEL)
+  add_definitions(-DPARALLEL)
+ENDIF()
+
 # Include dependent libs, note that this might be extended if we are on the cluster
 find_package(GSL REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)

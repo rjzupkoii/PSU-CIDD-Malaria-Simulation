@@ -37,7 +37,7 @@ public:
   void perform_circulation_serial() { }
 
   // Perform the daily population movement using parallel processing.
-  std::vector<Circulation> perform_circulation_parallel(Population* population);
+  void perform_circulation_parallel(Population* population);
 
 
 };

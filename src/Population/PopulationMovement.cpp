@@ -3,6 +3,8 @@
  */
 #include "PopulationMovement.h"
 
+#include "easylogging++.h"
+
 #include "Core/Config/Config.h"
 #include "Core/ParallelJobs.h"
 #include "Core/Random.h"
@@ -10,7 +12,7 @@
 #include "Model.h"
 #include "Spatial/SpatialModel.hxx"
 
-std::vector<PopulationMovement::Circulation> PopulationMovement::perform_circulation_parallel(Population* population) {
+void PopulationMovement::perform_circulation_parallel(Population* population) {
 #ifndef PARALLEL
   throw std::runtime_error("Parallel code is not enabled.");
 #endif
@@ -29,16 +31,24 @@ std::vector<PopulationMovement::Circulation> PopulationMovement::perform_circula
   // Wait for everything to catch up before continuing
   while (ParallelJobs::get_instance().work_pending());
 
-  // Return the movements
-  return movements;
+  // Perform all the circulation operations
+  PersonPtrVector circulations;
+  for (auto movement : movements) {
+    population->perform_circulation_for_1_location(movement.from, movement.to, movement.count, circulations);
+  }
+  for (auto* person : circulations) {
+    person->randomly_choose_target_location();
+  }
+
+  // Clean-up after ourselves
+  movements.clear();
 }
 
 void PopulationMovement::perform_circulation_location(int from, int count, PopulationMovement* movement) {
-
   // Determine the likelihood of travel from the current location
   DoubleVector outMovement(Model::CONFIG->number_of_locations(), 0);
   outMovement = Model::CONFIG->spatial_model()->get_v_relative_out_movement_to_destination(from,
-    Model::CONFIG->number_of_locations(), Model::CONFIG->spatial_distance_matrix()[from],
+    static_cast<int>(Model::CONFIG->number_of_locations()), Model::CONFIG->spatial_distance_matrix()[from],
     Model::DATA_COLLECTOR->popsize_residence_by_location());
 
   // Determine the number of individuals that are leaving each location
@@ -51,7 +61,6 @@ void PopulationMovement::perform_circulation_location(int from, int count, Popul
     if (leavers[target_location] == 0) { continue; }
     movement->add_circulation(Circulation(from, static_cast<int>(target_location), static_cast<int>(leavers[target_location])));
   }
-
 }
 
 void PopulationMovement::add_circulation(PopulationMovement::Circulation circulation) {

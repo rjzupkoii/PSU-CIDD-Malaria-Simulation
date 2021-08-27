@@ -21,13 +21,14 @@
 #include "Core/Random.h"
 #include "Properties/PersonIndexByLocationMovingLevel.h"
 #include "MDC/ModelDataCollector.h"
-#include "SingleHostClonalParasitePopulations.h"
 #include "Helpers/TimeHelpers.h"
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
 #include "Spatial/SpatialModel.hxx"
 #include <cmath>
 #include <cfloat>
+
+#include "PopulationMovement.h"
 
 Population::Population(Model* model) : model_(model) {
   person_index_list_ = new PersonIndexPtrList();
@@ -570,6 +571,9 @@ void Population::perform_circulation_event() {
   // Before entering, check the overall circulation, if zero then assume it is disabled
   auto circulation_percent = Model::CONFIG->circulation_info().circulation_percent;
   if (circulation_percent == 0.0) { return; }
+
+  PopulationMovement().perform_circulation_parallel(this);
+  return;
 
   PersonPtrVector today_circulations;
 
