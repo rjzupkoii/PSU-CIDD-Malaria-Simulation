@@ -122,7 +122,7 @@ int main(const int argc, char **argv) {
     LOG(INFO) << "Processor Count: " << processors;
 
   #ifdef PARALLEL
-    auto threads = (unsigned int)(processors / 2);
+    auto threads = processors - 1;
     LOG(INFO) << "Parallel code enabled";
     LOG(INFO) << "Thread Count: " << ParallelJobs::get_instance().start(threads);
   #endif

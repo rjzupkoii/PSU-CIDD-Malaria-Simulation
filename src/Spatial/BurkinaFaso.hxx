@@ -37,6 +37,8 @@ namespace Spatial {
 
             ~BurkinaFaso() override = default;
 
+            bool parallel_compliant() override { return true; }
+
             DoubleVector get_v_relative_out_movement_to_destination(
                     const int &from_location, const int &number_of_locations,
                     const DoubleVector &relative_distance_vector,

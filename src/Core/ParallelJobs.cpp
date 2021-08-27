@@ -7,9 +7,9 @@
 
 #include "easylogging++.h"
 
-ParallelJobs::ParallelJobs() { }
+ParallelJobs::ParallelJobs() = default;
 
-ParallelJobs::~ParallelJobs() { }
+ParallelJobs::~ParallelJobs() = default;
 
 unsigned long ParallelJobs::start(unsigned int count) {
 
@@ -34,12 +34,16 @@ bool ParallelJobs::work_pending() {
 }
 
 void ParallelJobs::stop() {
+  // Stop the workers
   stopFlag = true;
   for (auto& worker : workers) {
     if (worker.joinable()) {
       worker.join();
     }
   }
+
+  // Delete the workers
+  workers.clear();
 }
 
 void ParallelJobs::do_work() {

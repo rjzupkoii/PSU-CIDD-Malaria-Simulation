@@ -572,45 +572,8 @@ void Population::perform_circulation_event() {
   auto circulation_percent = Model::CONFIG->circulation_info().circulation_percent;
   if (circulation_percent == 0.0) { return; }
 
-  PopulationMovement().perform_circulation_parallel(this);
-  return;
-
-  PersonPtrVector today_circulations;
-
-  // Grab a copy of residents by location
-  const auto residents_by_location = Model::DATA_COLLECTOR->popsize_residence_by_location();
-
-  //for each location
-  // get number of circulations based on size * circulation_percent
-  // distributes that number into others location based of other location size
-  // for each number in that list select an individual, and schedule a movement event on next day
-  for (std::size_t from_location = 0; from_location < Model::CONFIG->number_of_locations(); from_location++) {
-    
-    // How much of the population is moving? If none then press on
-    auto poisson_means = size(from_location) * circulation_percent;
-    if (poisson_means == 0) { continue; }
-    const auto number_of_circulating_from_this_location = Model::RANDOM->random_poisson(poisson_means);
-    if (number_of_circulating_from_this_location == 0) { continue; }
-
-    DoubleVector v_relative_outmovement_to_destination(Model::CONFIG->number_of_locations(), 0);
-    v_relative_outmovement_to_destination = Model::CONFIG->spatial_model()->get_v_relative_out_movement_to_destination(
-      from_location, Model::CONFIG->number_of_locations(), Model::CONFIG->spatial_distance_matrix()[from_location], residents_by_location);
-
-    std::vector<unsigned int> v_num_leavers_to_destination(static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()));
-    Model::RANDOM->random_multinomial(static_cast<int>(v_relative_outmovement_to_destination.size()),
-                                      static_cast<unsigned int>(number_of_circulating_from_this_location),
-                                      &v_relative_outmovement_to_destination[0], &v_num_leavers_to_destination[0]);
-
-    for (std::size_t target_location = 0; target_location < Model::CONFIG->number_of_locations(); target_location++) {
-      if (v_num_leavers_to_destination[target_location]==0) { continue; }
-      perform_circulation_for_1_location(from_location, target_location, v_num_leavers_to_destination[target_location], today_circulations);
-    }
-  }
-
-  // Have the population do the movement
-  for (auto* p : today_circulations) {
-    p->randomly_choose_target_location();
-  }
+  // Perform the movement
+  PopulationMovement().perform_circulation(this);
 
 #ifdef DEBUG
   auto end = std::chrono::system_clock::now();
@@ -619,42 +582,6 @@ void Population::perform_circulation_event() {
     LOG(INFO) << "Long circulation" << elapsed_seconds.count();
   }
 #endif
-}
-
-void Population::perform_circulation_for_1_location(const int &from_location, const int &target_location,
-                                                    const int &number_of_circulation,
-                                                    std::vector<Person*> &today_circulations) {
-  DoubleVector vLevelDensity;
-  auto pi = get_person_index<PersonIndexByLocationMovingLevel>();
-
-  for (int i = 0; i < Model::CONFIG->circulation_info().number_of_moving_levels; i++) {
-    double temp = Model::CONFIG->circulation_info().v_moving_level_value[i]*
-        pi->vPerson()[from_location][i].size();
-    vLevelDensity.push_back(temp);
-  }
-
-  std::vector<unsigned int> vIntNumberOfCirculation(vLevelDensity.size());
-
-  model_->random()->random_multinomial(static_cast<int>(vLevelDensity.size()),
-                                       static_cast<unsigned int>(number_of_circulation), &vLevelDensity[0],
-                                       &vIntNumberOfCirculation[0]);
-
-  for (std::size_t moving_level = 0; moving_level < vIntNumberOfCirculation.size(); moving_level++) {
-    auto size = static_cast<int>(pi->vPerson()[from_location][moving_level].size());
-    if (size==0) continue;
-    for (std::size_t j = 0u; j < vIntNumberOfCirculation[moving_level]; j++) {
-
-
-      //select 1 random person from level i
-      int index = model_->random()->random_uniform(size);
-      Person* p = pi->vPerson()[from_location][moving_level][index];
-      assert(p->host_state()!=Person::DEAD);
-
-      p->today_target_locations()->push_back(target_location);
-      today_circulations.push_back(p);
-
-    }
-  }
 }
 
 bool Population::has_0_case() {

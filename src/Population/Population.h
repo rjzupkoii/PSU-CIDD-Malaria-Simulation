@@ -113,10 +113,6 @@ class Population : public Dispatcher {
 
   void perform_circulation_event();
 
-  void perform_circulation_for_1_location(const int &from_location, const int &target_location,
-                                          const int &number_of_circulation,
-                                          std::vector<Person *> &today_circulations);
-
   bool has_0_case();
 
   void initialize_person_indices();

@@ -1,7 +1,7 @@
 /*
  * ParallelJobs.h
  *
- * Define a parallel job processor using the singleton pattern.
+ * Define a thread pool that reads from a common work queue.
  */
 #ifndef PARALLELJOBS_H
 #define PARALLELJOBS_H
@@ -74,6 +74,9 @@ class ParallelJobs {
 
     // Check to see if there is work pending in the job queue
     bool work_pending();
+
+    // Return true threads are running, false otherwise
+    bool running() { return !workers.empty(); }
 
     // Gracefully stops the parallel job queue
     void stop();
