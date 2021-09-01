@@ -33,6 +33,7 @@ void CellularReporter::initialize(int job_number, std::string path) {
     ss << "DaysElapsed" << Csv::sep 
        << "Population" << Csv::sep 
        << "PfPR2to10" << Csv::sep
+       << "TreatmentCoverage" << Csv::sep
        << "InfectedIndividuals" << Csv::sep 
        << "ClinicalIndividuals" << Csv::sep 
        << "ClinicalU5" << Csv::sep
@@ -153,6 +154,7 @@ void CellularReporter::monthly_report() {
     ss << Model::SCHEDULER->current_time() << Csv::sep 
        << population << Csv::sep 
        << Model::DATA_COLLECTOR->get_blood_slide_prevalence(0, 2, 10) * 100.0 << Csv::sep
+       << Model::TREATMENT_COVERAGE->p_treatment_less_than_5[0] << Csv::sep
        << infectedIndividuals << Csv::sep 
        << clinical_all << Csv::sep
        << clinical_u5 << Csv::sep

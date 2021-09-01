@@ -15,23 +15,25 @@
 #include "Core/Scheduler.h"
 #include "Events/Event.h"
 #include "Helpers/TimeHelpers.h"
+#include "Malaria/ITreatmentCoverageModel.h"
 #include "Model.h"
 
 class AnnualCoverageUpdateEvent : public Event {
   private:
     float rate_ = 0.0;
 
-    // Execute the annual converage update event
+    // Execute the annual coverage update event
     void execute() override {
 
       // Grab a reference to the location_db to work with
       auto& location_db = Model::CONFIG->location_db();
+      auto& tcm_db = Model::TREATMENT_COVERAGE;
 
       // Iterate though and adjust the rates
       auto count = Model::CONFIG->number_of_locations();
       for (auto ndx = 0; ndx < count; ndx++) {
-        location_db[ndx].p_treatment_less_than_5 = adjust(location_db[ndx].p_treatment_less_than_5, rate_);
-        location_db[ndx].p_treatment_more_than_5 = adjust(location_db[ndx].p_treatment_more_than_5, rate_);
+        tcm_db->p_treatment_less_than_5[ndx] = adjust(tcm_db->p_treatment_less_than_5[ndx], rate_);
+        tcm_db->p_treatment_more_than_5[ndx] = adjust(tcm_db->p_treatment_more_than_5[ndx], rate_);
       }
 
       // Schedule for one year from now
