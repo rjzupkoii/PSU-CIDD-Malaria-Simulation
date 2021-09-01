@@ -132,15 +132,21 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
 }
 
 void SingleHostClonalParasitePopulations::update_relative_effective_parasite_density_using_free_recombination() {
-  // Get the population count, if it is zero then return
+  // Get the population count, if it is zero then set the density and return
   std::size_t parasite_population_count = size();
-  if (parasite_population_count == 0) { return; }
+  if (parasite_population_count == 0) {
+    log10_total_relative_density_ = ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY;
+    return;
+  }
 
   // Get the parasite profiles, if the density is zero then return
   std::vector<double> relative_parasite_density(parasite_population_count, 0.0);
   get_parasites_profiles(relative_parasite_density, log10_total_relative_density_);
+
+  // TODO See if this is actually possible or not
   if (NumberHelpers::is_equal(log10_total_relative_density_, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) { return; }
 
+  // Make sure nothing was deleted in the process
   assert(relative_parasite_density.size() == parasite_population_count);
 
   // Zero the current value
@@ -306,19 +312,19 @@ void SingleHostClonalParasitePopulations::clear_cured_parasites() {
     if ((*parasites_)[i]->last_update_log10_parasite_density() <= Model::CONFIG->parasite_density_level().log_parasite_density_cured + 0.00001) {
       
       // Clear the infection force prior to removal
-      if (!updated) {
-        remove_all_infection_force();
-        updated = true;
-      }
+     if (!updated) {
+       remove_all_infection_force();
+       updated = true;
+     }
 
       remove(i);
     }
   }
 
-  // Update the infection force
-  if (updated) {
-    add_all_infection_force();
-  }
+ // Update the infection force
+ if (updated) {
+   add_all_infection_force();
+ }
 }
 
 void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in_blood) const {
@@ -387,7 +393,7 @@ bool SingleHostClonalParasitePopulations::has_detectable_parasite() const {
 // Check to see if any of the parasites are gametocytaemic
 bool SingleHostClonalParasitePopulations::is_gametocytaemic() const {
   // This approach to the code is slightly faster than a foreach iterator 
-  // which is improtant since this gets called a lot!
+  // which is important since this gets called a lot!
   auto size = parasites_->size();
   for (std::size_t ndx = 0; ndx < size; ndx++) {
     if ((*parasites_)[ndx]->gametocyte_level() > 0) {
