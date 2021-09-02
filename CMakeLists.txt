@@ -35,10 +35,8 @@ find_package(fmt CONFIG REQUIRED)
 
 # Include external projects
 set(EXT_PROJECTS_DIR ${PROJECT_SOURCE_DIR}/ext)
-if (NOT BUILD_CLUSTER)
-  add_subdirectory(${EXT_PROJECTS_DIR}/date)
-  add_subdirectory(${EXT_PROJECTS_DIR}/args)
-endif()
+add_subdirectory(${EXT_PROJECTS_DIR}/date)
+add_subdirectory(${EXT_PROJECTS_DIR}/args)
 include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${ARGS_INCLUDE_DIR} ${EXT_PROJECTS_DIR}/CLI11)
 
 # Add the source subdirectory
