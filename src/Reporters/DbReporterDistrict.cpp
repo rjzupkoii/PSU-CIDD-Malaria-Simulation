@@ -22,8 +22,13 @@ void DbReporterDistrict::initialize(int job_number, std::string path) {
     throw std::invalid_argument("No district raster present");
   }
 
-  // Defer to the base class for the remainder
+  // Have the base class do all the major initialization
   DbReporter::initialize(job_number, path);
+
+  // Build a lookup for location to district
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    district_lookup.emplace_back(SpatialData::get_instance().get_district(loc));
+  }
 }
 
 void DbReporterDistrict::monthly_genome_data(int id, std::string &query) {
@@ -48,7 +53,7 @@ void DbReporterDistrict::monthly_genome_data(int id, std::string &query) {
   for (auto location = 0; location < index->vPerson().size(); location++) {
 
     // Get the current index and apply the off set, so we are zero aligned
-    auto district = SpatialData::get_instance().get_district(location) - first_index;
+    auto district = district_lookup[location] - first_index;
     int infectedIndividuals = 0;
 
     for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
@@ -139,7 +144,7 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
     if (location_population == 0) { continue; }
 
     // Note the district we are in, make sure things are zero indexed
-    auto district = SpatialData::get_instance().get_district(location) - first_index;
+    auto district = district_lookup[location] - first_index;
 
     // Collect the simple data
     population[district] += location_population;

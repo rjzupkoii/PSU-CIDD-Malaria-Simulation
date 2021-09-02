@@ -9,6 +9,9 @@
 #include "DbReporter.h"
 
 class DbReporterDistrict : public DbReporter {
+  private:
+    std::vector<int> district_lookup;
+
   protected:
     char get_genotype_level() override { return 'D'; }
 
