@@ -4,7 +4,7 @@ This file outlines the basic steps that are needed to build the simulation acros
 
 # Tool Chain Dependencies
 
-## Windows 10 / Windows Subsystem for Linux (WSL)
+## Windows 10 / Windows Subsystem for Linux (WSL 1)
 1. Install a Linux sub-system of your choice (Ubuntu recommended, or Red Hat)
 
 2. Update the Linux sub-system
@@ -39,6 +39,25 @@ sudo make install
 
 This may need to be done every time you connect to the VPN, so scripting the update may be in order.
 
+## Upgrading to WSL 2
+
+WSL 2 offers some [performance improvements](https://docs.microsoft.com/en-us/windows/wsl/compare-versions) which may be relevant during development so upgrading may be of interest. To do so the following needs to be performed, note that these steps will also enable WSL 2 if WSL 1 has not already been installed.
+
+Open PowerSHell with administrator permissions and enter the following:
+
+```PowerShell
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+```
+
+Once complete, restart the computer, after which the version needs to be set in PowerShell:
+
+```PowerShell
+wsl --set-default-version 2
+```
+
+If you have already installed a distribution, updating is recommended. Otherwise, you can now install a WSL compliant distribution.
+
 # Building
 
 ## Local WSL Builds
@@ -57,7 +76,7 @@ cmake -DCMAKE_BUILD_TYPE=DEBUG -DBUILD_WSL:BOOL=true ..
 make -j 8
 ```
 
-Generally it is recomended to create a `build.sh` script that runs the build commands.
+Generally it is recommended to create a `build.sh` script that runs the build commands.
 
 ## Building on ICDS-ACI
 To build the simulation to run on the ICDS-ACI the first time it is necessary to perform a number of configuration steps. After logging on to the interactive environment (`aci-b.aci.ics.psu.edu`) cloning this repository run `config.sh` which will prepare the build environment. As part of the process a build script will be created at `build/build.sh` that will ensure the environment is set correctly when run. 
@@ -78,10 +97,10 @@ cd /build/bin
 ./MaSim -i ../../misc/input.yml
 ```
 
-Note that while care was taken in places to ensure the code is performant, the amount of RAM needed during execution can be quite high (ex., 32GB or more). When the model is run in Linux environments where the necessary memory is not available, you may find that the program is killed without notice due to being [out of memory](https://linux-mm.org/OOM_Killer).
+Note that while care was taken in places to ensure the code is performant, the amount of RAM needed during execution can be quite high (ex., 32 GB or more). When the model is run in Linux environments where the necessary memory is not available, you may find that the program is killed without notice due to being [out of memory](https://linux-mm.org/OOM_Killer).
 
 ## Cluster Runs
-The [Roar Supercomputer Users' Guide](https://www.icds.psu.edu/computing-services/roar-user-guide/) providers a good overview for running single replicates on the cluster; however, when running batches it is recommended to script out the process. When replicates need to be run with a variety of settings (e.g., sensitivity analysis) some of the scripts present in [PSU-CIDD-MaSim-Support](https://github.com/bonilab/PSU-CIDD-MaSim-Support) under the `bash` directory can be used to parse a CSV formatted list of replicates to be run. In addition to the [`calibrationLib.sh`](https://github.com/bonilab/PSU-CIDD-MaSim-Support/tree/master/bash) file the support repository, the following files need to be created for this:
+The [Roar Supercomputer Users' Guide](https://www.icds.psu.edu/computing-services/roar-user-guide/) providers a good overview for running single replicates on the cluster; however, when running batches it is recommended to script out the process. When replicates need to be run with a variety of settings (e.g., sensitivity analysis) some scripts present in [PSU-CIDD-MaSim-Support](https://github.com/bonilab/PSU-CIDD-MaSim-Support) under the `bash` directory can be used to parse a CSV formatted list of replicates to be run. In addition to the [`calibrationLib.sh`](https://github.com/bonilab/PSU-CIDD-MaSim-Support/tree/master/bash) file the support repository, the following files need to be created for this:
 
 1. A runner script which will be queued on the cluster as a job, typically named `run.sh` or similar in project repositories:
 ```bash
@@ -105,7 +124,7 @@ cd $PBS_O_WORKDIR
 ./run.sh
 ```
 
-When defining the PBS file note the low memory usage (`pmem`) and high `walltime`. Since the job will only be responsible for running this script, only a limited amount of resources are needed. However, the total batch of jobs may run for quite some time, so the wall clock time is likely to be quite high. 
+When defining the PBS file note the low memory usage (`pmem`) and high `walltime`. Since the job will only be responsible for running this script, only a limited amount of resources is needed. However, the total batch of jobs may run for quite some time, so the wall clock time is likely to be quite high. 
 
 3. The CSV file that defines the replicates to be run, where the first column is the PBS file for the replicate and the second column is the count:
 ```CSV
@@ -139,7 +158,11 @@ gprof2dot -f callgrind callgrind.out.* | dot -Tpng -o output.png
 
 This will generate a PNG file containing a node graph of where most of the simulation's time is spent during execution along with the percentage of time spent in a given function. 
 
-Note that `valgrind` adds **considerable** overhead to the execution of the simulation so it is highly recommended that profiling be limited to small simulations. 
+Note that `valgrind` adds **considerable** overhead to the execution of the simulation, so it is highly recommended that profiling be limited to small simulations. 
+
+### Valgrind under WSL 2 with CLion integration
+
+When using CLion as an IDE, integration with Valgrind is possible. Presuming that WSL 2 has been enabled and `valgrind` has been installed, CLion simply needs to be informed of the path under WLS 2 via **File > Settings > Build, Execution, Deployment > Valgrind** and the path will typically be `/usr/bin/valgrind`. 
 
 # Troubleshooting
 
