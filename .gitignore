@@ -19,3 +19,4 @@ documentation/diagrams/*.~vsdx
 out
 monthly_data\.txt
 reporter\.txt
+/kientt/output/_aggregate_data_0.csv
