@@ -160,10 +160,9 @@ void DbReporter::prepare_replicate(pqxx::connection* connection) {
 
     // Load the location information
     auto locations = Model::CONFIG->number_of_locations();
-    location_index = new int[locations];
     pqxx::result results = db.exec(fmt::format(SELECT_LOCATION, config_id));
     for (auto ndx = 0; ndx < locations; ndx++) {
-        location_index[ndx] = results[ndx][0].as<int>();
+        location_index.emplace_back(results[ndx][0].as<int>());
     }
 
     // Commit prior work and let the user know we are running
@@ -214,7 +213,7 @@ bool DbReporter::do_monthly_report() {
         // Build the queries that contain the site data
         query = "";
         monthly_site_data(id, query);
-        if (Model::CONFIG->record_genome_db() && Model::DATA_COLLECTOR->recording_data()) {
+        if (Model::CONFIG->record_genome_db() && ModelDataCollector::recording_data()) {
             // Add the genome information, this will also update infected individuals
             monthly_genome_data(id, query);
         } else {
@@ -341,17 +340,17 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         // Make make sure we have valid bounds
         //
         // TODO odds are these can be deleted once we have robust unit testing in place to validate the MDC
-        check_nan(eir);
-        check_inf(eir);
+        check_nan(eir)
+        check_inf(eir)
 
-        check_nan(pfpr_under5);
+        check_nan(pfpr_under5)
         check_inf(pfpr_under5)
 
-        check_nan(pfpr_2to10);
-        check_inf(pfpr_2to10);
+        check_nan(pfpr_2to10)
+        check_inf(pfpr_2to10)
         
-        check_nan(pfpr_all);
-        check_inf(pfpr_all);
+        check_nan(pfpr_all)
+        check_inf(pfpr_all)
 
         query.append(fmt::format(INSERT_SITE,
             id,
@@ -408,4 +407,5 @@ void DbReporter::after_run() {
 
     // Close the connection 
     connection->close();
+    delete connection;
 }

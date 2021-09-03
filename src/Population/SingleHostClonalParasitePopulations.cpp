@@ -364,7 +364,7 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
       }
       if (new_genotype != blood_parasite->genotype()) {
         //mutation occurs
-        Model::DATA_COLLECTOR->record_1_mutation(person_->location(), blood_parasite->genotype(), new_genotype);
+        Model::DATA_COLLECTOR->record_1_mutation(person_->location());
         //                std::cout << bloodParasite->genotype()->genotype_id() << "==>" << new_genotype->genotype_id() << std::endl;
         blood_parasite->set_genotype(new_genotype);
       }

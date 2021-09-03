@@ -3,20 +3,18 @@
  * 
  * Implementation of the model data collector class.
  */
+#include "ModelDataCollector.h"
 
 #include <numeric>
 #include <cmath>
 #include <algorithm>
-#include "ModelDataCollector.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Population/Person.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include "Population/Population.h"
 #include "Population/ImmuneSystem.h"
-#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Therapies/SCTherapy.hxx"
-#include "Population/ClonalParasitePopulation.h"
 #include "Constants.h"
 
 // Define some macros to make the code a bit easier to follow
@@ -26,7 +24,7 @@
 #define IntMatrix_Locations_by_AgeClasses() IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->number_of_age_classes(), 0))
 
 // Fill the vector indicated with zeros, this should compile into a memset call which is faster than a loop
-#define zero_fill(vector) std::fill(vector.begin(), vector.end(), 0);
+#define zero_fill(vector) std::fill(vector.begin(), vector.end(), 0)
 
 ModelDataCollector::ModelDataCollector(Model* model) : model_(model), current_utl_duration_(0),
                                                        AMU_per_parasite_pop_(0),
@@ -41,7 +39,8 @@ ModelDataCollector::ModelDataCollector(Model* model) : model_(model), current_ut
                                                        quadruple_resistance_frequency_at_15_(0),
                                                        quintuple_resistance_frequency_at_15_(0),
                                                        art_resistance_frequency_at_15_(0),
-                                                       total_resistance_frequency_at_15_(0), mean_moi_(0) {}
+                                                       total_resistance_frequency_at_15_(0), mean_moi_(0),
+                                                       current_number_of_mutation_events_(0) {}
 
 bool ModelDataCollector::recording_data() { 
   return Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day(); 
@@ -153,6 +152,7 @@ void ModelDataCollector::initialize() {
     monthly_number_of_treatment_by_location_ = Vector_by_Locations(IntVector);
     monthly_number_of_new_infections_by_location_ = Vector_by_Locations(IntVector);
     monthly_number_of_clinical_episode_by_location_ = Vector_by_Locations(IntVector);
+    monthly_number_of_clinical_episode_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
     monthly_nontreatment_by_location_ = Vector_by_Locations(IntVector);
     monthly_nontreatment_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
     monthly_treatment_failure_by_location_ = Vector_by_Locations(IntVector);
@@ -169,7 +169,7 @@ void ModelDataCollector::perform_population_statistic() {
   zero_population_statistics();
 
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
-  long long sum_moi = 0;
+  int sum_moi = 0;
 
   for (auto loc = 0ul; loc < Model::CONFIG->number_of_locations(); loc++) {
     auto pop_sum_location = 0;
@@ -179,9 +179,9 @@ void ModelDataCollector::perform_population_statistic() {
       for (auto ac = 0ul; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         std::size_t size = pi->vPerson()[loc][hs][ac].size();
         
-        pop_sum_location += size;
-        popsize_by_location_hoststate_[loc][hs] += (int) size;
-        popsize_by_location_age_class_[loc][ac] += size;
+        pop_sum_location += static_cast<int>(size);
+        popsize_by_location_hoststate_[loc][hs] += static_cast<int>(size);
+        popsize_by_location_age_class_[loc][ac] += static_cast<int>(size);
 
         for (std::size_t i = 0; i < size; i++) {
           Person* p = pi->vPerson()[loc][hs][ac][i];
@@ -241,7 +241,7 @@ void ModelDataCollector::perform_population_statistic() {
     blood_slide_prevalence_by_location_[loc] = blood_slide_prevalence_by_location_[loc] / static_cast<double>(pop_sum_location);
 
     current_EIR_by_location_[loc] = 
-      (total_number_of_bites_by_location_[loc] - last_update_total_number_of_bites_by_location_[loc]) / static_cast<double>(popsize_by_location_[loc]);
+      static_cast<double>(total_number_of_bites_by_location_[loc] - last_update_total_number_of_bites_by_location_[loc]) / static_cast<double>(popsize_by_location_[loc]);
 
     last_update_total_number_of_bites_by_location_[loc] = total_number_of_bites_by_location_[loc];
 
@@ -271,12 +271,12 @@ void ModelDataCollector::collect_number_of_bites(const int &location, const int 
 
 void ModelDataCollector::perform_yearly_update() {
   if (Model::SCHEDULER->current_time() == Model::CONFIG->start_collect_data_day()) {
-    for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
       person_days_by_location_year_[loc] = Model::POPULATION->size(loc) * Constants::DAYS_IN_YEAR();
     }
   } else if (Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) {
-    for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      auto eir = (total_number_of_bites_by_location_year_[loc] / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
+    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+      auto eir = (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
       EIR_by_location_year_[loc].push_back(eir);
 
       //this number will be changed whenever a birth or a death occurs
@@ -314,23 +314,24 @@ void ModelDataCollector::calculate_eir() {
       // Collect data for less than 1 year, note that total_time_in_years maybe <= 0 if 
       // the model time is still before collection should take place
       const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / static_cast<double>(Constants::DAYS_IN_YEAR());
-      double eir = (total_number_of_bites_by_location_year_[loc] / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
+      double eir = (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
       eir = eir / total_time_in_years;
       EIR_by_location_[loc] = eir;
 
     } else {
       double sum_eir = std::accumulate(EIR_by_location_year_[loc].begin(), EIR_by_location_year_[loc].end(), 0.0);
       auto number_of_0 = std::count(EIR_by_location_year_[loc].begin(), EIR_by_location_year_[loc].end(), 0);
-      EIR_by_location_[loc] = ((EIR_by_location_year_[loc].size() - number_of_0) == 0.0)  ? 0.0  : sum_eir / (EIR_by_location_year_[loc].size() - number_of_0);
+      EIR_by_location_[loc] = (static_cast<double>(EIR_by_location_year_[loc].size() - number_of_0) == 0.0)  ?
+              0.0  : sum_eir / static_cast<double>(EIR_by_location_year_[loc].size() - number_of_0);
     }
   }
 }
 
-// TODO Do something with the age and age_class or remove them
-void ModelDataCollector::collect_1_clinical_episode(const int &location, const int &age, const int &age_class) {
+void ModelDataCollector::collect_1_clinical_episode(const int &location, const int &age_class) {
   if (recording_data()) {
     cumulative_clinical_episodes_by_location_[location]++;
-    monthly_number_of_clinical_episode_by_location_[location] += 1;
+    monthly_number_of_clinical_episode_by_location_[location]++;
+    monthly_number_of_clinical_episode_by_location_age_class_[location][age_class]++;
   }
 }
 
@@ -370,7 +371,7 @@ void ModelDataCollector::update_average_number_bitten(const int &location, const
 
 void ModelDataCollector::calculate_percentage_bites_on_top_20() {
   auto pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
-  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
       for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         for (auto p : pi->vPerson()[loc][hs][ac]) {
@@ -385,7 +386,7 @@ void ModelDataCollector::calculate_percentage_bites_on_top_20() {
     std::sort(average_number_biten_by_location_person_[location].begin(), average_number_biten_by_location_person_[location].end(), std::greater<>());
     double total = 0;
     double t20 = 0;
-    const auto size20 = static_cast<int>(std::round(average_number_biten_by_location_person_[location].size() / 100.0 * 20));
+    const auto size20 = static_cast<int>(std::round(static_cast<double>(average_number_biten_by_location_person_[location].size()) / 100.0 * 20));
 
     for (std::size_t i = 0; i < average_number_biten_by_location_person_[location].size(); i++) {
       total += average_number_biten_by_location_person_[location][i];
@@ -478,7 +479,7 @@ void ModelDataCollector::record_1_treatment(const int &location, const int &ther
   }
 }
 
-void ModelDataCollector::record_1_mutation(const int &location, Genotype* from, Genotype* to) {
+void ModelDataCollector::record_1_mutation(const int &location) {
   if (recording_data()) {
     cumulative_mutants_by_location_[location] += 1;
   }
@@ -501,7 +502,7 @@ void ModelDataCollector::record_1_TF(const int &location, const bool &by_drug) {
   }
 
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
-    const auto current_discounted_tf = exp(log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / Constants::DAYS_IN_YEAR()));
+    const auto current_discounted_tf = exp(log(0.97) * floor(static_cast<double>(Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / Constants::DAYS_IN_YEAR()));
     cumulative_discounted_NTF_by_location_[location] += current_discounted_tf;
     cumulative_NTF_by_location_[location] += 1;
   }
@@ -534,14 +535,14 @@ void ModelDataCollector::update_after_run() {
   }
 }
 
-void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite) {
+[[maybe_unused]] void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
     auto sc_therapy = dynamic_cast<SCTherapy*>(therapy);
     if (sc_therapy != nullptr) {
       const auto art_id = sc_therapy->get_arteminsinin_id();
       if (art_id != -1 && sc_therapy->drug_ids.size() > 1) {
         const auto number_of_drugs_in_therapy = sc_therapy->drug_ids.size();
-        const auto discounted_fraction = exp(log(0.97) * floor((Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) / Constants::DAYS_IN_YEAR()));
+        const auto discounted_fraction = exp(log(0.97) * floor(static_cast<double>(Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) / Constants::DAYS_IN_YEAR()));
 
         //combine therapy
         for (std::size_t i = 0; i < number_of_drugs_in_therapy; i++) {

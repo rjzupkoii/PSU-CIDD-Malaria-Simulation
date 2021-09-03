@@ -80,7 +80,7 @@ class DbReporter : public Reporter {
     "UPDATE sim.MonthlySiteData SET InfectedIndividuals = {} WHERE MonthlyDataId = {} AND Location = {};";
 
     // Used to track location information for the life of the object
-    int* location_index;
+    std::vector<int> location_index;
 
     // Return the character code that indicates the level of genotype records (c: cell, d: district)
     virtual char get_genotype_level() { return 'C'; }

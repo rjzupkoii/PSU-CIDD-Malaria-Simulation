@@ -15,6 +15,7 @@ GenotypeDatabase::~GenotypeDatabase() {
     delete i.second;
   }
   clear();
+  delete mating_matrix;
 }
 
 void GenotypeDatabase::add(Genotype *genotype) {
