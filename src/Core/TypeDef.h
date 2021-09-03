@@ -101,7 +101,6 @@ struct ImmuneSystemInformation {
 
   double immune_inflation_rate{-1};
 
-  double min_clinical_probability{-1};
   double max_clinical_probability{-1};
 
   // Slope of the sigmoidal prob-v-immunity function, z-value

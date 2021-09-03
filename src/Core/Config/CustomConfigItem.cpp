@@ -100,7 +100,6 @@ void immune_system_information::set_value(const YAML::Node &node) {
 
   value_.immune_inflation_rate = read_node<double>(is_node, "immune_inflation_rate");
 
-  value_.min_clinical_probability = read_node<double>(is_node, "min_clinical_probability");
   value_.max_clinical_probability = read_node<double>(is_node, "max_clinical_probability");
 
   value_.immune_effect_on_progression_to_clinical = read_node<double>(is_node, "immune_effect_on_progression_to_clinical");
