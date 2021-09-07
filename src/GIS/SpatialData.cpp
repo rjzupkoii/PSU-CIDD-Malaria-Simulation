@@ -5,8 +5,8 @@
  */
 #include "SpatialData.h"
 
+#include <cmath>
 #include <fmt/format.h>
-#include <math.h>
 #include <stdexcept>
 
 #include "Core/Config/Config.h"
@@ -42,7 +42,7 @@ bool SpatialData::check_catalog(std::string& errors) {
     // If we hit the end, then there must be nothing loaded
     if (ndx == SpatialFileType::Count) { return true; }
 
-    // Check the remainder of the enteries, do this by validating the header
+    // Check the remainder of the entries, do this by validating the header
     for (; ndx != SpatialFileType::Count; ndx++) {
         if (data[ndx] == nullptr) { continue; }
         if (data[ndx]->CELLSIZE != reference->CELLSIZE) { errors += "mismatched CELLSIZE;"; }
@@ -61,7 +61,7 @@ bool SpatialData::check_catalog(std::string& errors) {
     return has_errors;
 }
 
-void SpatialData::generate_distances() {
+void SpatialData::generate_distances() const {
     auto& db = Model::CONFIG->location_db();
     auto& distances = Model::CONFIG->spatial_distance_matrix();
 
@@ -93,11 +93,11 @@ void SpatialData::generate_locations() {
 
     // If we didn't find one, return
     if (ndx == SpatialFileType::Count) { 
-        LOG(ERROR) << "No spaital file found to generate locations with!";
+        LOG(ERROR) << "No spatial file found to generate locations with!";
         return; 
     }
 
-    // Start by overallocating the location_db
+    // Start by over allocating the location_db
     auto& db = Model::CONFIG->location_db();
     db.clear();
     db.reserve(reference->NROWS * reference->NCOLS);
@@ -118,14 +118,14 @@ void SpatialData::generate_locations() {
     // Update the configured count
     Model::CONFIG->number_of_locations.set_value();
     if (Model::CONFIG->number_of_locations() == 0) {
-        // This error should be redundent since the ASC loader should catch it
+        // This error should be redundant since the ASC loader should catch it
         LOG(ERROR) << "Zero locations loaded while parsing ASC file.";
     }
     VLOG(1) << "Generated " << Model::CONFIG->number_of_locations() << " locations";
 }
 
 int SpatialData::get_district(int location) {
-    // Throw an error if there are not districts
+    // Throw an error if there are no districts
     if (data[SpatialFileType::Districts] == nullptr) {
         throw std::runtime_error(fmt::format("{} called without district data loaded", __FUNCTION__));
     }
@@ -147,18 +147,19 @@ int SpatialData::get_district_count() {
     // Do we already have a count?
     if (district_count != 0) { return district_count; }
 
-    // Determine the count
+    // Determine the count, note that the casting is a bit odd, but the number and index of districts doesn't make sense
+    // as a float whereas data structure underlying the ASC file may be float or int.
     auto first = INT_MAX;
     for (auto ndx = 0; ndx <  data[SpatialFileType::Districts]->NROWS; ndx++) {
         for (auto ndy = 0; ndy <  data[SpatialFileType::Districts]->NCOLS; ndy++) {
             if ( data[SpatialFileType::Districts]->data[ndx][ndy] ==  data[SpatialFileType::Districts]->NODATA_VALUE) { continue; }
-            if ( data[SpatialFileType::Districts]->data[ndx][ndy] > district_count) {
-                district_count = data[SpatialFileType::Districts]->data[ndx][ndy];
+            if ( data[SpatialFileType::Districts]->data[ndx][ndy] > static_cast<float>(district_count)) {
+                district_count = static_cast<int>(data[SpatialFileType::Districts]->data[ndx][ndy]);
             }
 
             // Update the label for the first index
-            if (data[SpatialFileType::Districts]->data[ndx][ndy] < first) {
-              first = data[SpatialFileType::Districts]->data[ndx][ndy];
+            if (data[SpatialFileType::Districts]->data[ndx][ndy] < static_cast<float>(first)) {
+              first = static_cast<int>(data[SpatialFileType::Districts]->data[ndx][ndy]);
             }
         }
     }
@@ -207,7 +208,7 @@ bool SpatialData::has_raster() {
     return false;
 }
 
-void SpatialData::load(std::string filename, SpatialFileType type) {
+void SpatialData::load(const std::string& filename, SpatialFileType type) {
     // Check to see if something has already been loaded
     if (data[type] != nullptr) { delete data[type]; }
 
@@ -221,7 +222,7 @@ void SpatialData::load(std::string filename, SpatialFileType type) {
 }
 
 void SpatialData::load_raster(SpatialFileType type) {
-    // Verify that that the raster data has been loaded
+    // Verify that the raster data has been loaded
     if (data[type] == nullptr) {
         throw std::runtime_error(fmt::format("{} called without raster, type id: {}", __FUNCTION__, type));
     }
@@ -259,8 +260,7 @@ void SpatialData::load_raster(SpatialFileType type) {
                     location_db[id].p_treatment_more_than_5 = values->data[row][col]; 
                     break;
                 default: 
-                    throw std::runtime_error(fmt::format("{} called with invlaid raster, type id: {}", __FUNCTION__, type)); 
-                    break;
+                    throw std::runtime_error(fmt::format("{} called with invalid raster, type id: {}", __FUNCTION__, type));
             }
             id++;
         }
@@ -298,7 +298,7 @@ void SpatialData::load_files(const YAML::Node &node) {
         load(node[TREATMENT_RATE_UNDER5].as<std::string>(), SpatialData::SpatialFileType::PrTreatmentUnder5);
     }
     if (node[TREATMENT_RATE_OVER5]) {
-        load(node[TREATMENT_RATE_UNDER5].as<std::string>(), SpatialData::SpatialFileType::PrTreatmentOver5);
+        load(node[TREATMENT_RATE_OVER5].as<std::string>(), SpatialData::SpatialFileType::PrTreatmentOver5);
     }
 }
 
@@ -361,7 +361,7 @@ bool SpatialData::parse(const YAML::Node &node) {
 }
 
 void SpatialData::parse_complete() {
-    // Delete redundent rasters once they have been loaded to the location_db
+    // Delete redundant rasters once they have been loaded to the location_db
     if (data[SpatialFileType::Beta] != nullptr) {
         delete data[SpatialFileType::Beta];
         data[SpatialFileType::Beta] = nullptr;
@@ -387,7 +387,7 @@ void SpatialData::refresh() {
         throw std::runtime_error(errors);
     }
 
-    // We have data and we know that it should be located in the same geographic space,
+    // We have data, and we know that it should be located in the same geographic space,
     // so now we can now refresh the location_db 
     auto& db = Model::CONFIG->location_db();
     if (Model::CONFIG->number_of_locations() == 0) {
@@ -401,7 +401,7 @@ void SpatialData::refresh() {
     if (data[SpatialFileType::PrTreatmentOver5] != nullptr) { load_raster(SpatialFileType::PrTreatmentOver5); }
 }
 
-void SpatialData::write(std::string filename, SpatialFileType type) {
+void SpatialData::write(const std::string& filename, SpatialFileType type) {
     // Check to make sure there is something to write
     if (data[type] == nullptr) {
         throw std::runtime_error(fmt::format("No data for spatial file type {}, write file {}", type, filename)); 

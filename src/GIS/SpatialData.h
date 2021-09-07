@@ -60,7 +60,7 @@ class SpatialData {
             double y_lower_left_corner = NOT_SET;
 
             // The size of the cell, typically in meters
-            int cellsize = NOT_SET;
+            double cellsize = NOT_SET;
         };
 
     private:
@@ -77,7 +77,7 @@ class SpatialData {
         AscFile** data;
 
         // Flag to indicate if data has been loaded since the last time it was checked
-        bool dirty;
+        bool dirty = false;
 
         // The size of the cells in the raster, the units shouldn't matter, but this was
         // written when we were using 5x5 km cells
@@ -102,7 +102,7 @@ class SpatialData {
         void generate_locations();
 
         // Load the given raster file into the spatial catalog and assign the given label
-        void load(std::string filename, SpatialFileType type);
+        void load(const std::string &filename, SpatialFileType type);
 
         // Load all the spatial data from the node
         void load_files(const YAML::Node &node);
@@ -136,7 +136,7 @@ class SpatialData {
         bool has_raster(SpatialFileType type) { return data[type] != nullptr; }
 
         // Generate the Euclidean distances for the location_db
-        void generate_distances();
+        void generate_distances() const;
 
         // Get the district id that corresponds to the cell id
         int get_district(int location);
@@ -159,7 +159,7 @@ class SpatialData {
         void refresh();
 
         // Write the current spatial data to the filename and path indicated, output will be an ASC file
-        void write(std::string filename, SpatialFileType type);
+        void write(const std::string &filename, SpatialFileType type);
 
 };
 
