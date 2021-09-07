@@ -66,7 +66,7 @@ void ProgressToClinicalEvent::execute() {
   clinical_caused_parasite_->set_update_function(Model::MODEL->clinical_update_function());
 
   //Statistic collect cumulative clinical episodes
-  Model::DATA_COLLECTOR->collect_1_clinical_episode(person->location(), person->age(), person->age_class());
+  Model::DATA_COLLECTOR->collect_1_clinical_episode(person->location(), person->age_class());
 
   const auto p = Model::RANDOM->random_flat(0.0, 1.0);
 

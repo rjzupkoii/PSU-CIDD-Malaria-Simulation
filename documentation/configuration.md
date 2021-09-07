@@ -139,7 +139,6 @@ immune_system_information:
   sd_initial_condition: 0.1
 
   # Probability bounds for clinical symptoms
-  min_clinical_probability: 0.05
   max_clinical_probability: 0.99
 
   # Immunity acquisition parameters
@@ -158,7 +157,6 @@ immune_system_information:
 **duration_for_fully_immune** (double) : Duration, in days, of infection when fully immune. \
 **mean_initial_condition** (double) : Mean initial immune function of population at initialization. \
 **sd_initial_condition** (double) : Standard deviation of initial immune function of population at initiation. \
-**min_clinical_probability** (double) : Minimum probability of clinical symptoms as a result of a new infection. \
 **max_clinical_probability** (double) : Maximum probability of clinical symptoms as a result of a new infection. \
 **immune_inflation_rate** (double) : Yearly age-dependent faster acquisition of immunity between ages 1 to 10. \
 **age_mature_immunity** (double) : Age at which the immune function is mature, i.e., age at which the immune acquisition model switches from child to adult. \

@@ -1,7 +1,7 @@
 /*
  * FlatArray.hxx
  * 
- * This pseudo-library provides templates for a 2D and 3D data structure that has been flattended
+ * This pseudo-library provides templates for a 2D and 3D data structure that has been flattened
  * into a 1D array. This is generally going to be more performant than dimensional data structures 
  * but may not be as flexible.
  */ 
@@ -13,7 +13,7 @@
 template <typename T>
 class Flat2D {
     private:
-        T* data = nullptr;
+        std::vector<T> data;
         std::size_t x_size = 0;         // Width
         std::size_t y_size = 0;         // Height
 
@@ -23,7 +23,7 @@ class Flat2D {
             this->x_size = x_size;
             this->y_size = y_size;
 
-            data = new T[x_size * y_size];
+            data.reserve(x_size * y_size);
         }
 
         T get(int x, int y) { return data[x + y * y_size]; }
@@ -41,7 +41,7 @@ class Flat2D {
             }
 
             // Allocate the memory
-            result = new T[result->x_size * result->y_size];
+            result->data(result->x_size * result->y_size);
 
             // Copy the data
             for (std::size_t ndx = 0; ndx < result->x_size; ndx++) {
@@ -58,7 +58,7 @@ class Flat2D {
 template <typename T>
 class Flat3D {
     private:
-        T* data = nullptr;
+        std::vector<T> data;
         std::size_t x_size = 0;         // Width
         std::size_t y_size = 0;         // Height
         std::size_t z_size = 0;         // Depth
@@ -73,7 +73,7 @@ class Flat3D {
             this->y_size = y_size;
             this->z_size = z_size;
 
-            data = new T[x_size * y_size * z_size];
+            data.reserve(x_size * y_size * z_size);
         }
 
         T get(int x, int y, int z) { return data[x + y_size * (y + x_size * z)]; }
@@ -96,7 +96,7 @@ class Flat3D {
             }
 
             // Allocate the memory
-            result->data = new T[result->x_size * result->y_size * result->z_size];
+            result->data.reserve(result->x_size * result->y_size * result->z_size);
 
             // Copy the data
             for (std::size_t ndx = 0; ndx < result->x_size; ndx++) {
