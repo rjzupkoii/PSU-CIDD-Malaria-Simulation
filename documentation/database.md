@@ -126,7 +126,7 @@ sudo a2ensite pgadmin4.conf
 sudo systemctl restart apache2
 ```
 
-At this point you should be able to connect to the pgAdmin control panel at http://[SERVER IP ADDRESS]. Login to the control panel using the credentials supplied during configuration. One logged in, you should be able to add the localhost via "Add New Server" and proceed with administration of the databases using pgAdmin.
+At this point you should be able to connect to the pgAdmin control panel at http://[SERVER IP ADDRESS]. Login to the control panel using the credentials supplied during configuration. One logged in, you should be able to add the localhost via "Add New Server" and proceed with administration of the databases using pgAdmin. Additional deployment information can be found on [pgAdmin.org](https://www.pgadmin.org/) under [Server Deployment](https://www.pgadmin.org/docs/pgadmin4/5.7/server_deployment.html).
 
 # Using the Database
 
