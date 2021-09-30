@@ -41,9 +41,10 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 
 The current head of the 4.x.main branch is version 4.1.0, and should not be considered stable code. The current features in the model are:
 
-1. Weighted frequency has been removed from the genotype table (`sim.monthlygenomedata.weightedfrequency`), this will break code written for the 4.0.0 schema, but will reduce the storage requirements studies with many replicates and genotypes. 
-2. Depercated values have been removed from the configuration (`min_clinical_probablity`).
-3. Fixes for various bugs that were found in version 4.0.0.
+1. Added the `DbReporterDistrict` allowing for reporting data to be aggregated to the district level when reporting, database schemea also updated to support this.
+2. Weighted frequency has been removed from the genotype table (`sim.monthlygenomedata.weightedfrequency`), this will break code written for the 4.0.0 schema, but will reduce the storage requirements studies with many replicates and genotypes. 
+3. Depercated values have been removed from the configuration (`min_clinical_probablity`).
+4. Fixes for various bugs that were found in version 4.0.0.
 
 ### Version 4.0.0
 
