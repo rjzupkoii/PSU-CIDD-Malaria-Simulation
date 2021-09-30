@@ -168,7 +168,7 @@ void Population::perform_infection_event() {
 
     // Calculate location adjustments
     
-    const auto new_beta = Model::CONFIG->location_db()[loc].beta * seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, loc);
+    const auto new_beta = Model::CONFIG->location_db()[loc].beta * Model::CONFIG->seasonal_info()->get_seasonal_factor(Model::SCHEDULER->calendar_date, loc);
 
     // Iterate over all of the parasite types
     for (std::size_t parasite_type_id = 0; parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {

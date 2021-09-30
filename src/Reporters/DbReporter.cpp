@@ -199,7 +199,7 @@ bool DbReporter::do_monthly_report() {
         // Get the relevant data
         auto days_elapsed = Model::SCHEDULER->current_time();
         auto model_time = std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date);
-        auto seasonal_factor = seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
+        auto seasonal_factor = Model::CONFIG->seasonal_info()->get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
 
         // Prepare the summary query
         std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor);

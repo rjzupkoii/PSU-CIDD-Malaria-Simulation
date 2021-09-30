@@ -72,10 +72,16 @@ To Be Written.
 
 
 ### seasonal_info 
-This setting governs the malaria season in the model.
+This setting governs the malaria season in the model and operates differently depending upon the setting and version of the simulation.
+
+---
+Under previous versions and 4.1.0 and higher, an equation based model seasonal variation in transmission is provided where parameters must be fit to the following equation: multiplier = base + (a * sin<sup>+</sup>(b * π * (t - φ) / 365))
+
+Once the equation is fit, the YAML can then be written as follows:
 
 ```YAML
 seasonal_info:
+  mode: equation
   enable: true
   raster: false
   a: [0.0]
@@ -84,12 +90,25 @@ seasonal_info:
   period: 365
 ```
 
+**mode** (**equation** | rainfall) : (*Optional*) indicates the node that should be used for the seasonality, namely based upon the equation based model, or by using rainfall data. In the event that a value is not supplied, the simulation will default to the equation based model.\  
 **enable** (true | false) : enables or disables seasonality in the simulation.\
 **raster** (true | false) : (*Version 4.0*) indicates that a raster file should be used to set the correct rate for each pixel.\
 **a**, **phi**, **min_value** : arrays of one to *n* `double` values that inform the seasonality period.\
 &nbsp;*Version 3.x*: when one value is provided, it is used for all locations, otherwise a value must be provided for each location\
 &nbsp;*Version 4.0*: if `raster` is true then each index in the array is used for the pixel coded with that value, otherwise the first value is used for all pixels.\
 **period** : the number of days defined by the period.
+
+---
+For version 4.1.1 and higher, a rainfall based model can be used with the following configuration:
+
+```YAML
+seasonal_info:
+  mode: rainfall
+  filename: filename.csv
+  period: 365
+```
+
+**mode** (equation | **rainfall**) : Required in order to load th
 
 ## Individual Immunity and Infection Response
 
