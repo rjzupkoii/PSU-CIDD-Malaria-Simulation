@@ -48,7 +48,7 @@ void MonthlyReporter::monthly_report()
   ss << Model::SCHEDULER->current_time() << Tsv::sep;
   ss << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << Tsv::sep;
   ss << date::format("%Y\t%m\t%d", Model::SCHEDULER->calendar_date) << Tsv::sep;
-  ss << seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0) << Tsv::sep;
+  ss << Model::CONFIG->seasonal_info()->get_seasonal_factor(Model::SCHEDULER->calendar_date, 0) << Tsv::sep;
   ss << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 1) << Tsv::sep;
   ss << Model::TREATMENT_COVERAGE->get_probability_to_be_treated(0, 10) << Tsv::sep;
   ss << Model::POPULATION->size() << Tsv::sep;

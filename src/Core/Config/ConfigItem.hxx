@@ -47,6 +47,7 @@ class ConfigItem : public IConfigItem {
 
   virtual T &operator()();
 
+  // Set the values from the configuration file
   void set_value(const YAML::Node &node) override;
 };
 

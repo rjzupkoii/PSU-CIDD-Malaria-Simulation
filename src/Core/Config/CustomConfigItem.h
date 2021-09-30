@@ -14,6 +14,7 @@
 #include <utility>
 
 #include "ConfigItem.hxx"
+#include "Environment/SeasonalInfo.h"
 #include "Therapies/DrugDatabase.h"
 #include "Parasites/GenotypeDatabase.h"
 #include "Core/MultinomialDistributionGenerator.h"
@@ -64,35 +65,23 @@ class spatial_distance_matrix : public ConfigItem<std::vector<std::vector<double
   void set_value(const YAML::Node &node) override;
 };
 
-// This class defines how seasonality works in the model
+// This class allows for the seasonal information object to be loaded based upon the configuration
 class seasonal_info : public IConfigItem {
   DISALLOW_COPY_AND_ASSIGN(seasonal_info)
   DISALLOW_MOVE(seasonal_info)
 
-  public:
-    SeasonalInfo value_{};
-    explicit seasonal_info(const std::string &name, SeasonalInfo default_value, Config *config = nullptr) 
-      : IConfigItem(config, name), value_{ std::move(default_value) } {}
-    virtual ~seasonal_info() = default;
-
-    // Return the seasonal information
-    virtual SeasonalInfo &operator()() { return value_; }
-
-    // Set the values from the configuration file
-    void set_value(const YAML::Node &node) override;
-
-    // Return the seasonal factor for the given day and location, based upon the loaded configuration.
-    static double get_seasonal_factor(const date::sys_days &today, const int &location);
-
   private:
-    // Clear the current seasonal info
-    void clear();
+    ISeasonalInfo* value_{nullptr};
 
-    // Set the values based upon the contents of a raster file.
-    void set_from_raster(const YAML::Node &node); 
+  public:
+    // Invoked via macro definition
+    explicit seasonal_info(const std::string &name, ISeasonalInfo *default_value, Config *config = nullptr) :
+      IConfigItem(config, name), value_{default_value} { }
 
-    // Set the period for a single location given the index
-    void set_seasonal_period(const YAML::Node &node, int index);
+    ~seasonal_info() override;
+
+    ISeasonalInfo* operator()() { return value_; }
+    void set_value(const YAML::Node &node) override;
 };
 
 namespace Spatial {
