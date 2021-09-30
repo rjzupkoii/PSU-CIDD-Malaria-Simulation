@@ -37,12 +37,13 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 
 ## About
 
-### Version 4.1.0 (unstable)
+### Version 4.1.0
 
 The current head of the 4.x.main branch is version 4.1.0, and should not be considered stable code. The current features in the model are:
 
 1. Weighted frequency has been removed from the genotype table (`sim.monthlygenomedata.weightedfrequency`), this will break code written for the 4.0.0 schema, but will reduce the storage requirements studies with many replicates and genotypes. 
 2. Depercated values have been removed from the configuration (`min_clinical_probablity`).
+3. Fixes for various bugs that were found in version 4.0.0.
 
 ### Version 4.0.0
 
