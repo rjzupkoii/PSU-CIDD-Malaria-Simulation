@@ -68,8 +68,17 @@ class SeasonalInfoFactory {
         return new SeasonalDisabled();
       }
 
+      // Check to make sure the mode node exists
+      try {
+        if (node["mode"].IsNull()) {
+          throw std::invalid_argument("Seasonal information mode is not found.");
+        }
+      } catch (YAML::InvalidNode &ex) {
+        throw std::invalid_argument("Seasonal information mode node is not found.");
+      }
+
       // Return the correct object for the named mode
-      auto mode = node["name"].as<std::string>();
+      auto mode = node["mode"].as<std::string>();
       std::transform(mode.begin(), mode.end(), mode.begin(), ::toupper);
       if (mode == "EQUATION") {
         VLOG(1) << "Using equation-based seasonal information.";
