@@ -17,29 +17,32 @@ SeasonalEquation* SeasonalEquation::build(const YAML::Node &node, Config* config
   // Prepare the object to be returned
   auto value = new SeasonalEquation();
 
+  // Note the node for settings
+  auto settings = node["equation"];
+
   // Before doing anything, check to see if there is a raster
-  if (node["raster"] && node["raster"].as<bool>()) {
-    value->set_from_raster(node);
+  if (settings["raster"] && settings["raster"].as<bool>()) {
+    value->set_from_raster(settings);
     return value;
   }
 
   // Check to make sure the nodes exist
-  if (node["base"].IsNull()  || node["a"].IsNull() || node["b"].IsNull() || node["phi"].IsNull()) {
-    throw std::invalid_argument("One or more of the seasonality parameters is missing.");
+  if (settings["base"].IsNull()  || settings["a"].IsNull() || settings["b"].IsNull() || settings["phi"].IsNull()) {
+    throw std::invalid_argument("One or more of the seasonality equation parameters are missing.");
   }
-  if (node["base"].size() == 0  || node["a"].size() == 0 || node["b"].size() == 0 || node["phi"].size() == 0) {
-    throw std::invalid_argument("One or more of the seasonality parameters is an empty array.");
+  if (settings["base"].size() == 0  || settings["a"].size() == 0 || settings["b"].size() == 0 || settings["phi"].size() == 0) {
+    throw std::invalid_argument("One or more of the seasonality equation parameters is an empty array.");
   }
 
   // Warn the user if enough nodes were not provided
-  if (node["a"].size() > 1 && node["a"].size() < config->number_of_locations()) {
-    LOG(WARNING) << fmt::format("Only {} seasonal settings provided, but {} are needed for all locations", node["a"].size(), config->number_of_locations());
+  if (settings["a"].size() > 1 && settings["a"].size() < config->number_of_locations()) {
+    LOG(WARNING) << fmt::format("Only {} seasonal  equation settings provided, but {} are needed for all locations", settings["a"].size(), config->number_of_locations());
   }
 
   // Set the values from the array and return
   for (auto i = 0ul; i < config->number_of_locations(); i++) {
-    auto input_loc = node["a"].size() < config->number_of_locations() ? 0 : i;
-    value->set_seasonal_period(node, input_loc);
+    auto input_loc = settings["a"].size() < config->number_of_locations() ? 0 : i;
+    value->set_seasonal_period(settings, input_loc);
   }
   return value;
 }
@@ -64,11 +67,11 @@ void SeasonalEquation::set_from_raster(const YAML::Node &node) {
   // Get the raster data and make sure it is valid
   AscFile* raster = SpatialData::get_instance().get_raster(SpatialData::SpatialFileType::Ecoclimatic);
   if (raster == nullptr) {
-    throw std::invalid_argument("seasonal_info raster flag set without eco-climatic raster loaded.");
+    throw std::invalid_argument("Seasonal equation  raster flag set without eco-climatic raster loaded.");
   }
 
   // Prepare to run
-  LOG(INFO) << "Setting seasonal_info using raster data.";
+  LOG(INFO) << "Setting seasonal equation using raster data.";
 
   // Load the values based upon the raster data
   auto size = node["a"].size();
@@ -83,16 +86,8 @@ void SeasonalEquation::set_from_raster(const YAML::Node &node) {
       if (index > (size - 1)) { throw std::out_of_range(fmt::format("Raster value at row: {}, col: {} exceeds bounds of {}.", row, col, size)); }
 
       // Set the seasonal period
-      set_seasonal_period(node, index);
+      set_seasonal_period(node["equation"], index);
     }
-  }
-
-  // Update the reference values as well
-  for (std::size_t ndx = 0; ndx < size; ndx++) {
-    reference_base.push_back(node["base"][ndx].as<double>());
-    reference_A.push_back(node["a"][ndx].as<double>());
-    reference_B.push_back(node["b"][ndx].as<double>());
-    reference_phi.push_back(node["phi"][ndx].as<double>());
   }
 }
 
@@ -102,6 +97,12 @@ void SeasonalEquation::set_seasonal_period(const YAML::Node &node, unsigned long
   A.push_back(node["a"][index].as<double>());
   B.push_back(node["b"][index].as<double>());
   phi.push_back(node["phi"][index].as<double>());
+
+  // Update the reference values as well
+  reference_base.push_back(node["base"][index].as<double>());
+  reference_A.push_back(node["a"][index].as<double>());
+  reference_B.push_back(node["b"][index].as<double>());
+  reference_phi.push_back(node["phi"][index].as<double>());
 }
 
 // Update the seasonality of the equation from the current to the new one.
