@@ -53,8 +53,14 @@ class SeasonalEquation : public ISeasonalInfo {
 };
 
 class SeasonalRainfall : public ISeasonalInfo {
+  private:
+    DoubleVector adjustments;
+    int period;
+
+    void read(std::string &filename);
+
   public:
-    static SeasonalRainfall* build(const YAML::Node &node, Config* config);
+    static SeasonalRainfall* build(const YAML::Node &node);
     double get_seasonal_factor(const date::sys_days &today, const int &location) override;
 };
 
@@ -86,7 +92,7 @@ class SeasonalInfoFactory {
       }
       if (mode == "RAINFALL") {
         VLOG(1) << "Using rainfall-based seasonal information.";
-        return SeasonalRainfall::build(node, config);
+        return SeasonalRainfall::build(node);
       }
       throw std::runtime_error(fmt::format("Unknown seasonal mode {}", mode));
     }
