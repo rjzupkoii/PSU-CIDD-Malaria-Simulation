@@ -74,7 +74,6 @@ To Be Written.
 ### seasonal_info 
 This setting governs the malaria season in the model and operates differently depending upon the setting and version of the simulation.
 
----
 Under previous versions and 4.1.0 and higher, an equation based model seasonal variation in transmission is provided where parameters must be fit to the following equation: multiplier = base + (a * sin<sup>+</sup>(b * π * (t - φ) / 365))
 
 Once the equation is fit, the YAML can then be written as follows:
@@ -99,7 +98,6 @@ seasonal_info:
 &nbsp;*Version 4.0*: if `raster` is true then each index in the array is used for the pixel coded with that value, otherwise the first value is used for all pixels.\
 **period** : the number of days defined by the period.
 
----
 For version 4.1.1 and higher, a rainfall based model can be used with the following configuration:
 
 ```YAML
@@ -111,7 +109,9 @@ seasonal_info:
     period: 365
 ```
 
-**mode** (equation | **rainfall**) : Required in order to load th
+**mode** (equation | **rainfall**) : Required in order to load the rainfall data.\
+**filename** (string) : The CSV file that contains the adjustment that should be applied to the beta. Each adjustment should be supplied on a single line in the file.\
+**period** (integer) : The period of time before the pattern in the CSV file should repeat, generally 365 days is expected.
 
 ## Individual Immunity and Infection Response
 

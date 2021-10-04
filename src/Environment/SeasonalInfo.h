@@ -87,11 +87,11 @@ class SeasonalInfoFactory {
       auto mode = node["mode"].as<std::string>();
       std::transform(mode.begin(), mode.end(), mode.begin(), ::toupper);
       if (mode == "EQUATION") {
-        VLOG(1) << "Using equation-based seasonal information.";
+        LOG(INFO) << "Using equation-based seasonal information.";
         return SeasonalEquation::build(node, config);
       }
       if (mode == "RAINFALL") {
-        VLOG(1) << "Using rainfall-based seasonal information.";
+        LOG(INFO) << "Using rainfall-based seasonal information.";
         return SeasonalRainfall::build(node);
       }
       throw std::runtime_error(fmt::format("Unknown seasonal mode {}", mode));
