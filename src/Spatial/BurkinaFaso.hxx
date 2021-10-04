@@ -10,14 +10,18 @@
 #ifndef BURKINAFASO_HXX
 #define BURKINAFASO_HXX
 
-#include "easylogging++.h"
+#include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
+#include "Model.h"
 #include "NudgeBase.hxx"
 #include "SpatialModel.hxx"
+
+#include "easylogging++.h"
 #include "yaml-cpp/yaml.h"
 
+
 namespace Spatial {
-    class BurkinaFaso : public SpatialModel, public NudgeBase {
+    class BurkinaFaso : public SpatialModel {
         DISALLOW_COPY_AND_ASSIGN(BurkinaFaso)
 
         VIRTUAL_PROPERTY_REF(double, tau)
@@ -26,11 +30,51 @@ namespace Spatial {
         VIRTUAL_PROPERTY_REF(double, capital)
         VIRTUAL_PROPERTY_REF(double, penalty)
 
-        const double CAPITAL_DISTRICT = 14;
+        private:
+            // Hold on to the total number of locations, so we can free the kernel
+            unsigned long locations = 0;
 
-        
+            // These variables will be computed when the prepare method is called
+            double* travel = nullptr;
+            double** kernel = nullptr;
+
+            void prepare_kernel() {
+
+              // Prepare the kernel object
+              kernel = new double*[locations];
+
+              // Get the distance matrix
+              auto distance = Model::CONFIG->spatial_distance_matrix();
+
+              // Iterate through all the locations and calculate the kernel
+              for (auto source = 0; source < locations; source++) {
+                for (auto destination = 0; destination < locations; destination++) {
+                  kernel[source][destination] = std::pow(1 + (distance[source][destination] / rho_), (-alpha_));
+                }
+              }
+            }
+
+            double* prepare_travel(const SpatialData::SpatialFileType type) {
+              // Get the travel times raster
+              AscFile* raster = SpatialData::get_instance().get_raster(type);
+              if (raster == nullptr) {
+                throw std::runtime_error(fmt::format("{} called without travel data loaded", __FUNCTION__));
+              }
+
+              // Use the min and max to normalize the raster into an array
+              auto id = 0;
+              travel = new double[locations];
+              for (auto row = 0; row < raster->NROWS; row++) {
+                for (auto col = 0; col < raster->NCOLS; col++) {
+                  if (raster->data[row][col] == raster->NODATA_VALUE) { continue; }
+                  travel[id] = raster->data[row][col];
+                  id++;
+                }
+              }
+            }
+
         public:
-            BurkinaFaso(const YAML::Node &node) { 
+            explicit BurkinaFaso(const YAML::Node &node) {
                 tau_ = node["tau"].as<double>();
                 alpha_ = node["alpha"].as<double>();
                 rho_ = std::pow(10, node["log_rho"].as<double>());
@@ -38,15 +82,38 @@ namespace Spatial {
                 penalty_ = node["penalty"].as<double>();
             }
 
-            virtual ~BurkinaFaso() { }
+            ~BurkinaFaso() override {
+              // Delete memory allocated to the kernel
+              if (kernel != nullptr) {
+                for (auto ndx = 0; ndx < locations; ndx++) {
+                  delete kernel[ndx];
+                }
+                delete kernel;
+              }
 
+              // Delete everything else
+              delete travel;
+            }
+
+            void prepare() override {
+              // Note the number of locations
+              locations = Model::CONFIG->number_of_locations();
+
+              // Allow the work to be done
+              prepare_kernel();
+              prepare_travel(SpatialData::SpatialFileType::Travel);
+            }
+
+            [[nodiscard]]
             DoubleVector get_v_relative_out_movement_to_destination(
                     const int &from_location, const int &number_of_locations,
                     const DoubleVector &relative_distance_vector,
-                    const IntVector &v_number_of_residents_by_location) const override { 
+                    const IntVector &v_number_of_residents_by_location) const override {
 
-                // NOTE this variable is STATIC
-                static double* travel = nullptr;
+                // Dependent objects should have been created already, so throw an exception if they are not
+                if (kernel == nullptr || travel == nullptr) {
+                  throw std::runtime_error(fmt::format("{} called without kernel or travel surface prepared", __FUNCTION__));
+                }
 
                 // Note the population size
                 auto population = v_number_of_residents_by_location[from_location];
@@ -54,13 +121,6 @@ namespace Spatial {
                 // Note the source district
                 auto source_district = SpatialData::get_instance().get_district(from_location);
 
-                // Get the relevent surfaces, preparing the surface is an expensive operation,
-                // so only do it once since the population should generally continue to grow
-                // proportionately for each cell
-                if (travel == nullptr) {
-                    travel = prepare_surface(SpatialData::SpatialFileType::Travel, number_of_locations);    
-                }
-                
                 // Prepare the vector for results
                 std::vector<double> results(number_of_locations, 0.0);
 
@@ -68,12 +128,8 @@ namespace Spatial {
                     // Continue if there is nothing to do
                     if (NumberHelpers::is_equal(relative_distance_vector[destination], 0.0)) { continue; }
 
-                    // Calculate the distance kernel
-                    double distance = relative_distance_vector[destination];
-                    double kernel = std::pow(1 + (distance / rho_), (-alpha_));
-
                     // Calculate the proportional probability
-                    double probability = std::pow(population, tau_) * kernel;
+                    double probability = std::pow(population, tau_) * kernel[from_location][destination];
 
                     // Adjust the probability by the friction surface
                     probability = probability / (1 + travel[from_location] + travel[destination] );
