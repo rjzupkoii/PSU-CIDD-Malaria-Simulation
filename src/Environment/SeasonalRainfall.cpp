@@ -5,6 +5,8 @@
  */
 #include "SeasonalInfo.h"
 
+#include "Helpers/TimeHelpers.h"
+
 SeasonalRainfall *SeasonalRainfall::build(const YAML::Node &node) {
   // Prepare the object to be returned
   auto value = new SeasonalRainfall();
@@ -33,7 +35,11 @@ SeasonalRainfall *SeasonalRainfall::build(const YAML::Node &node) {
 }
 
 double SeasonalRainfall::get_seasonal_factor(const date::sys_days &today, const int &location) {
-  return ISeasonalInfo::get_seasonal_factor(today, location);
+  // Get the day of the year
+  auto doy = TimeHelpers::day_of_year(today);
+
+  // If it's a leap day, return the last day a second time, otherwise just return the value for the day
+  return (doy == 366) ? adjustments[doy - 1] : adjustments[doy];
 }
 
 void SeasonalRainfall::read(std::string &filename) {
