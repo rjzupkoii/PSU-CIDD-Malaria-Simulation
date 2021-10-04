@@ -13,12 +13,10 @@
 #include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
 #include "Model.h"
-#include "NudgeBase.hxx"
 #include "SpatialModel.hxx"
 
 #include "easylogging++.h"
 #include "yaml-cpp/yaml.h"
-
 
 namespace Spatial {
     class BurkinaFaso : public SpatialModel {
