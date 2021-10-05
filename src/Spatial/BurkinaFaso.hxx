@@ -36,8 +36,8 @@ namespace Spatial {
             double* travel = nullptr;
             double** kernel = nullptr;
 
+            // Precompute the kernel function for the movement model
             void prepare_kernel() {
-
               // Prepare the kernel object
               kernel = new double*[locations];
 
@@ -53,7 +53,8 @@ namespace Spatial {
               }
             }
 
-            double* prepare_travel(const SpatialData::SpatialFileType type) {
+            // Prepare the travel raster for the movement model
+            void prepare_travel(const SpatialData::SpatialFileType type) {
               // Get the travel times raster
               AscFile* raster = SpatialData::get_instance().get_raster(type);
               if (raster == nullptr) {
