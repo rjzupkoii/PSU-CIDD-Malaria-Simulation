@@ -42,6 +42,7 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 The version 4.1.1 release is focused on adding new features needed for research:
 
 1. Added new seasonality method based upon rainfall data.
+2. Refactored movement model for better flexibility, better Burkina Faso model performance. 
 
 ### Version 4.1.0
 
