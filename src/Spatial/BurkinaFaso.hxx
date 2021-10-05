@@ -46,6 +46,7 @@ namespace Spatial {
 
               // Iterate through all the locations and calculate the kernel
               for (auto source = 0; source < locations; source++) {
+                kernel[source] = new double[locations];
                 for (auto destination = 0; destination < locations; destination++) {
                   kernel[source][destination] = std::pow(1 + (distance[source][destination] / rho_), (-alpha_));
                 }

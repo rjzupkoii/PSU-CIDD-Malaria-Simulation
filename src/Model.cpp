@@ -38,6 +38,7 @@
 #include "Strategies/IStrategy.h"
 #include "Malaria/SteadyTCM.h"
 #include "Validation/MovementValidation.h"
+#include "Spatial/SpatialModel.hxx"
 
 #define empty_or_blank(string_data) (string_data.empty() || string_data.size() == 0)
 
@@ -174,6 +175,9 @@ void Model::initialize(int job_number, std::string std) {
   population_->initialize();
   LOG(INFO) << fmt::format("Location count: {0}", CONFIG->number_of_locations());
   LOG(INFO) << fmt::format("Population size: {0}", population_->size());
+
+  VLOG(1) << "Initializing movement model";
+  config_->spatial_model()->prepare();
 
   VLOG(1) << "Introducing initial cases";
   population_->introduce_initial_cases();
