@@ -7,6 +7,7 @@
 
 #include <fmt/format.h>
 #include <thread>
+#include <regex>
 
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
@@ -73,9 +74,9 @@ void DbReporter::prepare_configuration(pqxx::connection* connection) {
     
     // Remove the new lines from the string
     std::string yaml = stream.str();
-    yaml.erase(std::remove(yaml.begin(), yaml.end(), '\r'), yaml.end());
-    yaml.erase(std::remove(yaml.begin(), yaml.end(), '\n'), yaml.end());
-    
+    yaml = std::regex_replace(yaml, std::regex("\n"), std::string(1, char(1)));
+    yaml = std::regex_replace(yaml, std::regex("\r"), std::string(1, char(1)));
+
     // Check to see if this is a known configuration
     pqxx::work db(*connection);
     std::string query = fmt::format(SELECT_CONFIGURATION, db.quote(yaml), db.quote(filename));

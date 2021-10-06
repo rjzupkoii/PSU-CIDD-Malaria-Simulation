@@ -42,13 +42,14 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 The version 4.1.1 release is focused on adding new features needed for research:
 
 1. Added new seasonality method based upon rainfall data.
-2. Refactored movement model for better flexibility, better Burkina Faso model performance. 
+2. Refactored movement model for better flexibility, better Burkina Faso model performance.
+3. Updated `DbReporter` to use ASCII character one (`SOH` or ☺) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored. 
 
 ### Version 4.1.0
 
 The version 4.1.0 release focused on quality of life updates as well as correcting bugs found in the 4.0.0 release:
 
-1. Added the `DbReporterDistrict` allowing for reporting data to be aggregated to the district level when reporting, database schemea also updated to support this.
+1. Added the `DbReporterDistrict` allowing for reporting data to be aggregated to the district level when reporting, database schema also updated to support this.
 2. Weighted frequency has been removed from the genotype table (`sim.monthlygenomedata.weightedfrequency`), this will break code written for the 4.0.0 schema, but will reduce the storage requirements studies with many replicates and genotypes. 
 3. Deprecated values have been removed from the configuration (`min_clinical_probablity`).
 4. Fixes for various bugs that were found in version 4.0.0.
