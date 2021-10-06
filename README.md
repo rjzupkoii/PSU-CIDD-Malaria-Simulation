@@ -43,7 +43,7 @@ The version 4.1.1 release is focused on adding new features needed for research:
 
 1. Added new seasonality method based upon rainfall data.
 2. Refactored movement model for better flexibility, better Burkina Faso model performance.
-3. Updated `DbReporter` to use ASCII character one (`SOH` or ☺) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored. 
+3. Updated `DbReporter` to use ASCII character one (`SOH` or `☺`) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored. 
 
 ### Version 4.1.0
 
