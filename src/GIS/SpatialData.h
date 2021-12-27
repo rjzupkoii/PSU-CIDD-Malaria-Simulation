@@ -144,6 +144,9 @@ class SpatialData {
         // Get the count of districts loaded, or -1 if they have not been loaded
         int get_district_count();
 
+        // Get the locations that are within the given district, throws an error if not districts are loaded
+        std::vector<int> get_district_locations(int district);
+
         // Returns the index of the first district.
         // Note that the index may be one (ArcGIS default) or zero; however, a delayed error is generated if the value
         // is not one of the two.

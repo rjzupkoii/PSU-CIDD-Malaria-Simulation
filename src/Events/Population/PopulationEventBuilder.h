@@ -19,6 +19,9 @@ namespace YAML {
 }
 
 class PopulationEventBuilder {
+private:
+  static void verify_single_node(const YAML::Node& node, const std::string& name);
+
 public:
   static std::vector<Event*> build(const YAML::Node& node, Config* config);
 
@@ -43,6 +46,8 @@ public:
   static std::vector<Event*> build_introduce_aq_mutant_parasite_events(const YAML::Node& node, Config* config);
 
   static std::vector<Event*> build_introduce_lumefantrine_mutant_parasite_events(const YAML::Node& node, Config* config);
+
+  static std::vector<Event*> build_introduce_mutant_events(const YAML::Node& node, Config* config);
 
   static std::vector<Event*> build_annual_coverage_update_event(const YAML::Node& node, Config* config);
 

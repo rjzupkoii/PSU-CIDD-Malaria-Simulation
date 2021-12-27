@@ -1,15 +1,20 @@
-#define NOMINMAX
-
+/**
+ * PopulationEventBuilder.cpp
+ *
+ * Implement the population event builder factory.
+ */
 #include "PopulationEventBuilder.h"
+
+#include <algorithm>
 #include <vector>
+
 #include "yaml-cpp/yaml.h"
 #include "Core/Config/Config.h"
 #include "ImportationEvent.h"
 #include "ImportationPeriodicallyEvent.h"
 #include "ChangeTreatmentCoverageEvent.h"
 #include "ChangeStrategyEvent.h"
-#include <algorithm>
-#include <Model.h>
+#include "Model.h"
 #include "SingleRoundMDAEvent.h"
 #include "ModifyNestedMFTEvent.h"
 #include "TurnOnMutationEvent.h"
@@ -17,10 +22,12 @@
 #include "IntroducePlas2CopyParasiteEvent.h"
 #include "IntroduceAQMutantEvent.h"
 #include "IntroduceLumefantrineMutantEvent.h"
+#include "GIS/SpatialData.h"
 
 #include "AnnualBetaUpdateEvent.hxx"
 #include "AnnualCoverageUpdateEvent.hxx"
 #include "ImportationPeriodicallyRandomEvent.h"
+#include "IntroduceMutantEvent.h"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
@@ -232,6 +239,9 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_
 // YAML node contains a rate of change and start date.
 std::vector<Event*> PopulationEventBuilder::build_annual_beta_update_event(const YAML::Node& node, Config* config) {  
   try {
+    // Check the node size
+    verify_single_node(node, AnnualBetaUpdateEvent::EventName);
+
     // Build the event
     auto start_date = node[0]["day"].as<date::year_month_day>();
     auto rate = node[0]["rate"].as<float>();
@@ -253,6 +263,9 @@ std::vector<Event*> PopulationEventBuilder::build_annual_beta_update_event(const
 // the YAML node contains a rate of change and start date.
 std::vector<Event*> PopulationEventBuilder::build_annual_coverage_update_event(const YAML::Node& node, Config* config) {
   try {
+    // Check the node size
+    verify_single_node(node, AnnualCoverageUpdateEvent::EventName);
+
     // Build the event
     auto start_date = node[0]["day"].as<date::year_month_day>();
     auto rate = node[0]["rate"].as<float>();
@@ -276,13 +289,13 @@ std::vector<Event*> PopulationEventBuilder::build_annual_coverage_update_event(c
 std::vector<Event*> PopulationEventBuilder::build_importation_periodically_random_event(const YAML::Node& node, Config* config) {
   try {
     std::vector<Event*> events;
-    for (std::size_t ndx = 0; ndx < node.size(); ndx++) {
+    for (const auto & entry : node) {
       // Load the values
-      auto start_date = node[ndx]["day"].as<date::year_month_day>();
+      auto start_date = entry["day"].as<date::year_month_day>();
       auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
-      auto genotype_id = node[ndx]["genotype_id"].as<int>();
-      auto count = node[ndx]["count"].as<int>();
-      auto log_parasite_density = node[ndx]["log_parasite_density"].as<double>();
+      auto genotype_id = entry["genotype_id"].as<int>();
+      auto count = entry["count"].as<int>();
+      auto log_parasite_density = entry["log_parasite_density"].as<double>();
 
       // Check to make sure the date is valid
       if (start_date.day() != date::day{1}) {
@@ -323,6 +336,57 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
     return events;
   } catch (YAML::BadConversion &error) {
     LOG(ERROR) << "Unrecoverable error parsing YAML value in " << ImportationPeriodicallyRandomEvent::EventName << " node: " << error.msg;
+    exit(1);
+  }
+}
+
+ std::vector<Event*> PopulationEventBuilder::build_introduce_mutant_events(const YAML::Node& node, Config* config) {
+  try {
+    std::vector<Event*> events;
+    for (const auto & entry : node) {
+      // Load the values
+      auto start_date = entry["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
+      auto district = entry["district"].as<int>();
+      auto fraction = entry["fraction"].as<double>();
+      auto locus = entry["locus"].as<int>();
+      auto mutant_allele = entry["mutant_allele"].as<int>();
+
+      // Make sure the district GIS data is loaded and the district id makes sense
+      if (district < 0) {
+        LOG(ERROR) << "The target district must be greater than or equal to zero.";
+        throw std::invalid_argument("Target district must be greater than or equal to zero");
+      }
+      if (district > SpatialData::get_instance().get_district_count()) {
+        LOG(ERROR) << "Target district is greater than the district count.";
+        throw std::invalid_argument("Target district greater than district count.");
+      }
+
+      // Make sure the fraction makes sense
+      if (fraction <= 0) {
+        LOG(ERROR) << "The fraction of the mutants must be greater than zero.";
+        throw std::invalid_argument("Mutant fraction must be greater than zero");
+      }
+
+      // Make sure the locus and alleles make sense
+      if (locus < 0) {
+        LOG(ERROR) << "The locus must be greater than or equal to zero.";
+        throw std::invalid_argument("Locus must be greater than or equal to zero");
+      }
+      if (mutant_allele < 0) {
+        LOG(ERROR) << "The locus must be greater than or equal to zero.";
+        throw std::invalid_argument("Mutant allele must be greater than or equal to zero");
+      }
+
+      // Log and add the event to the queue
+      auto* event = new IntroduceMutantEvent(time, district, fraction, locus, mutant_allele);
+      VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", district: " << district
+              << ", locus: " << locus << ", mutant_allele: " << mutant_allele << ", fraction: " << fraction;
+      events.push_back(event);
+    }
+    return events;
+  } catch (YAML::BadConversion &error) {
+    LOG(ERROR) << "Unrecoverable error parsing YAML value in " << AnnualCoverageUpdateEvent::EventName << " node: " << error.msg;
     exit(1);
   }
 }
@@ -379,6 +443,16 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   if (name == ImportationPeriodicallyRandomEvent::EventName) {
     events = build_importation_periodically_random_event(node["info"], config);
   }
+  if (name == IntroduceMutantEvent::EventName) {
+    events = build_introduce_mutant_events(node["info"], config);
+  }
 
   return events;
+}
+
+void PopulationEventBuilder::verify_single_node(const YAML::Node& node, const std::string& name) {
+  if (node.size() > 1) {
+    LOG(ERROR) << "More than one sub node found for " << name;
+    throw std::invalid_argument("Multiple sub nodes for single node event.");
+  }
 }
