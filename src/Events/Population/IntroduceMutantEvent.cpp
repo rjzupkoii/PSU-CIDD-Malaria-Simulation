@@ -23,18 +23,18 @@ void IntroduceMutantEvent::execute() {
   // Calculate the target fraction of the district infections and perform them as needed
   auto locations = SpatialData::get_instance().get_district_locations(district_);
   double target_fraction = calculate(locations);
-  if (target_fraction > 0) {
-    mutate(locations, target_fraction);
-  }
+  auto count = (target_fraction > 0) ? mutate(locations, target_fraction) : 0;
 
   // Log the event's operation
-  LOG(INFO) << date::year_month_day{scheduler->calendar_date} << " : Introduce mutant event with target fraction: " << target_fraction;
+  LOG(INFO) << date::year_month_day{scheduler->calendar_date} << " : Introduce mutant event, target fraction: "
+    << target_fraction << ", mutations: " << count;
 }
 
-// Induce the mutations in individuals across the district
-void IntroduceMutantEvent::mutate(std::vector<int> &locations, double target_fraction) const {
+// Induce the mutations in individuals across the district, return the total number of mutations inflicted
+int IntroduceMutantEvent::mutate(std::vector<int> &locations, double target_fraction) const {
   auto *pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
+  auto mutations_count = 0;
   for (auto location : locations) {
     for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
       // Note the infected individuals in the location
@@ -43,6 +43,7 @@ void IntroduceMutantEvent::mutate(std::vector<int> &locations, double target_fra
       // Use a Poisson distribution to determine the number of mutations in this location
       auto mutations = Model::RANDOM->random_poisson((double)infections * target_fraction);
       if (mutations == 0) { continue; }
+      mutations_count += mutations;
 
       // Note the number of asymptomatic cases for indexing operations
       auto asymptomatic = pi->vPerson()[location][Person::ASYMPTOMATIC][ac].size();
@@ -69,6 +70,9 @@ void IntroduceMutantEvent::mutate(std::vector<int> &locations, double target_fra
       }
     }
   }
+
+  // Return the total mutations count
+  return mutations_count;
 }
 
 double IntroduceMutantEvent::calculate(std::vector<int> &locations) const {

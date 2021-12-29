@@ -102,13 +102,15 @@ void SpatialData::generate_locations() {
     db.clear();
     db.reserve(reference->NROWS * reference->NCOLS);
 
+    // Start the id at -1 since we are incrementing it before emplacement
+    auto id = -1;
+
     // Scan the data and insert fields with a value
-    auto id = 0;
     for (auto row = 0; row < reference->NROWS; row++) {
         for (auto col = 0; col < reference->NCOLS; col++) {
             if (reference->data[row][col] == reference->NODATA_VALUE) { continue; }
-            db.emplace_back(id, row, col, 0);
             id++;
+            db.emplace_back(id, row, col, 0);
         }
     }
 
@@ -187,7 +189,7 @@ std::vector<int> SpatialData::get_district_locations(int district) {
 
   // Scan the district raster and use it to generate the location ids, the logic here is the same
   // as the generation of the location ids in generate_locations
-  auto id = 0;
+  auto id = -1;
   for (auto ndx = 0; ndx < reference->NROWS; ndx++) {
     for (auto ndy = 0; ndy < reference->NCOLS; ndy++) {
       if (reference->data[ndx][ndy] == reference->NODATA_VALUE) { continue; }

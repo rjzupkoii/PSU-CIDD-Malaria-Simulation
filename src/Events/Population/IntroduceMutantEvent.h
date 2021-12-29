@@ -26,7 +26,7 @@ private:
 
   void execute() override;
   double calculate(std::vector<int> &locations) const;
-  void mutate(std::vector<int> &locations, double target_fraction) const;
+  int mutate(std::vector<int> &locations, double target_fraction) const;
 
 public:
   inline static const std::string EventName = "introduce_mutant_event";
