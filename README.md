@@ -42,8 +42,9 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 The version 4.1.1 release is focused on adding new features needed for research:
 
 1. Added new seasonality method based upon rainfall data.
-2. Refactored movement model for better flexibility, better Burkina Faso model performance.
-3. Updated `DbReporter` to use ASCII character one (`SOH` or `☺`) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored. 
+2. Added new event (`introduce_mutant_event`) which allows mutations to be introduced in the popuation explicitly.
+3. Refactored movement model for better flexibility, better Burkina Faso model performance.
+4. Updated `DbReporter` to use ASCII character one (`SOH` or `☺`) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored. 
 
 ### Version 4.1.0
 
