@@ -221,6 +221,35 @@ drug_db:
 **k** (double) : Controls the change in the mutation probability when drug levels are intermediate. For example, k=0.5 is a simple linear model where mutation probability decreases linearly with drug concentration; whereas k=2 or k=4 are a piecewise-linear model where mutation probability increases from high concentrations to intermediate concentrations, and then decreases linearly from intermediate concentrations to zero. \
 **EC50** (array of key-value pairs) : The drug concentration which produces 50% of the parasite killing achieved at maximum-concentration, format is a string that describes the relevant genotypes (see [genotype_info](#genotype_info)), followed by the concentration where 1.0 is the expected starting concentration.
 
+### therapy_db
+This setting is used to define the various therapies that will be used in the simuation and two variations are supported: simple therapies that consist of one or more drugs (defined using the the `id` from the `drug_db`) given over a number of days, and complex therapies that consist of one or more therapies (defined using the `id` of the previously defined therapy) given over a regimen. 
+
+```YAML
+therapy_db:
+  # Artemisinin combination therapy (ACT) - artemether–lumefantrine (AL), three days
+  0:
+    drug_id: [0, 1]
+    dosing_days: [3]
+  # ACT - AL, one day
+  1:
+    drug_id: [0, 1]
+    dosing_days: [1]
+
+  # Complex therapy, AL dosed three days, one day off, with one final dose (3-1-1)
+  2:
+    therapy_ids: [0, 1]
+    regimen: [1, 5]
+```
+
+***Simple Therapies***
+**drug_id** (integer array) : One or more integers that correspond to the defined identification numbers (i.e., array index) in the `drug_db` \
+**dosing_days** (integer) : The number of days that the drug combination should be given for. \
+
+***Complex Therapies***
+**therapy_ids** (integer array) : One or more integers that correspond to the defined therapies. \
+**regimen** (interger array) : A one-index list of the days that the corresponding therapy should be given.
+
+
 ## Genotype Information
 
 ### genotype_info<a name="genotype_info"></a>
