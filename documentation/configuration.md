@@ -241,11 +241,11 @@ therapy_db:
     regimen: [1, 5]
 ```
 
-***Simple Therapies***
-**drug_id** (integer array) : One or more integers that correspond to the defined identification numbers (i.e., array index) in the `drug_db` \
-**dosing_days** (integer) : The number of days that the drug combination should be given for. \
+***Simple Therapies*** \
+**drug_id** (integer array) : One or more integers that correspond to the defined identification numbers (i.e., array index) in the `drug_db`. \
+**dosing_days** (integer) : The number of days that the drug combination should be given for.
 
-***Complex Therapies***
+***Complex Therapies*** \
 **therapy_ids** (integer array) : One or more integers that correspond to the defined therapies. \
 **regimen** (interger array) : A one-index list of the days that the corresponding therapy should be given.
 
