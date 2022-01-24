@@ -138,7 +138,7 @@ void handle_cli(Model *model, int argc, char **argv) {
   args::ValueFlag<std::string> input_file(commands, "string", "The config file (YAML format). \nEx: MaSim -i input.yml", {'i', 'c', "input", "config"});
   args::ValueFlag<int> cluster_job_number(commands, "int", "Cluster job number. \nEx: MaSim -j 1", {'j'});
   args::ValueFlag<int> study_number(commands, "int", "Study number to associate with the configuration. \nEx: MaSim -s 1", {'s'});
-  args::ValueFlag<std::string> reporter(commands, "string", "Reporter Type. \nEx: MaSim -r MMC", {'r'});
+  args::ValueFlag<std::string> reporter(commands, "string", "Reporter type, with additional seperated by commas \nEx: MaSim -r MMC", {'r'});
   args::ValueFlag<std::string> input_path(commands, "string", "Path for output files, default is current directory. \nEx: MaSim -p out", {'o'});
   args::Flag dump_movement(commands, "dump", "Dump the movement matrix as calculated", { "dump" });
   args::Flag list_reporters(commands, "lr", "List the possible reporters", { "lr" });

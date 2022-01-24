@@ -35,6 +35,7 @@
 #include "Events/Population/ImportationEvent.h"
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
+#include "Helpers/StringHelpers.h"
 #include "Strategies/IStrategy.h"
 #include "Malaria/SteadyTCM.h"
 #include "Validation/MovementValidation.h"
@@ -137,7 +138,8 @@ void Model::initialize(int job_number, std::string std) {
   random_->initialize(config_->initial_seed_number());
 
   // MARKER add reporter here
-  VLOG(1) << "Initialing reports";
+  VLOG(1) << "Initialing reporter(s)...";
+  VLOG(1) << StringHelpers::split(reporter_type_, ',');
   try {
     if (reporter_type_.empty()) {
       add_reporter(Reporter::MakeReport(Reporter::DB_REPORTER));
@@ -154,6 +156,9 @@ void Model::initialize(int job_number, std::string std) {
     }
   } catch (std::invalid_argument &ex) {
     LOG(ERROR) << "Initialing reporter generated exception: " << ex.what();
+    exit(EXIT_FAILURE);
+  } catch (std::runtime_error &ex) {
+    LOG(ERROR) << "Runtime error encountered while initializing reporter: " << ex.what();
     exit(EXIT_FAILURE);
   }
 
