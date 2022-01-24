@@ -49,6 +49,7 @@ class Model {
  PROPERTY_REF(bool, district_movement)
  PROPERTY_REF(bool, is_farm_output)
  PROPERTY_REF(std::string, reporter_type)
+ PROPERTY_REF(int, replicate)
 
  public:
   static Model *MODEL;
@@ -72,7 +73,7 @@ class Model {
 
   void build_initial_treatment_coverage();
 
-  void initialize(int job_number, std::string std);
+  void initialize(int job_number, const std::string& std);
 
   static void initialize_object_pool(const int &size = 100000);
 
@@ -102,10 +103,8 @@ class Model {
 
   void add_reporter(Reporter *reporter);
 
-  double get_seasonal_factor(const date::sys_days &today, const int &location) const;
-
   // True if movement should be reported by individuals, false otherwise.
-  bool report_movement() { return (individual_movement_ || cell_movement_ || district_movement_); }
+  bool report_movement() const { return (individual_movement_ || cell_movement_ || district_movement_); }
 
  private:
   IStrategy *treatment_strategy_{nullptr};

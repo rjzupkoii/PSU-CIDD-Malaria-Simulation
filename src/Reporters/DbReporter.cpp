@@ -14,7 +14,6 @@
 #include "easylogging++.h"
 #include "MDC/ModelDataCollector.h"
 #include "Model.h"
-#include "Population/ClonalParasitePopulation.h"
 #include "Population/Population.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 
@@ -153,11 +152,12 @@ void DbReporter::prepare_replicate(pqxx::connection* connection) {
         }
     }
 
-    // Insert the replicate into the database
+    // Insert the replicate into the database, set it for the model
     std::string query = fmt::format(INSERT_REPLICATE, config_id, Model::RANDOM->seed(), movement, get_genotype_level());
     pqxx::work db(*connection);
     pqxx::result result = db.exec(query);
     replicate = result[0][0].as<int>();
+    Model::MODEL->set_replicate(replicate);
 
     // Load the location information
     auto locations = Model::CONFIG->number_of_locations();

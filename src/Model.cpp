@@ -1,7 +1,7 @@
 /* 
  * File:   Model.cpp
  * 
- * Main class for the individually based model. Initializes all of the relevent 
+ * Main class for the individually based model. Initializes all the relevant
  * objects, passes control to the scheduler, and manages the tear-down.
  */
 #include "Model.h"
@@ -40,8 +40,6 @@
 #include "Malaria/SteadyTCM.h"
 #include "Validation/MovementValidation.h"
 #include "Spatial/SpatialModel.hxx"
-
-#define empty_or_blank(string_data) (string_data.empty() || string_data.size() == 0)
 
 Model* Model::MODEL = nullptr;
 Config* Model::CONFIG = nullptr;
@@ -123,7 +121,7 @@ void Model::build_initial_treatment_coverage() {
 /**
  * Prepare the model to be run.
  */
-void Model::initialize(int job_number, std::string std) {
+void Model::initialize(int job_number, const std::string& std) {
   LOG(INFO) << "Model initializing...";
 
   // Read the configuration and check to make sure it is valid
@@ -139,16 +137,17 @@ void Model::initialize(int job_number, std::string std) {
 
   // MARKER add reporter here
   VLOG(1) << "Initialing reporter(s)...";
-  VLOG(1) << StringHelpers::split(reporter_type_, ',');
   try {
     if (reporter_type_.empty()) {
       add_reporter(Reporter::MakeReport(Reporter::DB_REPORTER));
     } else {
-      if (Reporter::ReportTypeMap.find(reporter_type_) != Reporter::ReportTypeMap.end()) {
-        add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));
-      } else {
-        std::cerr << "ERROR! Unknown reporter type: " << reporter_type_ << std::endl;
-        exit(EXIT_FAILURE);
+      for (const auto& type : StringHelpers::split(reporter_type_, ',')) {
+        if (Reporter::ReportTypeMap.find(type) != Reporter::ReportTypeMap.end()) {
+          add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[type]));
+        } else {
+          std::cerr << "ERROR! Unknown reporter type: " << type << std::endl;
+          exit(EXIT_FAILURE);
+        }
       }
     }
     for (auto* reporter : reporters_) {
@@ -311,7 +310,6 @@ void Model::run() {
 
   // Note the final run-time of the model
   std::chrono::duration<double> elapsed_seconds = end-start;
-  std::time_t end_time = std::chrono::system_clock::to_time_t(end);
   LOG(INFO) << fmt::format("Elapsed time (s): {0}", elapsed_seconds.count());
 }
 
@@ -379,14 +377,12 @@ void Model::yearly_update() {
 }
 
 void Model::release() {
-  //    std::cout << "Model Release" << std::endl;
+  // Clean up the memory used by the model
   ObjectHelpers::delete_pointer<ClinicalUpdateFunction>(progress_to_clinical_update_function_);
   ObjectHelpers::delete_pointer<ImmunityClearanceUpdateFunction>(immunity_clearance_update_function_);
   ObjectHelpers::delete_pointer<ImmunityClearanceUpdateFunction>(having_drug_update_function_);
   ObjectHelpers::delete_pointer<ImmunityClearanceUpdateFunction>(clinical_update_function_);
-
   ObjectHelpers::delete_pointer<Population>(population_);
-  //   ObjectHelpers::DeletePointer<ExternalPopulation>(external_population_);
   ObjectHelpers::delete_pointer<Scheduler>(scheduler_);
   ObjectHelpers::delete_pointer<ModelDataCollector>(data_collector_);
 

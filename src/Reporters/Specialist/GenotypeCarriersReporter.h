@@ -17,7 +17,16 @@ class GenotypeCarriersReporter : public Reporter {
     "SELECT TRUE FROM pg_attribute "
     "WHERE attrelid = \'sim.monthlysitedata\'::regclass AND attname = \'genotypecarriers\'";
 
+    const std::string SELECT_AGGREGATION =
+    "SELECT aggregationlevel FROM sim.replicate "
+    "WHERE ID = {} AND endtime IS NULL";
+
+    // TODO Ideally this should be configurable
+    // The genotype we are looking for
     const std::string GENOTYPE = "561H";
+
+    // The aggregation level to use when recording counts, retrieved from database
+    std::string aggregation;
 
   public:
     GenotypeCarriersReporter() = default;

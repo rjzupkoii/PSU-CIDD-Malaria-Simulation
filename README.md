@@ -20,7 +20,7 @@ The following commands are available from the simulation:
 -j                The job number for this replicate
 -l / --load       Load genotypes to the database and exit
 -o                The path for output files, default is the current directory
--r                The reporter type to use
+-r                The reporter type to use, multiple supported when comma delimited
 -s                The study number to associate with the configuration
 
 --dump            Dump the movement matrix as calculated
@@ -43,8 +43,9 @@ The version 4.1.1 release is focused on adding new features needed for research:
 
 1. Added new seasonality method based upon rainfall data.
 2. Added new event (`introduce_mutant_event`) which allows mutations to be introduced in the popuation explicitly.
-3. Refactored movement model for better flexibility, better Burkina Faso model performance.
-4. Updated `DbReporter` to use ASCII character one (`SOH` or `☺`) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored. 
+3. Updated `DbReporter` to use ASCII character one (`SOH` or `☺`) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored.
+4. Updated `-r` switch to support multiple comma delimited reporter types.
+5. Refactored movement model for better flexibility, better Burkina Faso model performance.
 
 ### Version 4.1.0
 
