@@ -123,7 +123,7 @@ void SeasonalImmunity::monthly_report() {
   }
 
   // Log the monthly data for the zones
-  for (int zone = 0; zone <= lookup_allocation; zone++) {
+  for (int zone = 0; zone < lookup_allocation; zone++) {
     ss << Model::SCHEDULER->current_time() << Csv::sep
        << zone << Csv::sep
        << population[zone] << Csv::sep
@@ -165,4 +165,7 @@ void SeasonalImmunity::build_lookup() {
       lookup_allocation = (lookup_allocation < zone) ? zone : lookup_allocation;
     }
   }
+
+  // Update the lookup allocation by one to account for indexing
+  lookup_allocation++;
 }
