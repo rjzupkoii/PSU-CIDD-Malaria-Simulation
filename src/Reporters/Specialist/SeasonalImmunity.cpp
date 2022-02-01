@@ -52,6 +52,11 @@ void SeasonalImmunity::initialize(int job_number, std::string path) {
 }
 
 void SeasonalImmunity::monthly_report() {
+  // Hold off on logging until the MDC starts recording, this will help things run a bit faster for large models
+  if (!ModelDataCollector::recording_data()) {
+    return;
+  }
+
   // Set up our storage, start with individual specific
   std::vector<int> population(lookup_allocation, 0);
   std::vector<double> theta(lookup_allocation, 0);
