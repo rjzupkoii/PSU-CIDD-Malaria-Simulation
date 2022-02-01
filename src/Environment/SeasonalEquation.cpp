@@ -82,7 +82,7 @@ void SeasonalEquation::set_from_raster(const YAML::Node &node) {
 
       // Verify the index
       int index = static_cast<int>(raster->data[row][col]);
-      if (index < 0) { throw std::out_of_range(fmt::format("Raster value at row: {}, col: {} is zero.", row, col)); }
+      if (index < 0) { throw std::out_of_range(fmt::format("Raster value at row: {}, col: {} is less than zero.", row, col)); }
       if (index > (size - 1)) { throw std::out_of_range(fmt::format("Raster value at row: {}, col: {} exceeds bounds of {}.", row, col, size)); }
 
       // Set the seasonal period

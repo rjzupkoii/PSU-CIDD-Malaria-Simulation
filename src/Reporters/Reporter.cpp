@@ -20,6 +20,7 @@
 #include "Specialist/GenotypeCarriersReporter.h"
 #include "Specialist/MovementReporter.h"
 #include "Specialist/PopulationReporter.h"
+#include "Specialist/SeasonalImmunity.h"
 
 std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
     {"Console", CONSOLE},
@@ -30,13 +31,14 @@ std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
     {"MovementReporter", MOVEMENT_REPORTER},
     {"PopulationReporter", POPULATION_REPORTER},
     {"CellularReporter", CELLULAR_REPORTER},
-    {"GenotypeCarriers", GENOTYPE_CARRIERS}
+    {"GenotypeCarriers", GENOTYPE_CARRIERS},
+    {"SeasonalImmunity", SEASONAL_IMMUNITY}
 };
 
 // Calculate the number of treatment failures (NTF) for the model
 [[deprecated("Use treatment failure count and nontreatments instead.")]]
 double Reporter::calculate_treatment_failures() {
-  // If the report is generated when the comparision period starts then we could end up dividing by zero, so guard against that
+  // If the report is generated when the comparison period starts then we could end up dividing by zero, so guard against that
   const double total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) / static_cast<double>(Constants::DAYS_IN_YEAR());
   if (total_time_in_years == 0 || std::isnan(total_time_in_years)) {
     LOG(WARNING) << "Treatment failures report generated is the start of the comparison period.";
@@ -65,8 +67,9 @@ Reporter *Reporter::MakeReport(ReportType report_type) {
     case POPULATION_REPORTER: return new PopulationReporter();
     case CELLULAR_REPORTER: return new CellularReporter();
     case GENOTYPE_CARRIERS: return new GenotypeCarriersReporter();
+    case SEASONAL_IMMUNITY: return new SeasonalImmunity();
     default:
       LOG(ERROR) << "No reporter type supplied";
-      throw new std::runtime_error("No reporter type supplied");
+      throw std::runtime_error("No reporter type supplied");
   }
 }

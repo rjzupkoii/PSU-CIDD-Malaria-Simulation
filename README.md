@@ -44,9 +44,10 @@ The version 4.1.1 release is focused on adding new features needed for research:
 1. Added new seasonality method based upon rainfall data.
 2. Added new event (`introduce_mutant_event`) which allows mutations to be introduced in the popuation explicitly.
 3. Added the genotype carriers reporter to the simulation.
-4. Updated `DbReporter` to use ASCII character one (`SOH` or `☺`) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored.
-5. Updated `-r` switch to support multiple comma delimited reporter types.
-6. Refactored movement model for better flexibility, better Burkina Faso model performance.
+4. Added the seasonal immunity reporter to the simulation.
+5. Updated `DbReporter` to use ASCII character one (`SOH` or `☺`) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored.
+6. Updated `-r` switch to support multiple comma delimited reporter types.
+7. Refactored movement model for better flexibility, better Burkina Faso model performance.
 
 ### Version 4.1.0
 

@@ -1,7 +1,7 @@
 /*
  * CellularReporter.h
  * 
- * This reporter is intended to capture detailed data at the celluar level.
+ * This reporter is intended to capture detailed data at the cellular level.
  */
 #ifndef CELLULARREPORTER_H
 #define CELLULARREPORTER_H

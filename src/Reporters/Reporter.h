@@ -60,7 +60,8 @@ protected:
     MOVEMENT_REPORTER,
     POPULATION_REPORTER,
     CELLULAR_REPORTER,
-    GENOTYPE_CARRIERS
+    GENOTYPE_CARRIERS,
+    SEASONAL_IMMUNITY
   };
 
   static std::map<std::string, ReportType> ReportTypeMap;
