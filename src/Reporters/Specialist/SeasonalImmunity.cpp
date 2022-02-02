@@ -38,9 +38,11 @@ void SeasonalImmunity::initialize(int job_number, std::string path) {
      << "InfectedIndividuals" << Csv::sep
      << "ClinicalIndividuals" << Csv::sep
      << "NewInfections" << Csv::sep
+     << "Treatments" << Csv::sep
      << "NonTreatment" << Csv::sep
      << "TreatmentFailure" << Csv::sep
      << "ParasiteClones" << Csv::sep
+     << "Multiclonal" << Csv::sep
      << "580yWeighted" << Csv::sep
      << "508yUnweighted" << Csv::sep
      << Csv::end_line;
@@ -63,6 +65,7 @@ void SeasonalImmunity::monthly_report() {
 
   // Location index specific
   std::vector<int> new_infections(lookup_allocation, 0);
+  std::vector<int> treatments(lookup_allocation, 0);
   std::vector<int> nontreatment(lookup_allocation, 0);
   std::vector<int> treatment_failure(lookup_allocation, 0);
 
@@ -70,6 +73,7 @@ void SeasonalImmunity::monthly_report() {
   std::vector<int> clinical_individuals(lookup_allocation, 0);
   std::vector<int> infected_individuals(lookup_allocation, 0);
   std::vector<int> parasite_clones(lookup_allocation, 0);
+  std::vector<int> multiclonal(lookup_allocation, 0);
   std::vector<int> unweighted_580y(lookup_allocation, 0);
   std::vector<double> weighted_580y(lookup_allocation, 0);
 
@@ -83,6 +87,7 @@ void SeasonalImmunity::monthly_report() {
     // Update our location specific items
     auto zone = lookup[location];
     new_infections[zone] += Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[location];
+    treatments[zone] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[location];
     nontreatment[zone] += Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location];
     treatment_failure[zone] += Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[location];
 
@@ -104,6 +109,11 @@ void SeasonalImmunity::monthly_report() {
           infected_individuals[zone]++;
           if (person->host_state() == Person::HostStates::CLINICAL) {
             clinical_individuals[zone]++;
+          }
+
+          // Update the multiclonal count if there is more than one parasite clone present
+          if (size > 1) {
+            multiclonal[zone]++;
           }
 
           // Update the parasite counts
@@ -131,6 +141,7 @@ void SeasonalImmunity::monthly_report() {
        << infected_individuals[zone] << Csv::sep
        << clinical_individuals[zone] << Csv::sep
        << new_infections[zone] << Csv::sep
+       << treatments[zone] << Csv::sep
        << nontreatment[zone] << Csv::sep
        << treatment_failure[zone] << Csv::sep
        << parasite_clones[zone] << Csv::sep
