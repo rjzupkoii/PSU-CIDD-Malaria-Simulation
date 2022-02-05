@@ -145,7 +145,7 @@ void SeasonalImmunity::monthly_report() {
        << nontreatment[zone] << Csv::sep
        << treatment_failure[zone] << Csv::sep
        << parasite_clones[zone] << Csv::sep
-       << multiclonal << Csv::sep
+       << multiclonal[zone] << Csv::sep
        << weighted_580y[zone] << Csv::sep
        << unweighted_580y[zone] << Csv::sep
        << Csv::end_line;
