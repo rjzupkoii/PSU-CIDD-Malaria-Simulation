@@ -72,24 +72,46 @@ To Be Written.
 
 
 ### seasonal_info 
-This setting governs the malaria season in the model.
+This setting governs the malaria season in the model and operates differently depending upon the setting and version of the simulation.
+
+Under previous versions and 4.1.0 and higher, an equation based model seasonal variation in transmission is provided where parameters must be fit to the following equation: multiplier = base + (a * sin<sup>+</sup>(b * π * (t - φ) / 365))
+
+Once the equation is fit, the YAML can then be written as follows:
 
 ```YAML
 seasonal_info:
   enable: true
-  raster: false
-  a: [0.0]
-  phi: [0.0]
-  min_value: [0.0]
-  period: 365
+  mode: equation
+  equation:
+    raster: false
+    a: [0.0]
+    phi: [0.0]
+    min_value: [0.0]
+    period: 365
 ```
 
+**mode** (**equation** | rainfall) : (*Optional*) indicates the node that should be used for the seasonality, namely based upon the equation based model, or by using rainfall data. In the event that a value is not supplied, the simulation will default to the equation based model.\  
 **enable** (true | false) : enables or disables seasonality in the simulation.\
 **raster** (true | false) : (*Version 4.0*) indicates that a raster file should be used to set the correct rate for each pixel.\
 **a**, **phi**, **min_value** : arrays of one to *n* `double` values that inform the seasonality period.\
 &nbsp;*Version 3.x*: when one value is provided, it is used for all locations, otherwise a value must be provided for each location\
 &nbsp;*Version 4.0*: if `raster` is true then each index in the array is used for the pixel coded with that value, otherwise the first value is used for all pixels.\
 **period** : the number of days defined by the period.
+
+For version 4.1.1 and higher, a rainfall based model can be used with the following configuration:
+
+```YAML
+seasonal_info:
+  enable: true
+  mode: rainfall
+  rainfall:
+    filename: filename.csv
+    period: 365
+```
+
+**mode** (equation | **rainfall**) : Required in order to load the rainfall data.\
+**filename** (string) : The CSV file that contains the adjustment that should be applied to the beta. Each adjustment should be supplied on a single line in the file.\
+**period** (integer) : The period of time before the pattern in the CSV file should repeat, generally 365 days is expected.
 
 ## Individual Immunity and Infection Response
 
@@ -199,6 +221,35 @@ drug_db:
 **k** (double) : Controls the change in the mutation probability when drug levels are intermediate. For example, k=0.5 is a simple linear model where mutation probability decreases linearly with drug concentration; whereas k=2 or k=4 are a piecewise-linear model where mutation probability increases from high concentrations to intermediate concentrations, and then decreases linearly from intermediate concentrations to zero. \
 **EC50** (array of key-value pairs) : The drug concentration which produces 50% of the parasite killing achieved at maximum-concentration, format is a string that describes the relevant genotypes (see [genotype_info](#genotype_info)), followed by the concentration where 1.0 is the expected starting concentration.
 
+### therapy_db
+This setting is used to define the various therapies that will be used in the simuation and two variations are supported: simple therapies that consist of one or more drugs (defined using the the `id` from the `drug_db`) given over a number of days, and complex therapies that consist of one or more therapies (defined using the `id` of the previously defined therapy) given over a regimen. 
+
+```YAML
+therapy_db:
+  # Artemisinin combination therapy (ACT) - artemether–lumefantrine (AL), three days
+  0:
+    drug_id: [0, 1]
+    dosing_days: [3]
+  # ACT - AL, one day
+  1:
+    drug_id: [0, 1]
+    dosing_days: [1]
+
+  # Complex therapy, AL dosed three days, one day off, with one final dose (3-1-1)
+  2:
+    therapy_ids: [0, 1]
+    regimen: [1, 5]
+```
+
+***Simple Therapies*** \
+**drug_id** (integer array) : One or more integers that correspond to the defined identification numbers (i.e., array index) in the `drug_db`. \
+**dosing_days** (integer) : The number of days that the drug combination should be given for.
+
+***Complex Therapies*** \
+**therapy_ids** (integer array) : One or more integers that correspond to the defined therapies. \
+**regimen** (interger array) : A one-index list of the days that the corresponding therapy should be given.
+
+
 ## Genotype Information
 
 ### genotype_info<a name="genotype_info"></a>
@@ -252,12 +303,32 @@ events:
         log_parasite_density: 3.0
 ```
 
-**day** (date string, YYYY/mm/01) : The first day of the month for which the event will occur. \
+**day** (date string, YYYY/mm/dd) : The first day of the month for which the event will occur. \
 **genotype_id** (int) : The id of the genotype to be introduced. \
 **count** (int) : The number of cases to be introduced in the month. \
 **log_parasite_density** (double) : the log density of the parasite to be imported. 
 
-#### turn_off_mutation
+### introduce_mutant_event
+(*Version 4.1.1*) On the specified date, find infected individuals and force the parasite genotype from the given wild type to mutation specified (e.g., C580 to 580Y). This operation will fill the difference between the input fraction and the current frequency of the genotype in the population. **Note** that while this is a one time event, it is recommended that the event be invoked multiple times prior to any policy interventions acting upon a given mutation frequency.
+
+```YAML
+events:
+  - name: introduce_mutant_event
+    info:
+      - day: 2021/12/27
+        district: 9
+        fraction: 0.01
+        locus: 2
+        mutant_allele: 1         
+```
+
+**day** (date string, YYYY/mm/dd) : The model date when this event should occur. \
+**district** (int) : The district id for where the mutation event should occur. \
+**fraction** (int) : The target frequency of the mutation. \
+**locus** (int) : The genotype database locus index of the desired mutation. \
+**mutant_allele** (int) : The genotype database allele index of the mutation allele that will be applied.
+
+### turn_off_mutation
 Turn off all mutations in the model, recommended during the model burn-in.
 
 ```YAML
@@ -269,7 +340,7 @@ events:
 
 **day** (date string, YYYY/mm/dd) : the date when the event will occur.
 
-#### turn_on_mutation
+### turn_on_mutation
 Turn on all mutations in the model, or the mutations for individual drugs.
 
 ```YAML
@@ -285,7 +356,7 @@ events:
 **drug_id** (integer) : the id of the drug, as defined in the `drug_db` or `-1` to apply the value to all drugs. \
 **mutation_probability** (float) : the mutation probability to use.
 
-#### update_ecozone_event
+### update_ecozone_event
 (*Version 4.0*) Update all the cells matching the original ecozone to the new ecozone.
 
 ```YAML

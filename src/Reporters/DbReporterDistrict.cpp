@@ -122,7 +122,6 @@ void DbReporterDistrict::monthly_genome_data(int id, std::string &query) {
 }
 
 void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
-
   // Prepare the data structures
   auto districts = SpatialData::get_instance().get_district_count();
   auto first_index = SpatialData::get_instance().get_first_district();

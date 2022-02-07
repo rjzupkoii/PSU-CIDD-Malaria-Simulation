@@ -59,7 +59,9 @@ protected:
     // Specialist reporters for specific experiments
     MOVEMENT_REPORTER,
     POPULATION_REPORTER,
-    CELLULAR_REPORTER
+    CELLULAR_REPORTER,
+    GENOTYPE_CARRIERS,
+    SEASONAL_IMMUNITY
   };
 
   static std::map<std::string, ReportType> ReportTypeMap;

@@ -1,7 +1,7 @@
 /* 
  * File:   Model.cpp
  * 
- * Main class for the individually based model. Initializes all of the relevent 
+ * Main class for the individually based model. Initializes all the relevant
  * objects, passes control to the scheduler, and manages the tear-down.
  */
 #include "Model.h"
@@ -35,11 +35,11 @@
 #include "Events/Population/ImportationEvent.h"
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
+#include "Helpers/StringHelpers.h"
 #include "Strategies/IStrategy.h"
 #include "Malaria/SteadyTCM.h"
 #include "Validation/MovementValidation.h"
-
-#define empty_or_blank(string_data) (string_data.empty() || string_data.size() == 0)
+#include "Spatial/SpatialModel.hxx"
 
 Model* Model::MODEL = nullptr;
 Config* Model::CONFIG = nullptr;
@@ -121,7 +121,7 @@ void Model::build_initial_treatment_coverage() {
 /**
  * Prepare the model to be run.
  */
-void Model::initialize(int job_number, std::string std) {
+void Model::initialize(int job_number, const std::string& std) {
   LOG(INFO) << "Model initializing...";
 
   // Read the configuration and check to make sure it is valid
@@ -136,16 +136,18 @@ void Model::initialize(int job_number, std::string std) {
   random_->initialize(config_->initial_seed_number());
 
   // MARKER add reporter here
-  VLOG(1) << "Initialing reports";
+  VLOG(1) << "Initialing reporter(s)...";
   try {
     if (reporter_type_.empty()) {
       add_reporter(Reporter::MakeReport(Reporter::DB_REPORTER));
     } else {
-      if (Reporter::ReportTypeMap.find(reporter_type_) != Reporter::ReportTypeMap.end()) {
-        add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[reporter_type_]));
-      } else {
-        std::cerr << "ERROR! Unknown reporter type: " << reporter_type_ << std::endl;
-        exit(EXIT_FAILURE);
+      for (const auto& type : StringHelpers::split(reporter_type_, ',')) {
+        if (Reporter::ReportTypeMap.find(type) != Reporter::ReportTypeMap.end()) {
+          add_reporter(Reporter::MakeReport(Reporter::ReportTypeMap[type]));
+        } else {
+          std::cerr << "ERROR! Unknown reporter type: " << type << std::endl;
+          exit(EXIT_FAILURE);
+        }
       }
     }
     for (auto* reporter : reporters_) {
@@ -153,6 +155,9 @@ void Model::initialize(int job_number, std::string std) {
     }
   } catch (std::invalid_argument &ex) {
     LOG(ERROR) << "Initialing reporter generated exception: " << ex.what();
+    exit(EXIT_FAILURE);
+  } catch (std::runtime_error &ex) {
+    LOG(ERROR) << "Runtime error encountered while initializing reporter: " << ex.what();
     exit(EXIT_FAILURE);
   }
 
@@ -174,6 +179,9 @@ void Model::initialize(int job_number, std::string std) {
   population_->initialize();
   LOG(INFO) << fmt::format("Location count: {0}", CONFIG->number_of_locations());
   LOG(INFO) << fmt::format("Population size: {0}", population_->size());
+
+  VLOG(1) << "Initializing movement model";
+  config_->spatial_model()->prepare();
 
   VLOG(1) << "Introducing initial cases";
   population_->introduce_initial_cases();
@@ -302,7 +310,6 @@ void Model::run() {
 
   // Note the final run-time of the model
   std::chrono::duration<double> elapsed_seconds = end-start;
-  std::time_t end_time = std::chrono::system_clock::to_time_t(end);
   LOG(INFO) << fmt::format("Elapsed time (s): {0}", elapsed_seconds.count());
 }
 
@@ -370,14 +377,12 @@ void Model::yearly_update() {
 }
 
 void Model::release() {
-  //    std::cout << "Model Release" << std::endl;
+  // Clean up the memory used by the model
   ObjectHelpers::delete_pointer<ClinicalUpdateFunction>(progress_to_clinical_update_function_);
   ObjectHelpers::delete_pointer<ImmunityClearanceUpdateFunction>(immunity_clearance_update_function_);
   ObjectHelpers::delete_pointer<ImmunityClearanceUpdateFunction>(having_drug_update_function_);
   ObjectHelpers::delete_pointer<ImmunityClearanceUpdateFunction>(clinical_update_function_);
-
   ObjectHelpers::delete_pointer<Population>(population_);
-  //   ObjectHelpers::DeletePointer<ExternalPopulation>(external_population_);
   ObjectHelpers::delete_pointer<Scheduler>(scheduler_);
   ObjectHelpers::delete_pointer<ModelDataCollector>(data_collector_);
 

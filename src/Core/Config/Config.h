@@ -120,7 +120,7 @@ class Config {
 
   CUSTOM_CONFIG_ITEM(spatial_distance_matrix, DoubleVector2())
 
-  CUSTOM_CONFIG_ITEM(seasonal_info, SeasonalInfo())
+  CUSTOM_CONFIG_ITEM(seasonal_info, nullptr)
 
   CUSTOM_CONFIG_ITEM(spatial_model, nullptr)
 

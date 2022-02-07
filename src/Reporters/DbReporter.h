@@ -48,7 +48,7 @@ class DbReporter : public Reporter {
     // Number of times various retry events should be tried
     int RETRY_LIMIT = 10;
 
-    // Time to wait between trying to reconnect to the database, 10 seconds in miliseconds
+    // Time to wait between trying to reconnect to the database, 10 seconds in milliseconds
     int WAIT_TIMESPAN = 10000;
 
     // Configuration and replicate information

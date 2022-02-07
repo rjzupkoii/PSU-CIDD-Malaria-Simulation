@@ -150,8 +150,7 @@ void CellularReporter::monthly_report() {
     }
 
     // Store the data
-    auto dayselapsed = Model::SCHEDULER->current_time();
-    ss << Model::SCHEDULER->current_time() << Csv::sep 
+    ss << Model::SCHEDULER->current_time() << Csv::sep
        << population << Csv::sep 
        << Model::DATA_COLLECTOR->get_blood_slide_prevalence(0, 2, 10) * 100.0 << Csv::sep
        << Model::TREATMENT_COVERAGE->p_treatment_less_than_5[0] << Csv::sep

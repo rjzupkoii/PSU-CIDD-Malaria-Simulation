@@ -86,102 +86,39 @@ update pg_database set datistemplate=true where datname='template1';
 
 ## Installation of pgAdmin
 
-1. Install Apache
+The prefered way of installing pgAdmin on a clean Ubunut installation is though the use of `apt`:
+
+1. Configure the system for the pgAdmin APT repository.
 
 ```bash
-sudo apt install apache2
+sudo apt install curl
+sudo curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
+sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
 ```
 
-2.  Upgrade Python 3
+2. Install pgAdmin
 
 ```bash
-sudo apt -y upgrade
-sudo apt install -y python3-venv
-sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
-```
-
-3. Prepare build environments
-
-```bash
-mkdir environments
-cd environments
-python3 -m venv py_env
-source py_env/bin/activate
-python -m pip install wheel
-deactivate
-cd ~
-```
-
-4. Prepare for pgAdmin 4 
-
-Note that `[user]` should be your user name, directory ownership will be updated later in the process.
-
-```bash
-sudo apt install -y libgmp3-dev libpq-dev libapache2-mod-wsgi-py3
-sudo mkdir -p /var/lib/pgadmin4/sessions
-sudo mkdir /var/lib/pgadmin4/storage
-sudo mkdir /var/log/pgadmin4
-sudo chown -R [user]:[user] /var/lib/pgadmin4/
-sudo chown -R [user]:[user] /var/log/pgadmin4/
-```
-
-5. Install pgAdmin 4 
-
-```bash
-cd environments
-source py_env/bin/activate
-wget https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v4.14/pip/pgadmin4-4.14-py2.py3-none-any.whl
-python -m pip install pgadmin4-4.14-py2.py3-none-any.whl 
-```
-
-6. Configure pgAdmin 4 <a name="Step6"></a>
-
-Start by creating the file `py_env/lib/python3.6/site-packages/pgadmin4/config_local.py` and adding the following lines:
-
-```
-LOG_FILE = '/var/log/pgadmin4/pgadmin4.log'
-SQLITE_PATH = '/var/lib/pgadmin4/pgadmin4.db'
-SESSION_DB_PATH = '/var/lib/pgadmin4/sessions'
-STORAGE_DIR = '/var/lib/pgadmin4/storage'
-SERVER_MODE = True
-```
-
-Run the pgAdmin setup script to set the login credentials:
-
-```bash
-python py_env/lib/python3.6/site-packages/pgadmin4/setup.py
-```
-
-Wrap-up by deactivating the environment and setting directory ownership:
-
-```bash
-deactivate
-sudo chown -R www-data:www-data /var/lib/pgadmin4/
-sudo chown -R www-data:www-data /var/log/pgadmin4/
+sudo apt install pgadmin4-web 
+sudo /usr/pgadmin4/bin/setup-web.sh
 ```
 
 ### Configuration of Apache for pgAdmin
 
-Start in the root (`/`) directory, create the file `/etc/apache2/sites-available/pgadmin4.conf`, and add the following lines:
+Since newer version of pgAdmin are designed for web enviroments, configuration following installation may be limited editing the `pgadmin4.conf` configuration to reside at the server root:
 
 ```xml
-<VirtualHost *>
-    ServerName [SERVER IP ADDRESS]
+WSGIDaemonProcess pgadmin processes=1 threads=25 python-home=/usr/pgadmin4/venv
+WSGIScriptAlias / /usr/pgadmin4/web/pgAdmin4.wsgi
 
-    WSGIDaemonProcess pgadmin processes=1 threads=25 python-home=/home/[USERNAME]/environments/py_env
-    WSGIScriptAlias / /home/[USERNAME]/environments/py_env/lib/python3.6/site-packages/pgadmin4/pgAdmin4.wsgi
-
-    <Directory "/home/[USERNAME]/environments/py_env/lib/python3.6/site-packages/pgadmin4/">
-        WSGIProcessGroup pgadmin
-        WSGIApplicationGroup %{GLOBAL}
-        Require all granted
-    </Directory>
-</VirtualHost>
+<Directory /usr/pgadmin4/web/>
+    WSGIProcessGroup pgadmin
+    WSGIApplicationGroup %{GLOBAL}
+    Require all granted
+</Directory>
 ```
 
-Note that `[SERVER IP ADDRESS]` and `[USERNAME]` need to be updated for your server. Syntax can be verified using `apachectl configtest`
-
-Next, switch the default site over to pgAdmin:
+The configuration can then be relaoded as follows:
 
 ```bash
 sudo a2dissite 000-default.conf
@@ -189,11 +126,7 @@ sudo a2ensite pgadmin4.conf
 sudo systemctl restart apache2
 ```
 
-At this point you should be able to connect to the pgAdmin control panel at http://[SERVER IP ADDRESS]. Login to the control panel using the credentials supplied in [Step 6](#Step6). One logged in, you should be able to add the localhost via "Add New Server" and proceed with administration of the databases using pgAdmin.
-
-### Upgrading pgAdmin
-
-Note that in upgrading to Ubuntu 20.04.1 LTS, pgAdmin4 was also updated to version 4.29 in the process of doing so it was observed that much of the installation directions were out of date. The biggest issue appears to be with file permissions and most, if not all, of the pgadmin4 files and directories need to be assigned to `www-data` to work correctly. Also, be sure that paths have the correct Python version since operating system upgrades may result in the minor Python version changing.
+At this point you should be able to connect to the pgAdmin control panel at http://[SERVER IP ADDRESS]. Login to the control panel using the credentials supplied during configuration. One logged in, you should be able to add the localhost via "Add New Server" and proceed with administration of the databases using pgAdmin. Additional deployment information can be found on [pgAdmin.org](https://www.pgadmin.org/) under [Server Deployment](https://www.pgadmin.org/docs/pgadmin4/5.7/server_deployment.html).
 
 # Using the Database
 

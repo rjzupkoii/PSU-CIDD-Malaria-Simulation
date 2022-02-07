@@ -107,4 +107,10 @@ void ImportationPeriodicallyRandomEvent::infect(Person* person, int genotypeId) 
   blood_parasite->set_gametocyte_level(Model::CONFIG->gametocyte_level_full());
   blood_parasite->set_last_update_log10_parasite_density(log_parasite_density_);
   blood_parasite->set_update_function(Model::MODEL->immunity_clearance_update_function());
+
+  // Check if the configured log density is equal to or greater than the standard for clinical
+  if (log_parasite_density_ >= Model::CONFIG->parasite_density_level().log_parasite_density_clinical) {
+    blood_parasite->set_update_function(Model::MODEL->progress_to_clinical_update_function());
+    person->schedule_progress_to_clinical_event_by(blood_parasite);
+  }
 }

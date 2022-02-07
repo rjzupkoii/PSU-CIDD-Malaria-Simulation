@@ -4,7 +4,7 @@ set(BUILD_WARNINGS false CACHE BOOL "Enable for build warnings")
 # Enable if building on the Windows Subsystem for Linux (WSL), via the command line use -DBUILD_WSL:BOOL=true
 set(BUILD_WSL false CACHE BOOL "Enable for builds on WSL")
 
-# This function checks for the existance of a given module and sets the flag accordingly
+# This function checks for the existence of a given module and sets the flag accordingly
 function(CheckHasModule Module)
   find_package(${Module} QUIET)
   if(NOT DEFINED ${Module}_DIR)
@@ -23,7 +23,8 @@ file(GLOB SOURCE *.cpp
         Core/*.cpp 
         Core/Config/*.cpp 
         Core/Config/Decoders/*.cpp
-        Core/Index/*.cpp 
+        Core/Index/*.cpp
+        Environment/*.cpp
         Events/*.cpp 
         Events/Environment/*.cpp
         Events/Population/*.cpp 

@@ -63,6 +63,17 @@ void spatial_distance_matrix::set_value(const YAML::Node &node) {
 
 }
 
+seasonal_info::~seasonal_info() {
+  if (value_ != nullptr) {
+    delete value_;
+    value_ = nullptr;
+  }
+}
+
+void seasonal_info::set_value(const YAML::Node &node) {
+  value_ = SeasonalInfoFactory::build(node[name_], config_);
+}
+
 spatial_model::~spatial_model() {
   if (value_ != nullptr) {
     delete value_;

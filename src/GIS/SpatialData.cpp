@@ -102,13 +102,15 @@ void SpatialData::generate_locations() {
     db.clear();
     db.reserve(reference->NROWS * reference->NCOLS);
 
+    // Start the id at -1 since we are incrementing it before emplacement
+    auto id = -1;
+
     // Scan the data and insert fields with a value
-    auto id = 0;
     for (auto row = 0; row < reference->NROWS; row++) {
         for (auto col = 0; col < reference->NCOLS; col++) {
             if (reference->data[row][col] == reference->NODATA_VALUE) { continue; }
-            db.emplace_back(id, row, col, 0);
             id++;
+            db.emplace_back(id, row, col, 0);
         }
     }
 
@@ -173,6 +175,33 @@ int SpatialData::get_district_count() {
 
     // Return the result
     return district_count;
+}
+
+std::vector<int> SpatialData::get_district_locations(int district) {
+  // Throw an error if there are no districts
+  if (data[SpatialFileType::Districts] == nullptr) {
+    throw std::runtime_error(fmt::format("{} called without district data loaded", __FUNCTION__));
+  }
+
+  // Prepare our data
+  std::vector<int> locations;
+  AscFile* reference = data[SpatialFileType::Districts];
+
+  // Scan the district raster and use it to generate the location ids, the logic here is the same
+  // as the generation of the location ids in generate_locations
+  auto id = -1;
+  for (auto ndx = 0; ndx < reference->NROWS; ndx++) {
+    for (auto ndy = 0; ndy < reference->NCOLS; ndy++) {
+      if (reference->data[ndx][ndy] == reference->NODATA_VALUE) { continue; }
+      id++;
+      if ((int)reference->data[ndx][ndy] == district) {
+        locations.emplace_back(id);
+      }
+    }
+  }
+
+  // Return the results
+  return locations;
 }
 
 int SpatialData::get_first_district() {
@@ -248,7 +277,7 @@ void SpatialData::load_raster(SpatialFileType type) {
                     break;
                 case SpatialFileType::Population:
                     // Verify that we aren't losing data
-                    if (values->data[row][col] != ceil(values->data[row][col])) {
+                    if (values->data[row][col] != ceil((double)values->data[row][col])) {
                         LOG(WARNING) << fmt::format("Population data lost at row {}, col {}, value {}", row, col, values->data[row][col]);
                     }
                     location_db[id].population_size = static_cast<int>(values->data[row][col]);

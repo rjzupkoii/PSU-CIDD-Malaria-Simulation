@@ -68,29 +68,6 @@ typedef std::map<int, Drug*> DrugPtrMap;
 typedef std::vector<Therapy*> TherapyPtrVector;
 typedef std::vector<IStrategy*> StrategyPtrVector;
 
-struct SeasonalInfo {
-  bool enable{false};
-
-  DoubleVector base;
-  DoubleVector A;
-  DoubleVector B;
-  DoubleVector phi;
-
-  // The reference values contain the inputs from the YAML so the UpdateEcozoneEvent
-  // can change the ecozone (i.e., seasonal information) during model execution
-  DoubleVector reference_base;
-  DoubleVector reference_A;
-  DoubleVector reference_B;
-  DoubleVector reference_phi;
-
-  friend std::ostream &operator<<(std::ostream &os, const SeasonalInfo &seasonal_info);
-};
-
-inline std::ostream &operator<<(std::ostream &os, const SeasonalInfo &seasonal_info) {
-  os << "seasonal_info: ";
-  return os;
-}
-
 struct ImmuneSystemInformation {
   double acquire_rate{-1};
   std::vector<double> acquire_rate_by_age;

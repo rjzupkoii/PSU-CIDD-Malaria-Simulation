@@ -1,5 +1,5 @@
 /*
- * UpdateEcozoneEvent.h
+ * UpdateEcozoneEvent.hxx
  * 
  * Update the ecozone from the previous type to the new type.
  */
@@ -8,6 +8,7 @@
 
 #include "Core/Config/Config.h"
 #include "Core/TypeDef.h"
+#include "Environment/SeasonalInfo.h"
 #include "Events/Event.h"
 #include "Model.h"
 
@@ -19,23 +20,15 @@ class UpdateEcozoneEvent : public Event {
     // Execute the import event
     void execute() override {
       
-      // Scan all of the locations, if they match the old values, then replace them with the new
+      // Scan all the locations, if they match the old values, then replace them with the new
       LOG(INFO) << date::year_month_day{scheduler->calendar_date} << " Updating ecozone " << from_ << " to " << to_;
       
-      // Get a pointer to the seasonal information used by the model
-      auto& seasons = Model::CONFIG->seasonal_info();
-
-      for (std::size_t ndx = 0; ndx < seasons.base.size(); ndx++) {
-        if (seasons.base[ndx] == seasons.reference_base[from_] && 
-            seasons.A[ndx] == seasons.reference_A[from_] &&
-            seasons.B[ndx] == seasons.reference_B[from_] && 
-            seasons.phi[ndx] == seasons.reference_phi[from_]) {
-          seasons.base[ndx] = seasons.reference_base[to_];
-          seasons.A[ndx] = seasons.reference_A[to_];
-          seasons.B[ndx] = seasons.reference_B[to_];
-          seasons.phi[ndx] = seasons.reference_phi[to_];
-        }
+      // Defer to the object for the actual update
+      auto seasons = dynamic_cast<SeasonalEquation*>(Model::CONFIG->seasonal_info());
+      if (seasons == nullptr) {
+        throw std::runtime_error("Configuration called for seasonality to be updated with a mode that does not support it.");
       }
+      seasons->update_seasonality(from_, to_);
     }
 
   public:
@@ -45,7 +38,7 @@ class UpdateEcozoneEvent : public Event {
       time = start;
     }
 
-    ~UpdateEcozoneEvent() = default;
+    ~UpdateEcozoneEvent() override = default;
 
     std::string name() override { return EventName; }
 

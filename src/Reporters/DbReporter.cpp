@@ -7,13 +7,13 @@
 
 #include <fmt/format.h>
 #include <thread>
+#include <regex>
 
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "easylogging++.h"
 #include "MDC/ModelDataCollector.h"
 #include "Model.h"
-#include "Population/ClonalParasitePopulation.h"
 #include "Population/Population.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 
@@ -73,9 +73,9 @@ void DbReporter::prepare_configuration(pqxx::connection* connection) {
     
     // Remove the new lines from the string
     std::string yaml = stream.str();
-    yaml.erase(std::remove(yaml.begin(), yaml.end(), '\r'), yaml.end());
-    yaml.erase(std::remove(yaml.begin(), yaml.end(), '\n'), yaml.end());
-    
+    yaml = std::regex_replace(yaml, std::regex("\n"), std::string(1, char(1)));
+    yaml = std::regex_replace(yaml, std::regex("\r"), std::string(1, char(1)));
+
     // Check to see if this is a known configuration
     pqxx::work db(*connection);
     std::string query = fmt::format(SELECT_CONFIGURATION, db.quote(yaml), db.quote(filename));
@@ -152,11 +152,12 @@ void DbReporter::prepare_replicate(pqxx::connection* connection) {
         }
     }
 
-    // Insert the replicate into the database
+    // Insert the replicate into the database, set it for the model
     std::string query = fmt::format(INSERT_REPLICATE, config_id, Model::RANDOM->seed(), movement, get_genotype_level());
     pqxx::work db(*connection);
     pqxx::result result = db.exec(query);
     replicate = result[0][0].as<int>();
+    Model::MODEL->set_replicate(replicate);
 
     // Load the location information
     auto locations = Model::CONFIG->number_of_locations();
@@ -199,7 +200,7 @@ bool DbReporter::do_monthly_report() {
         // Get the relevant data
         auto days_elapsed = Model::SCHEDULER->current_time();
         auto model_time = std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date);
-        auto seasonal_factor = seasonal_info::get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
+        auto seasonal_factor = Model::CONFIG->seasonal_info()->get_seasonal_factor(Model::SCHEDULER->calendar_date, 0);
 
         // Prepare the summary query
         std::string query = fmt::format(INSERT_COMMON, replicate, days_elapsed, model_time, seasonal_factor);
