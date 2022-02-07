@@ -90,6 +90,7 @@ void SeasonalImmunity::monthly_report() {
     treatments[zone] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[location];
     nontreatment[zone] += Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location];
     treatment_failure[zone] += Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[location];
+    clinical_individuals[zone] += Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[location];
 
     // Iterate overall of the individuals in this location
     for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
@@ -107,9 +108,6 @@ void SeasonalImmunity::monthly_report() {
 
           // Update the individual infection counts
           infected_individuals[zone]++;
-          if (person->host_state() == Person::HostStates::CLINICAL) {
-            clinical_individuals[zone]++;
-          }
 
           // Update the multiclonal count if there is more than one parasite clone present
           if (size > 1) {
