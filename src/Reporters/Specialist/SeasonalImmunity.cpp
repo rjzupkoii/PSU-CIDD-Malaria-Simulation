@@ -44,7 +44,7 @@ void SeasonalImmunity::initialize(int job_number, std::string path) {
      << "ParasiteClones" << Csv::sep
      << "Multiclonal" << Csv::sep
      << "580yWeighted" << Csv::sep
-     << "508yUnweighted" << Csv::sep
+     << "580yUnweighted" << Csv::sep
      << Csv::end_line;
   CLOG(INFO, "seasonal_logger") << ss.str();
   ss.str("");
