@@ -43,3 +43,56 @@ and aggregates summary data at the climatic zone level. This is useful for deter
 transmission patterns has upon the genotype evolution and immune response to the parasite. The reporter is hard coded 
 for the first allele mutation on the second locus, so while it reports 580Y in the output, 561H could be captured, 
 depending upon model configuration.
+
+### PRMC Genotype Reporter
+
+Daily or Monthly Reporter \
+Output: CSV File
+
+The PRMC genotype reporter is a report that counts all genotypes in the PRMC as well as in population. To use this reporter, use the code snippet as below:
+
+```c++
+void MonthlyReporter::initialize(int job_number, std::string path) {
+    ...
+    auto prmc = Model::CONFIG->prmc();
+    std::stringstream ss;
+    prmc->printRecombinedGenotypeHeaders(ss);
+    ...
+}
+
+void MonthlyReporter::monthly_report(){
+    ...
+    auto prmc = Model::CONFIG->prmc();
+    std::stringstream ss;
+    prmc->printRecombinedGenotypeStats(ss); /* For counting genotypes in PRMC */
+    prmc->printPopulationRecombinedGenotypeStats(ss); /* For counting genotypes in population */
+    ...
+}
+```
+For example, if two genotypes `KYY--C1x` and `TYY-Y1x` are introduced 1 location, `printRecombinedGenotypeStats` will output:
+
+```text
+    /* For counting genotypes in PRMC */
+    0:-1,0:KYY--C1x,0:KYY--Y1x,0:TYY--C1x,0:TYY--Y1x /* This is headers */
+    0,49,2,1,48 /* The number of each genotype in PRMC table */
+    0,61,1,2,36
+    0,56,1,1,42
+    0,49,2,4,45
+    ...
+```
+where `0` is `location 1` follows by possible recombined genotypes. Note that there will be genotype `-1` at the beginning of the output to count the number of no recombination in that location. This `-1` is used to mark the lack of recombined genotypes in low prevalence areas.
+
+On the other hand, `printPopulationRecombinedGenotypeStats` will output the number of genotypes in population in each location. There will be no genotype `-1` in this report.
+
+```text
+    /* For counting genotypes in population */
+    0:KYY--C1x,0:KYY--Y1x,0:TYY--C1x,0:TYY--Y1x /* This is headers */
+    527,0,0,511 /* The number of each genotype in population */
+    527,0,0,511
+    527,0,0,511
+    527,0,0,511
+    ...
+```
+
+This reports also supports daily reports which can be enabled by setting `daily_report` to `true` in the configuration (see `configuration` section).
+

@@ -36,9 +36,9 @@ public:
     void reset();
     Genotype* getRandomGenotype(std::size_t loc, int tracking_day);
     std::map<int,int> getTrackingGenotypeStatsByLocationAndDay(int location, int tracking_day);
-    void printRecombinedGenotypeHeader(std::stringstream& ss);
+    void printRecombinedGenotypeHeaders(std::stringstream& ss);
     void printRecombinedGenotypeStats(std::stringstream& ss);
-    void printPopulationGenotypeHeader(std::stringstream& ss);
+    void printPopulationGenotypeHeaders(std::stringstream& ss);
     void printPopulationGenotypeStats(std::stringstream& ss);
 
 private:

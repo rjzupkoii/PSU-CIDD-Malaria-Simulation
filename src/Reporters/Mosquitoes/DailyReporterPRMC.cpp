@@ -73,7 +73,7 @@ void DailyReporterPRMC::initialize(int job_number, std::string path) {
     << "Day" << Csv::sep
     << "Calendar" << Csv::sep
     ;
-    prmc->printRecombinedGenotypeHeader(ss);
+    prmc->printRecombinedGenotypeHeaders(ss);
 //    for (unsigned int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
 //        ss
 //        << location  << ":" << "IFRate"  << Csv::sep;

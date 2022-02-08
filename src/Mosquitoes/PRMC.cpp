@@ -641,7 +641,7 @@ Genotype* PRMC::getRandomGenotype(std::size_t loc, int tracking_day){
 }
 
 /* Print all population recombined genotype headers */
-void PRMC::printPopulationGenotypeHeader(std::stringstream& ss){
+void PRMC::printPopulationGenotypeHeaders(std::stringstream& ss){
   for (unsigned int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     int index = 0;
     for(std::pair<std::string,int> stats : population_recombined_genotype_stats[location]){
@@ -678,7 +678,7 @@ void PRMC::printPopulationGenotypeStats(std::stringstream& ss){
 }
 
 /* Print all recombined genotype headers */
-void PRMC::printRecombinedGenotypeHeader(std::stringstream& ss){
+void PRMC::printRecombinedGenotypeHeaders(std::stringstream& ss){
   for (unsigned int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     int index = 0;
     for(std::pair<std::string,int> stats : recombined_genotype_stats[location]){

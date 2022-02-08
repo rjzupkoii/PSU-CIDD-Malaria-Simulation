@@ -372,6 +372,35 @@ events:
 **from** (integer) : the id of the ecozone, defined in `seasonal_info`, that is the original ecozone. \
 **to** (integer) : the id of the new ecozone, defined in `seasonal_info`, that will be applied to matching cells.
 
+### mosquitoes_config
+(*Version 4.0*) Configuration for recombined genotypes from mosquito infection or `Post Recombined Mosquito Cohort (PRMC)`. \
+
+This feature simulates the interrupted feeding in mosquito where it will bite one person, get interrupted and bite on another person. As a result, this mosquito might get genotypes from two persons and those genotypes will be recombined to new genotypes to infect the next person bitten by this mosquito. The recombination also works when one mosquito bites one person since that person might get multiple parasites with different genotypes at the beginning.
+
+```yaml
+#Mosquitoes
+mosquitoes_config:
+  #generate daily reports (for debug)
+  daily_report: false
+  # Set the cell size used by raster, in sq.km
+  cell_size: 5
+  #Interruped feeding rate, set 0.0 will disable the interrupted feature
+  interrupted_feeding_rate_raster: "interrupted_feeding_rate.asc"
+  #PRMC size
+  prmc_size: 800
+  #PRMC starting date and ending date must be in range of starting and ending date of the model
+  #otherwise, they will be set to model starting and ending dates
+  prmc_starting_date: 2007/1/1
+  prmc_ending_date: 2021/12/31
+```
+
+**daily_report** (bool) : enable for disable daily reports of counting recombined genotypes in the mosquitoes.\
+**cell_size** (float) : The size of each cell along one axis, in kilometers.\
+**interrupted_feeding_rate_raster** (string) : The interrupted feeding rate parameter (float) used for each cell in the model, the value should range from `0.16` to `0.19`. This will make one mosquito bites two people and might get genotypes from those two people. If this `value` is `0`, the interrupted bites will be disbaled and will lead to one mosquito bites one person only.\
+**prmc_size** (int) : the size of mosquito cohort table. 
+**prmc_starting_date** (date string, YYYY/mm/dd) : The date that interrupted feeding will be enabled. \
+**prmc_ending_date** (date string, YYYY/mm/dd) :The date that interrupted feeding will be disabled.
+
 # References
 <a name="Nguyen2015"></a>Nguyen, TD, Olliaro, P, Dondorp, AM, Baird, JK, Lam, HM, Farrar, J, Thwaites, GE, White, NJ, & Boni, MF. (2015). Optimum population-level use of artemisinin combination therapies: A modelling study. *The Lancet Global Health*, 3(12), e758–e766. https://doi.org/10.1016/S2214-109X(15)00162-X
 

@@ -127,9 +127,9 @@ void MonthlyReporterMosquitoes::initialize(int job_number, std::string path) {
         << location << ":" << "EIR" << Csv::sep
         << location << ":" << "EIRLog10" << Csv::sep
         << location << ":" << "PRMCCurrentInterruptedFeedingRate" << Csv::sep;
-        prmc->printRecombinedGenotypeHeader(ss);
+        prmc->printRecombinedGenotypeHeaders(ss);
         ss << Csv::sep;
-        prmc->printPopulationGenotypeHeader(ss);
+        prmc->printPopulationGenotypeHeaders(ss);
         if(location < Model::CONFIG->number_of_locations() - 1){
             ss << Csv::sep;
         }

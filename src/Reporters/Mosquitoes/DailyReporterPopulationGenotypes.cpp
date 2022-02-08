@@ -72,7 +72,7 @@ void DailyReporterPopulationGenotypes::initialize(int job_number, std::string pa
     << "Day" << Csv::sep
     << "Calendar" << Csv::sep
     ;
-    prmc->printPopulationGenotypeHeader(ss);
+    prmc->printPopulationGenotypeHeaders(ss);
 //    for (unsigned int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
 //        ss
 //        << location  << ":" << "Prevalence"  << Csv::sep
