@@ -7,6 +7,7 @@
 
 #include "Core/Config/Config.h"
 #include "GIS/SpatialData.h"
+#include "Helpers/RunningMedian.hxx"
 #include "MDC/ModelDataCollector.h"
 #include "Model.h"
 #include "Population/ImmuneSystem.h"
@@ -34,7 +35,8 @@ void SeasonalImmunity::initialize(int job_number, std::string path) {
   ss << "DaysElapsed" << Csv::sep
      << "ClimaticZone" << Csv::sep
      << "Population" << Csv::sep
-     << "Theta" << Csv::sep
+     << "MedianTheta" << Csv::sep
+     << "MeanTheta" << Csv::sep
      << "InfectedIndividuals" << Csv::sep
      << "ClinicalIndividuals" << Csv::sep
      << "NewInfections" << Csv::sep
@@ -44,7 +46,8 @@ void SeasonalImmunity::initialize(int job_number, std::string path) {
      << "ParasiteClones" << Csv::sep
      << "Multiclonal" << Csv::sep
      << "580yWeighted" << Csv::sep
-     << "508yUnweighted" << Csv::sep
+     << "580yUnweighted" << Csv::sep
+     << "580yMulticlonal" << Csv::sep
      << Csv::end_line;
   CLOG(INFO, "seasonal_logger") << ss.str();
   ss.str("");
@@ -61,7 +64,8 @@ void SeasonalImmunity::monthly_report() {
 
   // Set up our storage, start with individual specific
   std::vector<int> population(lookup_allocation, 0);
-  std::vector<double> theta(lookup_allocation, 0);
+  std::vector<RunningMedian<double>> median_theta(lookup_allocation, RunningMedian<double>());
+  std::vector<double> mean_theta(lookup_allocation, 0);
 
   // Location index specific
   std::vector<int> new_infections(lookup_allocation, 0);
@@ -75,6 +79,7 @@ void SeasonalImmunity::monthly_report() {
   std::vector<int> parasite_clones(lookup_allocation, 0);
   std::vector<int> multiclonal(lookup_allocation, 0);
   std::vector<int> unweighted_580y(lookup_allocation, 0);
+  std::vector<int> multiclonal_580y(lookup_allocation, 0);
   std::vector<double> weighted_580y(lookup_allocation, 0);
 
   // Cache relevant data
@@ -90,15 +95,20 @@ void SeasonalImmunity::monthly_report() {
     treatments[zone] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[location];
     nontreatment[zone] += Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location];
     treatment_failure[zone] += Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[location];
+    clinical_individuals[zone] += Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[location];
 
     // Iterate overall of the individuals in this location
     for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
       for (unsigned int ac = 0; ac < age_classes; ac++) {
         for (auto &person : index->vPerson()[location][hs][ac]) {
 
-          // Update our individual specific items
+          // Update the population
           population[zone]++;
-          theta[zone] += person->immune_system()->get_current_value();
+
+          // Update the mean and median theta structures
+          auto theta = person->immune_system()->get_current_value();
+          mean_theta[zone] += theta;
+          median_theta[zone].push(theta);
 
           // Get the parasites, or press on if none are present
           auto parasites = person->all_clonal_parasite_populations()->parasites();
@@ -107,9 +117,6 @@ void SeasonalImmunity::monthly_report() {
 
           // Update the individual infection counts
           infected_individuals[zone]++;
-          if (person->host_state() == Person::HostStates::CLINICAL) {
-            clinical_individuals[zone]++;
-          }
 
           // Update the multiclonal count if there is more than one parasite clone present
           if (size > 1) {
@@ -125,6 +132,11 @@ void SeasonalImmunity::monthly_report() {
             if (parasite->genotype()->gene_expression()[2] == 1) {
               unweighted_580y[zone]++;
               weighted_580y[zone] += (1 / static_cast<double>(size));
+
+              // Is this a multiclonal 580Y?
+              if (size > 1) {
+                multiclonal_580y[zone]++;
+              }
             }
           }
         }
@@ -137,7 +149,8 @@ void SeasonalImmunity::monthly_report() {
     ss << Model::SCHEDULER->current_time() << Csv::sep
        << zone << Csv::sep
        << population[zone] << Csv::sep
-       << theta[zone] / population[zone] << Csv::sep
+       << median_theta[zone].getMedian() << Csv::sep
+       << mean_theta[zone] / population[zone] << Csv::sep
        << infected_individuals[zone] << Csv::sep
        << clinical_individuals[zone] << Csv::sep
        << new_infections[zone] << Csv::sep
@@ -148,6 +161,7 @@ void SeasonalImmunity::monthly_report() {
        << multiclonal[zone] << Csv::sep
        << weighted_580y[zone] << Csv::sep
        << unweighted_580y[zone] << Csv::sep
+       << multiclonal_580y[zone] << Csv::sep
        << Csv::end_line;
   }
   CLOG(INFO, "seasonal_logger") << ss.str();
