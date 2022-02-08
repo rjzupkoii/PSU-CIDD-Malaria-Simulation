@@ -45,6 +45,7 @@ void SeasonalImmunity::initialize(int job_number, std::string path) {
      << "Multiclonal" << Csv::sep
      << "580yWeighted" << Csv::sep
      << "580yUnweighted" << Csv::sep
+     << "580yMulticlonal" << Csv::sep
      << Csv::end_line;
   CLOG(INFO, "seasonal_logger") << ss.str();
   ss.str("");
@@ -75,6 +76,7 @@ void SeasonalImmunity::monthly_report() {
   std::vector<int> parasite_clones(lookup_allocation, 0);
   std::vector<int> multiclonal(lookup_allocation, 0);
   std::vector<int> unweighted_580y(lookup_allocation, 0);
+  std::vector<int> multiclonal_580y(lookup_allocation, 0);
   std::vector<double> weighted_580y(lookup_allocation, 0);
 
   // Cache relevant data
@@ -123,6 +125,11 @@ void SeasonalImmunity::monthly_report() {
             if (parasite->genotype()->gene_expression()[2] == 1) {
               unweighted_580y[zone]++;
               weighted_580y[zone] += (1 / static_cast<double>(size));
+
+              // Is this a multiclonal 580Y?
+              if (size > 1) {
+                multiclonal_580y[zone]++;
+              }
             }
           }
         }
@@ -146,6 +153,7 @@ void SeasonalImmunity::monthly_report() {
        << multiclonal[zone] << Csv::sep
        << weighted_580y[zone] << Csv::sep
        << unweighted_580y[zone] << Csv::sep
+       << multiclonal_580y[zone] << Csv::sep
        << Csv::end_line;
   }
   CLOG(INFO, "seasonal_logger") << ss.str();
