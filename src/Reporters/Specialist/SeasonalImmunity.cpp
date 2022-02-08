@@ -7,6 +7,7 @@
 
 #include "Core/Config/Config.h"
 #include "GIS/SpatialData.h"
+#include "Helpers/RunningMedian.hxx"
 #include "MDC/ModelDataCollector.h"
 #include "Model.h"
 #include "Population/ImmuneSystem.h"
@@ -34,7 +35,8 @@ void SeasonalImmunity::initialize(int job_number, std::string path) {
   ss << "DaysElapsed" << Csv::sep
      << "ClimaticZone" << Csv::sep
      << "Population" << Csv::sep
-     << "Theta" << Csv::sep
+     << "MedianTheta" << Csv::sep
+     << "MeanTheta" << Csv::sep
      << "InfectedIndividuals" << Csv::sep
      << "ClinicalIndividuals" << Csv::sep
      << "NewInfections" << Csv::sep
@@ -62,7 +64,8 @@ void SeasonalImmunity::monthly_report() {
 
   // Set up our storage, start with individual specific
   std::vector<int> population(lookup_allocation, 0);
-  std::vector<double> theta(lookup_allocation, 0);
+  std::vector<RunningMedian<double>> median_theta(lookup_allocation, RunningMedian<double>());
+  std::vector<double> mean_theta(lookup_allocation, 0);
 
   // Location index specific
   std::vector<int> new_infections(lookup_allocation, 0);
@@ -99,9 +102,13 @@ void SeasonalImmunity::monthly_report() {
       for (unsigned int ac = 0; ac < age_classes; ac++) {
         for (auto &person : index->vPerson()[location][hs][ac]) {
 
-          // Update our individual specific items
+          // Update the population
           population[zone]++;
-          theta[zone] += person->immune_system()->get_current_value();
+
+          // Update the mean and median theta structures
+          auto theta = person->immune_system()->get_current_value();
+          mean_theta[zone] += theta;
+          median_theta[zone].push(theta);
 
           // Get the parasites, or press on if none are present
           auto parasites = person->all_clonal_parasite_populations()->parasites();
@@ -142,7 +149,8 @@ void SeasonalImmunity::monthly_report() {
     ss << Model::SCHEDULER->current_time() << Csv::sep
        << zone << Csv::sep
        << population[zone] << Csv::sep
-       << theta[zone] / population[zone] << Csv::sep
+       << median_theta[zone].getMedian() << Csv::sep
+       << mean_theta[zone] / population[zone] << Csv::sep
        << infected_individuals[zone] << Csv::sep
        << clinical_individuals[zone] << Csv::sep
        << new_infections[zone] << Csv::sep
