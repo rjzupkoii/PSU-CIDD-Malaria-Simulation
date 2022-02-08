@@ -6,15 +6,12 @@
  *
  * Code adopted from: https://stackoverflow.com/a/28846596/1185
  */
+#ifndef RUNNINGMEDIAN_HXX
+#define RUNNINGMEDIAN_HXX
 
-#ifndef POMS_RUNNINGMEDIAN_HXX
-#define POMS_RUNNINGMEDIAN_HXX
-
+#include <limits>
 #include <queue>
 #include <vector>
-#include <functional>
-#include <limits>
-#include <iostream>
 
 template<class T>
 class RunningMedian {
@@ -55,12 +52,12 @@ public:
 
     T getMedian() const {
       // If the queues are the same size, the median is the average of the smallest upper value, and largest lower value
-      if(upper.size()==lower.size()) {
+      if(upper.size() == lower.size()) {
         return (upper.top() + lower.top()) / ((T) 2.0);
       }
 
       // Upper size is greater, so return it
-      if(upper.size()>lower.size()) {
+      if(upper.size() > lower.size()) {
         return upper.top();
       }
 
