@@ -14,6 +14,8 @@
 #include "easylogging++.h"
 #include "GIS/SpatialData.h"
 #include "Spatial/Location.h"
+#include "Mosquitoes/PRMC.h"
+#include "Mosquitoes/Config/MosquitoesData.h"
 
 namespace YAML {
   template<>
@@ -216,6 +218,36 @@ namespace YAML {
       relative_infectivity.ro_star = (log(ro) - log(d_star)) / relative_infectivity.sigma;
 
       relative_infectivity.sigma = log(10) / relative_infectivity.sigma;
+      return true;
+    }
+  };
+
+
+  /* MOSQUITOES - KTT */
+  template<>
+  struct convert<MosquitoesConfig> {
+    static Node encode(const MosquitoesConfig &mdb) {
+      Node node;
+      node.push_back("mosquitoes_config");
+      VLOG(0) << "[YamlConverter] Convert MosquitoesConfig";
+      return node;
+    }
+    static bool decode(const Node &node, MosquitoesConfig &mcf) {
+      VLOG(0) << "[YamlConverter] Decode MosquitoesConfig";
+      return MosquitoesData::get_instance().parse(node);
+    }
+  };
+
+  template<>
+  struct convert<PRMC*> {
+    static Node encode(const PRMC* prmcptr) {
+      Node node;
+      node.push_back("PRMC");
+      VLOG(0) << "[YamlConverter] Convert PRMCPtr";
+      return node;
+    }
+    static bool decode(const Node &node, PRMC* prmcptr) {
+      VLOG(0) << "[YamlConverter] Decode PRMCPtr";
       return true;
     }
   };

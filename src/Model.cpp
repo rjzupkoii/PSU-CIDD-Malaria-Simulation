@@ -135,6 +135,12 @@ void Model::initialize(int job_number, const std::string& std) {
   VLOG(1) << "Initialize Random";
   random_->initialize(config_->initial_seed_number());
 
+  /* MOSQUITOES - KTT */
+  VLOG(1) << "Initializing PRMC";
+  auto& prmc = Model::CONFIG->prmc();
+  prmc->init();
+  prmc->initReporter(job_number, std);
+
   // MARKER add reporter here
   VLOG(1) << "Initialing reporter(s)...";
   try {

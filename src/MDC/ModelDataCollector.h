@@ -290,6 +290,9 @@ public:
   // Return true if data is being recorded, false otherwise.
   static bool recording_data();
 
+  /* MOSQUITOES - KTT */
+  PROPERTY_REF(std::vector<std::vector<std::vector<Genotype*>>>, prmc_genotypes_by_location);
+
 private:
 
   void update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten);

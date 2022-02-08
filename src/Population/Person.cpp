@@ -261,6 +261,9 @@ double Person::relative_infectivity(const double &log10_parasite_density) {
                    Model::CONFIG->relative_infectivity().ro_star;
   const auto p = Model::RANDOM->cdf_standard_normal_distribution(d_n);
 
+  /* MOSQUITOES - KTT */
+  set_current_relative_infectivity(p * p + 0.01);
+
   return p * p + 0.01;
 }
 

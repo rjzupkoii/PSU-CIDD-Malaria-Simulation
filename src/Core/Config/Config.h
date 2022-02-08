@@ -15,6 +15,7 @@
 #include "PreconfigEvents.hxx"
 #include "Spatial/Location.h"
 #include "Core/MultinomialDistributionGenerator.h"
+#include "Mosquitoes/PRMC.h"
 #include <string>
 #include <vector>
 #include <date/date.h>
@@ -85,6 +86,10 @@ class Config {
   CONFIG_ITEM(raster_db, RasterDb, RasterDb())
   CONFIG_ITEM(location_db, std::vector<Spatial::Location>,
               std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
+
+  /* MOSQUITOES - KTT */
+  CONFIG_ITEM(mosquitoes_config, MosquitoesConfig, MosquitoesConfig())
+  CONFIG_ITEM(prmc, PRMC*, new PRMC())
 
   CONFIG_ITEM(birth_rate, double, 0)
 

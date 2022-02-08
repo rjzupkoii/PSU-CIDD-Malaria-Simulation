@@ -76,6 +76,11 @@ void MonthlyReporter::monthly_report()
   ReporterUtils::output_genotype_frequency3(ss, Model::CONFIG->number_of_parasite_types(),
                                             Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>());
 
+  auto prmc = Model::CONFIG->prmc();
+  ss << "prmc:";
+  prmc->printRecombinedGenotypeStats(ss);
+  ss << "pg:";
+  prmc->printPopulationGenotypeStats(ss);
 
   CLOG(INFO, "monthly_reporter") << ss.str();
   ss.str("");

@@ -42,6 +42,9 @@ file(GLOB SOURCE *.cpp
         Therapies/*.cpp
         Utility/*.cpp
         Validation/*.cpp
+        Mosquitoes/*.cpp
+        Mosquitoes/Config/*.cpp
+        Reporters/Mosquitoes/*.cpp
 )
 
 # Define extra library files

@@ -231,4 +231,13 @@ struct GenotypeInfo {
   }
 };
 
+
+/* MOSQUITOES - KTT */
+struct MosquitoesConfig {
+  friend std::ostream &operator<<(std::ostream &os, const MosquitoesConfig &mcf) {
+    os << "MosquitoesConfig";
+    return os;
+  }
+};
+
 #endif /* TYPEDEF_H */

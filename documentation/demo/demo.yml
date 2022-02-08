@@ -685,6 +685,21 @@ genotype_info:
           mutation_level: 1
           daily_cost_of_resistance: 0.0005
 
+#Mosquitoes
+mosquitoes_config:
+  #generate daily reports (for debug)
+  daily_report: false
+  # Set the cell size used by raster, in sq.km
+  cell_size: 5
+  #Interruped feeding rate, set 0.0 will disable the interrupted feature
+  interrupted_feeding_rate_raster: "interrupted_feeding_rate.asc"
+  #PRMC size
+  prmc_size: 800
+  #PRMC starting date and ending date must be in range of starting and ending date of the model
+  #otherwise, they will be set to model starting and ending dates
+  prmc_starting_date: 2007/1/1
+  prmc_ending_date: 2021/12/31
+
 # --- DISABLED FEATURES ---
 
 # special function to make the mean biting rate (across hosts) depend on age

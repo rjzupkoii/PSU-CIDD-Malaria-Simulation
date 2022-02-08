@@ -26,6 +26,7 @@
 #include "easylogging++.h"
 #include "Helpers/ObjectHelpers.h"
 #include "Spatial/SpatialModel.hxx"
+#include "Population/Properties/PersonIndexByLocationStageBittingLevel.h"
 #include <cmath>
 #include <cfloat>
 
@@ -160,6 +161,10 @@ void Population::perform_infection_event() {
   auto start = std::chrono::system_clock::now();
 #endif
 
+  /* MOSQUITOES - KTT */
+  auto& prmc = Model::CONFIG->prmc();
+  prmc->sample(Model::SCHEDULER->current_time());
+
   // Get the person index
   auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
@@ -209,9 +214,16 @@ void Population::perform_infection_event() {
           // If the person is not dead, inflict the bite upon them,
           // an update today's infection if they get infected
           assert(person->host_state()!=Person::DEAD);
-          if (person->inflict_bite(parasite_type_id)) {
+          /* MOSQUITOES - KTT */
+          /* Infection from PRMC */
+          auto parasite_id_from_prmc = prmc->getRandomGenotype(loc,trackingDays);
+          if (person->inflict_bite(parasite_id_from_prmc->genotype_id())) {
             today_infections.push_back(person);
           }
+//          /* Infection from FOI */
+//          if (person->inflict_bite(parasite_type_id)) {
+//            today_infections.push_back(person);
+//          }
 
           // TODO This is te legacy code, delete it once we know the new 
           // TODO version works
@@ -227,6 +239,9 @@ void Population::perform_infection_event() {
       }
     }
   }
+
+  /* MOSQUITOES - KTT */
+  prmc->update(Model::SCHEDULER->current_time());
 
   // TODO solve Multiple infections
   if (today_infections.empty()) return;
@@ -359,7 +374,7 @@ void Population::introduce_initial_cases() {
     num_of_infections = num_of_infections <= 0 ? 1 : num_of_infections;
     
     auto* genotype = Model::CONFIG->genotype_db()->at(p_info.parasite_type_id);
-    VLOG(9) << fmt::format("Introducing genotype {}  with prevalence: {} : {} infections at location {}", 
+    VLOG(0) << fmt::format("Introducing genotype {}  with prevalence: {} : {} infections at location {}",
       p_info.parasite_type_id, p_info.prevalence, num_of_infections,  p_info.location);
     introduce_parasite(p_info.location, genotype, num_of_infections);
   }
@@ -685,6 +700,12 @@ void Population::initialize_person_indices() {
   auto p_index_location_moving_level = new PersonIndexByLocationMovingLevel(
       number_of_location, Model::CONFIG->circulation_info().number_of_moving_levels);
   person_index_list_->push_back(p_index_location_moving_level);
+
+  /* MOSQUITOES - KTT */
+  const int number_of_bitting_level = Model::CONFIG->relative_bitting_info().number_of_biting_levels;
+  auto p_index_location_stage_bitting_level = new PersonIndexByLocationStageBittingLevel(
+      number_of_location, number_of_hoststate, number_of_bitting_level);
+  person_index_list_->push_back(p_index_location_stage_bitting_level);
 
 }
 

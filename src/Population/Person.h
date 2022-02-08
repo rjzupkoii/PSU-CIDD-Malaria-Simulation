@@ -14,6 +14,7 @@
 #include "Core/Dispatcher.h"
 #include "Properties/PersonIndexByLocationBittingLevelHandler.hxx"
 #include "Properties/PersonIndexByLocationMovingLevelHandler.hxx"
+#include "Properties/PersonIndexByLocationStageBittingLevelHanlder.hxx"
 #include "ClonalParasitePopulation.h"
 #include "Helpers/UniqueId.hxx"
 
@@ -51,6 +52,7 @@ class Genotype;
 
 class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAgeClassHandler,
                public PersonIndexByLocationBittingLevelHandler, public PersonIndexByLocationMovingLevelHandler,
+               public PersonIndexByLocationStageBittingLevelHandler,
                public Dispatcher {
  public:
 
@@ -122,6 +124,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
  PROPERTY_REF(int, last_therapy_id)
 
  PROPERTY_REF(std::vector<double>, prob_present_at_mda_by_age)
+
+  /* MOSQUITOES - KTT */
+  PROPERTY_REF(double, current_relative_infectivity)
 
  private:
   ul_uid _uid;
