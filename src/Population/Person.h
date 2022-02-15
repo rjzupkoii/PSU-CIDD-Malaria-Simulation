@@ -126,6 +126,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
  private:
   ul_uid _uid;
 
+  // The starting drug values given for a complex therapy
+  std::map<int, double> starting_mac_drug_values;
+
  public:
   Person();
   virtual ~Person();
@@ -161,9 +164,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   int complied_dosing_days(const int &dosing_day) const;
 
-  void receive_therapy(Therapy *therapy, ClonalParasitePopulation *clinical_caused_parasite);
+  void receive_therapy(Therapy *therapy, ClonalParasitePopulation *clinical_caused_parasite, bool is_mac_therapy = false);
 
-  void add_drug_to_blood(DrugType *dt, const int &dosing_days);
+  void add_drug_to_blood(DrugType *dt, const int &dosing_days, bool is_mac_therapy);
 
   void schedule_progress_to_clinical_event_by(ClonalParasitePopulation *blood_parasite);
 

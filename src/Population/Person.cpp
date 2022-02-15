@@ -5,7 +5,7 @@
  * model and care should be taken in modifying it.
  * 
  * NOTE Longer term the goal is to simplify this a bit by shifting some 
- *      operations out - remember, seperation of concerns!
+ *      operations out - remember, separation of concerns!
  */
 #include "Person.h"
 
@@ -347,40 +347,42 @@ int Person::complied_dosing_days(const int &dosing_day) const {
   return dosing_day;
 }
 
-void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite) {
-  //if therapy is SCTherapy
+// Give the therapy indicated to the individual, making note of the parasite that caused the clinical case. Note that
+// we assume that MACTherapy is going to be fairly rare, but that additional bookkeeping needs to be done in the event
+// of one.
+// NOLINTNEXTLINE(misc-no-recursion)
+void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite, bool is_mac_therapy) {
+
+  // Start by checking if this is a simple therapy with a single dosing regime
   auto* sc_therapy = dynamic_cast<SCTherapy*>(therapy);
   if (sc_therapy != nullptr) {
-
     for (std::size_t j = 0; j < sc_therapy->drug_ids.size(); ++j) {
-      int drug_id = sc_therapy->drug_ids[j];
-      auto dosing_days = sc_therapy->drug_ids.size() == sc_therapy->dosing_day.size() ? sc_therapy->dosing_day[j]
-                                                                                      : sc_therapy->dosing_day[0];
-
+      // Determine the dosing days
+      auto dosing_days = (sc_therapy->drug_ids.size() == sc_therapy->dosing_day.size())
+              ? sc_therapy->dosing_day[j] : sc_therapy->dosing_day[0];
       dosing_days = complied_dosing_days(dosing_days);
-//      std::cout << drug_id << "-" << dosing_days << std::endl;
 
-      add_drug_to_blood(Model::CONFIG->drug_db()->at(drug_id), dosing_days);
-    }
-
-    for (auto drug_id : sc_therapy->drug_ids) {
-
+      // Add the treatment to the blood
+      auto drug_id = sc_therapy->drug_ids[j];
+      add_drug_to_blood(Model::CONFIG->drug_db()->at(drug_id), dosing_days, is_mac_therapy);
     }
   } else {
-    //else if therapy is MACTherapy
+    // This is not a simple therapy, multiple treatments and dosing regimes may be involved
     auto* mac_therapy = dynamic_cast<MACTherapy*>(therapy);
     assert(mac_therapy != nullptr);
+
+    starting_mac_drug_values.clear();
     for (std::size_t i = 0; i < mac_therapy->therapy_ids().size(); i++) {
       const auto therapy_id = mac_therapy->therapy_ids()[i];
       const auto start_day = mac_therapy->start_at_days()[i];
+      assert(start_day >= 1);
 
       if (start_day == 1) {
-        receive_therapy(Model::CONFIG->therapy_db()[therapy_id], clinical_caused_parasite);
+        receive_therapy(Model::CONFIG->therapy_db()[therapy_id], clinical_caused_parasite, true);
       } else {
-        assert(start_day > 1);
-        ReceiveTherapyEvent::schedule_event(Model::SCHEDULER, this, Model::CONFIG->therapy_db()[therapy_id],
-                                            Model::SCHEDULER->current_time() + start_day - 1,
-                                            clinical_caused_parasite);
+        ReceiveTherapyEvent::schedule_event(
+                Model::SCHEDULER, this, Model::CONFIG->therapy_db()[therapy_id],
+                Model::SCHEDULER->current_time() + start_day - 1, clinical_caused_parasite, true);
       }
     }
   }
@@ -388,28 +390,40 @@ void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinica
   last_therapy_id_ = therapy->id();
 }
 
-void Person::add_drug_to_blood(DrugType* dt, const int &dosing_days) {
+void Person::add_drug_to_blood(DrugType* dt, const int &dosing_days, bool is_mac_therapy) {
+  // Prepare the drug object
   auto* drug = new Drug(dt);
   drug->set_dosing_days(dosing_days);
   drug->set_last_update_time(Model::SCHEDULER->current_time());
 
+  // Find the mean and standard deviation for the drug, and use those values to determine the drug level for this individual
   const auto sd = dt->age_group_specific_drug_concentration_sd()[age_class_];
-  //    std::cout << ageClass << "====" << sd << std::endl;
   const auto mean_drug_absorption = dt->age_specific_drug_absorption()[age_class_];
-  const auto drug_level = Model::RANDOM->random_normal_truncated(mean_drug_absorption, sd);
+  auto drug_level = Model::RANDOM->random_normal_truncated(mean_drug_absorption, sd);
+
+  // If this is going to be part of a complex therapy regime then we need to note this initial drug level
+  if (is_mac_therapy) {
+    if (drugs_in_blood()->drugs()->find(dt->id()) != drugs_in_blood()->drugs()->end()) {
+      // Long half-life drugs are already present in the blood
+      drug_level = drugs_in_blood()->get_drug(dt->id())->starting_value();
+    } else if (starting_mac_drug_values.find(dt->id()) != starting_mac_drug_values.end()) {
+      // Short half-life drugs that were taken, but cleared the blood already
+      drug_level = starting_mac_drug_values[dt->id()];
+    }
+    // Note the value for future use
+    starting_mac_drug_values[dt->id()] = drug_level;
+  }
 
   if (drugs_in_blood_->is_drug_in_blood(dt)){
     drug->set_last_update_value(drugs_in_blood_->get_drug(dt->id())->last_update_value());
   } else {
     drug->set_last_update_value(0.0);
   }
-  drug->set_starting_value(drug_level);
 
   drug->set_start_time(Model::SCHEDULER->current_time());
   drug->set_end_time(Model::SCHEDULER->current_time() + dt->get_total_duration_of_drug_activity(dosing_days));
 
   drugs_in_blood_->add_drug(drug);
-
 }
 
 void Person::schedule_update_by_drug_event(ClonalParasitePopulation* clinical_caused_parasite) {
