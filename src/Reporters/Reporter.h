@@ -61,7 +61,10 @@ protected:
     POPULATION_REPORTER,
     CELLULAR_REPORTER,
     GENOTYPE_CARRIERS,
-    SEASONAL_IMMUNITY
+    SEASONAL_IMMUNITY,
+
+    // Null reporter used when the model needs to be initialized for access to functionality
+    NULL_REPORTER
   };
 
   static std::map<std::string, ReportType> ReportTypeMap;

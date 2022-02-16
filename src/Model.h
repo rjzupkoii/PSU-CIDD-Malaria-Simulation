@@ -61,7 +61,6 @@ class Model {
 
   static IStrategy *TREATMENT_STRATEGY;
   static ITreatmentCoverageModel *TREATMENT_COVERAGE;
-  // static std::shared_ptr<spdlog::logger> LOGGER;
 
   explicit Model(const int &object_pool_size = 100000);
 
@@ -72,6 +71,9 @@ class Model {
   void set_treatment_coverage(ITreatmentCoverageModel *tcm);
 
   void build_initial_treatment_coverage();
+
+  // Initialize the simulation without parameters, intended for external callers that need access without full features
+  void initialize() { initialize(0, ""); }
 
   void initialize(int job_number, const std::string& std);
 
@@ -104,7 +106,7 @@ class Model {
   void add_reporter(Reporter *reporter);
 
   // True if movement should be reported by individuals, false otherwise.
-  bool report_movement() const { return (individual_movement_ || cell_movement_ || district_movement_); }
+  [[nodiscard]] bool report_movement() const { return (individual_movement_ || cell_movement_ || district_movement_); }
 
  private:
   IStrategy *treatment_strategy_{nullptr};

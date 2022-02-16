@@ -26,16 +26,14 @@ public:
 public:
   Therapy();
 
-  //    Therapy(const Therapy& orig);
   virtual ~Therapy();
 
   virtual void add_drug(int drug_id);
 
-  friend std::ostream &operator<<(std::ostream &os, const Therapy &therapy);
-
-private:
-
+  virtual void print(std::ostream& os) const;
 };
 
-#endif    /* THERAPY_H */
+std::ostream& operator<<(std::ostream &os, const Therapy &therapy);
+
+#endif
 

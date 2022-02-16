@@ -19,6 +19,7 @@
 #include "Specialist/CellularReporter.h"
 #include "Specialist/GenotypeCarriersReporter.h"
 #include "Specialist/MovementReporter.h"
+#include "Specialist/NullReporter.hxx"
 #include "Specialist/PopulationReporter.h"
 #include "Specialist/SeasonalImmunity.h"
 
@@ -32,7 +33,8 @@ std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
     {"PopulationReporter", POPULATION_REPORTER},
     {"CellularReporter", CELLULAR_REPORTER},
     {"GenotypeCarriers", GENOTYPE_CARRIERS},
-    {"SeasonalImmunity", SEASONAL_IMMUNITY}
+    {"SeasonalImmunity", SEASONAL_IMMUNITY},
+    {"Null", NULL_REPORTER}
 };
 
 // Calculate the number of treatment failures (NTF) for the model
@@ -68,6 +70,7 @@ Reporter *Reporter::MakeReport(ReportType report_type) {
     case CELLULAR_REPORTER: return new CellularReporter();
     case GENOTYPE_CARRIERS: return new GenotypeCarriersReporter();
     case SEASONAL_IMMUNITY: return new SeasonalImmunity();
+    case NULL_REPORTER: return new NullReporter();
     default:
       LOG(ERROR) << "No reporter type supplied";
       throw std::runtime_error("No reporter type supplied");
