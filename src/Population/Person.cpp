@@ -414,6 +414,9 @@ void Person::add_drug_to_blood(DrugType* dt, const int &dosing_days, bool is_mac
     starting_mac_drug_values[dt->id()] = drug_level;
   }
 
+  // Set the starting level for this course of treatment
+  drug->set_starting_value(drug_level);
+
   if (drugs_in_blood_->is_drug_in_blood(dt)){
     drug->set_last_update_value(drugs_in_blood_->get_drug(dt->id())->last_update_value());
   } else {
