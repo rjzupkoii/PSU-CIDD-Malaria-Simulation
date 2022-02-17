@@ -12,7 +12,7 @@
 #include "MDC/ModelDataCollector.h"
 #include <sstream>
 #include "IStrategy.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 
 CyclingStrategy::CyclingStrategy() : IStrategy("CyclingStrategy", Cycling) {}
 

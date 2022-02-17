@@ -1,7 +1,7 @@
 #include "NovelDrugSwitchingStrategy.h"
 #include "Model.h"
 #include "Core/Random.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 #include "MDC/ModelDataCollector.h"
 #include "Core/Config/Config.h"
 #include "Helpers/TimeHelpers.h"

@@ -14,7 +14,7 @@
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 #include "Population/Population.h"
 #include "Population/ImmuneSystem.h"
-#include "Therapies/SCTherapy.hxx"
+#include "Therapies/SCTherapy.h"
 #include "Constants.h"
 
 // Define some macros to make the code a bit easier to follow
@@ -539,7 +539,7 @@ void ModelDataCollector::update_after_run() {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
     auto sc_therapy = dynamic_cast<SCTherapy*>(therapy);
     if (sc_therapy != nullptr) {
-      const auto art_id = sc_therapy->get_arteminsinin_id();
+      const auto art_id = sc_therapy->get_artemisinin_id();
       if (art_id != -1 && sc_therapy->drug_ids.size() > 1) {
         const auto number_of_drugs_in_therapy = sc_therapy->drug_ids.size();
         const auto discounted_fraction = exp(log(0.97) * floor(static_cast<double>(Model::SCHEDULER->current_time() - Model::CONFIG->start_of_comparison_period()) / Constants::DAYS_IN_YEAR()));

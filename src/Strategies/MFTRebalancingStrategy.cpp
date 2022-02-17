@@ -15,7 +15,7 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "MDC/ModelDataCollector.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 #include <string>
 
 MFTRebalancingStrategy::MFTRebalancingStrategy() {

@@ -7,7 +7,7 @@
 
 #include "Population/Person.h"
 #include "Core/Scheduler.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 #include "Population/ClonalParasitePopulation.h"
 
 ReceiveTherapyEvent::ReceiveTherapyEvent() : received_therapy_(nullptr), clinical_caused_parasite_(nullptr), is_mac_therapy_(false) {}

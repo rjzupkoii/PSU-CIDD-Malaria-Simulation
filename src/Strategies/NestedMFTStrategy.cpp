@@ -2,7 +2,7 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 
 void NestedMFTStrategy::add_strategy(IStrategy *strategy) {
   strategy_list.push_back(strategy);

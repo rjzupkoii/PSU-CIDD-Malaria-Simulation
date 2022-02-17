@@ -9,7 +9,7 @@
 #include "Core/Random.h"
 #include "Population/Person.h"
 #include "Core/Scheduler.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 
 
 

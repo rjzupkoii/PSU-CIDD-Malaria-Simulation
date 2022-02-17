@@ -6,8 +6,8 @@
  */
 
 #include "TherapyBuilder.h"
-#include "Therapy.h"
-#include "SCTherapy.hxx"
+#include "Therapy.hxx"
+#include "SCTherapy.h"
 #include "MACTherapy.h"
 
 TherapyBuilder::TherapyBuilder() = default;

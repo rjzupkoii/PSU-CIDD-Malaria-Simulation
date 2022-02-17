@@ -23,7 +23,7 @@
 #include "Population/Population.h"
 #include "Population/Properties/PersonIndexAll.h"
 #include "Strategies/SFTStrategy.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 #include "easylogging++.h"
 
 INITIALIZE_EASYLOGGINGPP

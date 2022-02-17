@@ -11,7 +11,7 @@
 #include "Core/Config/Config.h"
 #include <sstream>
 #include "IStrategy.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 
 AdaptiveCyclingStrategy::AdaptiveCyclingStrategy() : IStrategy("AdaptiveCyclingStrategy", AdaptiveCycling) {}
 

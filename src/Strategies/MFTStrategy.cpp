@@ -10,7 +10,7 @@
 #include "Model.h"
 #include <sstream>
 #include "IStrategy.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 
 MFTStrategy::MFTStrategy() : IStrategy("MFTStrategy", MFT) {}
 

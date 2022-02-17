@@ -6,7 +6,7 @@
 
 #include "ClonalParasitePopulation.h"
 #include "SingleHostClonalParasitePopulations.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 #include "Model.h"
 #include "Core/Scheduler.h"
 #include "Core/Config/Config.h"

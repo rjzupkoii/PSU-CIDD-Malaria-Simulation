@@ -10,7 +10,7 @@
 
 #include "Core/PropertyMacro.h"
 #include <vector>
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 
 class MACTherapy : public Therapy {
  DISALLOW_COPY_AND_ASSIGN(MACTherapy)

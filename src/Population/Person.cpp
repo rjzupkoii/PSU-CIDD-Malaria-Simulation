@@ -22,7 +22,7 @@
 #include "ClonalParasitePopulation.h"
 #include "Events/EndClinicalDueToDrugResistanceEvent.h"
 #include "Events/TestTreatmentFailureEvent.h"
-#include "Therapies/SCTherapy.hxx"
+#include "Therapies/SCTherapy.h"
 #include "Therapies/DrugType.h"
 #include "Events/UpdateWhenDrugIsPresentEvent.h"
 #include "Events/EndClinicalEvent.h"

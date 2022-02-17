@@ -7,7 +7,7 @@
 
 #include <cassert>
 #include "SFTStrategy.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 #include "IStrategy.h"
 #include <sstream>
 
