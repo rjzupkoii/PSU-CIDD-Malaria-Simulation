@@ -1,6 +1,6 @@
 Boni Lab Malaria Simulation (MaSim) Contributors
 
-Pricipal Invesigator:
+Principal Investigator:
   Maciej Boni
   
 Lead Scientists:
