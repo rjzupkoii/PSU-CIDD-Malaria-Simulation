@@ -1,13 +1,12 @@
 /* 
- * File:   BloodParasite.cpp
- * Author: Merlin
+ * ColonalParasitePopulation.cpp
  * 
- * Created on July 11, 2013, 2:21 PM
+ * Implement the ColonalParasitePopulation class.
  */
 
 #include "ClonalParasitePopulation.h"
 #include "SingleHostClonalParasitePopulations.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 #include "Model.h"
 #include "Core/Scheduler.h"
 #include "Core/Config/Config.h"
@@ -18,12 +17,15 @@
 OBJECTPOOL_IMPL(ClonalParasitePopulation)
 const double ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY = -1000;
 
-ClonalParasitePopulation::ClonalParasitePopulation(Genotype *genotype) : last_update_log10_parasite_density_(
-    LOG_ZERO_PARASITE_DENSITY), gametocyte_level_(0.0),
-                                                                         first_date_in_blood_(-1),
-                                                                         parasite_population_(nullptr),
-                                                                         genotype_(genotype),
-                                                                         update_function_(nullptr) {}
+ClonalParasitePopulation::ClonalParasitePopulation(Genotype *genotype) : 
+  last_update_log10_parasite_density_(LOG_ZERO_PARASITE_DENSITY), 
+  gametocyte_level_(0.0),
+  first_date_in_blood_(-1),
+  parasite_population_(nullptr),
+  genotype_(genotype),
+  update_function_(nullptr) {
+    _uid = UniqueId::get_instance().get_uid();
+  }
 
 ClonalParasitePopulation::~ClonalParasitePopulation() = default;
 

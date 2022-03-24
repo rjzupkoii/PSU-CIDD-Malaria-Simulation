@@ -1,12 +1,10 @@
 /* 
- * File:   ReceiveTherapyEvent.h
- * Author: Merlin
+ * ReceiveTherapyEvent.h
  *
- * Created on November 4, 2014, 3:00 PM
+ * Define the event in which the individual receives a therapy for the infection.
  */
-
 #ifndef RECEIVETHERAPYEVENT_H
-#define    RECEIVETHERAPYEVENT_H
+#define RECEIVETHERAPYEVENT_H
 
 #include "Event.h"
 #include "Population/ClonalParasitePopulation.h"
@@ -28,14 +26,15 @@ class ReceiveTherapyEvent : public Event {
 
  POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
 
+  PROPERTY_REF(bool, is_mac_therapy)
+
  public:
   ReceiveTherapyEvent();
 
-  //    ReceiveTherapyEvent(const ReceiveTherapyEvent& orig);
-  virtual ~ReceiveTherapyEvent();
+  ~ReceiveTherapyEvent() override;
 
   static void schedule_event(Scheduler *scheduler, Person *p, Therapy *therapy, const int &time,
-                             ClonalParasitePopulation *clinical_caused_parasite);
+                             ClonalParasitePopulation *clinical_caused_parasite, bool is_mac_therapy);
 
   std::string name() override {
     return "ReceiveTherapyEvent";
@@ -45,4 +44,4 @@ class ReceiveTherapyEvent : public Event {
   void execute() override;
 };
 
-#endif    /* RECEIVETHERAPYEVENT_H */
+#endif

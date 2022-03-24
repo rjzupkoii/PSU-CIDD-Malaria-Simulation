@@ -6,20 +6,20 @@ Genotypes are encoded into the application via the input file which contains a Y
 
 | Locus | Allele | Short Name | Description |
 | --- | --- | --- | --- |
-| PfCRT | K76 | K | Lumefantrine resistant; Amodiaquine sensitive |
-| | 76T | T |  Lumefantrine sensitive; Amodiaquine resistant |
-| PfMDR1 | N86 Y184, Single-Copy |  NY-- | Partial-Lumefantrine and Partial-Amodiaquine resistant |
-| | 86Y Y184, Single-Copy | YY-- | Amodiaquine resistant |
-| | N86 184F, Single-Copy | NF-- | Lumefantrine resistant |
-| | 86Y 184F, Single-Copy | YF-- | Partial-Amodiaquine and Partial-Lumefantrine resistant |
-| | N86 Y184, Double-Copy | NYNY | Partial-Lumefantrine and Partial-Amodiaquine resistant, higher strength; Mefloquine selects strongly for multi-copy |
-| | 86Y Y184, Double-Copy | YYYY | Amodiaquine resistant, higher strength; Mefloquine selects strongly for multi-copy |
-| | N86 184F, Double-Copy | NFNF | Lumefantrine resistant, higher strength; Mefloquine selects strongly for multi-copy |
-| | 86Y 184F, Double-Copy | YFYF | Partial-Amodiaquine and Partial-Lumefantrine resistant, higher strength; Mefloquine selects strongly for multi-copy |
+| PfCRT | K76 | K | Chloroquine sensitivity, Amodiaquine sensitive, Lumefantrine resistance  |
+| | 76T | T |  Chloroquine resistance, Amodiaquine resistance, Lumefantrine sensitive |
+| PfMDR1 | N86 Y184 one copy of pfmdr1 |  NY-- | Lumefantrine resistance, Amodiaquine sensitive |
+| | 86Y Y184 one copy of pfmdr1 | YY-- | Amodiaquine resistance |
+| | N86 184F one copy of pfmdr1 | NF-- | lumefantrine resistance |
+| | 86Y 184F one copy of pfmdr1 | YF-- | Amodiaquine resistance, Lumefantrine resistance |
+| | N86 Y184 2 copies of pfmdr1 | NYNY | lumefantrine resistance, Amodiaquine sensitive, Mefloquine resistance |
+| | 86Y Y184 2 copies of pfmdr1 | YYYY | Amodiaquine resistance, Mefloquine resistance |
+| | N86 184F 2 copies of pfmdr1 | NFNF | lumefantrine resistance, Mefloquine resistance |
+| | 86Y 184F 2 copies of pfmdr1 | YFYF | Amodiaquine resistance, Lumefantrine resistance, Mefloquine resistance |
 | K13 Propeller | C580 | C | Artemisinin sensitive |
-| | 580Y | Y | Artemisinin resistant |
-| Plasmepsin 2-3 | Plasmepsin 2-3 Single-Copy | 1 | Piperaquine sensitive |
-| | Plasmepsin 2-3 Double-Copy | 2 | Piperaquine resistant |
+| | 580Y | Y | Artemisinin resistance |
+| Plasmepsin 2-3 | Plasmepsin 2-3 one copy | 1 | Piperaquine sensitive |
+| | Plasmepsin 2-3 2 copies | 2 | Piperaquine resistant |
 | Hypothetical locus for multiple use | naïve | x | Experimental use in the model |
 | | mutant | X | Experimental use in the model |
 

@@ -28,6 +28,9 @@ class Scheduler {
 
  PROPERTY_REF(bool, is_force_stop)
 
+ // Number of days to wait between updating the user
+ PROPERTY(int, days_between_notifications)
+
  public:
   date::sys_days calendar_date;
 
@@ -46,6 +49,7 @@ class Scheduler {
 
   virtual void schedule_individual_event(Event *event);
 
+  // TODO Update references for "population" to "global" since it better reflects the type of event
   virtual void schedule_population_event(Event *event);
 
   virtual void schedule_event(EventPtrVector &time_events, Event *event);

@@ -6,14 +6,16 @@
  */
 
 #include "Dispatcher.h"
-#include "Population/Properties/IndexHandler.h"
+#include "Population/Properties/IndexHandler.hxx"
 #include "Events/Event.h"
 #include "Helpers/ObjectHelpers.h"
 
 Dispatcher::Dispatcher() : events_(nullptr) {}
 
+// Create the event dispatcher and preallocate some space for future events
 void Dispatcher::init() {
   events_ = new EventPtrVector();
+  events_->reserve(INTITAL_ALLOCATION);
 }
 
 Dispatcher::~Dispatcher() {
@@ -21,32 +23,36 @@ Dispatcher::~Dispatcher() {
   ObjectHelpers::delete_pointer<EventPtrVector>(events_);
 }
 
+// Add the event to the dispatcher
 void Dispatcher::add(Event *event) {
   events_->push_back(event);
   event->IndexHandler::set_index(events_->size() - 1);
 }
 
+// Remove the event from the dispatcher
 void Dispatcher::remove(Event *event) {
+  // Move the given event to the back of the vector
   events_->back()->IndexHandler::set_index(event->IndexHandler::index());
+  (*events_)[event->IndexHandler::index()] = events_->back();
 
-  //    std::cout << "1"<<event->IndexHandler::index()<< std::endl;
-  events_->at(event->IndexHandler::index()) = events_->back();
-  //    std::cout << "2"<< std::endl;
-
+  // Remove it from the vector and clear our index
   events_->pop_back();
   event->IndexHandler::set_index(-1);
 }
 
+// Disable all events in the dispatcher and then clear it.
 void Dispatcher::clear_events() {
-  if (events_==nullptr) return;
-  if (events_->empty()) return;
-  //    std::cout << "Clear event"<< std::endl;
+  // Return if there is nothing to do
+  if (events_ == nullptr) { return; }
+  if (events_->empty()) { return; }
 
-  for (auto &event : *events_) {
-    event->dispatcher = nullptr;
-    event->executable = false;
+  // Disable the events in the dispatcher, slightly faster than an iterator
+  for (std::size_t ndx = 0; ndx < events_->size(); ndx++) {
+    (*events_)[ndx]->dispatcher = nullptr;
+    (*events_)[ndx]->executable = false;
   }
 
+  // Remove the events from the dispatcher
   events_->clear();
 }
 

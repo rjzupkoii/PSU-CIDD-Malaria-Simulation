@@ -33,16 +33,20 @@ void Config::read_from_file(const std::string &config_file_name) {
   }
   catch (YAML::BadFile &ex) {
     LOG(FATAL) << config_file_name << " not found or err... Ex: " << ex.msg;
+    exit(EXIT_FAILURE);
   }
   catch (YAML::Exception &ex) {
     LOG(FATAL) << "error: " << ex.msg << " at line " << ex.mark.line + 1 << ":" << ex.mark.column + 1;
+    exit(EXIT_FAILURE);
   }
 
-  for (auto &config_item : config_items) {
-    LOG(INFO) << "Reading config item: " << config_item->name();
-    config_item->set_value(config);
+  try {
+    for (auto &config_item : config_items) {
+      VLOG(1) << "Reading config item: " << config_item->name();
+      config_item->set_value(config);
+    }
+  } catch (std::invalid_argument &error) {
+    LOG(FATAL) << error.what();
+    exit(EXIT_FAILURE);
   }
 }
-
-
-

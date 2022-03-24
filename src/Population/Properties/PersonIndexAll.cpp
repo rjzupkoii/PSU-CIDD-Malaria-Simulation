@@ -37,6 +37,6 @@ std::size_t PersonIndexAll::size() const {
 void PersonIndexAll::notify_change(Person *p, const Person::Property &property, const void *oldValue,
                                    const void *newValue) {}
 
-void PersonIndexAll::update() {
+void PersonIndexAll::defragment() {
   vPerson_.shrink_to_fit();
 }

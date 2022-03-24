@@ -2,7 +2,7 @@
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 
 void NestedMFTStrategy::add_strategy(IStrategy* strategy) {
   strategy_list.push_back(strategy);
@@ -14,7 +14,7 @@ Therapy* NestedMFTStrategy::get_therapy(Person* person) {
   const auto p = Model::RANDOM->random_flat(0.0, 1.0);
 
   double sum = 0;
-  for (auto i = 0; i < distribution.size(); i++) {
+  for (std::size_t i = 0; i < distribution.size(); i++) {
     sum += distribution[i];
     if (p <= sum) {
       return strategy_list[i]->get_therapy(person);
@@ -57,11 +57,12 @@ void NestedMFTStrategy::monthly_update() {
 //  std::cout << distribution[0] << "-" << distribution[1] << std::endl;
 }
 
-void NestedMFTStrategy::adjust_distribution(const int& time) {
-  if (time <= starting_time + peak_after) {
-    for (auto i = 0; i < distribution.size(); i++) {
-      const auto dist = (peak_distribution[i] - start_distribution[i]) * (time - starting_time) / peak_after +
-                        start_distribution[i];
+void NestedMFTStrategy::adjust_distribution(const int &time) {
+  if (time < starting_time + peak_after) {
+
+    for (std::size_t i = 0; i < distribution.size(); i++) {
+      const auto dist = (peak_distribution[i] - start_distribution[i])*(time - starting_time)/peak_after +
+          start_distribution[i];
       distribution[i] = dist;
     }
   } else {

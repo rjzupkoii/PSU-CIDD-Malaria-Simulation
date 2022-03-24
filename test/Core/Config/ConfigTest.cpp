@@ -1,7 +1,7 @@
 #include "Core/Config/Config.h"
 #include "Spatial/WesolowskiSM.h"
 #include "Spatial/BarabasiSM.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 #include "Therapies/SCTherapy.h"
 #include "Strategies/IStrategy.h"
 #include "Events/Event.h"

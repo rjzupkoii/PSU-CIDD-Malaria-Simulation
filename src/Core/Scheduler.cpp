@@ -5,6 +5,7 @@
  * Created on March 22, 2013, 2:27 PM
  */
 
+#include <iomanip>
 #include <vector>
 #include "Scheduler.h"
 #include "Events/Event.h"
@@ -87,7 +88,7 @@ void Scheduler::schedule_event(EventPtrVector& time_events, Event* event) {
   // Schedule event in the future
   // Event time cannot exceed total time or less than current time
   if (event->time > Model::CONFIG->total_time() || event->time < current_time_) {
-    LOG_IF(event->time < current_time_, FATAL) << "Error when schedule event " << event->name() << " at "
+    LOG_IF(event->time < current_time_, FATAL) << "Error when scheduling event " << event->name() << " at "
                                                << event->time
                                                << ". Current_time: " << current_time_ << " - total time: "
                                                << total_available_time_;
@@ -116,11 +117,18 @@ void Scheduler::execute_events_list(EventPtrVector& events_list) const {
 
 void Scheduler::run() {
 
+  // Make sure we have a model
+  if (model_ == nullptr) {
+    throw std::runtime_error("Scheduler::run() called without model!");
+  }
+
   LOG(INFO) << "Simulation is running";
   current_time_ = 0;
 
   for (current_time_ = 0; !can_stop(); current_time_++) {
-    LOG_IF(current_time_ % 100 == 0, INFO) << "Day: " << current_time_;
+    std::time_t t = std::time(nullptr);
+    LOG_IF(current_time_ % days_between_notifications_ == 0, INFO) <<  std::put_time(std::localtime(&t), "%H:%M:%S - ") <<  "Day: " << current_time_;
+
     begin_time_step();
     // population related events
     execute_events_list(population_events_list_[current_time_]);
@@ -135,23 +143,19 @@ void Scheduler::run() {
 }
 
 void Scheduler::begin_time_step() const {
-  if (model_ != nullptr) {
-    model_->begin_time_step();
-    if (is_today_first_day_of_month()) {
-      model_->monthly_update();
-    }
+  model_->begin_time_step();
+  if (is_today_first_day_of_month()) {
+    model_->monthly_update();
+  }
 
-    if (is_today_first_day_of_year()) {
-      // std::cout << date::year_month_day{calendar_date} << std::endl;
-      model_->yearly_update();
-    }
+  if (is_today_first_day_of_year()) {
+    // std::cout << date::year_month_day{calendar_date} << std::endl;
+    model_->yearly_update();
   }
 }
 
 void Scheduler::end_time_step() const {
-  if (model_ != nullptr) {
-    model_->daily_update(current_time_);
-  }
+  model_->daily_update(current_time_);
 }
 
 bool Scheduler::can_stop() const {

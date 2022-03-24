@@ -68,22 +68,6 @@ typedef std::map<int, Drug*> DrugPtrMap;
 typedef std::vector<Therapy*> TherapyPtrVector;
 typedef std::vector<IStrategy*> StrategyPtrVector;
 
-struct SeasonalInfo {
-  bool enable{false};
-  DoubleVector A;
-  DoubleVector B;
-  DoubleVector C;
-  DoubleVector phi;
-  DoubleVector min_value;
-
-  friend std::ostream &operator<<(std::ostream &os, const SeasonalInfo &seasonal_info);
-};
-
-inline std::ostream &operator<<(std::ostream &os, const SeasonalInfo &seasonal_info) {
-  os << "seasonal_info: ";
-  return os;
-}
-
 struct ImmuneSystemInformation {
   double acquire_rate{-1};
   std::vector<double> acquire_rate_by_age;
@@ -92,15 +76,15 @@ struct ImmuneSystemInformation {
   double duration_for_fully_immune{-1};
   double duration_for_naive{-1};
 
-  //    double mean_initial_condition;
-  //    double sd_initial_condition;
-
   double immune_inflation_rate{-1};
 
-  double min_clinical_probability{-1};
   double max_clinical_probability{-1};
 
+  // Slope of the sigmoidal prob-v-immunity function, z-value
   double immune_effect_on_progression_to_clinical{-1};
+
+  // The midpoint of the sigmoidal prob-v-immunity function, recommended default 0.4
+  double midpoint{-1};
 
   double c_min{-1};
   double c_max{-1};
@@ -109,6 +93,8 @@ struct ImmuneSystemInformation {
   double beta_immune{-1};
 
   double age_mature_immunity{-1};
+
+  // Parameter kappa in supplement of 2015 LGH paper
   double factor_effect_age_mature_immunity{-1};
 };
 
@@ -135,6 +121,14 @@ struct ParasiteDensityLevel {
        << pdl.log_parasite_density_detectable_pfpr << ","
        << pdl.log_parasite_density_pyrogenic
        << "]";
+    return os;
+  }
+};
+
+// This structure is a hook so we can convert rasters to location_db
+struct RasterDb {
+  friend std::ostream &operator<<(std::ostream &os, const RasterDb &rdb) {
+    os << "raster_db: ";
     return os;
   }
 };

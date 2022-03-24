@@ -8,10 +8,11 @@
 #ifndef SINGLEHOSTCLONALPARASITEPOPULATIONS_H
 #define    SINGLEHOSTCLONALPARASITEPOPULATIONS_H
 
+#include <vector>
+
 #include "Core/PropertyMacro.h"
 #include "Core/ObjectPool.h"
 #include "Core/TypeDef.h"
-#include <vector>
 
 class ClonalParasitePopulation;
 
@@ -20,6 +21,8 @@ class Person;
 class DrugType;
 
 class DrugsInBlood;
+
+class ParasiteDensityUpdateFunction;
 
 class SingleHostClonalParasitePopulations {
  OBJECTPOOL(SingleHostClonalParasitePopulations)
@@ -34,6 +37,11 @@ class SingleHostClonalParasitePopulations {
 
  PROPERTY_REF(double, log10_total_relative_density);
 
+ private:
+  int parasite_types = -1;
+
+  void remove(const std::size_t &index);
+
  public:
   SingleHostClonalParasitePopulations(Person *person = nullptr);
 
@@ -45,10 +53,6 @@ class SingleHostClonalParasitePopulations {
   virtual int size();
 
   virtual void add(ClonalParasitePopulation *blood_parasite);
-
-  virtual void remove(ClonalParasitePopulation *blood_parasite);
-
-  virtual void remove(const int &index);
 
   virtual void add_all_infection_force();
 
@@ -83,9 +87,7 @@ class SingleHostClonalParasitePopulations {
 
   bool is_gametocytaemic() const;
 
- private:
-
 };
 
-#endif    /* SINGLEHOSTCLONALPARASITEPOPULATIONS_H */
+#endif
 

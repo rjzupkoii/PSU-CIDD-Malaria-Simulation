@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use source code from this repository, please cite it using these metadata. Otherwise, please cite one of the manuscripts associated with the simulation."
+authors: 
+- family-names: Boni
+  given-names: Maciej
+  orcid: https://orcid.org/0000-0002-0830-9630
+- family-names: Tran Dang
+  given-names: Nguyen
+  orcid: https://orcid.org/0000-0002-5118-8432
+- family-names: Tran
+  given-names: Thu
+  orcid: https://orcid.org/0000-0001-6789-5900
+- family-names: Zupko
+  given-names: Robert
+  orcid: https://orcid.org/0000-0001-8757-483X
+title: "Malaria Simulation (MaSim)"
+version: 4.0.0
+license: "BSD-3-Clause"
+repository-code: "https://github.com/rjzupkoii/PSU-CIDD-Malaria-Simulation"

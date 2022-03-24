@@ -1,43 +1,36 @@
-/* 
- * File:   Therapy.cpp
- * Author: nguyentran
- * 
- * Created on June 3, 2013, 7:50 PM
+/*
+ * SCTherapy.cpp
+ *
+ * Implement the single compound therapy class.
  */
-
 #include "SCTherapy.h"
+
 #include "Core/Config/Config.h"
 #include "Model.h"
 
-SCTherapy::SCTherapy() : Therapy(), dosing_day{}, artemisinin_id{-1} {}
-
-SCTherapy::~SCTherapy() = default;
-
-void SCTherapy::add_drug(int drug_id) {
+void SCTherapy::add_drug(int drug_id)  {
   Therapy::add_drug(drug_id);
   if (drug_id==0) {
     artemisinin_id = drug_id;
   }
 }
 
-int SCTherapy::get_arteminsinin_id() const {
-  return artemisinin_id;
+int SCTherapy::get_max_dosing_day() const  {
+  auto max = dosing_day[0];
+  for (auto ndx = 1; ndx < dosing_day.size(); ndx++) {
+    max = (dosing_day[ndx] > max) ? dosing_day[ndx] : max;
+  }
+  return max;
 }
 
-int SCTherapy::get_max_dosing_day() const {
-  // TODO: implement here
-  return 3;
+void SCTherapy::print(std::ostream& os) const {
+  os << Model::CONFIG->drug_db()->at(drug_ids[0])->name();
+  for (std::size_t i = 1; i < drug_ids.size(); ++i) {
+    os << "+" + Model::CONFIG->drug_db()->at(drug_ids[i])->name();
+  }
+  os << "(" << dosing_day[0];
+  for (auto ndx = 1; ndx < dosing_day.size(); ndx++) {
+    os << "," << dosing_day[ndx];
+  }
+  os << ")";
 }
-
-
-//int Therapy::get_therapy_duration(int dosing_day) {
-//    int result = 0;
-//
-//    for (int i = 0; i < drug_ids_.size(); i++) {
-//        DrugType* dt = Model::CONFIG->drug_db()->get(drug_ids_[i]);
-//        if (!dt->is_artemisinin()) {
-//            result = std::max<int>(dt->get_duration(dosing_day), result);
-//        }
-//    }
-//    return result;
-//}

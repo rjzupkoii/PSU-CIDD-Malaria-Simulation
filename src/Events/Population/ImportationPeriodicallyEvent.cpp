@@ -77,19 +77,21 @@ void ImportationPeriodicallyEvent::execute() {
 
     //check and draw random Genotype
     Genotype* imported_genotype = nullptr;
-    if (genotype_id_==-1) {
-      ul random_id = Model::RANDOM->random_uniform_int(0,
-                                                       static_cast<const unsigned long &>(Model::CONFIG
-                                                           ->number_of_parasite_types()));
 
-//      new genotype will have 50% change of 580Y and 50% plasmepsin-2 copy, last allele will always be x
-      if (random_id%2==1) {
-        random_id -= 1;
-      }
-      imported_genotype = Model::CONFIG->genotype_db()->at(random_id);
-    } else {
-      imported_genotype = Model::CONFIG->genotype_db()->at(genotype_id_);
-    }
+    // TODO genotype_id_ is an unsigned int so this appears to be dead code
+//     if (genotype_id_==-1) {
+//       ul random_id = Model::RANDOM->random_uniform_int(0,
+//                                                        static_cast<const unsigned long &>(Model::CONFIG
+//                                                            ->number_of_parasite_types()));
+
+// //      new genotype will have 50% change of 580Y and 50% plasmepsin-2 copy, last allele will always be x
+//       if (random_id%2==1) {
+//         random_id -= 1;
+//       }
+//       imported_genotype = Model::CONFIG->genotype_db()->at(random_id);
+//     } else {
+       imported_genotype = Model::CONFIG->genotype_db()->at(genotype_id_);
+//     }
 
     auto* blood_parasite = p->add_new_parasite_to_blood(imported_genotype);
     //    std::cout << "hello"<< std::endl;

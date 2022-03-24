@@ -28,8 +28,8 @@ void PersonIndexByLocationBittingLevel::Initialize(const int &no_location, const
 }
 
 void PersonIndexByLocationBittingLevel::add(Person *p) {
-  assert(vPerson_.size() > p->location() && p->location() >= 0);
-  assert(vPerson_[p->location()].size() > p->bitting_level());
+  assert(vPerson_.size() > static_cast<std::size_t>(p->location()) && p->location() >= 0);
+  assert(vPerson_[p->location()].size() > static_cast<std::size_t>(p->bitting_level()));
   add(p, p->location(), p->bitting_level());
 }
 
@@ -56,16 +56,16 @@ std::size_t PersonIndexByLocationBittingLevel::size() const {
 }
 
 void PersonIndexByLocationBittingLevel::add(Person *p, const int &location, const int &bitting_level) {
-  vPerson_[location][bitting_level].push_back(p);
+  auto& reference = vPerson_[location][bitting_level];
+  reference.push_back(p);
   p->PersonIndexByLocationBittingLevelHandler::set_index(vPerson_[location][bitting_level].size() - 1);
 }
 
 void PersonIndexByLocationBittingLevel::remove_without_set_index(Person *p) {
-  vPerson_[p->location()][p->bitting_level()].back()->PersonIndexByLocationBittingLevelHandler::set_index(
-      p->PersonIndexByLocationBittingLevelHandler::index());
-  vPerson_[p->location()][p->bitting_level()][p->PersonIndexByLocationBittingLevelHandler::index()] =
-      vPerson_[p->location()][p->bitting_level()].back();
-  vPerson_[p->location()][p->bitting_level()].pop_back();
+  auto & reference = vPerson_[p->location()][p->bitting_level()];
+  reference.back()->PersonIndexByLocationBittingLevelHandler::set_index(p->PersonIndexByLocationBittingLevelHandler::index());
+  reference[p->PersonIndexByLocationBittingLevelHandler::index()] = reference.back();
+  reference.pop_back();
 }
 
 void PersonIndexByLocationBittingLevel::change_property(Person *p, const int &location, const int &bitting_level) {
@@ -76,8 +76,8 @@ void PersonIndexByLocationBittingLevel::change_property(Person *p, const int &lo
   add(p, location, bitting_level);
 }
 
-void PersonIndexByLocationBittingLevel::update() {
-  for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+void PersonIndexByLocationBittingLevel::defragment() {
+  for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     for (int bl = 0; bl < Model::CONFIG->relative_bitting_info().number_of_biting_levels; bl++) {
       std::vector<Person *>(vPerson_[location][bl]).swap(vPerson_[location][bl]);
     }

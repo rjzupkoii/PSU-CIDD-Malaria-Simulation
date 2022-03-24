@@ -25,6 +25,7 @@ void ModifyNestedMFTEvent::execute() {
 
   if (new_strategy==nullptr) {
     LOG(FATAL) << "Modify Nested MFT Event error with null ptr.";
+    exit(EXIT_FAILURE);
   }
 
   LOG(INFO) << date::year_month_day{scheduler->calendar_date} << " : switch first strategy in nested strategies to "

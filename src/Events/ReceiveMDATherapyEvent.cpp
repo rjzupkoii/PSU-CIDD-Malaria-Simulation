@@ -7,7 +7,7 @@
 #include "ReceiveMDATherapyEvent.h"
 #include "Population/Person.h"
 #include "Core/Scheduler.h"
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 #include "Model.h"
 
 ReceiveMDATherapyEvent::ReceiveMDATherapyEvent() : received_therapy_(nullptr) {};

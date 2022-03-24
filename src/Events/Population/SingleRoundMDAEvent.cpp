@@ -19,30 +19,27 @@ void SingleRoundMDAEvent::execute() {
 
 
   // for all location
-  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     // step 1: get number of individuals for MDA
     auto pi_lsa = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
     std::vector<Person *> all_persons_in_location;
     for (auto hs = 0; hs < Person::DEAD; hs++) {
-      for (auto ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
+      for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         for (auto p : pi_lsa->vPerson()[loc][hs][ac]) {
           all_persons_in_location.push_back(p);
         }
       }
     }
 
-    const auto number_indidividuals_in_location = all_persons_in_location.size();
-    auto number_of_individuals_will_receive_mda = Model::RANDOM->random_poisson(
-        fraction_population_targeted[loc]*number_indidividuals_in_location);
+    const std::size_t number_indidividuals_in_location = all_persons_in_location.size();
+    unsigned int number_of_individuals_will_receive_mda = Model::RANDOM->random_poisson(fraction_population_targeted[loc]*number_indidividuals_in_location);
 
-    number_of_individuals_will_receive_mda =
-        number_of_individuals_will_receive_mda > number_indidividuals_in_location
-        ? number_indidividuals_in_location
-        : number_of_individuals_will_receive_mda;
+    number_of_individuals_will_receive_mda = number_of_individuals_will_receive_mda > number_indidividuals_in_location
+        ? number_indidividuals_in_location : number_of_individuals_will_receive_mda;
     //shuffle app_persons_in_location index for sampling without replacement
     Model::RANDOM->shuffle(&all_persons_in_location[0], all_persons_in_location.size(), sizeof(size_t));
 
-    for (auto p_i = 0; p_i < number_of_individuals_will_receive_mda; p_i++) {
+    for (std::size_t p_i = 0; p_i < number_of_individuals_will_receive_mda; p_i++) {
       auto p = all_persons_in_location[p_i];
       //step 2: determine whether person will receive treatment
       const auto prob = Model::RANDOM->random_flat(0.0, 1.0);

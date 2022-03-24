@@ -1,16 +1,12 @@
 /* 
- * File:   Therapy.h
- * Author: nguyentran
+ * SCTherapy.hxx
  *
- * Created on June 3, 2013, 7:50 PM
+ * Define and implement the single compound therapy (SCT) class.
  */
-
 #ifndef SCTHERAPY_H
-#define    SCTHERAPY_H
+#define SCTHERAPY_H
 
-#include "Core/PropertyMacro.h"
-#include "Therapy.h"
-#include <vector>
+#include "Therapy.hxx"
 
 class DrugType;
 
@@ -22,21 +18,21 @@ public:
   std::vector<int> dosing_day;
 
 public:
-  SCTherapy();
+  SCTherapy() : Therapy(), dosing_day{}, artemisinin_id{-1} {};
+  ~SCTherapy() override = default;
 
-  //    Therapy(const Therapy& orig);
-  virtual ~SCTherapy();
+  // Add the drug, note if it is artemisinin or not.
+  void add_drug(int drug_id) override;
 
-  void add_drug(int drug_id);
+  // Return the artemisinin id or -1 if this treatment is not an artemisinin.
+  int get_artemisinin_id() const {
+    return artemisinin_id;
+  }
 
-  int get_arteminsinin_id() const;
-
+  // This is only used in MDC::record_AMU_AFU - return the maximum dosing day
   int get_max_dosing_day() const;
-  //    int get_therapy_duration(int dosing_day);
 
-private:
-
+  void print(std::ostream& os) const override;
 };
 
-#endif    /* THERAPY_H */
-
+#endif 

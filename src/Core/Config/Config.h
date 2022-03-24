@@ -11,7 +11,8 @@
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "CustomConfigItem.h"
-#include "ConfigItem.h"
+#include "ConfigItem.hxx"
+#include "PreconfigEvents.hxx"
 #include "Spatial/Location.h"
 #include "Core/MultinomialDistributionGenerator.h"
 #include <string>
@@ -29,6 +30,11 @@ class Config {
  POINTER_PROPERTY(Model, model)
 
   std::vector<IConfigItem *> config_items{};
+
+  CONFIG_ITEM(days_between_notifications, int, 100)
+  CONFIG_ITEM(initial_seed_number, unsigned long, 0)
+  CONFIG_ITEM(connection_string, std::string, "")
+  CONFIG_ITEM(record_genome_db, bool, false)
 
   CONFIG_ITEM(starting_date, date::year_month_day, date::year_month_day{date::year{1999}/1/1})
   CONFIG_ITEM(ending_date, date::year_month_day, date::year_month_day{date::year{1999}/1/2})
@@ -67,11 +73,16 @@ class Config {
   CONFIG_ITEM(tf_window_size, int, 60)
 
   CONFIG_ITEM(using_age_dependent_bitting_level, bool, false)
-  CONFIG_ITEM(using_variable_probability_infectious_bites_cause_infection, bool, false)
 
   CONFIG_ITEM(fraction_mosquitoes_interrupted_feeding, double, 0.0)
   CONFIG_ITEM(inflation_factor, double, 0.01)
 
+  // Used primarily by Person::inflect_bite when the immune system is challenged
+  CONFIG_ITEM(transmission_parameter, double, 0.0)
+
+  // Either the raster_db field or the location_db MUST be supplied in the YAML
+  // and they MUST appear by this point in the file as well
+  CONFIG_ITEM(raster_db, RasterDb, RasterDb())
   CONFIG_ITEM(location_db, std::vector<Spatial::Location>,
               std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
 
@@ -105,11 +116,11 @@ class Config {
 
   CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
 
-  CUSTOM_CONFIG_ITEM(number_of_locations, 1)
+  CUSTOM_CONFIG_ITEM(number_of_locations, 0)
 
   CUSTOM_CONFIG_ITEM(spatial_distance_matrix, DoubleVector2())
 
-  CUSTOM_CONFIG_ITEM(seasonal_info, SeasonalInfo())
+  CUSTOM_CONFIG_ITEM(seasonal_info, nullptr)
 
   CUSTOM_CONFIG_ITEM(spatial_model, nullptr)
 
@@ -133,7 +144,7 @@ class Config {
 
   CUSTOM_CONFIG_ITEM(initial_parasite_info, std::vector<InitialParasiteInfo>())
 
-  CUSTOM_CONFIG_ITEM(preconfig_population_events, std::vector<Event *>())
+  CUSTOM_CONFIG_ITEM(PreconfigEvents, std::vector<Event *>())
 
   CUSTOM_CONFIG_ITEM(bitting_level_generator, MultinomialDistributionGenerator())
   CUSTOM_CONFIG_ITEM(moving_level_generator, MultinomialDistributionGenerator())

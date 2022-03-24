@@ -18,8 +18,8 @@ void IntroduceAQMutantEvent::execute() {
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
 
 
-  for (auto j = 0; j < Model::CONFIG->number_of_age_classes(); ++j) {
-//    static const std::vector<int> mutant_alleles{0, 1, 3, 4, 5, 7};
+  for (std::size_t j = 0; j < Model::CONFIG->number_of_age_classes(); ++j) {
+    static const std::vector<int> mutant_alleles{0, 1, 3, 4, 5, 7};
 
 
     const auto number_infected_individual_in_ac =

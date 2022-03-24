@@ -26,7 +26,7 @@ class ITreatmentCoverageModel {
 
   static ITreatmentCoverageModel *build_steady_tcm(const YAML::Node &node, Config *config);
 
-  static void read_p_treatment(const YAML::Node &node, std::vector<double> &p_treatments, int number_of_locations);
+  static void read_p_treatment(const YAML::Node &node, std::vector<double> &p_treatments, std::size_t number_of_locations);
 
   static ITreatmentCoverageModel *build_inflated_tcm(const YAML::Node &node, Config *config);
 

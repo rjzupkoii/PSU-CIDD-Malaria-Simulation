@@ -1,9 +1,20 @@
+/*
+ * CustomConfigItem.h
+ * 
+ * Define the various custom configuration items in the YAML file.
+ * 
+ * NOTE circulate dependencies will arise if the class defintions are pulled 
+ *      out of this file. However, to keep things organized some of the 
+ *      implimeation takes place in [classname].cpp files.  
+ */
 #ifndef CUSTOMCONFIGITEM_H
 #define CUSTOMCONFIGITEM_H
 
 #include <string>
 #include <utility>
-#include "ConfigItem.h"
+
+#include "ConfigItem.hxx"
+#include "Environment/SeasonalInfo.h"
 #include "Therapies/DrugDatabase.h"
 #include "Parasites/GenotypeDatabase.h"
 #include "Core/MultinomialDistributionGenerator.h"
@@ -36,7 +47,10 @@ class number_of_locations : public ConfigItem<unsigned long> {
   number_of_locations(const std::string &name, const unsigned long &default_value, Config *config) : ConfigItem<unsigned long>(name,
                                                                                                            default_value,
                                                                                                            config) {}
+  // Update the number of locations based upon the location_db size
+  void set_value();
 
+  // Update the number of locations based upon the location_db size, the node is ignored
   void set_value(const YAML::Node &node) override;
 };
 
@@ -51,30 +65,23 @@ class spatial_distance_matrix : public ConfigItem<std::vector<std::vector<double
   void set_value(const YAML::Node &node) override;
 };
 
+// This class allows for the seasonal information object to be loaded based upon the configuration
 class seasonal_info : public IConfigItem {
- DISALLOW_COPY_AND_ASSIGN(seasonal_info)
+  DISALLOW_COPY_AND_ASSIGN(seasonal_info)
+  DISALLOW_MOVE(seasonal_info)
 
- DISALLOW_MOVE(seasonal_info)
+  private:
+    ISeasonalInfo* value_{nullptr};
 
- public:
-  SeasonalInfo value_{};
- public:
-  //constructor
-  explicit seasonal_info(const std::string &name, SeasonalInfo default_value, Config *config = nullptr) : IConfigItem(
-      config, name),
-                                                                                                          value_{
-                                                                                                              std::move(
-                                                                                                                  default_value)
-                                                                                                          } {}
+  public:
+    // Invoked via macro definition
+    explicit seasonal_info(const std::string &name, ISeasonalInfo *default_value, Config *config = nullptr) :
+      IConfigItem(config, name), value_{default_value} { }
 
-  // destructor
-  virtual ~seasonal_info() = default;
+    ~seasonal_info() override;
 
-  virtual SeasonalInfo &operator()() {
-    return value_;
-  }
-
-  void set_value(const YAML::Node &node) override;
+    ISeasonalInfo* operator()() { return value_; }
+    void set_value(const YAML::Node &node) override;
 };
 
 namespace Spatial {
@@ -376,29 +383,6 @@ class moving_level_generator : public IConfigItem {
   void set_value(const YAML::Node &node) override;
 };
 
-class preconfig_population_events : public IConfigItem {
- DISALLOW_COPY_AND_ASSIGN(preconfig_population_events)
-
- DISALLOW_MOVE(preconfig_population_events)
-
- public:
-  std::vector<Event *> value_;
- public:
-  //constructor
-  explicit preconfig_population_events(const std::string &name, std::vector<Event *> default_value,
-                                       Config *config = nullptr) : IConfigItem(config, name),
-                                                                   value_{std::move(default_value)} {}
-
-  // destructor
-  virtual ~preconfig_population_events() = default;
-
-  virtual std::vector<Event *> &operator()() {
-    return value_;
-  }
-
-  void set_value(const YAML::Node &node) override;
-};
-
 class start_of_comparison_period : public ConfigItem<int> {
  public:
   start_of_comparison_period(const std::string &name, const int &default_value, Config *config) : ConfigItem<int>(
@@ -436,4 +420,4 @@ class prob_individual_present_at_mda_distribution : public IConfigItem {
   void set_value(const YAML::Node &node) override;
 };
 
-#endif // CUSTOMCONFIGITEM_H
+#endif

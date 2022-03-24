@@ -1,21 +1,21 @@
 /* 
- * File:   Person.h
- * Author: nguyentran
- *
- * Created on March 22, 2013, 2:25 PM
+ * Person.h
+ * 
+ * Define the person class and the methods that are associated with it.
  */
 
 #ifndef PERSON_H
-#define    PERSON_H
+#define PERSON_H
 
 #include "Core/PropertyMacro.h"
-#include "Properties/PersonIndexAllHandler.h"
-#include "Properties/PersonIndexByLocationStateAgeClassHandler.h"
+#include "Properties/PersonIndexAllHandler.hxx"
+#include "Properties/PersonIndexByLocationStateAgeClassHandler.hxx"
 #include "Core/ObjectPool.h"
 #include "Core/Dispatcher.h"
-#include "Properties/PersonIndexByLocationBittingLevelHandler.h"
-#include "Properties/PersonIndexByLocationMovingLevelHandler.h"
+#include "Properties/PersonIndexByLocationBittingLevelHandler.hxx"
+#include "Properties/PersonIndexByLocationMovingLevelHandler.hxx"
 #include "ClonalParasitePopulation.h"
+#include "Helpers/UniqueId.hxx"
 
 class Population;
 
@@ -123,25 +123,22 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
  PROPERTY_REF(std::vector<double>, prob_present_at_mda_by_age)
 
+ private:
+  ul_uid _uid;
+
+  // The starting drug values given for a complex therapy
+  std::map<int, double> starting_mac_drug_values;
+
  public:
   Person();
-
-  //    Person(const Person& orig);
   virtual ~Person();
 
   void init() override;
-
-  //    Model* model();
-  //    Scheduler* scheduler();
-  //    Config* config();
-  //    Random* random();
-
 
   void NotifyChange(const Property &property, const void *oldValue, const void *newValue);
 
   virtual void increase_age_by_1_year();
 
-  //    BloodParasite* add_new_parasite_to_blood(Genotype* parasite_type);
   ClonalParasitePopulation *add_new_parasite_to_blood(Genotype *parasite_type) const;
 
   virtual void notify_change_in_force_of_infection(const double &sign, const int &parasite_type_id,
@@ -161,21 +158,17 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
   void cancel_all_other_progress_to_clinical_events_except(Event *event) const;
 
   void cancel_all_events_except(Event *event) const;
-  //    void record_treatment_failure_for_test_treatment_failure_events();
 
   void change_all_parasite_update_function(ParasiteDensityUpdateFunction *from,
                                            ParasiteDensityUpdateFunction *to) const;
 
   int complied_dosing_days(const int &dosing_day) const;
 
-  void receive_therapy(Therapy *therapy, ClonalParasitePopulation *clinical_caused_parasite);
+  void receive_therapy(Therapy *therapy, ClonalParasitePopulation *clinical_caused_parasite, bool is_mac_therapy = false);
 
-  void add_drug_to_blood(DrugType *dt, const int &dosing_days);
+  void add_drug_to_blood(DrugType *dt, const int &dosing_days, bool is_mac_therapy);
 
   void schedule_progress_to_clinical_event_by(ClonalParasitePopulation *blood_parasite);
-
-  [[deprecated]]
-  void schedule_end_clinical_due_to_drug_resistance_event(ClonalParasitePopulation *blood_parasite);
 
   void schedule_test_treatment_failure_event(ClonalParasitePopulation *blood_parasite, const int &testing_day,
                                              const int &t_id = 0);
@@ -200,13 +193,15 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   void determine_clinical_or_not(ClonalParasitePopulation *clinical_caused_parasite);
 
-  void update() override;
+  void update();
 
   void update_current_state();
 
   void randomly_choose_parasite();
 
   void infected_by(const int &parasite_type_id);
+
+  bool inflict_bite(const unsigned int parasite_type_id);
 
   void randomly_choose_target_location();
 
@@ -239,6 +234,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
   double prob_present_at_mda();
 
   bool has_effective_drug_in_blood() const;
+
+  ul_uid get_uid() { return _uid; }
+
 };
 
-#endif    /* PERSON_H */
+#endif

@@ -34,30 +34,24 @@ DrugsInBlood::~DrugsInBlood() {
 
 Drug *DrugsInBlood::add_drug(Drug *drug) {
   int typeID = drug->drug_type()->id();
+
   if (!is_drug_in_blood(typeID)) {
     drug->set_person_drugs(this);
     drugs_->insert(std::pair<int, Drug *>(typeID, drug));
 
-
-    // TODO::review
-    // if (drug->drug_type()->is_artemisinin()) {
-    //   person_->all_clonal_parasite_populations()->active_astermisinin_on_gametocyte(drug->drug_type());
-    // }
   } else {
-    //already have it
+    // The drug is already present in their blood, so make sure the starting value is set correctly. This is intended
+    // to occur as part fo a MACTherapy when someone is prescribed a treatment regime (ex., ACT for 3 days, 2 off, 2 on)
+    drugs_->at(typeID)->set_starting_value(drug->starting_value());
     drugs_->at(typeID)->set_dosing_days(drug->dosing_days());
     drugs_->at(typeID)->set_last_update_value(drug->last_update_value());
     drugs_->at(typeID)->set_last_update_time(drug->last_update_time());
     drugs_->at(typeID)->set_start_time(drug->start_time());
     drugs_->at(typeID)->set_end_time(drug->end_time());
-
-    //        person->cancelEvent(Events::ClearDrugFromBlood, typeID);
-    //release current drug to pool
     delete drug;
   }
 
   return drugs_->at(typeID);
-
 }
 
 bool DrugsInBlood::is_drug_in_blood(DrugType *drug_type) const {

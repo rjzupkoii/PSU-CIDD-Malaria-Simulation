@@ -19,23 +19,23 @@ Event::~Event() {
 }
 
 void Event::perform_execute() {
-  if (executable) {
-    //        std::cout << "Before event"<< std::endl;
-    //update to current status of the dispatcher
-    if (dispatcher!=nullptr) {
-      //            std::cout << name() << std::endl;
-      dispatcher->update();
-    }
+  // Return if there is nothing to do
+  if (!executable) { return; }
 
-    //std::cout << "1.run" << name()<< std::endl;
-    execute();
-    //std::cout << "2.e-run" << std::endl;
-    if (dispatcher!=nullptr) {
-      dispatcher->remove(this);
-      dispatcher = nullptr;
-    }
-
-    executable = false;
-    //        std::cout << "After event"<< std::endl;
+  // Execute the update event attached to the dispatcher
+  if (dispatcher != nullptr) {
+    dispatcher->update();
   }
+
+  // Execute the event
+  execute();    
+
+  // Update the dispatcher
+  if (dispatcher != nullptr) {
+    dispatcher->remove(this);
+    dispatcher = nullptr;
+  }
+
+  // Disable ourselves
+  executable = false;
 }

@@ -29,6 +29,8 @@ VIRTUAL_PROPERTY_REF(double, maximum_parasite_killing_rate)
 
 VIRTUAL_PROPERTY_REF(DoubleVector, age_group_specific_drug_concentration_sd);
 
+VIRTUAL_PROPERTY_REF(DoubleVector, age_specific_drug_absorption);
+
 VIRTUAL_PROPERTY_REF(double, p_mutation)
 
 VIRTUAL_PROPERTY_REF(double, k)
@@ -45,15 +47,13 @@ VIRTUAL_PROPERTY_REF(ec50map_type, ec50_map)
 public:
   DrugType();
 
-  virtual ~DrugType();
-
-  void reset(int length);
+  virtual ~DrugType() = default;
 
   virtual double get_parasite_killing_rate_by_concentration(const double &concentration, const double &EC50_power_n);
 
-  virtual double n();
+  virtual double n() { return n_; }
 
-  virtual void set_n(const double &n);
+  virtual void set_n(const double &n) { n_ = n; }
 
   int get_total_duration_of_drug_activity(const int &dosing_days) const;
 
@@ -63,7 +63,6 @@ public:
 
 private:
   double n_;
-  //    double EC50_;
 };
 
-#endif /* DRUGTYPE_H */
+#endif 

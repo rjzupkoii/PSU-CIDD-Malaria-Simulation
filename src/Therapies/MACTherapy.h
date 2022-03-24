@@ -10,7 +10,7 @@
 
 #include "Core/PropertyMacro.h"
 #include <vector>
-#include "Therapies/Therapy.h"
+#include "Therapies/Therapy.hxx"
 
 class MACTherapy : public Therapy {
  DISALLOW_COPY_AND_ASSIGN(MACTherapy)
@@ -22,13 +22,14 @@ class MACTherapy : public Therapy {
  public:
   MACTherapy();
 
-  //    MACTherapy(const MACTherapy& orig);
-  virtual ~MACTherapy();
+  ~MACTherapy() override;
 
   void add_therapy_id(const int &therapy_id);
 
   void add_schedule(const int &start_at_day);
 
+  void print(std::ostream& os) const override;
+
 };
 
-#endif    /* MACTHERAPY_H */
+#endif

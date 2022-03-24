@@ -1,19 +1,21 @@
-build*
-bin
+
+# Ignore IDE directories
 .idea
 .vscode
 .vs
+.DS_Store
+
+# Ignore build artifacts
+build*
+bin
 node_modules
 Testing
 cmake-*
-monthly_data\.txt
 
-.DS_Store
+# Ignore the backups of diagrams
+documentation/diagrams/*.~vsdx
 
-reporter\.txt
-
-# Ignore the backup of the UML diagram
-documentation/MaSim.uml~
-
-# Ingore the "default" output directory
+# Ignore default output and data files
 out
+monthly_data\.txt
+reporter\.txt

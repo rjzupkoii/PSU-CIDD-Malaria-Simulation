@@ -11,14 +11,10 @@
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "Person.h"
-#include "Properties/PersonIndex.h"
+#include "Properties/PersonIndex.hxx"
 #include "Core/Dispatcher.h"
 #include <vector>
 
-//#include "PersonIndexByLocationStateAgeClass.h"
-
-
-//class Person;
 class Model;
 
 class PersonIndexAll;
@@ -44,6 +40,10 @@ class Population : public Dispatcher {
  PROPERTY_REF(std::vector<std::vector<double> >, current_force_of_infection_by_location_parasite_type);
  PROPERTY_REF(std::vector<std::vector<double> >, interupted_feeding_force_of_infection_by_location_parasite_type);
  PROPERTY_REF(std::vector<std::vector<std::vector<double> > >, force_of_infection_for7days_by_location_parasite_type);
+
+  private:
+    // Generate the individual at the given location
+    void generate_individual(int location, int age_class);
 
  public:
   Population(Model *model = nullptr);
@@ -101,7 +101,7 @@ class Population : public Dispatcher {
   virtual void notify_change_in_force_of_infection(const int &location, const int &parasite_type_id,
                                                    const double &relative_force_of_infection);
 
-  // void update() override;
+  void update() override;
 
   void update_force_of_infection(const int &current_time);
 
@@ -110,8 +110,6 @@ class Population : public Dispatcher {
   void perform_death_event();
 
   void give_1_birth(const int &location);
-
-  void clear_all_dead_state_individual();
 
   void perform_circulation_event();
 
@@ -140,4 +138,4 @@ T *Population::get_person_index() {
   return nullptr;
 }
 
-#endif    /* POPULATION_H */
+#endif

@@ -23,7 +23,7 @@ class PkPdReporter : public Reporter {
   //    PkPdReporter(const PkPdReporter& orig);
   virtual ~PkPdReporter();
 
-  void initialize() override;
+  void initialize(int job_number, std::string path) override;
 
   void before_run() override;
 

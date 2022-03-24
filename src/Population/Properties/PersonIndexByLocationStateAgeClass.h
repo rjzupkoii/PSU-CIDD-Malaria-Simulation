@@ -10,8 +10,8 @@
 
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
-#include "../Person.h"
-#include "PersonIndex.h"
+#include "Population/Person.h"
+#include "PersonIndex.hxx"
 
 class PersonIndexByLocationStateAgeClass : public PersonIndex {
  DISALLOW_COPY_AND_ASSIGN(PersonIndexByLocationStateAgeClass)
@@ -34,7 +34,7 @@ class PersonIndexByLocationStateAgeClass : public PersonIndex {
 
   virtual std::size_t size() const;
 
-  virtual void update();
+  virtual void defragment();
 
   virtual void notify_change(Person *p, const Person::Property &property, const void *oldValue, const void *newValue);
 

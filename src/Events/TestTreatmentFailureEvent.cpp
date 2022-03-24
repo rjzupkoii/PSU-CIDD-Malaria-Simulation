@@ -51,8 +51,6 @@ void TestTreatmentFailureEvent::execute() {
           Model::CONFIG->parasite_density_level().log_parasite_density_detectable) {
 
     Model::DATA_COLLECTOR->record_1_TF(person->location(), true);
-    Model::DATA_COLLECTOR->record_1_treatment_failure_by_therapy(person->location(), person->age(), therapyId_);
-  } else {
-    Model::DATA_COLLECTOR->record_1_treatment_success_by_therapy(therapyId_);
+    Model::DATA_COLLECTOR->record_1_treatment_failure_by_therapy(person->location(), person->age_class(), therapyId_);
   }
 }

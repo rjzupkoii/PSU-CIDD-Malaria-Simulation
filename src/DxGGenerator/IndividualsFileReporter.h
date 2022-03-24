@@ -26,7 +26,7 @@ class IndividualsFileReporter : public Reporter {
   virtual ~IndividualsFileReporter();
 
  private:
-  void initialize() override;
+  void initialize(int job_number, std::string path) override { }
 
   void before_run() override;
 

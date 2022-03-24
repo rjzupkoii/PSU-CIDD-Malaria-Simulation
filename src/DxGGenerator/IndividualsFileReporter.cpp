@@ -21,10 +21,6 @@ IndividualsFileReporter::IndividualsFileReporter(const std::string &file_name) :
 IndividualsFileReporter::~IndividualsFileReporter() {
 }
 
-void IndividualsFileReporter::initialize() {
-
-}
-
 void IndividualsFileReporter::before_run() {
   fs_.open(file_name_.c_str(), std::fstream::out);
 }
@@ -35,7 +31,7 @@ void IndividualsFileReporter::begin_time_step() {
 
 void IndividualsFileReporter::after_time_step() {
   if (Model::SCHEDULER->current_time()%Model::CONFIG->report_frequency()==0) {
-    for (int i = 0; i < Model::POPULATION->all_persons()->vPerson().size(); i++) {
+    for (std::size_t i = 0; i < Model::POPULATION->all_persons()->vPerson().size(); i++) {
       Person *person = Model::POPULATION->all_persons()->vPerson()[i];
       double p_density = 0;
       if (person->all_clonal_parasite_populations()->parasites()->size() >= 1) {

@@ -1,11 +1,17 @@
 /* 
- * File:   Person.cpp
- * Author: nguyentran
+ * Person.cpp
  * 
- * Created on March 22, 2013, 2:25 PM
+ * Implement the Person object. Note that this is a very complex part of the 
+ * model and care should be taken in modifying it.
+ * 
+ * NOTE Longer term the goal is to simplify this a bit by shifting some 
+ *      operations out - remember, separation of concerns!
  */
-
 #include "Person.h"
+
+#include <algorithm>
+#include <cmath>
+
 #include "Population.h"
 #include "ImmuneSystem.h"
 #include "Model.h"
@@ -34,8 +40,7 @@
 #include "Therapies/MACTherapy.h"
 #include "Events/ReceiveTherapyEvent.h"
 #include "Constants.h"
-#include <algorithm>
-#include <cmath>
+#include "Validation/MovementValidation.h"
 #include "Helpers/ObjectHelpers.h"
 
 OBJECTPOOL_IMPL(Person)
@@ -60,6 +65,9 @@ Person::Person() :
 
 void Person::init() {
   Dispatcher::init();
+
+  // Refresh the UID
+  _uid = UniqueId::get_instance().get_uid();
 
   immune_system_ = new ImmuneSystem(this);
 
@@ -103,8 +111,6 @@ void Person::set_location(const int &value) {
       Model::DATA_COLLECTOR->update_person_days_by_years(value, day_diff);
     }
 
-    Model::DATA_COLLECTOR->record_1_migration(this, location_, value);
-
     NotifyChange(LOCATION, &location_, &value);
 
     location_ = value;
@@ -124,9 +130,7 @@ void Person::set_host_state(const HostStates &value) {
       all_clonal_parasite_populations_->clear();
       clear_events();
 
-      //
-      //            Model::STATISTIC->update_person_days_by_years(location_, -(Constants::DAYS_IN_YEAR() - Model::SCHEDULER->current_day_in_year()));
-      Model::DATA_COLLECTOR->record_1_death(location_, birthday_, number_of_times_bitten_, age_class_, age_);
+      Model::DATA_COLLECTOR->record_1_death(location_, birthday_, number_of_times_bitten_, age_class_);
     }
 
     host_state_ = value;
@@ -149,7 +153,7 @@ void Person::set_age(const int &value) {
 
     //update age class
     if (Model::MODEL != nullptr) {
-      auto ac = age_class_ == -1 ? 0 : age_class_;
+      unsigned int ac = age_class_ == -1 ? 0 : age_class_;
 
       while (ac < (Model::CONFIG->number_of_age_classes() - 1) && age_ >= Model::CONFIG->age_structure()[ac]) {
         ac++;
@@ -324,15 +328,6 @@ void Person::schedule_progress_to_clinical_event_by(ClonalParasitePopulation* bl
                                           Model::SCHEDULER->current_time() + time);
 }
 
-void Person::schedule_end_clinical_due_to_drug_resistance_event(ClonalParasitePopulation* blood_parasite) {
-
-  auto d_clinical = Model::RANDOM->random_normal(7, 2);
-  d_clinical = std::min<int>(std::max<int>(d_clinical, 5), 14);
-
-  EndClinicalDueToDrugResistanceEvent::schedule_event(Model::SCHEDULER, this, blood_parasite,
-                                                      Model::SCHEDULER->current_time() + d_clinical);
-}
-
 void Person::schedule_test_treatment_failure_event(ClonalParasitePopulation* blood_parasite, const int &testing_day,
                                                    const int &t_id) {
   TestTreatmentFailureEvent::schedule_event(Model::SCHEDULER, this, blood_parasite,
@@ -352,40 +347,42 @@ int Person::complied_dosing_days(const int &dosing_day) const {
   return dosing_day;
 }
 
-void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite) {
-  //if therapy is SCTherapy
+// Give the therapy indicated to the individual, making note of the parasite that caused the clinical case. Note that
+// we assume that MACTherapy is going to be fairly rare, but that additional bookkeeping needs to be done in the event
+// of one.
+// NOLINTNEXTLINE(misc-no-recursion)
+void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite, bool is_mac_therapy) {
+
+  // Start by checking if this is a simple therapy with a single dosing regime
   auto* sc_therapy = dynamic_cast<SCTherapy*>(therapy);
   if (sc_therapy != nullptr) {
-
-    for (int j = 0; j < sc_therapy->drug_ids.size(); ++j) {
-      int drug_id = sc_therapy->drug_ids[j];
-      auto dosing_days = sc_therapy->drug_ids.size() == sc_therapy->dosing_day.size() ? sc_therapy->dosing_day[j]
-                                                                                      : sc_therapy->dosing_day[0];
-
+    for (std::size_t j = 0; j < sc_therapy->drug_ids.size(); ++j) {
+      // Determine the dosing days
+      auto dosing_days = (sc_therapy->drug_ids.size() == sc_therapy->dosing_day.size())
+              ? sc_therapy->dosing_day[j] : sc_therapy->dosing_day[0];
       dosing_days = complied_dosing_days(dosing_days);
-//      std::cout << drug_id << "-" << dosing_days << std::endl;
 
-      add_drug_to_blood(Model::CONFIG->drug_db()->at(drug_id), dosing_days);
-    }
-
-    for (auto drug_id : sc_therapy->drug_ids) {
-
+      // Add the treatment to the blood
+      auto drug_id = sc_therapy->drug_ids[j];
+      add_drug_to_blood(Model::CONFIG->drug_db()->at(drug_id), dosing_days, is_mac_therapy);
     }
   } else {
-    //else if therapy is MACTherapy
+    // This is not a simple therapy, multiple treatments and dosing regimes may be involved
     auto* mac_therapy = dynamic_cast<MACTherapy*>(therapy);
     assert(mac_therapy != nullptr);
-    for (auto i = 0; i < mac_therapy->therapy_ids().size(); i++) {
+
+    starting_mac_drug_values.clear();
+    for (std::size_t i = 0; i < mac_therapy->therapy_ids().size(); i++) {
       const auto therapy_id = mac_therapy->therapy_ids()[i];
       const auto start_day = mac_therapy->start_at_days()[i];
+      assert(start_day >= 1);
 
       if (start_day == 1) {
-        receive_therapy(Model::CONFIG->therapy_db()[therapy_id], clinical_caused_parasite);
+        receive_therapy(Model::CONFIG->therapy_db()[therapy_id], clinical_caused_parasite, true);
       } else {
-        assert(start_day > 1);
-        ReceiveTherapyEvent::schedule_event(Model::SCHEDULER, this, Model::CONFIG->therapy_db()[therapy_id],
-                                            Model::SCHEDULER->current_time() + start_day - 1,
-                                            clinical_caused_parasite);
+        ReceiveTherapyEvent::schedule_event(
+                Model::SCHEDULER, this, Model::CONFIG->therapy_db()[therapy_id],
+                Model::SCHEDULER->current_time() + start_day - 1, clinical_caused_parasite, true);
       }
     }
   }
@@ -393,23 +390,43 @@ void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinica
   last_therapy_id_ = therapy->id();
 }
 
-void Person::add_drug_to_blood(DrugType* dt, const int &dosing_days) {
+void Person::add_drug_to_blood(DrugType* dt, const int &dosing_days, bool is_mac_therapy) {
+  // Prepare the drug object
   auto* drug = new Drug(dt);
   drug->set_dosing_days(dosing_days);
   drug->set_last_update_time(Model::SCHEDULER->current_time());
 
+  // Find the mean and standard deviation for the drug, and use those values to determine the drug level for this individual
   const auto sd = dt->age_group_specific_drug_concentration_sd()[age_class_];
-  //    std::cout << ageClass << "====" << sd << std::endl;
-  const auto drug_level = Model::RANDOM->random_normal_truncated(1.0, sd);
+  const auto mean_drug_absorption = dt->age_specific_drug_absorption()[age_class_];
+  auto drug_level = Model::RANDOM->random_normal_truncated(mean_drug_absorption, sd);
 
-  drug->set_last_update_value(drug_level);
+  // If this is going to be part of a complex therapy regime then we need to note this initial drug level
+  if (is_mac_therapy) {
+    if (drugs_in_blood()->drugs()->find(dt->id()) != drugs_in_blood()->drugs()->end()) {
+      // Long half-life drugs are already present in the blood
+      drug_level = drugs_in_blood()->get_drug(dt->id())->starting_value();
+    } else if (starting_mac_drug_values.find(dt->id()) != starting_mac_drug_values.end()) {
+      // Short half-life drugs that were taken, but cleared the blood already
+      drug_level = starting_mac_drug_values[dt->id()];
+    }
+    // Note the value for future use
+    starting_mac_drug_values[dt->id()] = drug_level;
+  }
+
+  // Set the starting level for this course of treatment
   drug->set_starting_value(drug_level);
+
+  if (drugs_in_blood_->is_drug_in_blood(dt)){
+    drug->set_last_update_value(drugs_in_blood_->get_drug(dt->id())->last_update_value());
+  } else {
+    drug->set_last_update_value(0.0);
+  }
 
   drug->set_start_time(Model::SCHEDULER->current_time());
   drug->set_end_time(Model::SCHEDULER->current_time() + dt->get_total_duration_of_drug_activity(dosing_days));
 
   drugs_in_blood_->add_drug(drug);
-
 }
 
 void Person::schedule_update_by_drug_event(ClonalParasitePopulation* clinical_caused_parasite) {
@@ -614,6 +631,44 @@ void Person::infected_by(const int &parasite_type_id) {
 
 }
 
+// Inflict a bite upon the person with sporozoites of the given type being
+// contained within the bite. When a bite is inflicted, the immune system 
+// is challenged. If the challenge fails the method will return true 
+// indicating that they are now infected.
+bool Person::inflict_bite(const unsigned int parasite_type_id) {
+  // Update the overall bite count
+  increase_number_of_times_bitten();
+
+  // Get the probability of infection of a naive individual
+  double pr = Model::CONFIG->transmission_parameter();
+  
+  // Get the current immunity and calculate the baseline probability
+  double theta = immune_system()->get_current_value();
+  double pr_inf = pr * (1 - (theta - 0.2) / 0.6) + 0.1 * ((theta - 0.2) / 0.6);
+
+  // High immunity reduces likelihood of infection
+  if (theta > 0.8) {
+    pr_inf = 0.1;
+  } 
+  
+  // Low immunity sets likelihood at the probability of infection
+  if (theta < 0.2) {
+    pr_inf = pr;
+  }
+
+  // If the draw is less less than pr_inf, they get infected
+  const double draw = Model::RANDOM->random_flat(0.0, 1.0);
+  if (draw < pr_inf) {
+    if (host_state() != Person::EXPOSED && liver_parasite_type() == nullptr) {
+      today_infections()->push_back(parasite_type_id);
+      return true;
+    }
+  }
+
+  // We were not infected
+  return false;
+}
+
 void Person::schedule_move_parasite_to_blood(Genotype* genotype, const int &time) {
 
   MoveParasiteToBloodEvent::schedule_event(Model::SCHEDULER, this, genotype, Model::SCHEDULER->current_time() + time);
@@ -643,6 +698,12 @@ void Person::randomly_choose_target_location() {
   } else {
     const int index_random_location = Model::RANDOM->random_uniform(today_target_locations_->size());
     target_location = today_target_locations_->at(index_random_location);
+  }
+
+  // Report the movement if need be
+  if (Model::MODEL->report_movement()) {
+    auto id = static_cast<int>(PersonIndexAllHandler::index());
+    MovementValidation::add_move(id, location_, target_location);
   }
 
   schedule_move_to_target_location_next_day_event(target_location);
@@ -758,7 +819,7 @@ bool Person::isGametocytaemic() const {
 
 void Person::generate_prob_present_at_mda_by_age() {
   if (prob_present_at_mda_by_age().empty()) {
-    for (auto i = 0; i < Model::CONFIG->mean_prob_individual_present_at_mda().size(); i++) {
+    for (std::size_t i = 0; i < Model::CONFIG->mean_prob_individual_present_at_mda().size(); i++) {
       auto value = Model::RANDOM->random_beta(
         Model::CONFIG->prob_individual_present_at_mda_distribution()[i].alpha,
         Model::CONFIG->prob_individual_present_at_mda_distribution()[i].beta);
@@ -768,7 +829,7 @@ void Person::generate_prob_present_at_mda_by_age() {
 }
 
 double Person::prob_present_at_mda() {
-  auto i = 0;
+  std::size_t i = 0;
   // std::cout << "hello " << i << std::endl;
   while (age_ > Model::CONFIG->age_bracket_prob_individual_present_at_mda()[i]
          && i < Model::CONFIG->age_bracket_prob_individual_present_at_mda().size()) {

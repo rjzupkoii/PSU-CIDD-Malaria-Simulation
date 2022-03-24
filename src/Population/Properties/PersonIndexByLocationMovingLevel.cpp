@@ -29,8 +29,8 @@ void PersonIndexByLocationMovingLevel::Initialize(const int &no_location, const 
 }
 
 void PersonIndexByLocationMovingLevel::add(Person *p) {
-  assert(vPerson_.size() > p->location() && p->location() >= 0);
-  assert(vPerson_[p->location()].size() > p->moving_level());
+  assert(vPerson_.size() > static_cast<std::size_t>(p->location()) && p->location() >= 0);
+  assert(vPerson_[p->location()].size() > static_cast<std::size_t>(p->moving_level()));
   add(p, p->location(), p->moving_level());
 }
 
@@ -55,16 +55,16 @@ std::size_t PersonIndexByLocationMovingLevel::size() const {
 }
 
 void PersonIndexByLocationMovingLevel::add(Person *p, const int &location, const int &moving_level) {
-  vPerson_[location][moving_level].push_back(p);
-  p->PersonIndexByLocationMovingLevelHandler::set_index(vPerson_[location][moving_level].size() - 1);
+  auto& reference = vPerson_[location][moving_level];
+  reference.push_back(p);
+  p->PersonIndexByLocationMovingLevelHandler::set_index(reference.size() - 1);
 }
 
 void PersonIndexByLocationMovingLevel::remove_without_set_index(Person *p) {
-  vPerson_[p->location()][p->moving_level()].back()->PersonIndexByLocationMovingLevelHandler::set_index(
-      p->PersonIndexByLocationMovingLevelHandler::index());
-  vPerson_[p->location()][p->moving_level()][p->PersonIndexByLocationMovingLevelHandler::index()] =
-      vPerson_[p->location()][p->moving_level()].back();
-  vPerson_[p->location()][p->moving_level()].pop_back();
+  auto& reference = vPerson_[p->location()][p->moving_level()];
+  reference.back()->PersonIndexByLocationMovingLevelHandler::set_index(p->PersonIndexByLocationMovingLevelHandler::index());
+  reference[p->PersonIndexByLocationMovingLevelHandler::index()] = reference.back();
+  reference.pop_back();
 }
 
 void PersonIndexByLocationMovingLevel::change_property(Person *p, const int &location, const int &moving_level) {
@@ -75,8 +75,8 @@ void PersonIndexByLocationMovingLevel::change_property(Person *p, const int &loc
   add(p, location, moving_level);
 }
 
-void PersonIndexByLocationMovingLevel::update() {
-  for (int location = 0; location < Model::CONFIG->number_of_locations(); location++) {
+void PersonIndexByLocationMovingLevel::defragment() {
+  for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     for (int ml = 0; ml < Model::CONFIG->circulation_info().number_of_moving_levels; ml++) {
       std::vector<Person *>(vPerson_[location][ml]).swap(vPerson_[location][ml]);
     }
