@@ -93,7 +93,7 @@ cd build/bin
 Once the genome data has been loaded the basic input file can be run as follows:
 
 ```bash
-cd /build/bin
+cd build/bin
 ./MaSim -i ../../misc/input.yml
 ```
 
