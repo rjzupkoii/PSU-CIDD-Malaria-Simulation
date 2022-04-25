@@ -86,7 +86,7 @@ To build the simulation to run on the ICDS-ACI the first time it is necessary to
 The first step in performing a basic model check is load the genome data in the database, this must also be done whenever a new database is corrected:
 
 ```base
-cd /build/bin
+cd build/bin
 ./MaSim -i ../../misc/input.yml -l
 ```
 
