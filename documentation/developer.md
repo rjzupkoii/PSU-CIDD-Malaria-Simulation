@@ -23,7 +23,16 @@ sudo apt install libfmt-dev
 sudo apt upgrade
 ```
 
-4. Install the PostgreSQL and libpqxx dependencies
+4. Add PostgreSQL to the Apt Respository listing
+
+Note that while this step is necessary when working from a new installation of Ubuntu, it may not be necessary, and you should check to see if the package can be found by first performing `apt search postgresql-10`
+
+```bash
+echo 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+```
+
+5. Install the PostgreSQL and libpqxx dependencies
 
 Note that this should be done from a directory that you are comfortable with git repositories being stored in.
 ```bash
