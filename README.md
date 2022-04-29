@@ -37,7 +37,7 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 
 ## Releases
  
-### Version 4.1.1 (unstable)
+### Version 4.1.1
 
 The version 4.1.1 release is focused on adding new features needed for research:
 
