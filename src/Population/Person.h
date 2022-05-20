@@ -141,12 +141,19 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   ClonalParasitePopulation *add_new_parasite_to_blood(Genotype *parasite_type) const;
 
+  // Notify the individual of the change to the force of infection (FOI) for one of their parasite clones.
+  //
+  // Sign - positive to increment the global FOI, negative to decrement the global FOI
+  // blood_parasite_log_relative_density - The parasite density for a single parasite clone in the individual.
+  // log_total_relative_parasite_density - The total parasite density for all clones present in the individual
   virtual void notify_change_in_force_of_infection(const double &sign, const int &parasite_type_id,
                                                    const double &blood_parasite_log_relative_density,
                                                    const double &log_total_relative_parasite_density);
 
   virtual double get_biting_level_value();
 
+  // Calculate the infectivity of an arbitrary parasite population based upon the parasite density. This is based upon
+  // the calculations by Ross et al. (2006)
   virtual double relative_infectivity(const double &log10_parasite_density);
 
   virtual double get_probability_progress_to_clinical();

@@ -237,16 +237,16 @@ ClonalParasitePopulation* Person::add_new_parasite_to_blood(Genotype* parasite_t
 void Person::notify_change_in_force_of_infection(const double &sign, const int &parasite_type_id,
                                                  const double &blood_parasite_log_relative_density,
                                                  const double &log_total_relative_parasite_density) {
+  // Return if the relative density is zero
   if (blood_parasite_log_relative_density == 0.0) {
-
     return;
   }
 
-  //    double weight = pow(10, blood_parasite_log_relative_density - log_total_relative_parasite_density);
-  //    assert(weight <=1 && weight >=0);
+  // FOI_i = (+/-) b_i * g(D_i) * D_r
   const auto relative_force_of_infection =
-    sign * get_biting_level_value() * relative_infectivity(log_total_relative_parasite_density) *
-    blood_parasite_log_relative_density;
+    sign * get_biting_level_value() *
+      relative_infectivity(log_total_relative_parasite_density) *
+      blood_parasite_log_relative_density;
 
   population_->notify_change_in_force_of_infection(location_, parasite_type_id, relative_force_of_infection);
 }
@@ -656,7 +656,7 @@ bool Person::inflict_bite(const unsigned int parasite_type_id) {
     pr_inf = pr;
   }
 
-  // If the draw is less less than pr_inf, they get infected
+  // If the draw is less than pr_inf, they get infected
   const double draw = Model::RANDOM->random_flat(0.0, 1.0);
   if (draw < pr_inf) {
     if (host_state() != Person::EXPOSED && liver_parasite_type() == nullptr) {

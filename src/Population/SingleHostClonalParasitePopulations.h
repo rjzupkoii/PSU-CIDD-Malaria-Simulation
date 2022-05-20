@@ -1,8 +1,8 @@
 /* 
- * File:   ParasitePopulation.h
- * Author: Merlin
+ * SingleHostClonalParasitePopulations.h
  *
- * Created on July 11, 2013, 1:53 PM
+ * This class contains the points to all the clonal parasites that are inflecting a single individual and defines the
+ * functions that are used to calculate the force of infection.
  */
 
 #ifndef SINGLEHOSTCLONALPARASITEPOPULATIONS_H
@@ -35,6 +35,7 @@ class SingleHostClonalParasitePopulations {
 
  POINTER_PROPERTY(DoubleVector, relative_effective_parasite_density)
 
+ // Total density of all parasites present in the host
  PROPERTY_REF(double, log10_total_relative_density);
 
  private:

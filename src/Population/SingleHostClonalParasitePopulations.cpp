@@ -213,7 +213,7 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
     return;
   }
 
-  // Some of the parasites are still present, continue the calculation
+  // Some parasites are still present, continue the calculation
   log10_total_relative_density = (*parasites_)[i]->get_log10_relative_density();
   relative_parasite_density[i] = (log10_total_relative_density);
 

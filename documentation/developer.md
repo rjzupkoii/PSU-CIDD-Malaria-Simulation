@@ -38,6 +38,7 @@ sudo apt-get update
 Note that this should be done from a directory that you are comfortable with git repositories being stored in.
 ```bash
 sudo apt install postgresql-10
+sudo apt install libpq-dev
 sudo apt upgrade
 git clone https://github.com/jtv/libpqxx.git
 cd libpqxx
