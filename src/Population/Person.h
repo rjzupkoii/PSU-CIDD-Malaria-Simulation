@@ -16,6 +16,7 @@
 #include "Properties/PersonIndexByLocationMovingLevelHandler.hxx"
 #include "ClonalParasitePopulation.h"
 #include "Helpers/UniqueId.hxx"
+#include "Therapies/SCTherapy.h"
 
 class Population;
 
@@ -30,8 +31,6 @@ class Genotype;
 class Event;
 
 class ParasiteDensityUpdateFunction;
-
-class Therapy;
 
 class DrugType;
 
@@ -118,7 +117,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
  PROPERTY_REF(int, number_of_times_bitten)
 
  PROPERTY_REF(int, number_of_trips_taken)
-  //    PROPERTY_REF(bool, is_tracking_treatment_number);
+
  PROPERTY_REF(int, last_therapy_id)
 
  PROPERTY_REF(std::vector<double>, prob_present_at_mda_by_age)
@@ -128,6 +127,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   // The starting drug values given for a complex therapy
   std::map<int, double> starting_mac_drug_values;
+
+  // Get the number of days that the individual complied with the therapy
+  static int complied_dosing_days(const SCTherapy* therapy) ;
 
  public:
   Person();
@@ -168,8 +170,6 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   void change_all_parasite_update_function(ParasiteDensityUpdateFunction *from,
                                            ParasiteDensityUpdateFunction *to) const;
-
-  int complied_dosing_days(const int &dosing_day) const;
 
   void receive_therapy(Therapy *therapy, ClonalParasitePopulation *clinical_caused_parasite, bool is_mac_therapy = false);
 
@@ -244,6 +244,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   ul_uid get_uid() { return _uid; }
 
+    void receive_therapy(SCTherapy *sc_therapy, bool is_mac_therapy);
 };
 
 #endif

@@ -1,16 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   TherapyBuilder.h
- * Author: Merlin
+ * TherapyBuilder.h
  *
- * Created on August 23, 2017, 2:43 PM
+ * Define the factory pattern to create the therapy objects.
  */
-
 #ifndef THERAPYBUILDER_H
 #define THERAPYBUILDER_H
 
@@ -19,18 +11,18 @@
 class Therapy;
 
 class TherapyBuilder {
+
  public:
-  TherapyBuilder();
-
+  TherapyBuilder() = default;
   TherapyBuilder(const TherapyBuilder &orig) = default;
-
-  virtual ~TherapyBuilder();
+  virtual ~TherapyBuilder() = default;
 
   static Therapy *build(const YAML::Node &ns, const int &t_id);
 
  private:
-
+    static Therapy *create_simple(const YAML::Node &ns, const int &t_id);
+    static Therapy *create_complex(const YAML::Node &ns, const int &t_id);
 };
 
-#endif /* THERAPYBUILDER_H */
+#endif
 

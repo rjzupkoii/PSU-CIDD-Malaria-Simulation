@@ -287,18 +287,6 @@ void Person::cancel_all_events_except(Event* event) const {
   }
 }
 
-//void Person::record_treatment_failure_for_test_treatment_failure_events() {
-//
-//    for(Event* e :  *events()) {
-//        if (dynamic_cast<TestTreatmentFailureEvent*> (e) != nullptr && e->executable()) {
-//            //            e->set_dispatcher(nullptr);
-//            //record treatment failure
-//            Model::DATA_COLLECTOR->record_1_treatment_failure_by_therapy(location_, age_, ((TestTreatmentFailureEvent*) e)->therapyId());
-//
-//        }
-//    }
-//}
-
 void
 Person::change_all_parasite_update_function(ParasiteDensityUpdateFunction* from,
                                             ParasiteDensityUpdateFunction* to) const {
@@ -334,38 +322,33 @@ void Person::schedule_test_treatment_failure_event(ClonalParasitePopulation* blo
                                             Model::SCHEDULER->current_time() + testing_day, t_id);
 }
 
-int Person::complied_dosing_days(const int &dosing_day) const {
-
-  if (Model::CONFIG->p_compliance() < 1) {
-    const auto p = Model::RANDOM->random_flat(0.0, 1.0);
-    if (p > Model::CONFIG->p_compliance()) {
-      //do not comply
-      const auto a = (Model::CONFIG->min_dosing_days() - dosing_day) / (1 - Model::CONFIG->p_compliance());
-      return static_cast<int>(std::ceil(a * p + Model::CONFIG->min_dosing_days() - a));
-    }
+int Person::complied_dosing_days(const SCTherapy* therapy) {
+  // Return the max day if we have full compliance
+  if (therapy->full_compliance()) {
+    return therapy->get_max_dosing_day();
   }
-  return dosing_day;
+
+  // Otherwise, start rolling the dice
+  int days = 0;
+  for (double rate : therapy->compliance) {
+    auto rnd = Model::RANDOM->random_flat(0.0, 1.0);
+    if (rate != 1 && rate < rnd) {
+      break;
+    }
+    days++;
+  }
+  return days;
 }
 
 // Give the therapy indicated to the individual, making note of the parasite that caused the clinical case. Note that
 // we assume that MACTherapy is going to be fairly rare, but that additional bookkeeping needs to be done in the event
 // of one.
-// NOLINTNEXTLINE(misc-no-recursion)
 void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite, bool is_mac_therapy) {
 
   // Start by checking if this is a simple therapy with a single dosing regime
   auto* sc_therapy = dynamic_cast<SCTherapy*>(therapy);
   if (sc_therapy != nullptr) {
-    for (std::size_t j = 0; j < sc_therapy->drug_ids.size(); ++j) {
-      // Determine the dosing days
-      auto dosing_days = (sc_therapy->drug_ids.size() == sc_therapy->dosing_day.size())
-              ? sc_therapy->dosing_day[j] : sc_therapy->dosing_day[0];
-      dosing_days = complied_dosing_days(dosing_days);
-
-      // Add the treatment to the blood
-      auto drug_id = sc_therapy->drug_ids[j];
-      add_drug_to_blood(Model::CONFIG->drug_db()->at(drug_id), dosing_days, is_mac_therapy);
-    }
+    receive_therapy(sc_therapy, is_mac_therapy);
   } else {
     // This is not a simple therapy, multiple treatments and dosing regimes may be involved
     auto* mac_therapy = dynamic_cast<MACTherapy*>(therapy);
@@ -377,17 +360,37 @@ void Person::receive_therapy(Therapy* therapy, ClonalParasitePopulation* clinica
       const auto start_day = mac_therapy->start_at_days()[i];
       assert(start_day >= 1);
 
+      // Verify the therapy that is part of the regimen
+      sc_therapy = dynamic_cast<SCTherapy*>(Model::CONFIG->therapy_db()[therapy_id]);
+      if (sc_therapy == nullptr) {
+        auto message = "Complex therapy (" + std::to_string(therapy->id()) + ") contains a reference to an unknown therapy id (" + std::to_string(therapy_id) + ")";
+        throw std::runtime_error(message);
+      }
+      if (!sc_therapy->full_compliance()) {
+        auto message = "Complex therapy (" + std::to_string(therapy->id()) + ") contains a reference to a therapy (" + std::to_string(therapy_id) + ") that has variable compliance";
+        throw std::runtime_error(message);
+      }
+
       if (start_day == 1) {
-        receive_therapy(Model::CONFIG->therapy_db()[therapy_id], clinical_caused_parasite, true);
+        receive_therapy(sc_therapy, true);
       } else {
-        ReceiveTherapyEvent::schedule_event(
-                Model::SCHEDULER, this, Model::CONFIG->therapy_db()[therapy_id],
-                Model::SCHEDULER->current_time() + start_day - 1, clinical_caused_parasite, true);
+        ReceiveTherapyEvent::schedule_event(Model::SCHEDULER, this, sc_therapy,
+                                            Model::SCHEDULER->current_time() + start_day - 1, clinical_caused_parasite, true);
       }
     }
   }
 
   last_therapy_id_ = therapy->id();
+}
+
+void Person::receive_therapy(SCTherapy *sc_therapy, bool is_mac_therapy) {
+  // Determine the dosing days
+  auto dosing_days = complied_dosing_days(sc_therapy);
+
+  // Add the treatment to the blood
+  for (int drug_id : sc_therapy->drug_ids) {
+    add_drug_to_blood(Model::CONFIG->drug_db()->at(drug_id), dosing_days, is_mac_therapy);
+  }
 }
 
 void Person::add_drug_to_blood(DrugType* dt, const int &dosing_days, bool is_mac_therapy) {

@@ -222,7 +222,7 @@ drug_db:
 **EC50** (array of key-value pairs) : The drug concentration which produces 50% of the parasite killing achieved at maximum-concentration, format is a string that describes the relevant genotypes (see [genotype_info](#genotype_info)), followed by the concentration where 1.0 is the expected starting concentration.
 
 ### therapy_db
-This setting is used to define the various therapies that will be used in the simuation and two variations are supported: simple therapies that consist of one or more drugs (defined using the the `id` from the `drug_db`) given over a number of days, and complex therapies that consist of one or more therapies (defined using the `id` of the previously defined therapy) given over a regimen. 
+This setting is used to define the various therapies that will be used in the simulation and two variations are supported: simple therapies that consist of one or more drugs (defined using the the `id` from the `drug_db`) given over a number of days, and complex therapies that consist of one or more therapies (defined using the `id` of the previously defined therapy) given over a regimen. 
 
 ```YAML
 therapy_db:
@@ -239,15 +239,24 @@ therapy_db:
   2:
     therapy_ids: [0, 1]
     regimen: [1, 5]
+
+  # Artemisinin combination therapy (ACT) - artemether–lumefantrine (AL), five days with specified compliance
+  3:
+    drug_id: [0, 1]
+    dosing_days: [5]
+    compliance: [1, 1, 1, 0.8, 0.7]
 ```
 
 ***Simple Therapies*** \
 **drug_id** (integer array) : One or more integers that correspond to the defined identification numbers (i.e., array index) in the `drug_db`. \
-**dosing_days** (integer) : The number of days that the drug combination should be given for.
+**dosing_days** (integer) : The number of days that the drug combination should be given for. \
+**compliance** (integer array) : (*Optional, Version 4.1.2*) The probability that the individual will comply with the course of treatment where 1 indicates they will always take it, and 0 < _n_ < 1 is the probably that they stop taking the treatment on that day. In the event that the field is not supplied then it is assumed that the individual will always comply with the therapy.
 
 ***Complex Therapies*** \
+Complex therapies consist of multiple simple therapies that are dosed over several days and may contain gaps in the dosing. Prior to Version 4.1.1 patient compliance with the therapy was determined by the `p_compliance` which generally assumed full compliance with the course of treatment. With complex therapies, noncompliance is currently not support and such configurations will produce an error.  
+
 **therapy_ids** (integer array) : One or more integers that correspond to the defined therapies. \
-**regimen** (interger array) : A one-index list of the days that the corresponding therapy should be given.
+**regimen** (integer array) : A one-index list of the days that the corresponding therapy should be given.
 
 
 ## Genotype Information

@@ -16,7 +16,13 @@ void SCTherapy::add_drug(int drug_id)  {
 }
 
 int SCTherapy::get_max_dosing_day() const  {
-  auto max = dosing_day[0];
+  static int max = -1;
+
+  // If the max was already calculated, just return it.
+  if (max != -1) { return max; }
+
+  // Otherwise, calculate it
+  max = dosing_day[0];
   for (auto ndx = 1; ndx < dosing_day.size(); ndx++) {
     max = (dosing_day[ndx] > max) ? dosing_day[ndx] : max;
   }

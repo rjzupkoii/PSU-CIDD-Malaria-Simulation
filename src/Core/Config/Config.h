@@ -56,7 +56,6 @@ class Config {
   CONFIG_ITEM(days_mature_gametocyte_under_five, int, 4)
   CONFIG_ITEM(days_mature_gametocyte_over_five, int, 6)
 
-  CONFIG_ITEM(p_compliance, double, 1.0)
   CONFIG_ITEM(min_dosing_days, int, 1)
 
   CONFIG_ITEM(gametocyte_level_full, double, 1.0)
