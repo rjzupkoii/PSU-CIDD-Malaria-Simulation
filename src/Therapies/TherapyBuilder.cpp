@@ -73,7 +73,10 @@ Therapy *TherapyBuilder::create_simple(const YAML::Node &ns, const int &t_id) {
       throw std::invalid_argument("Treatment compliance should be supplied for all dosing days.");
     }
     for (auto ndx = 0; ndx < ns["compliance"].size(); ndx++) {
-      auto compliance = ns["compliance"][ndx].as<int>();
+      auto compliance = ns["compliance"][ndx].as<double>();
+      if (compliance < 0 || compliance > 1) {
+        throw std::invalid_argument("The compliance rate must be between 0 and 1.");
+      }
       simple->compliance.push_back(compliance);
     }
   } else {
