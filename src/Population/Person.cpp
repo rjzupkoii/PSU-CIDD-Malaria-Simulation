@@ -331,11 +331,14 @@ int Person::complied_dosing_days(const SCTherapy* therapy) {
   // Otherwise, start rolling the dice
   int days = 0;
   for (double rate : therapy->compliance) {
+    // Update the count for today
+    days++;
+
+    // Roll the dice
     auto rnd = Model::RANDOM->random_flat(0.0, 1.0);
     if (rate != 1 && rate < rnd) {
       break;
     }
-    days++;
   }
   return days;
 }

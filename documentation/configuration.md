@@ -244,13 +244,14 @@ therapy_db:
   3:
     drug_id: [0, 1]
     dosing_days: [5]
-    compliance: [1, 1, 1, 0.8, 0.7]
+    # 20% of individuals stop the treatment on day 4, 80% on day 5
+    compliance: [1, 1, 1, 0.8, 1]
 ```
 
 ***Simple Therapies*** \
 **drug_id** (integer array) : One or more integers that correspond to the defined identification numbers (i.e., array index) in the `drug_db`. \
 **dosing_days** (integer) : The number of days that the drug combination should be given for. \
-**compliance** (integer array) : (*Optional, Version 4.1.2*) The probability that the individual will comply with the course of treatment where 1 indicates they will always take it, and 0 < _n_ < 1 is the probably that they stop taking the treatment on that day. In the event that the field is not supplied then it is assumed that the individual will always comply with the therapy.
+**compliance** (integer array) : (*Optional, Version 4.1.2*) The probability that the individual will comply with the course of treatment where 1 indicates they will always take it; otherwise, 0 < _n_ < 1 is the probability that they will stop on that day. In the event that the field is not supplied then it is assumed that the individual will always comply with the therapy.
 
 ***Complex Therapies*** \
 Complex therapies consist of multiple simple therapies that are dosed over several days and may contain gaps in the dosing. Prior to Version 4.1.1 patient compliance with the therapy was determined by the `p_compliance` which generally assumed full compliance with the course of treatment. With complex therapies, noncompliance is currently not support and such configurations will produce an error.  

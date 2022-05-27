@@ -67,7 +67,7 @@ artificial_rescaling_of_population_size: 1.0
 raster_db:
   # Adjusted population to account for burn-in up to 2017 start
   population_raster: "population.asc"
-        
+
   # Set the cell size used by raster, in sq.km
   cell_size: 5
 
@@ -147,13 +147,13 @@ immune_system_information:
   max_clinical_probability: 0.99
 
   # slope of sigmoidal prob-v-immunity function (parameter z in supplement of 2015 LGH paper) 
-  immune_effect_on_progression_to_clinical: 4.5
+  immune_effect_on_progression_to_clinical: 4.0
 
   # age at which immune function is mature
   age_mature_immunity: 10
 
   # Adjust the infliction point in the curve
-  midpoint: 0.15
+  midpoint: 0.4
 
   # parameter kappa in supplement of 2015 LGH paper
   factor_effect_age_mature_immunity: 1.0
@@ -201,7 +201,7 @@ initial_parasite_info:
 events:
   - name: turn_off_mutation
     info:
-      - day: 2007/1/1      
+      - day: 2007/1/1
 
 # Drug Information
 #
@@ -451,6 +451,7 @@ therapy_db:
   1:
     drug_id: [0, 4]
     dosing_days: [3]
+    compliance: [1, 0.9, 1]
   # ACT - artesunate-mefloquine (ASMQ)
   2:
     drug_id: [0, 6]
