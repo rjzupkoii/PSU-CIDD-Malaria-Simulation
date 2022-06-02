@@ -18,7 +18,7 @@ PROPERTY(bool, full_compliance)
 public:
   int artemisinin_id;
   std::vector<int> dosing_day;
-  std::vector<double> compliance;
+  std::vector<double> pr_completed_days;
 
   SCTherapy() : Therapy(), dosing_day{}, artemisinin_id{-1}, full_compliance_{false} {};
   ~SCTherapy() override = default;

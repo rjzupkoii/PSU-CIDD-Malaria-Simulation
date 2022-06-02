@@ -328,19 +328,20 @@ int Person::complied_dosing_days(const SCTherapy* therapy) {
     return therapy->get_max_dosing_day();
   }
 
-  // Otherwise, start rolling the dice
-  int days = 0;
-  for (double rate : therapy->compliance) {
-    // Update the count for today
-    days++;
+  // Roll the dice
+  auto rv = Model::RANDOM->random_flat(0.0, 1.0);
 
-    // Roll the dice
-    auto rnd = Model::RANDOM->random_flat(0.0, 1.0);
-    if (rate != 1 && rate < rnd) {
-      break;
+  // Otherwise, iterate through the probabilities that they will complete the therapy on the given day
+  auto upper_bound = therapy->pr_completed_days[0];
+  for (auto days = 1; days < therapy->pr_completed_days.size() + 1; days++) {
+    if (rv < upper_bound) {
+      return days;
     }
+    upper_bound += therapy->pr_completed_days[days];
   }
-  return days;
+
+  // We encountered an error, this should not happen
+  throw std::runtime_error("Bounds of pr_completed_days exceeded: rv = " + std::to_string(rv));
 }
 
 // Give the therapy indicated to the individual, making note of the parasite that caused the clinical case. Note that

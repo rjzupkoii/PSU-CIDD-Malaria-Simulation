@@ -67,17 +67,24 @@ Therapy *TherapyBuilder::create_simple(const YAML::Node &ns, const int &t_id) {
     simple->dosing_day.push_back(dosing_days);
   }
 
-  if (ns["compliance"] && ns["compliance"].size() != 0) {
-    // The compliance field is present, so data should be supplied for each dosing day
-    if (ns["compliance"].size() != simple->get_max_dosing_day()) {
-      throw std::invalid_argument("Treatment compliance should be supplied for all dosing days.");
+  if (ns["pr_completed_days"] && ns["pr_completed_days"].size() != 0) {
+    // The pr_completed_days field is present, so data should be supplied for each dosing day
+    if (ns["pr_completed_days"].size() != simple->get_max_dosing_day()) {
+      throw std::invalid_argument("Treatment pr_completed_days should be supplied for all dosing days.");
     }
-    for (auto ndx = 0; ndx < ns["compliance"].size(); ndx++) {
-      auto compliance = ns["compliance"][ndx].as<double>();
-      if (compliance < 0 || compliance > 1) {
-        throw std::invalid_argument("The compliance rate must be between 0 and 1.");
+
+    // Read the values and track the total, so we can validate it
+    auto total = 0.0;
+    for (auto ndx = 0; ndx < ns["pr_completed_days"].size(); ndx++) {
+      auto pr = ns["pr_completed_days"][ndx].as<double>();
+      if (pr < 0 || pr > 1) {
+        throw std::invalid_argument("The pr_completed_days rate per day must be between 0 and 1.");
       }
-      simple->compliance.push_back(compliance);
+      simple->pr_completed_days.push_back(pr);
+      total += pr;
+    }
+    if (total != 1) {
+      throw std::invalid_argument("The total for pr_completed_days is " + std::to_string(total) + ", but it should equal 1.");
     }
   } else {
     // Otherwise, we assume the individual will always take the treatment each day
