@@ -81,6 +81,7 @@ if [ ! -d "build" ]; then
   toolchain="$BUILD_ENV/vcpkg/scripts/buildsystems/vcpkg.cmake"
   echo "module load gcc/8.3.1" > build.sh
   echo "module load cmake/3.18.4" >> build.sh
+  echo "export GIT_EXEC_PATH=$BUILD_ENV/git" >> build.sh
   echo "export PATH=$PATH" >> build.sh
   echo "export LIBRARY_PATH=$BUILD_ENV/postgres/lib:$BUILD_ENV/lib/lib:$LIBRARY_PATH" >> build.sh
   echo "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$toolchain -DBUILD_CLUSTER:BOOL=true .." >> build.sh
