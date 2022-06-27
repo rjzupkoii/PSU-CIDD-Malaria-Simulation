@@ -15,18 +15,18 @@ void SCTherapy::add_drug(int drug_id)  {
   }
 }
 
-int SCTherapy::get_max_dosing_day() const  {
-  static int max = -1;
-
-  // If the max was already calculated, just return it.
-  if (max != -1) { return max; }
-
-  // Otherwise, calculate it
-  max = dosing_day[0];
+void SCTherapy::calculate_max_dosing_day() {
+  max_dosing_day = dosing_day[0];
   for (auto ndx = 1; ndx < dosing_day.size(); ndx++) {
-    max = (dosing_day[ndx] > max) ? dosing_day[ndx] : max;
+    max_dosing_day = (dosing_day[ndx] > max_dosing_day) ? dosing_day[ndx] : max_dosing_day;
   }
-  return max;
+}
+
+int SCTherapy::get_max_dosing_day() const  {
+  // The calculate_max_dosing_day must be called before this function
+  assert(max_dosing_day != -1);
+
+  return max_dosing_day;
 }
 
 void SCTherapy::print(std::ostream& os) const {

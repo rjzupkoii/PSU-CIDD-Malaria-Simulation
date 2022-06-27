@@ -39,10 +39,11 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
  
 ### Version 4.1.2
 
-The version 4.1.2 release is focused on adding new features needed for research:
+The version 4.1.2 release is focused on bug fixes and adding new features needed for research:
 
 1. Removed the configuration field `p_compliance`.
 2. Updated simulation and configuration to support variable treatment compliance rates based upon the day of treatment. 
+3. Corrected a **critical** bug in the version 4.1.1 codebase concerning the number of dosing days.
 
 ### Version 4.1.1
 

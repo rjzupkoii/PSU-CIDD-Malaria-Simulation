@@ -66,6 +66,7 @@ Therapy *TherapyBuilder::create_simple(const YAML::Node &ns, const int &t_id) {
     const auto dosing_days = ns["dosing_days"][i].as<int>();
     simple->dosing_day.push_back(dosing_days);
   }
+  simple->calculate_max_dosing_day();
 
   if (ns["pr_completed_days"] && ns["pr_completed_days"].size() != 0) {
     // The pr_completed_days field is present, so data should be supplied for each dosing day
