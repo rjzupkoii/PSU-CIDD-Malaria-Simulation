@@ -33,3 +33,5 @@ strategy_db:
     therapy_id: 0
 initial_strategy_id: 0
 ```
+
+Additionally, the DxG Generator was written with the asumption that `log_parasite_density_detectable` represents the lower detectable limit for a careful clinical study, typically 10 parasites per microliter of blood. However, if `log_parasite_density_detectable_pfpr` is set, then that value will be used instead. Since the *Pf*PR is driven by the more common detecable range of 50 to 100 parasites per microliter of blood, this will result in the effiacies returned being higher than expected. As such, it is recomended that the `log_parasite_density_detectable_pfpr` setting be deleted from the YAML configration when it is prepared for the DxG Generator.
