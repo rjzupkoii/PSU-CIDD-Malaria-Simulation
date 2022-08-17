@@ -38,8 +38,9 @@ void CellularReporter::initialize(int job_number, std::string path) {
        << "ClinicalIndividuals" << Csv::sep 
        << "ClinicalU5" << Csv::sep
        << "ClinicalO5" << Csv::sep
-       << "NewInfections" << Csv::sep 
-       << "NonTreatment" << Csv::sep 
+       << "NewInfections" << Csv::sep
+       << "Treatment" << Csv::sep
+       << "NonTreatment" << Csv::sep
        << "TreatmentFailure" << Csv::sep
        << "ParasiteClones" << Csv::sep 
        << "Theta" << Csv::sep       
@@ -159,6 +160,7 @@ void CellularReporter::monthly_report() {
        << clinical_u5 << Csv::sep
        << (clinical_all - clinical_u5) << Csv::sep
        << Model::DATA_COLLECTOR->monthly_number_of_new_infections_by_location()[0] << Csv::sep
+       << Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[0] << Csv::sep
        << Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[0] << Csv::sep
        << Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[0] << Csv::sep
        << parasiteClones << Csv::sep

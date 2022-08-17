@@ -59,7 +59,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
     HOST_STATE,
     AGE,
     AGE_CLASS,
-    BITTING_LEVEL,
+    BITING_LEVEL,
     MOVING_LEVEL,
     EXTERNAL_POPULATION_MOVING_LEVEL
   };
@@ -95,8 +95,6 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
   // if birthday is -100 which is that person was born 100 day before the simulation start
  PROPERTY_REF(int, birthday)
 
- POINTER_PROPERTY_HEADER(ImmuneSystem, immune_system)
-
  POINTER_PROPERTY(SingleHostClonalParasitePopulations, all_clonal_parasite_populations)
 
  VIRTUAL_PROPERTY_REF(int, latest_update_time)
@@ -123,8 +121,12 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
  PROPERTY_REF(std::vector<double>, prob_present_at_mda_by_age)
 
- private:
-  ul_uid _uid;
+private:
+  // The UID is generated each time the person is initialized
+  ul_uid _uid = -1;
+
+  // Formally set via macro, but we don't want to replace an immune system
+  ImmuneSystem* immune_system_;
 
   // The starting drug values given for a complex therapy
   std::map<int, double> starting_mac_drug_values;
@@ -134,7 +136,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
  public:
   Person();
-  virtual ~Person();
+  ~Person() override;
 
   // Check to see if the indicated event has been defined for the individual.
   template <typename T>
@@ -146,6 +148,10 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
     }
     return false;
   }
+
+  ul_uid get_uid() const { return _uid; }
+
+  ImmuneSystem* immune_system() const { return immune_system_; }
 
   void init() override;
 
@@ -174,7 +180,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   virtual bool will_progress_to_death_when_receive_no_treatment();
 
-  virtual bool will_progress_to_death_when_recieve_treatment();
+  virtual bool will_progress_to_death_when_receive_treatment();
 
   void cancel_all_other_progress_to_clinical_events_except(Event *event) const;
 
@@ -236,7 +242,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   double get_age_dependent_biting_factor() const;
 
-  void update_bitting_level();
+  void update_biting_level();
 
   bool isGametocytaemic() const;
 
@@ -246,9 +252,8 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   bool has_effective_drug_in_blood() const;
 
-  ul_uid get_uid() const { return _uid; }
-
   void receive_therapy(SCTherapy *sc_therapy, bool is_mac_therapy);
+
 };
 
 #endif

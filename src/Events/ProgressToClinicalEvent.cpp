@@ -88,7 +88,7 @@ void ProgressToClinicalEvent::execute() {
     //Model::DATA_COLLECTOR->record_AMU_AFU(person, therapy, clinical_caused_parasite_);
 
     // death is 90% lower than no treatment
-    if (person->will_progress_to_death_when_recieve_treatment()) {
+    if (person->will_progress_to_death_when_receive_treatment()) {
 
       //for each test treatment failure event inside individual
       // record treatment failure (not tf)

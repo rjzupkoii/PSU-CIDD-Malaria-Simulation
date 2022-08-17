@@ -43,7 +43,7 @@ void PersonIndexByLocationBittingLevel::notify_change(Person *p, const Person::P
   switch (property) {
     case Person::LOCATION:change_property(p, *(int *) newValue, p->bitting_level());
       break;
-    case Person::BITTING_LEVEL:change_property(p, p->location(), *(int *) newValue);
+    case Person::BITING_LEVEL:change_property(p, p->location(), *(int *) newValue);
       break;
     default:
 
