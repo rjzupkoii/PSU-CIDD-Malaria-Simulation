@@ -83,8 +83,8 @@ void Scheduler::schedule_population_event(Event *event) {
 
 void Scheduler::schedule_event(EventPtrVector &time_events, Event *event) {
   // Schedule event in the future
-  // Event time cannot exceed total time or less than current time
-  if (event->time > Model::CONFIG->total_time() || event->time < current_time_) {
+  // Event time cannot exceed total available time or less than current time
+  if (event->time > Model::CONFIG->total_available_time() || event->time < current_time_) {
     LOG_IF(event->time < current_time_, FATAL) << "Error when scheduling event " << event->name() << " at "
                                                << event->time
                                                << ". Current_time: " << current_time_ << " - total time: "

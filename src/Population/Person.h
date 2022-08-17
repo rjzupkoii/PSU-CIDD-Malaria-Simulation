@@ -12,6 +12,7 @@
 #include "Properties/PersonIndexByLocationStateAgeClassHandler.hxx"
 #include "Core/ObjectPool.h"
 #include "Core/Dispatcher.h"
+#include "Events/Event.h"
 #include "Properties/PersonIndexByLocationBittingLevelHandler.hxx"
 #include "Properties/PersonIndexByLocationMovingLevelHandler.hxx"
 #include "ClonalParasitePopulation.h"
@@ -228,6 +229,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   bool has_update_by_having_drug_event() const;
 
+  template <typename T>
+  bool has_event() const;
+
   double get_age_dependent_biting_factor() const;
 
   void update_bitting_level();
@@ -246,5 +250,16 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
     void receive_therapy(SCTherapy *sc_therapy, bool is_mac_therapy);
 };
+
+template <typename T>
+bool Person::has_event() const {
+  for (Event *e : *events()) {
+    if (dynamic_cast<T *>(e) != nullptr && e->executable
+        && e->dispatcher != nullptr) {
+      return true;
+    }
+  }
+  return false;
+}
 
 #endif

@@ -762,23 +762,11 @@ void Person::move_to_population(Population* target_population) {
 }
 
 bool Person::has_birthday_event() const {
-
-  for (Event* e : *events()) {
-    if (dynamic_cast<BirthdayEvent*>(e) != nullptr) {
-      return true;
-    }
-  }
-  return false;
+  return has_event<BirthdayEvent>();
 }
 
 bool Person::has_update_by_having_drug_event() const {
-
-  for (Event* e : *events()) {
-    if (dynamic_cast<UpdateWhenDrugIsPresentEvent*>(e) != nullptr) {
-      return true;
-    }
-  }
-  return false;
+  return has_event<UpdateWhenDrugIsPresentEvent>();
 }
 
 double Person::get_age_dependent_biting_factor() const {

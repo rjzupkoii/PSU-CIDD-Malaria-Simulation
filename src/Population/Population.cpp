@@ -17,6 +17,7 @@
 #include "ImmuneSystem.h"
 #include "Events/SwitchImmuneComponentEvent.h"
 #include "Events/BirthdayEvent.h"
+#include "Events/RaptEvent.h"
 #include "Properties/PersonIndexByLocationBittingLevel.h"
 #include "Core/Random.h"
 #include "Properties/PersonIndexByLocationMovingLevel.h"
@@ -312,6 +313,7 @@ void Population::generate_individual(int location, int age_class) {
 
   BirthdayEvent::schedule_event(Model::SCHEDULER, p, days_to_next_birthday);
 
+  RaptEvent::schedule_event(Model::SCHEDULER, p, days_to_next_birthday);
   //set immune component
   if (simulation_time_birthday + Constants::DAYS_IN_YEAR()/2 >= 0) {
     LOG_IF(p->age() > 0, FATAL) << "Error in calculating simulation_time_birthday";
@@ -497,6 +499,9 @@ void Population::give_1_birth(const int &location) {
   BirthdayEvent::schedule_event(Model::SCHEDULER, p,
                                 Model::SCHEDULER->current_time() + number_of_days_to_next_birthday);
 
+  RaptEvent::schedule_event(
+      Model::SCHEDULER, p,
+      Model::SCHEDULER->current_time() + number_of_days_to_next_birthday);
   //schedule for switch
   SwitchImmuneComponentEvent::schedule_for_switch_immune_component_event(Model::SCHEDULER, p,
                                                                          Model::SCHEDULER->current_time() +
