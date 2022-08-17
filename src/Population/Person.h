@@ -136,6 +136,17 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
   Person();
   virtual ~Person();
 
+  // Check to see if the indicated event has been defined for the individual.
+  template <typename T>
+  bool has_event() const {
+    for (Event *e : *events()) {
+      if (dynamic_cast<T *>(e) != nullptr && e->executable && e->dispatcher != nullptr) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   void init() override;
 
   void NotifyChange(const Property &property, const void *oldValue, const void *newValue);
@@ -201,7 +212,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   void determine_clinical_or_not(ClonalParasitePopulation *clinical_caused_parasite);
 
-  void update();
+  void update() override;
 
   void update_current_state();
 
@@ -209,7 +220,7 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   void infected_by(const int &parasite_type_id);
 
-  bool inflict_bite(const unsigned int parasite_type_id);
+  bool inflict_bite(unsigned int parasite_type_id);
 
   void randomly_choose_target_location();
 
@@ -223,20 +234,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   void increase_number_of_times_bitten();
 
-  void move_to_population(Population *target_population);
-
-  bool has_birthday_event() const;
-
-  bool has_update_by_having_drug_event() const;
-
-  template <typename T>
-  bool has_event() const;
-
   double get_age_dependent_biting_factor() const;
 
   void update_bitting_level();
-
-  double p_infection_from_an_infectious_bite() const;
 
   bool isGametocytaemic() const;
 
@@ -246,20 +246,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
   bool has_effective_drug_in_blood() const;
 
-  ul_uid get_uid() { return _uid; }
+  ul_uid get_uid() const { return _uid; }
 
-    void receive_therapy(SCTherapy *sc_therapy, bool is_mac_therapy);
+  void receive_therapy(SCTherapy *sc_therapy, bool is_mac_therapy);
 };
-
-template <typename T>
-bool Person::has_event() const {
-  for (Event *e : *events()) {
-    if (dynamic_cast<T *>(e) != nullptr && e->executable
-        && e->dispatcher != nullptr) {
-      return true;
-    }
-  }
-  return false;
-}
 
 #endif
