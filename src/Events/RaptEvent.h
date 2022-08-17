@@ -1,4 +1,11 @@
+/*
+ * RaptEvent.h
+ *
+ * Define the RAPT event class.
+ */
+
 #pragma once
+
 #include "Event.h"
 
 class Person;
@@ -9,14 +16,12 @@ public:
   RaptEvent &operator=(const RaptEvent &) = delete;
 
 public:
-  RaptEvent();
-
-  //    RaptEvent(const BirthdayEvent& orig);
-  ~RaptEvent() override;
+  RaptEvent() = default;
+  ~RaptEvent() override = default;
 
   static void schedule_event(Scheduler *scheduler, Person *p, const int &time);
 
-  std::string name() override;
+  std::string name() override { return "RAPT Event"; }
 
 private:
   void execute() override;
