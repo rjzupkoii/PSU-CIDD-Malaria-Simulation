@@ -37,6 +37,12 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 
 ## Releases
  
+### Version 4.1.3
+
+The version 4.1.3 release is focued on adding new features needed for research:
+
+1. Add the relevent classes and evnets needed for the RAPT protocol.
+ 
 ### Version 4.1.2
 
 The version 4.1.2 release is focused on bug fixes and adding new features needed for research:
