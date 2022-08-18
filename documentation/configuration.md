@@ -1,5 +1,6 @@
 
 # MaSim Configuration File
+<!-- Note that we presume this will mostly be viewed on GitHub, so TeX and LaTeX is used in some places for rendering equations. Visual Studio Code will also render correctly, but support is uneven on other IDEs. -->
 
 # Introduction
 
@@ -74,7 +75,7 @@ To Be Written.
 ### seasonal_info 
 This setting governs the malaria season in the model and operates differently depending upon the setting and version of the simulation.
 
-Under previous versions and 4.1.0 and higher, an equation based model seasonal variation in transmission is provided where parameters must be fit to the following equation: multiplier = base + (a * sin<sup>+</sup>(b * π * (t - φ) / 365))
+Under previous versions and 4.1.0 and higher, an equation based model seasonal variation in transmission is provided where parameters must be fit to the following equation: $multiplier = base + \left (a \cdot sin^+\left ( \frac{b \cdot \pi \cdot (t - \phi)}{365} \right ) \right )$
 
 Once the equation is fit, the YAML can then be written as follows:
 
@@ -259,6 +260,28 @@ Complex therapies consist of multiple simple therapies that are dosed over sever
 **therapy_ids** (integer array) : One or more integers that correspond to the defined therapies. \
 **regimen** (integer array) : A one-index list of the days that the corresponding therapy should be given.
 
+## Policy Interventions
+While most of the policy interventions can be implemented using the therapies deployed, and switching them via events such as `change_treatment_strategy`, some of the more complex strategies require more in-depth configuration or are closely coupled with how the simulation operates.
+
+### Regular administration of prophylactic therapy (version 4.1.3)
+The regular administration of prophylactic therapy, or RAPT protocol, is a speculative approach to malaria control that calls for individual to take an artemisinin combination therapy (ACT) periodically without the presentation of clinical symptoms for malaria. The protocol presumes an individual will remember the month to take then next ACT, and at some point during that month a check will be performed to see if they take the therapy. The probability is based upon the probability that an individual in their age group will seek treatment and the probability of compliance with the RAPT protocol (i.e., $Pr(RAPT) = Pr(Treatment) \cdot Pr(Compliance)$). In the event that the individual already took an ACT in the past 28 days (determined by checking for `TestTreatmentFailureEvent`), they will not take the ACT regardless.
+
+Implementation of this protocol requires that events be scheduled for at model initialization, although the point at which the individuals start taking the ACTs is determined by the configuration. Due to the computational overhead involved with the RAPT protocol, the simulation execution time is longer. If the `rapt_config` entry is not present in the configuration file, the event will not be enabled within the simulation.
+
+```YAML
+rapt_config:
+  period: 12
+  therapy_id: 1
+  compliance: 0.7
+  age_start: 18
+  start_day: 2022/08/18
+```
+
+**period** (int): the interval, in months, between RAPT doses. \
+**therapy_id** (int): corresponds to id of the treatment defined in the `therapy_db` to take. \
+**compliance** (float): the probability that the individual will comply with the RAPT protocol. \
+**age_start** (int): the age, in years, that the individual will start checking for compliance with the RAPT protocol. \
+**start_day** (date string, YYYY/mm/dd): the date at which the RAPT protocol will take effect, after this date, individuals will start checking for compliance. 
 
 ## Genotype Information
 
@@ -269,7 +292,7 @@ To Be Written.
 This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all the data for the `info` field following will be provided to the loader function.
 
 ### annual_beta_update_event
-(*Version 4.0*) The annual beta update event increases or decreases the beta for each cell in the model using the formula `beta' = beta + (beta * rate)` and clamps the lower bounds for the beta a zero. 
+(*Version 4.0*) The annual beta update event increases or decreases the beta for each cell in the model using the formula $beta' = beta + (beta \cdot rate)$ and clamps the lower bounds for the beta a zero. 
 
 ```YAML
 events:
