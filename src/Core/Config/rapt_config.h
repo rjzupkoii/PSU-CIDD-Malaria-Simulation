@@ -20,16 +20,16 @@ struct RaptConfigEntry {
   int start_day;
 };
 
-class RaptConfig : public IConfigItem {
+class rapt_config : public IConfigItem {
 public:
-  RaptConfig(const RaptConfig &) = delete;
-  RaptConfig &operator=(const RaptConfig &) = delete;
+  rapt_config(const rapt_config &) = delete;
+  rapt_config &operator=(const rapt_config &) = delete;
 
 public:
-  explicit RaptConfig(const std::string &name, RaptConfigEntry default_value, Config *config = nullptr)
+  explicit rapt_config(const std::string &name, RaptConfigEntry default_value, Config *config = nullptr)
       : IConfigItem(config, name), value_ { default_value } {}
 
-  ~RaptConfig() override = default;
+  ~rapt_config() override = default;
 
   void set_value(const YAML::Node &node) override;
 

@@ -15,7 +15,7 @@
 #include "PreconfigEvents.hxx"
 #include "Spatial/Location.h"
 #include "Core/MultinomialDistributionGenerator.h"
-#include "RaptConfig.h"
+#include "rapt_config.h"
 #include <string>
 #include <vector>
 #include <date/date.h>
@@ -151,7 +151,7 @@ class Config {
 
   CUSTOM_CONFIG_ITEM(prob_individual_present_at_mda_distribution, std::vector<beta_distribution_params>())
 
-  CUSTOM_CONFIG_ITEM(RaptConfig, RaptConfigEntry())
+  CUSTOM_CONFIG_ITEM(rapt_config, RaptConfigEntry())
  VIRTUAL_PROPERTY_REF(double, modified_mutation_factor)
 
  VIRTUAL_PROPERTY_REF(double, modified_drug_half_life)

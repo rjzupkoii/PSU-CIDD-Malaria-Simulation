@@ -3,11 +3,11 @@
  *
  * Implement the RaptConfig class.
  */
-#include "RaptConfig.h"
+#include "rapt_config.h"
 
 #include "Core/Config/Config.h"
 
-void RaptConfig::set_value(const YAML::Node &node) {
+void rapt_config::set_value(const YAML::Node &node) {
   if (node[name_]) {
     value_.isDefined = true;
     auto rc_node = node[name_];

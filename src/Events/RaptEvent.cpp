@@ -18,7 +18,7 @@
 #include "Population/Person.h"
 
 void RaptEvent::schedule_event(Scheduler *scheduler, Person *p, const int &time) {
-  if (scheduler != nullptr && Model::CONFIG->RaptConfig().isDefined) {
+  if (scheduler != nullptr && Model::CONFIG->rapt_config().isDefined) {
     auto *rapt_event = new RaptEvent();
     rapt_event->dispatcher = p;
     rapt_event->time = time;
@@ -30,7 +30,7 @@ void RaptEvent::schedule_event(Scheduler *scheduler, Person *p, const int &time)
 
 void RaptEvent::execute() {
   auto *person = dynamic_cast<Person *>(dispatcher);
-  const auto raptConfig = Model::CONFIG->RaptConfig();
+  const auto raptConfig = Model::CONFIG->rapt_config();
 
   // Check to see if we should receive a therapy: RAPT is currently active, the person is the correct age, and they have
   // not recently taken a treatment in the past 28 days (based on testing for treatment failure).
@@ -53,7 +53,7 @@ void RaptEvent::execute() {
   }
 
   // Determine when the next RAPT dose should take place based upon scheduling period
-  const auto ymd = date::year_month_day(Model::SCHEDULER->calendar_date) + date::months(Model::CONFIG->RaptConfig().period);
+  const auto ymd = date::year_month_day(Model::SCHEDULER->calendar_date) + date::months(Model::CONFIG->rapt_config().period);
 
   // Find the first and last day of the month of the next dose
   const auto first_day = date::year_month_day(ymd.year(), ymd.month(), date::day(1));
