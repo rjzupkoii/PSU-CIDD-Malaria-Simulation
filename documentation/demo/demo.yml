@@ -451,7 +451,6 @@ therapy_db:
   1:
     drug_id: [0, 4]
     dosing_days: [3]
-    pr_completed_days: [0.0, 0.1, 0.8]
   # ACT - artesunate-mefloquine (ASMQ)
   2:
     drug_id: [0, 6]
