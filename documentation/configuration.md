@@ -85,10 +85,10 @@ seasonal_info:
   mode: equation
   equation:
     raster: false
+    base: [0.0]
     a: [0.0]
+    b: [0.0]
     phi: [0.0]
-    min_value: [0.0]
-    period: 365
 ```
 
 **mode** (**equation** | rainfall) : (*Optional*) indicates the node that should be used for the seasonality, namely based upon the equation based model, or by using rainfall data. In the event that a value is not supplied, the simulation will default to the equation based model.\  
