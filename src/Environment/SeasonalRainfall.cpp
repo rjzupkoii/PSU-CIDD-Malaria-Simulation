@@ -41,8 +41,6 @@ double SeasonalRainfall::get_seasonal_factor(const date::sys_days &today, const 
   // Shift the day of year to be one index, shift two on the leap day
   doy = (doy == 366) ? doy - 2 : doy - 1;
 
-  VLOG(1) << TimeHelpers::day_of_year(today) << ", doy: " << doy << " / " << adjustments[doy];
-
   // If it's a leap day, return the last day a second time, otherwise just return the value for the day
   return adjustments[doy];
 }
@@ -60,6 +58,12 @@ void SeasonalRainfall::read(std::string &filename) {
   // Read and store the data
   double data = 0.0;
   while (in >> data) {
+    if (data > 1.0) {
+      throw std::runtime_error(fmt::format("Rain fall factor exceeded 1.0: {0}", data));
+    }
+    if (data < 0.0) {
+      throw std::runtime_error(fmt::format("Rain fall factor less than zero: {0}", data));
+    }
     adjustments.emplace_back(data);
   }
 }
