@@ -213,17 +213,6 @@ void Population::perform_infection_event() {
           if (person->inflict_bite(parasite_type_id)) {
             today_infections.push_back(person);
           }
-
-          // TODO This is te legacy code, delete it once we know the new 
-          // TODO version works
-          // const auto p_infectious = Model::RANDOM->random_flat(0.0, 1.0);
-          // if (p_infectious <= Model::CONFIG->p_infection_from_an_infectious_bite()) {
-          //   if (person->host_state()!=Person::EXPOSED && person->liver_parasite_type()==nullptr) {
-          //     person->today_infections()->push_back(parasite_type_id);
-          //     today_infections.push_back(person);
-          //   }
-          // }
-          
         }
       }
     }
