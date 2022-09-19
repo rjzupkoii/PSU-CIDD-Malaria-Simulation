@@ -35,11 +35,16 @@ SeasonalRainfall *SeasonalRainfall::build(const YAML::Node &node) {
 }
 
 double SeasonalRainfall::get_seasonal_factor(const date::sys_days &today, const int &location) {
-  // Get the day of the year
+  // Get the current day of the year
   auto doy = TimeHelpers::day_of_year(today);
 
+  // Shift the day of year to be one index, shift two on the leap day
+  doy = (doy == 366) ? doy - 2 : doy - 1;
+
+  VLOG(1) << TimeHelpers::day_of_year(today) << ", doy: " << doy << " / " << adjustments[doy];
+
   // If it's a leap day, return the last day a second time, otherwise just return the value for the day
-  return (doy == 366) ? adjustments[doy - 1] : adjustments[doy];
+  return adjustments[doy];
 }
 
 void SeasonalRainfall::read(std::string &filename) {
@@ -53,7 +58,7 @@ void SeasonalRainfall::read(std::string &filename) {
   }
 
   // Read and store the data
-  double data;
+  double data = 0.0;
   while (in >> data) {
     adjustments.emplace_back(data);
   }
