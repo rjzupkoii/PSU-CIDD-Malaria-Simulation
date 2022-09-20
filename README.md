@@ -41,7 +41,8 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 
 The version 4.1.3 release is focued on adding new features needed for research:
 
-1. Add the relevent classes and evnets needed for the RAPT protocol.
+1. Add the relevent classes and events needed for the RAPT protocol.
+2. Additional input validation added for input data files.
  
 ### Version 4.1.2
 
