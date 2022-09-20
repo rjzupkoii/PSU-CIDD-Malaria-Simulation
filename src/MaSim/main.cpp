@@ -10,7 +10,7 @@
 
 #include "easylogging++.h"
 #include "error_handler.hxx"
-#include "Helpers/OSHelpers.hxx"
+#include "Helpers/OSHelpers.h"
 #include "Helpers/DbLoader.hxx"
 #include "Model.h"
 #include "Reporters/Reporter.h"

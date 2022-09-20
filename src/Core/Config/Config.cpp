@@ -14,7 +14,7 @@
 #include "Core/Random.h"
 #include "Therapies/SCTherapy.h"
 #include "easylogging++.h"
-#include "Helpers/OSHelpers.hxx"
+#include "Helpers/OSHelpers.h"
 #include "Helpers/StringHelpers.h"
 
 using namespace Spatial;

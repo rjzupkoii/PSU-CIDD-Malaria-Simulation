@@ -9,12 +9,17 @@
 
 #include <fstream>
 
+#include "sys/sysinfo.h"
+#include "sys/types.h"
+
 class OsHelpers {
  public:
   static bool file_exists(const std::string &name) {
     const std::ifstream f(name.c_str());
     return f.good();
   }
+
+  static int
 };
 
 #endif
