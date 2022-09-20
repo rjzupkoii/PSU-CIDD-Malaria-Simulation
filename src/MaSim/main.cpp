@@ -103,11 +103,17 @@ int main(const int argc, char **argv) {
     config_logger();
     START_EASYLOGGINGPP(argc, argv);
     LOG(INFO) << fmt::format("MaSim version {0}", VERSION);
-    LOG(INFO) << "Processor Count: " << std::thread::hardware_concurrency();
+    VLOG(1) << "Processor Count: " << std::thread::hardware_concurrency();
+    VLOG(1) << "Physical: " << OsHelpers::getPhysicalMemoryUsed() << " Kb";
+    VLOG(1) << "Virtual: " << OsHelpers::getVirtualMemoryUsed() << " Kb";
 
     // Run the model
     m->initialize(job_number, path);
     m->run();
+
+    // Report final memory usage
+    LOG(INFO) << fmt::format("Memory used: {0} Kb physical, {1} Kb virtual",
+                             OsHelpers::getPhysicalMemoryUsed(), OsHelpers::getVirtualMemoryUsed());
 
     // Clean-up and return
     delete m;
