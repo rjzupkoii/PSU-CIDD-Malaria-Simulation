@@ -1,5 +1,11 @@
-#ifndef OS_H
-#define OS_H
+/*
+ * OSHelpers.hxx
+ *
+ * This header contains some useful functions that are intended to be cross-platform compatible.
+ */
+
+#ifndef OS_HXX
+#define OS_HXX
 
 #include <fstream>
 
@@ -11,4 +17,4 @@ class OsHelpers {
   }
 };
 
-#endif // OS_H
+#endif

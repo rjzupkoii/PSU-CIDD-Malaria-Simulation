@@ -1,9 +1,9 @@
 /*
  * error_handler.hxx
  * 
- * This header defines error handling that can be incoperated into an application
- * allowing for "last chance" information to be extracted following an handled 
- * exception or abort occuring. 
+ * This header defines error handling that can be incorporated into an application
+ * allowing for "last chance" information to be extracted following an unhandled
+ * exception or abort occurring.
  * 
  * This code is adapted from an answer on StackOverflow (CC-BY-SA)
  * https://stackoverflow.com/a/2445569/1185
