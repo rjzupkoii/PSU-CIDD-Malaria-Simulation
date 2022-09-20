@@ -43,6 +43,7 @@ The version 4.1.3 release is focued on adding new features needed for research:
 
 1. Add the relevent classes and events needed for the RAPT protocol.
 2. Additional input validation added for input data files.
+3. Updated console logging to report physical and virtual memory usage at end of simulation.
  
 ### Version 4.1.2.1
 
