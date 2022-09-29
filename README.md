@@ -37,7 +37,7 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 
 ## Releases
 
-### Version 4.1.2
+### Version 4.1.1.1
 
 The version 4.1.2 release is specifically intended for work with manuscript revisions.
 
