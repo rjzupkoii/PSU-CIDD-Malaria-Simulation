@@ -8,8 +8,11 @@
 #ifndef MARSHALLSM_HXX
 #define MARSHALLSM_HXX
 
+#include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
+#include "Model.h"
 #include "SpatialModel.hxx"
+
 #include "yaml-cpp/yaml.h"
 
 namespace Spatial {
@@ -20,15 +23,52 @@ namespace Spatial {
         VIRTUAL_PROPERTY_REF(double, alpha)
         VIRTUAL_PROPERTY_REF(double, rho)
 
+        private:
+          // Hold on to the total number of locations, so we can free the kernel
+          unsigned long locations = 0;
+
+          // Pointer to the kernel object since it only needs to be computed once
+          double** kernel = nullptr;
+
+          // Precompute the kernel function for the movement model
+          void prepare_kernel() {
+            // Allocate the memory
+            kernel = new double*[locations];
+
+            // Get the distance matrix
+            auto distance = Model::CONFIG->spatial_distance_matrix();
+
+            // Iterate through all  the locations and calculate the kernel
+            for (auto source = 0; source < locations; source++) {
+              kernel[source] = new double[locations];
+              for (auto destination = 0; destination < locations; destination++) {
+                kernel[source][destination] = std::pow(1 + (distance[source][destination] / rho_), (-alpha_));
+              }
+            }
+          }
+
         public:
-            MarshallSM(const YAML::Node &node) { 
+            explicit MarshallSM(const YAML::Node &node) {
                 tau_ = node["tau"].as<double>();
                 alpha_ = node["alpha"].as<double>();
                 rho_ = std::pow(10, node["log_rho"].as<double>());
             }
 
-            virtual ~MarshallSM() { }
+            ~MarshallSM() override {
+              if (kernel != nullptr) {
+                for (auto ndx = 0; ndx < locations; ndx++) {
+                  delete kernel[ndx];
+                }
+                delete kernel;
+              }
+            }
 
+            void prepare() override {
+              locations = Model::CONFIG->number_of_locations();
+              prepare_kernel();
+            }
+
+            [[nodiscard]]
             DoubleVector get_v_relative_out_movement_to_destination(
                     const int &from_location, const int &number_of_locations,
                     const DoubleVector &relative_distance_vector,
@@ -44,13 +84,8 @@ namespace Spatial {
                     // Continue if there is nothing to do
                     if (NumberHelpers::is_equal(relative_distance_vector[destination], 0.0)) { continue; }
 
-                    // Calculate the distance kernel
-                    double distance = relative_distance_vector[destination];
-                    double kernel = std::pow(1 + (distance / rho_), (-alpha_));
-
                     // Calculate the proportional probability
-                    double probability = std::pow(population, tau_) * kernel;
-
+                    double probability = std::pow(population, tau_) * kernel[from_location][destination];
                     results[destination] = probability;
                 }
 

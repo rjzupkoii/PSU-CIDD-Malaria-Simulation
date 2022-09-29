@@ -39,7 +39,9 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 
 ### Version 4.1.1.1
 
-The version 4.1.2 release is specifically intended for work with manuscript revisions.
+The version 4.1.1.1 release is specifically intended for work with manuscript revisions.
+
+1. Updated the Marshall movement model to precompute the kernel.
 
 ### Version 4.1.1
 
