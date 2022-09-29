@@ -42,7 +42,13 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
 The version 4.1.2.1 release is focused on bug fixes and adding new features needed for research:
 
 1. Removed the configuration field `p_compliance`.
-2. Updated simulation and configuration to support variable treatment compliance rates based upon the day of treatment. 
+2. Updated simulation and configuration to support variable treatment compliance rates based upon the day of treatment.
+ 
+### Version 4.1.1.1
+
+The version 4.1.1.1 release is specifically intended for work with manuscript revisions.
+
+1. Updated the Marshall movement model to precompute the kernel.
 
 ### Version 4.1.1
 
