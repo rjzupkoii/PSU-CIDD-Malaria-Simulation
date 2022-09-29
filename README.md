@@ -36,7 +36,11 @@ The following commands are available from the simulation:
 Use of either the `-c` or `-i` switch with an appropriate YAML file is required. When the `-r` switch is not supplied the simulation defaults to the `DbReporter`; however, with the `-r` switch the reporters listed using the `--lr` switch can be used instead.
 
 ## Releases
- 
+
+### Version 4.1.2
+
+The version 4.1.2 release is specifically intended for work with manuscript revisions.
+
 ### Version 4.1.1
 
 The version 4.1.1 release is focused on adding new features needed for research:
