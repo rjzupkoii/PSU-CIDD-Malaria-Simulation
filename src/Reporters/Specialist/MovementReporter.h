@@ -23,18 +23,12 @@ class MovementReporter : public Reporter {
         "INSERT INTO sim.DistrictMovement (ReplicateId, Timestep, Count, Source, Destination) "
         "VALUES ({}, {}, {}, {}, {});";
 
-        // NOTE This may not always work if the same random number is reused.
-        //      However, this assumed to be a testing / early validation reporter
-        //      as opposed to one being used to generate manuscript data.
-        const std::string SELECT_REPLICATE = 
-        "SELECT id FROM sim.replicate WHERE seed = {}";
-
         int count = 0;
-        int replicate;
-        pqxx::connection* conn;
+        int replicate = 0;
+        pqxx::connection* conn = nullptr;
         std::string fine_update_query;
 
-        int division_count;
+        int division_count = 0;
         int** movement_counts = nullptr;
 
     public:
