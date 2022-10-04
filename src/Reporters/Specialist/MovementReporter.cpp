@@ -1,13 +1,13 @@
 /*
  * MovementReporter.cpp
  * 
- * Implimentation of the MovementReporter class. 
+ * Implementation of the MovementReporter class.
  * 
  * NOTE Since we assume this class will mostly be used for testing purposes, there
- *      is an assumed dependency on DbReporter having already initalized the database.
+ *      is an assumed dependency on DbReporter having already initialized the database.
  * 
  * NOTE This code could be significantly optimized; however, since it is only used 
- *      for the inital model validation it hasn't been tuned that much.
+ *      for the initial model validation it hasn't been tuned that much.
  */
 #include "MovementReporter.h"
 
@@ -38,9 +38,9 @@ void MovementReporter::add_coarse_move(int individual, int source, int destinati
 // Prepare and perform a bulk insert of the aggregated movements (can be cell-to-cell or district-to-district)
 //
 // NOTE This is slowed down a lot by sending the query to the DB for each source-destination. For district movements
-//      this isn't too bad, but for celluar it can be painfully slow. 
+//      this isn't too bad, but for cellular it can be painfully slow.
 void MovementReporter::coarse_report() {
-    // If we are at the zero time point, just return since we don't anticpate anything to do
+    // If we are at the zero time point, just return since we don't anticipate anything to do
     auto timestep = Model::SCHEDULER->current_time();
     if (timestep == 0) { return; }
 
@@ -70,24 +70,21 @@ void MovementReporter::coarse_report() {
     db.commit();
 }
 
-// Open a connection to the database and get the replicate based on the random seed value
+// Open a connection to the database
 void MovementReporter::initialize(int job_number, std::string path) {
     // Connect to the database
     conn = new pqxx::connection(Model::CONFIG->connection_string());
     
-    // Load the replicate or fail out
-    pqxx::work db(*conn);
-    std::string query = fmt::format(SELECT_REPLICATE, Model::RANDOM->seed());
-    pqxx::result result = db.exec(query);
-    replicate = result[0][0].as<int>();
+    // Since we are dependent upon DbReporter, the replicate should already be set
+    replicate = Model::MODEL->replicate();
     if (replicate == 0) {
-        LOG(ERROR) << "Loaded a value of zero for the replicate, expected one or higher.";
-        throw new std::runtime_error("Unable to load replicate from database");
+        LOG(ERROR) << "Replicate value of zero, expected one or higher. Was DbReporter loaded?";
+        throw std::runtime_error("Invalid replicate value");
     }
 
     if (Model::MODEL->district_movement()) {
         // Get the district count, prepare the memory. Note that we are assuming that the count
-        // is coming from ArcGis which will use one-based indexing. Therefore we need some extra
+        // is coming from ArcGis which will use one-based indexing. Therefore, we need some extra
         // padding on the area to prevent errors. Since we are only inserting actual movement
         // (i.e., district A to district B) cells with zero are not as big of a concern (baring
         // any memory considerations).
@@ -108,7 +105,7 @@ void MovementReporter::initialize(int job_number, std::string path) {
         VLOG(1) << "Cell count: " << division_count;
     }
     
-    // Prpare the memory, assume that padding is in place
+    // Prepare the memory, assume that padding is in place
     movement_counts = new int*[division_count];
     for (auto ndx = 0; ndx < division_count; ndx++) {
         movement_counts[ndx] = new int[division_count];
@@ -121,7 +118,7 @@ void MovementReporter::initialize(int job_number, std::string path) {
     LOG(INFO) << fmt::format("MovementReporter loaded, using replicate {}", replicate);
 }
 
-// Call the relevent sub reports
+// Call the relevant sub reports
 void MovementReporter::monthly_report() {
     if (movement_counts != nullptr) { coarse_report(); }
     if (count > 0) { fine_report(); }
