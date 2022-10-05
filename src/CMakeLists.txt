@@ -93,7 +93,7 @@ if (BUILD_WARNINGS)
 endif()
 
 # Update the linker for libpqxx
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq -mpc64")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
 if (BUILD_CLUSTER)
         include_directories($ENV{HOME}/work/build_env/lib/include)
         find_library(PQXX_LIB pqxx PATHS $ENV{HOME}/work/build_env/lib/lib)

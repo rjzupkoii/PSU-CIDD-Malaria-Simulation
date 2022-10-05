@@ -6,8 +6,6 @@
 #include <args.hxx>
 #include <iostream>
 #include <fmt/format.h>
-#include <gsl/gsl_ieee_utils.h>
-#include <stdlib.h>
 #include <thread>
 
 #include "easylogging++.h"
@@ -106,10 +104,6 @@ int main(const int argc, char **argv) {
     START_EASYLOGGINGPP(argc, argv);
     LOG(INFO) << fmt::format("MaSim version {0}", VERSION);
     LOG(INFO) << "Processor Count: " << std::thread::hardware_concurrency();
-
-    // Set our floating point environment, don't override if already set
-    setenv("GSL_IEEE_MODE", "extended-precision", 0);
-    LOG(INFO) << "IEEE Mode: " << getenv("GSL_IEEE_MODE");
 
     // Run the model
     m->initialize(job_number, path);
