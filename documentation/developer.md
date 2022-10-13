@@ -89,8 +89,31 @@ make -j 8
 
 Generally it is recommended to create a `build.sh` script that runs the build commands.
 
-## Building on ICDS-ACI
-To build the simulation to run on the ICDS-ACI the first time it is necessary to perform a number of configuration steps. After logging on to the interactive environment (`aci-b.aci.ics.psu.edu`) and cloning this repository, run `config.sh` which will prepare the build environment. As part of the process a build script will be created at `build/build.sh` that will ensure the environment is set correctly when run. Running the `build/build.sh` script will then build the simulation.
+## Building on ICDS-ACI, Roar Collab
+
+To build the simulation to run on the ICDS-ACI Roar Collab cluster the first time it is necessary to perform a number 
+of configuration steps. After logging on to the interactive environment (`submit.hpc.psu.edu`) and cloning this 
+repository, run `config.sh` which will prepare the build environment. As part of the process a build script will be 
+created at `build/build.sh` that will ensure the environment is set correctly to compile the codebase. 
+
+When the `config.sh` script is done running, note that it will recommend changes to the `.bashrc` which can be edited 
+via `vi ~/.bashrc` and adding lines similar to the following:
+
+```bash
+# Configure runtime environment
+module use /storage/icds/RISE/sw8/modules
+module load gsl
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/storage/home/USERNAME/work/build_env/postgres/lib
+```
+
+Running the `config.sh` script will report the relevant lines at the end of the script. 
+
+## Building on ICDS-ACI, Roar (Deprecated)
+To build the simulation to run on the ICDS-ACI Roar cluster the first time it is necessary to perform a number of 
+configuration steps. After logging on to the interactive environment (`submit.aci.ics.psu.edu`) and cloning this 
+repository, run `config.sh` which will prepare the build environment. As part of the process a build script will be 
+created at `build/build.sh` that will ensure the environment is set correctly when run. Running the `build/build.sh` 
+script will then build the simulation.
 
 # Running
 ## Local Runs

@@ -80,7 +80,7 @@ if [ ! -d "build" ]; then
   chmod +x build.sh
 fi
 
-# Notify the user of recomended .bashrc changes
+# Notify the user of recommended .bashrc changes
 BIWhite='\033[1;97m'
 DEFAULT='\033[0m'
 
