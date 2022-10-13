@@ -5,26 +5,12 @@ function check_version() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" !=
 # Define some paths
 BUILD_ENV="$HOME/work/build_env"
 
-# Load gcc and cmake
-module load gcc/8.3.1
-module load cmake/3.18.4
+# Load cmake
+module load cmake
 
 # Create the directory to work in
 source=$(pwd)
 mkdir -p $BUILD_ENV
-
-# If the version of git is to old, load a newer one
-required=2.24.0
-current=$(git --version | sed "s/git version //g")
-if check_version $required $current; then
-  cd $BUILD_ENV
-  git clone git://git.kernel.org/pub/scm/git/git.git
-  cd git
-  make configure
-  ./configure --prefix=/home
-  make all
-  export PATH="`pwd`:$PATH"
-fi
 
 # If PostgreSQL isn't present, download and install it to the user directory
 if [ ! -d "$BUILD_ENV/postgres" ]; then
@@ -74,14 +60,19 @@ cd $BUILD_ENV/vcpkg
 # Return to the source directory
 cd $source
 
+# Load GSL so we can set the correct path
+module use /storage/icds/RISE/sw8/modules
+module load gsl
+
 # Create the build script
 if [ ! -d "build" ]; then
   mkdir -p build
   cd build
   toolchain="$BUILD_ENV/vcpkg/scripts/buildsystems/vcpkg.cmake"
-  echo "module load gcc/8.3.1" > build.sh
-  echo "module load cmake/3.18.4" >> build.sh
-  echo "export GIT_EXEC_PATH=$BUILD_ENV/git" >> build.sh
+  echo "module use /storage/icds/RISE/sw8/modules" >> build.sh
+  echo "module load gsl" >> build.sh
+  echo "module load cmake" >> build.sh
+  echo "export GSL_ROOT_DIR=`gsl-config --prefix`" >> build.sh
   echo "export PATH=$PATH" >> build.sh
   echo "export LIBRARY_PATH=$BUILD_ENV/postgres/lib:$BUILD_ENV/lib/lib:$LIBRARY_PATH" >> build.sh
   echo "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$toolchain -DBUILD_CLUSTER:BOOL=true .." >> build.sh
