@@ -79,3 +79,15 @@ if [ ! -d "build" ]; then
   echo "make -j 8" >> build.sh
   chmod +x build.sh
 fi
+
+# Notify the user of recomended .bashrc changes
+BIWhite='\033[1;97m'
+DEFAULT='\033[0m'
+
+LIBPQ=~/work/build_env/postgres/lib/
+echo -e "${BIWhite}Configuration complete, you may wish to update ~/.bashrc with the following:${DEFAULT}\n"
+echo "    # Configure runtime environment"
+echo "    module use /storage/icds/RISE/sw8/modules"
+echo "    module load gsl"
+echo "    LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:`dirname $LIBPQ`/`basename $LIBPQ`"
+echo
