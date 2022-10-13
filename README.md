@@ -39,18 +39,24 @@ Use of either the `-c` or `-i` switch with an appropriate YAML file is required.
  
 ### Version 4.1.3
 
-The version 4.1.3 release is focued on adding new features needed for research:
+The version 4.1.3 release is focused on adding new features needed for research:
 
-1. Add the relevent classes and events needed for the RAPT protocol.
+1. Add the relevant classes and events needed for the RAPT protocol.
 2. Additional input validation added for input data files.
 3. Updated console logging to report physical and virtual memory usage at end of simulation.
- 
+
 ### Version 4.1.2.1
 
-The version 4.1.2 release is focused on bug fixes and adding new features needed for research:
+The version 4.1.2.1 release is focused on bug fixes and adding new features needed for research:
 
 1. Removed the configuration field `p_compliance`.
-2. Updated simulation and configuration to support variable treatment compliance rates based upon the day of treatment. 
+2. Updated simulation and configuration to support variable treatment compliance rates based upon the day of treatment.
+ 
+### Version 4.1.1.1
+
+The version 4.1.1.1 release is specifically intended for work with manuscript revisions.
+
+1. Updated the Marshall movement model to precompute the kernel.
 
 ### Version 4.1.1
 
