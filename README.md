@@ -10,6 +10,8 @@ This repository contains the working codebase for the Malaria Simulation (MaSim)
 
 The simulation has been tested to run on Windows 10, Windows Subsystem for Linux (Ubuntu), and Red Hat 7.9. The majority of development is performed on under Linux so building and running under Windows may be impacted.  While basic simulations are possible on desktop computing environments, regional and national scale simulations require advanced computing environments with access to 64 GB of RAM or more. Sample configuration files can be found under [documentation/input/](documentation/input), and examination of `simple.yml` or `spatial.yml` is recommended after working with the demonstration configuration in [documentation/demo/](documentation/demo/).
 
+While the simulation can be built and run from the contents of this repository, additional tools for model calibration, result analysis, and plotting can be found at [PSU-CIDD-MaSim-Support](https://github.com/bonilab/PSU-CIDD-MaSim-Support).
+
 ## Command Line Switches
 
 The following commands are available from the simulation:
