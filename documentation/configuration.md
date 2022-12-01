@@ -11,7 +11,7 @@ As a matter of convention, the YAML key is generally indicated with **bold** tex
 # Nodes
 
 ## Model Operation Nodes 
-The following nodes govern how the model executes at a low level.
+The following nodes govern how the model executes in terms of simulation execution.
 
 **connection_string** (string) : (*Version 4.0*) The connection string for the PostgreSQL database that stores the simulation data.
 
@@ -20,10 +20,22 @@ The following nodes govern how the model executes at a low level.
 ## Model Configuration Notes
 The following nodes contain the settings for the simulation.
 
-**transmission_parameter** (float) : Governs how likely malaria is to be transmitted to a naive individual in the sporozoite challenge.
+**starting_date** (date string, YYYY/mm/dd) : The start date of the simulation, model days elapsed will be indexed from this date.\
+**ending_date** (date string, YYYY/mm/dd) : The end date of the simulation.
+
+**start_collect_data_day** (integer) : The number of model days that should elapse before data collection begins (e.g., number of clinical episodes, number of deaths, etc.)
+
+<!-- Double check the NFT code to see how that is being done! -->
+**start_of_comparison_period** (date string, YYYY/mm/dd) : The calendar date upon which the simulation should start calculating the number of treatment failures (NTF), artemisinin monotherapy usage (AMU), and useful therapeutic life (UTL). Note that as of version 4.0 the AMU results are considered to be *deprecated* and will be removed at a later date.
+
+**number_of_tracking_days** (integer) : The number of days to take the total number of parasites in the population. 
 
 **number_of_age_classes** (integer) : The size of the `age_structure` array.\
-**age_structure** : An array of integer values that corresponds to the oldest age that defines a break in the age structure.
+**age_structure** (integer array) : An array of integer values that corresponds to the oldest age that defines a break in the age structure. This age structure is used for reporting and age-specific mortality calculations.
+
+**initial_age_structure** (integer array) : Used to initialize the population structure at model initialization (time zero).
+
+**artificial_rescaling_of_population_size** (double) : A scaling value that should be applied to the population size in a given location. Defaults to 1.0, but 0.25 is commonly applied when geospatial data is used that maps locations to current populations. 
 
 ## Simulation Geography
 
@@ -117,6 +129,8 @@ seasonal_info:
 ## Individual Immunity and Infection Response
 
 **allow_new_coinfection_to_cause_symtoms** (_true_ | false) : Flag to indicate if an asymptomatic host that is bitten and infected by a new parasite clone may present with new symptoms. Note the spelling of `symtoms` in the configuration.
+
+**transmission_parameter** (float) : Governs how likely malaria is to be transmitted to a naive individual in the sporozoite challenge.
 
 ### parasite_density_level
 The `parasite_density_level` setting contains several sub-values that govern individual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per μl is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/μl) while 50 per μl is the lower bounds for detection under field conditions (50 - 100 parasites/μl) ([Wongsrichanalai et al. 2007](#Wongsrichanalai2007)). Generally, a higher detection limit for the <em>Pf</em>PR will require a higher transmission for a given <em>Pf</em>PR than a lower detection level. 
