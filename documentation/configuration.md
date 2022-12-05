@@ -6,7 +6,7 @@
 
 The malaria simulation (MaSim) uses [YAML](https://yaml.org/) to load configuration settings for the simulation. While the configuration was previously forward compatible (i.e., older files would work with newer versions), with the transition to version 4.0 new nodes were added or deprecated that have resulted in a divergence between 3.x and 4.0 onwards. While the absence of nodes implies version 4.0 or greater, care should be taken to ensure it is clear which version a given configuration is intended for.
 
-As a matter of convention, the YAML key is generally indicated with **bold** text. The data type (e.g., integer, string, etc.) or the possible values are indicated in parentheses following the key name. If there is a default value, then it will be given in _italic_ text. Generally this document is organized such that keys are organized by operational impact upon the simulation, followed by simple key-value pairs as the first entry in each section, followed by more complex entities as subheadings.   
+As a matter of convention, the YAML key is generally indicated with **bold** text. The data type (e.g., integer, string, etc.) or the possible values are indicated in parentheses following the key name with any default indicated in **bold**. Generally this document is organized such that headings are organized by operational impact upon the simulation, followed by simple key-value pairs as the first entry in each section, followed by more complex entities as subheadings. Within subsections, the YAML keys should be in alphabetical order, although closely coupled keys (e.g., `number_of_age_classes` and `age_structure`) will break this pattern with the first key that should be read appearing first.
 
 # Nodes
 
@@ -15,27 +15,33 @@ The following nodes govern how the model executes in terms of simulation executi
 
 **connection_string** (string) : (*Version 4.0*) The connection string for the PostgreSQL database that stores the simulation data.
 
+**days_between_notifications** (integer) : The number of model days that should elapse between status updates to the console.
+
 **record_genome_db** (boolean) : (*Version 4.0*) Indicates that genome data should be recorded to the database when using the `DbReporter` reporter class. Note that recording genomic data to the database will cause the database to quickly inflate in size. It is recommended that this setting only be used when genomic data needs to be retrieved. 
 
 ## Model Configuration Notes
 The following nodes contain the settings for the simulation.
 
-**starting_date** (date string, YYYY/mm/dd) : The start date of the simulation, model days elapsed will be indexed from this date.\
-**ending_date** (date string, YYYY/mm/dd) : The end date of the simulation.
+**artificial_rescaling_of_population_size** (double) : A scaling value that should be applied to the population size in a given location. Defaults to 1.0, but 0.25 is commonly applied when geospatial data is used that maps locations to current populations. 
+
+**initial_age_structure** (integer array) : Used to initialize the population structure at model initialization (time zero).
+
+**initial_seed_number** (integer) : The seed value that should be used by the random number generator. The default value of zero (0) indicates that the seed will be generated at model execution time based upon the number of milliseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+**number_of_age_classes** (integer) : The size of the `age_structure` array.\
+**age_structure** (integer array) : An array of integer values that corresponds to the oldest age that defines a break in the age structure. This age structure is used for reporting and age-specific mortality calculations.
+
+**number_of_tracking_days** (integer) : The number of days to take the total number of parasites in the population. 
+
+**report_frequency** (integer) : The number of model days that various reporters will save data, and data aggregation events will trigger.
 
 **start_collect_data_day** (integer) : The number of model days that should elapse before data collection begins (e.g., number of clinical episodes, number of deaths, etc.)
 
 <!-- Double check the NFT code to see how that is being done! -->
 **start_of_comparison_period** (date string, YYYY/mm/dd) : The calendar date upon which the simulation should start calculating the number of treatment failures (NTF), artemisinin monotherapy usage (AMU), and useful therapeutic life (UTL). Note that as of version 4.0 the AMU results are considered to be *deprecated* and will be removed at a later date.
 
-**number_of_tracking_days** (integer) : The number of days to take the total number of parasites in the population. 
-
-**number_of_age_classes** (integer) : The size of the `age_structure` array.\
-**age_structure** (integer array) : An array of integer values that corresponds to the oldest age that defines a break in the age structure. This age structure is used for reporting and age-specific mortality calculations.
-
-**initial_age_structure** (integer array) : Used to initialize the population structure at model initialization (time zero).
-
-**artificial_rescaling_of_population_size** (double) : A scaling value that should be applied to the population size in a given location. Defaults to 1.0, but 0.25 is commonly applied when geospatial data is used that maps locations to current populations. 
+**starting_date** (date string, YYYY/mm/dd) : The start date of the simulation, model days elapsed will be indexed from this date.\
+**ending_date** (date string, YYYY/mm/dd) : The end date of the simulation.
 
 ## Simulation Geography
 
