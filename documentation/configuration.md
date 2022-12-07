@@ -10,7 +10,7 @@ As a matter of convention, the YAML key is generally indicated with **bold** tex
 
 # Nodes
 
-## Model Operation Nodes 
+## Model Operation 
 The following nodes govern how the model executes in terms of simulation execution.
 
 **connection_string** (string) : (*Version 4.0*) The connection string for the PostgreSQL database that stores the simulation data.
@@ -19,17 +19,21 @@ The following nodes govern how the model executes in terms of simulation executi
 
 **record_genome_db** (boolean) : (*Version 4.0*) Indicates that genome data should be recorded to the database when using the `DbReporter` reporter class. Note that recording genomic data to the database will cause the database to quickly inflate in size. It is recommended that this setting only be used when genomic data needs to be retrieved. 
 
-## Model Configuration Notes
+## Model Configuration
 The following nodes contain the settings for the simulation.
 
 **artificial_rescaling_of_population_size** (double) : A scaling value that should be applied to the population size in a given location. Defaults to 1.0, but 0.25 is commonly applied when geospatial data is used that maps locations to current populations. 
+
+**birth_rate** (float) : The number of births per thousand individuals in the simulation, expressed as a decimal (i.e., 42 births per 1000 is entered as 0.042).
 
 **initial_age_structure** (integer array) : Used to initialize the population structure at model initialization (time zero).
 
 **initial_seed_number** (integer) : The seed value that should be used by the random number generator. The default value of zero (0) indicates that the seed will be generated at model execution time based upon the number of milliseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
 
 **number_of_age_classes** (integer) : The size of the `age_structure` array.\
-**age_structure** (integer array) : An array of integer values that corresponds to the oldest age that defines a break in the age structure. This age structure is used for reporting and age-specific mortality calculations.
+**age_structure** (integer array) : An array of integer values that corresponds to the oldest age that defines a break in the age structure. This age structure is used for reporting and age-specific mortality calculations.\
+**death_rate_by_age_class** (float array) : A float array of values that corresponds to the all-causes death rate for the simulation withe same index correspondence as `age_structure`. Typically supplied as a malaria adjusted value.\
+**mortality_when_treatment_fail_by_age_class** (float array) : A float array of values that corresponds to the death rate when treatment fails, using the same index correspondence as `age_structure`.
 
 **number_of_tracking_days** (integer) : The number of days to take the total number of parasites in the population. 
 
@@ -131,6 +135,9 @@ seasonal_info:
 **mode** (equation | **rainfall**) : Required in order to load the rainfall data.\
 **filename** (string) : The CSV file that contains the adjustment that should be applied to the beta. Each adjustment should be supplied on a single line in the file.\
 **period** (integer) : The period of time before the pattern in the CSV file should repeat, generally 365 days is expected.
+
+### spatial_model
+To Be Written.
 
 ## Individual Immunity and Infection Response
 
