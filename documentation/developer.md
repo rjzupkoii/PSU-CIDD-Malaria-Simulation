@@ -15,7 +15,7 @@ sudo apt upgrade
 
 3. Install the build dependencies
 ```bash
-sudo apt install build-essentials
+sudo apt install build-essential
 sudo apt install cmake
 sudo apt install libgsl-dev
 sudo apt install libyaml-cpp-dev
