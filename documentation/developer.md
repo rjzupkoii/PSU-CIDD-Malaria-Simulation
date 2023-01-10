@@ -73,7 +73,7 @@ If you have already installed a distribution, updating is recommended. Otherwise
 
 ## Local WSL Builds
 
-Before building the first time it is necessary to create the build directory:
+Before building the first time it is necessary to create the build directory within the local clone of the `PSU-CIDD-Malaria-Simulation` repository:
 
 ```bash
 mkdir build
