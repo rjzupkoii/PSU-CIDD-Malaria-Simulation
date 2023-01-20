@@ -15,7 +15,7 @@ sudo apt upgrade
 
 3. Install the build dependencies
 ```bash
-sudo apt install build-essentials
+sudo apt install build-essential
 sudo apt install cmake
 sudo apt install libgsl-dev
 sudo apt install libyaml-cpp-dev
@@ -73,7 +73,7 @@ If you have already installed a distribution, updating is recommended. Otherwise
 
 ## Local WSL Builds
 
-Before building the first time it is necessary to create the build directory:
+Before building the first time it is necessary to create the build directory within the local clone of the `PSU-CIDD-Malaria-Simulation` repository:
 
 ```bash
 mkdir build
