@@ -17,11 +17,11 @@ The following tables are present in the output from the `CellularReporter`:
 | DaysElapsed	| Model days elapsed, should correspond to the length of months. |
 | Population | Total population in the simulation. |
 | PfPR2to10	| The *Plasmodium Falciparum* parasite prevalence for individuals aged 2 to 10 years. |
-| TreatmentCoverage | The current treatment coverage in the simulation.
+| TreatmentCoverage | The current treatment coverage in the simulation as an average for the under-5 and over-5 groups. |
 | InfectedIndividuals	| The number of individuals in the simulation who have *any* level of parasitemia. |
 | ClinicalIndividuals	| The number of individuals in the simulation who have a parasitemia level of clinical symptoms to manifest. |
-| ClinicalU5 | The number of clinical individuals under the age of 5. |
-| ClinicalO5 | The number of clinical individuals over the age of 5. |
+| ClinicalU5 | The number of newly clinical individuals  under the age of 5. |
+| ClinicalO5 | The number of newly clinical individuals over the age of 5. |
 | NewInfections	| The number of new infections in the past month. |
 | Treatment | The number of clinical individuals who received treatment. |
 | NonTreatment | The number of clinical individuals who did not seek treatment. |

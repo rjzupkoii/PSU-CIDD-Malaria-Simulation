@@ -640,6 +640,7 @@ void ModelDataCollector::monthly_reset() {
       zero_fill(monthly_nontreatment_by_location_age_class_[location]);
       zero_fill(malaria_deaths_by_location_age_class_[location]);
       zero_fill(monthly_treatment_failure_by_location_age_class_[location]);
+      zero_fill(monthly_number_of_clinical_episode_by_location_age_class_[location]);
     }
   }
 }
