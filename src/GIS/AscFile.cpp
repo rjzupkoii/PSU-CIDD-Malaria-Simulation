@@ -45,9 +45,9 @@ bool AscFileManager::checkAscFile(AscFile* file, std::string* errors) {
 
 // Read the indicated file from disk, caller is responsible for checking if 
 // data is integer or floating point.
-AscFile* AscFileManager::read(std::string fileName) {
+AscFile* AscFileManager::read(const std::string& fileName) {
     // Treat the struct as POD
-    AscFile* results = new AscFile();
+    auto* results = new AscFile();
 
     // Open the file and verify it
     std::string field, value;
@@ -87,7 +87,7 @@ AscFile* AscFileManager::read(std::string fileName) {
     }
 
     // Check the header to make sure it is valid
-    std::string* errors = new std::string();
+    auto* errors = new std::string();
     if (checkAscFile(results, errors)) {
         throw std::runtime_error(*errors);
     }
@@ -117,7 +117,7 @@ AscFile* AscFileManager::read(std::string fileName) {
 }
 
 // Write the contents of the AscFile to disk.
-void AscFileManager::write(AscFile* file, std::string fileName) {
+void AscFileManager::write(AscFile* file, const std::string& fileName) {
 
     // Open the file for writing
     std::ofstream out(fileName);

@@ -13,7 +13,7 @@
 
 // The ASC file either as read, or to be written. Note that since the specification does not
 // provide a header indicating if the data is floating point or integer, the data is presumed
-// to be floathing point. 
+// to be floating point.
 struct AscFile {
     // Flag to indicate the value has not been set yet
     static const int NOT_SET = -1;
@@ -57,13 +57,13 @@ class AscFileManager {
     private:
         static const int HEADER_WIDTH = 14;
 
-        // Static class, no need to instansiate.
+        // Static class, no need to instantiate.
         AscFileManager() { }
 
     public:
         static bool checkAscFile(AscFile* file, std::string* errors);
-        static AscFile* read(std::string fileName);
-        static void write(AscFile* file, std::string fileName);
+        static AscFile* read(const std::string& fileName);
+        static void write(AscFile* file, const std::string& fileName);
 };
 
 #endif

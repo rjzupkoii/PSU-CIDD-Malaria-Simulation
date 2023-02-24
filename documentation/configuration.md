@@ -416,6 +416,20 @@ events:
 **drug_id** (integer) : the id of the drug, as defined in the `drug_db` or `-1` to apply the value to all drugs. \
 **mutation_probability** (float) : the mutation probability to use.
 
+### update_beta_raster_event
+(*Version 4.1.4*) Update all beta values in the simulation to those in the raster file.
+
+```YAML
+events:
+  - name: update_beta_raster_event
+    info:
+      - day: 2023-02-24
+        beta_raster: "beta_2023.asc" 
+```
+
+**day** (date string, YYYY/mm/dd) : the date when the event will occur. \
+**beta_raster** (string) : The beta parameter (float) used for each cell in the model, overrides the current value in the cell. \
+
 ### update_ecozone_event
 (*Version 4.0*) Update all the cells matching the original ecozone to the new ecozone.
 

@@ -6,6 +6,7 @@
 #include "PopulationEventBuilder.h"
 
 #include <algorithm>
+#include <iostream>
 #include <vector>
 
 #include "yaml-cpp/yaml.h"
@@ -28,6 +29,7 @@
 #include "AnnualCoverageUpdateEvent.hxx"
 #include "ImportationPeriodicallyRandomEvent.h"
 #include "IntroduceMutantEvent.h"
+#include "UpdateBetaRasterEvent.hxx"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
@@ -391,6 +393,37 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
   }
 }
 
+std::vector<Event*> PopulationEventBuilder::build_update_beta_raster_event(const YAML::Node &node, Config *config) {
+  try {
+    std::vector<Event*> events;
+    for (const auto & entry : node) {
+      // Load the values
+      auto start_date = entry["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
+      auto filename = entry["beta_raster"].as<std::string>();
+
+      // Make sure the file actually exists
+      std::ifstream file;
+      file.open(filename);
+      if (!file) {
+        LOG(ERROR) << "The file indicated, " << filename << ", cannot be found.";
+        throw std::invalid_argument("File for " + UpdateBetaRasterEvent::EventName + " does not appear to exist.");
+      } else {
+        file.close();
+      }
+
+      // Log and add the event to the queue
+      auto* event = new UpdateBetaRasterEvent(filename, time);
+      VLOG(1) << "Adding " << event->name() << " start: " << start_date;
+      events.push_back(event);
+    }
+    return events;
+  } catch (YAML::BadConversion &error) {
+    LOG(ERROR) << "Unrecoverable error parsing YAML value in " << UpdateBetaRasterEvent::EventName << " node: " << error.msg;
+    exit(1);
+  }
+}
+
 std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   const auto name = node["name"].as<std::string>();
@@ -445,6 +478,9 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   }
   if (name == IntroduceMutantEvent::EventName) {
     events = build_introduce_mutant_events(node["info"], config);
+  }
+  if (name == UpdateBetaRasterEvent::EventName) {
+    events = build_update_beta_raster_event(node["info"], config);
   }
 
   return events;
