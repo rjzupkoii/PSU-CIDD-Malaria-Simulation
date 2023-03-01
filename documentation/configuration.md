@@ -423,7 +423,7 @@ events:
 events:
   - name: update_beta_raster_event
     info:
-      - day: 2023-02-24
+      - day: 2023/02/24
         beta_raster: "beta_2023.asc" 
 ```
 
