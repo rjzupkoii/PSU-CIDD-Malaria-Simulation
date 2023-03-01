@@ -6,6 +6,12 @@ dictate the features currently under development.
 
 ## Change Log
 
+### Version 4.1.4
+
+The version 4.1.4 release is focused on adding new features needed for research:
+
+1. Added `update_beta_raster_event`
+
 ### Version 4.1.3
 
 The version 4.1.3 release is focused on adding new features needed for research:
