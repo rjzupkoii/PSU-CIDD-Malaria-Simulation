@@ -37,6 +37,12 @@ void Config::read_from_file(const std::string &config_file_name) {
   }
   catch (YAML::Exception &ex) {
     LOG(FATAL) << "error: " << ex.msg << " at line " << ex.mark.line + 1 << ":" << ex.mark.column + 1;
+
+    // Offer a hint if this is an end of map error
+    if (ex.msg == "end of map not found") {
+      LOG(FATAL) << "Check to ensure that the file is valid YAML and that the whitespace is correct.";
+    }
+
     exit(EXIT_FAILURE);
   }
 
