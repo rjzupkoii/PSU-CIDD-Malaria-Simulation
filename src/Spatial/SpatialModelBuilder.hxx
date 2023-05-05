@@ -6,14 +6,15 @@
 #ifndef SPATIAL_SPATIALMODELBUILDER_H
 #define SPATIAL_SPATIALMODELBUILDER_H
 
-#include "BarabasiSM.h"
 #include "Core/PropertyMacro.h"
-#include "GeneralGravitySM.h"
-#include "Marshall.hxx"
+#include "yaml-cpp/yaml.h"
+
+#include "BarabasiSM.hxx"
 #include "BurkinaFaso.hxx"
+#include "Marshall.hxx"
 #include "SpatialModel.hxx"
 #include "WesolowskiSM.hxx"
-#include "yaml-cpp/yaml.h"
+
 
 namespace Spatial {
 class SpatialModelBuilder {
@@ -24,9 +25,6 @@ class SpatialModelBuilder {
     virtual ~SpatialModelBuilder() = default;
     
     static SpatialModel *Build(const std::string &name, const YAML::Node &node) {
-      if (name == "Gravity") {
-        return new GeneralGravitySM();
-      }
       if (name == "Barabasi") {
         return new BarabasiSM(node);
       }
