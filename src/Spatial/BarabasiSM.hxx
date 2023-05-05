@@ -1,7 +1,10 @@
-//
-// Created by Nguyen Tran on 1/29/2018.
-//
-
+/*
+ * BarabasiSM.hxx
+ *
+ * Movement model based upon the radius of gyration distribution in https://www.nature.com/articles/nature06958
+ *
+ * REMINDER Verify the correctness of the equation (2023-05-05)
+ */
 #ifndef SPATIAL_BARABASISM_HXX
 #define SPATIAL_BARABASISM_HXX
 
@@ -39,9 +42,11 @@ namespace Spatial {
             if (NumberHelpers::is_equal(relative_distance_vector[target_location], 0.0)) {
               v_relative_number_of_circulation_by_location[target_location] = 0;
             } else {
+              // P(r_g) = (r_g + r_g^0)^{-\beta_r}exp(\frac{-r_g}{\kappa})
+              auto r_g = relative_distance_vector[target_location];
               v_relative_number_of_circulation_by_location[target_location] =
-                      pow((relative_distance_vector[target_location] + r_g_0_), -beta_r_) *
-                      exp(-r_g_0_ / kappa_);   // equation from Barabasi's paper
+                      pow((r_g + r_g_0_), -beta_r_) *
+                      exp(-r_g / kappa_);
             }
           }
           return v_relative_number_of_circulation_by_location;
