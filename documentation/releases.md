@@ -6,6 +6,12 @@ dictate the features currently under development.
 
 ## Change Log
 
+### Version 4.1.5
+
+The version 4.1.5 release is focused on adding new features needed for research:
+
+1. Added the `WesolowskiSurface` movement model to the simuation.
+
 ### Version 4.1.4
 
 The version 4.1.4 release is focused on adding new features needed for research:
