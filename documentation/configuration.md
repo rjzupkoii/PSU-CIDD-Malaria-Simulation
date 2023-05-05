@@ -268,24 +268,38 @@ therapy_db:
     therapy_ids: [0, 1]
     regimen: [1, 5]
 
-  # Artemisinin combination therapy (ACT) - artemether–lumefantrine (AL), five days with specified compliance
+  # Drug compliance configuration: AL, five days with specified compliance
   3:
     drug_id: [0, 1]
     dosing_days: [5]
     # Probability that an individual will complete exactly this many days of treatment
     pr_completed_days: [0.1, 0.1, 0.2, 0.2, 0.4]
+
+  # Targeted intervention configuration: AL, but only in districts 1 and 3
+  4:
+    drug_id: [0, 1]
+    dosing_days: [3]
+    districts: [1, 3]
+
+  # Targeted intervention configuration: AL (3-1-1), but only in district 2
+  5:
+    therapy_ids: [0, 1]
+    regime: [1, 5]
+    districts: [2]
 ```
 
 ***Simple Therapies*** \
 **drug_id** (integer array) : One or more integers that correspond to the defined identification numbers (i.e., array index) in the `drug_db`. \
 **dosing_days** (integer) : The number of days that the drug combination should be given for. \
-**pr_completed_days** (float array) : (*Optional, Version 4.1.2*) The probability that the individual will comply with the course of treatment where 1 indicates they will always take it; otherwise, 0 < _n_ < 1 is the probability that they will stop on that day. In the event that the field is not supplied then it is assumed that the individual will always comply with the therapy.
+**pr_completed_days** (float array) : (*Optional, Version 4.1.2*) The probability that the individual will comply with the course of treatment where 1 indicates they will always take it; otherwise, 0 < _n_ < 1 is the probability that they will stop on that day. In the event that the field is not supplied then it is assumed that the individual will always comply with the therapy. \
+**districts** (integer array) : (*Optional, Version 4.1.5*) The ids of the districts in which the therapy should be applied. If nothing is supplied then the default is all districts. However, if something is supplied then the individual must be present in that district to have a chance at receiving the therapy.  
 
 ***Complex Therapies*** \
 Complex therapies consist of multiple simple therapies that are dosed over several days and may contain gaps in the dosing. Prior to Version 4.1.1 patient compliance with the therapy was determined by the `p_compliance` which generally assumed full compliance with the course of treatment. With complex therapies, noncompliance is currently not support and such configurations will produce an error.  
 
 **therapy_ids** (integer array) : One or more integers that correspond to the defined therapies. \
-**regimen** (integer array) : A one-index list of the days that the corresponding therapy should be given.
+**regimen** (integer array) : A one-index list of the days that the corresponding therapy should be given. \
+**districts** (integer array) : (*Optional, Version 4.1.5*) The ids of the districts in which the therapy should be applied. If nothing is supplied then the default is all districts. However, if something is supplied then the individual must be present in that district to have a chance at receiving the therapy.
 
 ## Policy Interventions
 While most of the policy interventions can be implemented using the therapies deployed, and switching them via events such as `change_treatment_strategy`, some of the more complex strategies require more in-depth configuration or are closely coupled with how the simulation operates.

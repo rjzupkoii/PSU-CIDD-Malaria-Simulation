@@ -6,6 +6,10 @@ dictate the features currently under development.
 
 ## Change Log
 
+### Version 4.1.5 (Development)
+
+The version 4.1.5 release will be focused on adding features needed to allow for sub-national level interventions.
+
 ### Version 4.1.4
 
 The version 4.1.4 release is focused on adding new features needed for research:
