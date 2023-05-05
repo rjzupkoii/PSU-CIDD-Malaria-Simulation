@@ -149,7 +149,7 @@ spatial_model:
 where the `name` may be of the type `Marshall`, `Wesolowski`, or `WesolowskiSurface` which each have their own configuration values.
 
 #### Marshall Movement Model
-The Marshall movement model is based upon the gravity model described in Marshall et al. ([2018](Marshall2018)) which presumes that the probability of a trip is defined by the proportional probability of movement from *i* to *j* such that $P(j|i)\propto N_j^Tk(d_{i,j})$ where the kernel is defined by $k(d_{i,j})=\left( 1+\frac{d_{i,j}}{\rho }\right )^{-\alpha}$ from the following configuration:
+The Marshall movement model is based upon the gravity model described in Marshall et al. ([2018](Marshall2018)) which presumes that the probability of a trip is defined by the proportional probability of movement from *i* to *j* such that $P(j|i)\propto N_j^\tau k(d_{i,j})$ where the kernel is defined by $k(d_{i,j})=\left( 1+\frac{d_{i,j}}{\rho }\right )^{-\alpha}$ from the following configuration:
 
 ```YAML
 spaital_model:
@@ -162,7 +162,12 @@ spaital_model:
 
 **tau** (double) : The calibrated value for $\tau$.\
 **alpha** (double) : The calibrated value for $\alpha$.\
-**log_rho** (double) : The calibrated $log_{10}(\rho) $value.
+**log_rho** (double) : The calibrated $log_{10}(\rho)$ value.
+
+#### Wesolowski Movement Model
+
+
+#### Wesolowski Movement Model with Travel Surface
 
 
 
