@@ -53,26 +53,6 @@ namespace Spatial {
               }
             }
 
-            // Prepare the travel raster for the movement model
-            void prepare_travel(const SpatialData::SpatialFileType type) {
-              // Get the travel times raster
-              AscFile* raster = SpatialData::get_instance().get_raster(type);
-              if (raster == nullptr) {
-                throw std::runtime_error(fmt::format("{} called without travel data loaded", __FUNCTION__));
-              }
-
-              // Use the min and max to normalize the raster into an array
-              auto id = 0;
-              travel = new double[locations];
-              for (auto row = 0; row < raster->NROWS; row++) {
-                for (auto col = 0; col < raster->NCOLS; col++) {
-                  if (raster->data[row][col] == raster->NODATA_VALUE) { continue; }
-                  travel[id] = raster->data[row][col];
-                  id++;
-                }
-              }
-            }
-
         public:
             explicit BurkinaFaso(const YAML::Node &node) {
                 tau_ = node["tau"].as<double>();
@@ -101,7 +81,7 @@ namespace Spatial {
 
               // Allow the work to be done
               prepare_kernel();
-              prepare_travel(SpatialData::SpatialFileType::Travel);
+              prepare_surface(SpatialData::SpatialFileType::Travel, travel);
             }
 
             [[nodiscard]]
@@ -132,7 +112,7 @@ namespace Spatial {
                     double probability = std::pow(population, tau_) * kernel[from_location][destination];
 
                     // Adjust the probability by the friction surface
-                    probability = probability / (1 + travel[from_location] + travel[destination] );
+                    probability = probability / (1 + travel[from_location] + travel[destination]);
 
                     // If the source and the destination are both in the capital district,
                     // penalize the travel by 50%

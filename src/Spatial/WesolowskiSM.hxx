@@ -42,7 +42,7 @@ namespace Spatial {
                 if (NumberHelpers::is_equal(relative_distance_vector[target_location], 0.0)) {
                     v_relative_number_of_circulation_by_location[target_location] = 0;
                 } else {
-                  // N_{ij}=\frac{pop^\alpha_ipop^\beta_j}{d(i,j)^\gamma}\kappa
+                  // Gravity model: N_{ij}=\frac{pop^\alpha_ipop^\beta_j}{d(i,j)^\gamma}\kappa
                   v_relative_number_of_circulation_by_location[target_location] = kappa_*
                         (pow(v_number_of_residents_by_location[from_location], alpha_) *  pow(v_number_of_residents_by_location[target_location], beta_)) /
                         (pow(relative_distance_vector[target_location], gamma_));

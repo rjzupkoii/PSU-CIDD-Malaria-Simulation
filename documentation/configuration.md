@@ -32,7 +32,7 @@ The following nodes contain the settings for the simulation.
 
 **number_of_age_classes** (integer) : The size of the `age_structure` array.\
 **age_structure** (integer array) : An array of integer values that corresponds to the oldest age that defines a break in the age structure. This age structure is used for reporting and age-specific mortality calculations.\
-**death_rate_by_age_class** (float array) : A float array of values that corresponds to the all-causes death rate for the simulation withe same index correspondence as `age_structure`. Typically supplied as a malaria adjusted value.\
+**death_rate_by_age_class** (float array) : A float array of values that corresponds to the all-causes death rate for the simulation withe same index correspondence as `age_structure`. Typically, supplied as a malaria adjusted value.\
 **mortality_when_treatment_fail_by_age_class** (float array) : A float array of values that corresponds to the death rate when treatment fails, using the same index correspondence as `age_structure`.
 
 **number_of_tracking_days** (integer) : The number of days to take the total number of parasites in the population. 
@@ -137,7 +137,36 @@ seasonal_info:
 **period** (integer) : The period of time before the pattern in the CSV file should repeat, generally 365 days is expected.
 
 ### spatial_model
-To Be Written.
+The `spatial_model` setting defines movement model that transfers individuals between model cells. All spatial models used in the simulation have the same basic definition structure:
+
+```YAML
+spatial_model:
+  name: "ModelName"
+  ModelName:
+    paramter: value
+```
+
+where the `name` may be of the type `Marshall`, `Wesolowski`, or `WesolowskiSurface` which each have their own configuration values.
+
+#### Marshall Movement Model
+The Marshall movement model is based upon the gravity model described in Marshall et al. ([2018](Marshall2018)) which presumes that the probability of a trip is defined by the proportional probability of movement from *i* to *j* such that $P(j|i)\propto N_j^Tk(d_{i,j})$ where the kernel is defined by $k(d_{i,j})=\left( 1+\frac{d_{i,j}}{\rho }\right )^{-\alpha}$ from the following configuration:
+
+```YAML
+spaital_model:
+  name: "Marshall"
+  Marshall:
+    tau: 1.0
+    alpha: 1.0
+    log_rho: 1.1
+```
+
+**tau** (double) : The calibrated value for $\tau$.\
+**alpha** (double) : The calibrated value for $\alpha$.\
+**log_rho** (double) : The calibrated $log_{10}(\rho) $value.
+
+
+
+
 
 ## Individual Immunity and Infection Response
 
@@ -210,7 +239,7 @@ immune_system_information:
 **max_clinical_probability** (double) : Maximum probability of clinical symptoms as a result of a new infection. \
 **immune_inflation_rate** (double) : Yearly age-dependent faster acquisition of immunity between ages 1 to 10. \
 **age_mature_immunity** (double) : Age at which the immune function is mature, i.e., age at which the immune acquisition model switches from child to adult. \
-**factor_effect_age_mature_immunity** (double) :  Adjustment to the curve of immune acquisition under the age indicated by `age_mature_immunity`, parameter kappa in supplement to Nguyen et al. (2015). \
+**factor_effect_age_mature_immunity** (double) :  Adjustment to the curve of immune acquisition under the age indicated by `age_mature_immunity`, parameter kappa in supplement to Nguyen et al. ([2015](#Nguyen2015)). \
 **immune_effect_on_progression_to_clinical** (double) : Slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)). \
 **midpoint** (double) : (*Version 4.0*) Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)).
 
@@ -447,6 +476,10 @@ events:
 **to** (integer) : the id of the new ecozone, defined in `seasonal_info`, that will be applied to matching cells.
 
 # References
+<a name="Marshall2018"></a>Marshall, J. M., Wu, S. L., Sanchez C., H. M., Kiware, S. S., Ndhlovu, M., Ouédraogo, A. L., Touré, M. B., Sturrock, H. J., Ghani, A. C., & Ferguson, N. M. (2018). Mathematical models of human mobility of relevance to malaria transmission in Africa. Scientific Reports, 8(1), 7713. https://doi.org/10.1038/s41598-018-26023-1
+
 <a name="Nguyen2015"></a>Nguyen, TD, Olliaro, P, Dondorp, AM, Baird, JK, Lam, HM, Farrar, J, Thwaites, GE, White, NJ, & Boni, MF. (2015). Optimum population-level use of artemisinin combination therapies: A modelling study. *The Lancet Global Health*, 3(12), e758–e766. https://doi.org/10.1016/S2214-109X(15)00162-X
+
+<a name="Wesolowski2015"></a>Wesolowski, A., O’Meara, W. P., Eagle, N., Tatem, A. J., & Buckee, C. O. (2015). Evaluating Spatial Interaction Models for Regional Mobility in Sub-Saharan Africa. PLOS Computational Biology, 11(7), e1004267. https://doi.org/10.1371/journal.pcbi.1004267
 
 <a name="Wongsrichanalai2007"></a>Wongsrichanalai C, Barcus MJ, Muth S, et al. A Review of Malaria Diagnostic Tools: Microscopy and Rapid Diagnostic Test (RDT) In: Breman JG, Alilio MS, White NJ, editors. Defining and Defeating the Intolerable Burden of Malaria III: Progress and Perspectives: Supplement to Volume 77(6) of American Journal of Tropical Medicine and Hygiene. Northbrook (IL): American Society of Tropical Medicine and Hygiene; 2007 Dec. Available from: https://www.ncbi.nlm.nih.gov/books/NBK1695/
