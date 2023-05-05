@@ -11,7 +11,7 @@
 
 #include "BarabasiSM.hxx"
 #include "BurkinaFaso.hxx"
-#include "Marshall.hxx"
+#include "MarshallSM.hxx"
 #include "SpatialModel.hxx"
 #include "WesolowskiSM.hxx"
 
