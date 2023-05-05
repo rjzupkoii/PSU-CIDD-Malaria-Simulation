@@ -165,13 +165,40 @@ spaital_model:
 **log_rho** (double) : The calibrated $log_{10}(\rho)$ value.
 
 #### Wesolowski Movement Model
+THe Wesolowski movement model is based upon the gravity model described in Wesolowski et al. ([2015](#Wesolowski2015)) where the amount of travel to $N_{ij}$ is defined by $N_{ij}=\frac{pop_i^\alpha pop_j^\beta}{d(i,j)^\gamma} \kappa$ from the following configuration:
 
+```YAML
+spaital_model:
+  name: "Wesolowski"
+  Wesolowski:
+    kappa: 1.0
+    alpha: 1.0
+    beta: 1.0
+    gamma: 1.0
+```
+
+**kappa** (double) : The calibrated value for $\kappa$.\
+**alpha** (double) : The calibrated value for $\alpha$.\
+**beta** (double) : The calibrated value for $\beta$.\
+**gamma** (double) : The calibrated value for $\gamma$.
 
 #### Wesolowski Movement Model with Travel Surface
+This movement model is similar to the generic Wesolowski movement model, except a travel surface penalty is applied to $N_{ij}$ such that $N_{ij}'=\frac{N_{ij}}{(1 + t_i + t_j)}$ using the `travel_raster` loaded as part of the `raster_db` and the following configuration:
 
+```YAML
+spaital_model:
+  name: "Wesolowski"
+  Wesolowski:
+    kappa: 1.0
+    alpha: 1.0
+    beta: 1.0
+    gamma: 1.0
+```
 
-
-
+**kappa** (double) : The calibrated value for $\kappa$.\
+**alpha** (double) : The calibrated value for $\alpha$.\
+**beta** (double) : The calibrated value for $\beta$.\
+**gamma** (double) : The calibrated value for $\gamma$.
 
 ## Individual Immunity and Infection Response
 
