@@ -29,7 +29,7 @@ namespace {
 #endif
 
 // Version information
-const std::string VERSION = "4.1.4";
+const std::string VERSION = "4.1.5.uganda";
 
 // Settings read from the CLI
 int job_number = 0;
