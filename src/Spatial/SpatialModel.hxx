@@ -17,8 +17,9 @@ namespace Spatial {
 
     protected:
         // Prepare the travel raster for the movement model
-        static void prepare_surface(const SpatialData::SpatialFileType type, double *travel) {
+        static double* prepare_surface(const SpatialData::SpatialFileType type) {
           // Get the travel times raster
+          VLOG(1) << "Preparing travel surface...";
           AscFile *raster = SpatialData::get_instance().get_raster(type);
           if (raster == nullptr) {
             throw std::runtime_error(fmt::format("{} called without travel data loaded", __FUNCTION__));
@@ -26,7 +27,7 @@ namespace Spatial {
 
           // Use the min and max to normalize the raster into an array
           auto id = 0;
-          travel = new double[Model::CONFIG->number_of_locations()];
+          auto* travel = new double[Model::CONFIG->number_of_locations()];
           for (auto row = 0; row < raster->NROWS; row++) {
             for (auto col = 0; col < raster->NCOLS; col++) {
               if (raster->data[row][col] == raster->NODATA_VALUE) { continue; }
@@ -34,6 +35,9 @@ namespace Spatial {
               id++;
             }
           }
+
+          // Return the pointer to the array
+          return travel;
         }
 
     public:

@@ -38,7 +38,7 @@ namespace Spatial {
         ~WesolowskiSurfaceSM() override = default;
 
         void prepare() override {
-          prepare_surface(SpatialData::Travel, travel);
+          travel = prepare_surface(SpatialData::Travel);
         }
 
         [[nodiscard]]

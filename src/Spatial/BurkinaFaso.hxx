@@ -81,7 +81,7 @@ namespace Spatial {
 
               // Allow the work to be done
               prepare_kernel();
-              prepare_surface(SpatialData::SpatialFileType::Travel, travel);
+              travel = prepare_surface(SpatialData::SpatialFileType::Travel);
             }
 
             [[nodiscard]]
