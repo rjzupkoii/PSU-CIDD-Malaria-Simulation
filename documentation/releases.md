@@ -10,7 +10,8 @@ dictate the features currently under development.
 
 The version 4.1.5 release is focused on adding new features needed for research:
 
-1. Added the `WesolowskiSurface` movement model to the simuation.
+1. Added the `WesolowskiSurface` movement model to the simulation.
+2. Added the `AgeBandReporter` specialist reporter to the simulation.
 
 ### Version 4.1.4
 
