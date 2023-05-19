@@ -16,15 +16,15 @@ class AgeBandReporter : public Reporter {
     DISALLOW_MOVE(AgeBandReporter)
 
 private:
-    // Constants to track the size of the groups
-    int ZERO_TO_TEN = 10;
-    int FIFTEEN_TO_HUNDRED = 17;
-
     // When to start logging the data
     int start_recording = -1;
 
     // Mapping of the locations to their districts
     std::vector<int> district_lookup;
+
+    // String streams to use when working with the loggers
+    std::stringstream pfpr;
+    std::stringstream cases;
 
 public:
     AgeBandReporter() = default;

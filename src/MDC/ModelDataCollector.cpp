@@ -47,6 +47,8 @@ bool ModelDataCollector::recording_data() {
 }
 
 void ModelDataCollector::initialize() {
+  // TODO Determine if the _age_group_by_5_ variables can be removed or not.
+
   if (model_ != nullptr) {
     popsize_by_location_ = Vector_by_Locations(IntVector);
     births_by_location_ = Vector_by_Locations(IntVector);
