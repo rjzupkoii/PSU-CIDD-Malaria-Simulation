@@ -13,11 +13,11 @@ As a matter of convention, the YAML key is generally indicated with **bold** tex
 ## Model Operation 
 The following nodes govern how the model executes in terms of simulation execution.
 
-**connection_string** (string) : (*Version 4.0*) The connection string for the PostgreSQL database that stores the simulation data.
+**connection_string** (string) : The connection string for the PostgreSQL database that stores the simulation data.
 
 **days_between_notifications** (integer) : The number of model days that should elapse between status updates to the console.
 
-**record_genome_db** (boolean) : (*Version 4.0*) Indicates that genome data should be recorded to the database when using the `DbReporter` reporter class. Note that recording genomic data to the database will cause the database to quickly inflate in size. It is recommended that this setting only be used when genomic data needs to be retrieved. 
+**record_genome_db** (boolean) : Indicates that genome data should be recorded to the database when using the `DbReporter` reporter class. Note that recording genomic data to the database will cause the database to quickly inflate in size. It is recommended that this setting only be used when genomic data needs to be retrieved. 
 
 ## Model Configuration
 The following nodes contain the settings for the simulation.
@@ -50,7 +50,7 @@ The following nodes contain the settings for the simulation.
 ## Simulation Geography
 
 ### raster_db
-*Version 4.0* This node contains data related to the spatial organization of the model to include population distributions and raster files.
+This node contains data related to the spatial organization of the model to include population distributions and raster files.
 
 *Usage*\
 The use of the `raster_db` node will override the use of the `location_db` and errors or inconsistencies will occur if both are used at the same time. All the raster files must have the same header information as defined in the [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm) and the same number of defined pixels. A `std::runtime_error` may be generated if the number of data pixels in a given raster exceeds, or is less than a previously loaded raster.
@@ -115,13 +115,13 @@ seasonal_info:
 
 **mode** (**equation** | rainfall) : (*Optional*) indicates the node that should be used for the seasonality, namely based upon the equation based model, or by using rainfall data. In the event that a value is not supplied, the simulation will default to the equation based model.\  
 **enable** (true | false) : enables or disables seasonality in the simulation.\
-**raster** (true | false) : (*Version 4.0*) indicates that a raster file should be used to set the correct rate for each pixel.\
+**raster** (true | false) : indicates that a raster file should be used to set the correct rate for each pixel.\
 **a**, **phi**, **min_value** : arrays of one to *n* `double` values that inform the seasonality period.\
 &nbsp;*Version 3.x*: when one value is provided, it is used for all locations, otherwise a value must be provided for each location\
 &nbsp;*Version 4.0*: if `raster` is true then each index in the array is used for the pixel coded with that value, otherwise the first value is used for all pixels.\
 **period** : the number of days defined by the period.
 
-For version 4.1.1 and higher, a rainfall based model can be used with the following configuration:
+The rainfall based model can be used with the following configuration:
 
 ```YAML
 seasonal_info:
@@ -273,7 +273,7 @@ immune_system_information:
 **age_mature_immunity** (double) : Age at which the immune function is mature, i.e., age at which the immune acquisition model switches from child to adult. \
 **factor_effect_age_mature_immunity** (double) :  Adjustment to the curve of immune acquisition under the age indicated by `age_mature_immunity`, parameter kappa in supplement to Nguyen et al. ([2015](#Nguyen2015)). \
 **immune_effect_on_progression_to_clinical** (double) : Slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)). \
-**midpoint** (double) : (*Version 4.0*) Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)).
+**midpoint** (double) : Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)).
 
 ## Treatments
 
@@ -303,7 +303,7 @@ drug_db:
 **maximum_parasite_killing_rate** (double) : The percentage of parasites that the compound will kill in one day if an individual has the highest possible drug concentration. \
 **n** (integer) : The slope of the linear portion of the concentration-effect curve. \
 **age_specific_drug_concentration_sd** (double array) : The actual drug concentration, per individual, that will be drawn from a normal distribution with a mean of one and this standard deviation. \
-**age_specific_drug_absorption** (double array) : (*Version 4.0*) The percentage of the drug that is absorbed into the bloodstream, based upon the age of the individual. When not supplied the default value is one for all age groups. \
+**age_specific_drug_absorption** (double array) : The percentage of the drug that is absorbed into the bloodstream, based upon the age of the individual. When not supplied the default value is one for all age groups. \
 **mutation_probability** (double) : The probability that exposure to the drug will result in a mutation in the parasite to resist it. \
 **affecting_loci** (integer array) : The index of the loci of alleles where drug resistance may form (see [genotype_info](#genotype_info)). \
 **selecting_alleles** (integer matrix) : The index of the alleles where drug resistance may form (see [genotype_info](#genotype_info)). \
@@ -340,7 +340,7 @@ therapy_db:
 ***Simple Therapies*** \
 **drug_id** (integer array) : One or more integers that correspond to the defined identification numbers (i.e., array index) in the `drug_db`. \
 **dosing_days** (integer) : The number of days that the drug combination should be given for. \
-**pr_completed_days** (float array) : (*Optional, Version 4.1.2*) The probability that the individual will comply with the course of treatment where 1 indicates they will always take it; otherwise, 0 < _n_ < 1 is the probability that they will stop on that day. In the event that the field is not supplied then it is assumed that the individual will always comply with the therapy.
+**pr_completed_days** (float array) : (*Optional*) The probability that the individual will comply with the course of treatment where 1 indicates they will always take it; otherwise, 0 < _n_ < 1 is the probability that they will stop on that day. In the event that the field is not supplied then it is assumed that the individual will always comply with the therapy.
 
 ***Complex Therapies*** \
 Complex therapies consist of multiple simple therapies that are dosed over several days and may contain gaps in the dosing. Prior to Version 4.1.1 patient compliance with the therapy was determined by the `p_compliance` which generally assumed full compliance with the course of treatment. With complex therapies, noncompliance is currently not support and such configurations will produce an error.  
@@ -351,10 +351,12 @@ Complex therapies consist of multiple simple therapies that are dosed over sever
 ## Policy Interventions
 While most of the policy interventions can be implemented using the therapies deployed, and switching them via events such as `change_treatment_strategy`, some of the more complex strategies require more in-depth configuration or are closely coupled with how the simulation operates.
 
-### Regular administration of prophylactic therapy (version 4.1.3)
+### Regular administration of prophylactic therapy (*experimental*)
 The regular administration of prophylactic therapy, or RAPT protocol, is a speculative approach to malaria control that calls for individual to take an artemisinin combination therapy (ACT) periodically without the presentation of clinical symptoms for malaria. The protocol presumes an individual will remember the month to take then next ACT, and at some point during that month a check will be performed to see if they take the therapy. The probability is based upon the probability that an individual in their age group will seek treatment and the probability of compliance with the RAPT protocol (i.e., $Pr(RAPT) = Pr(Treatment) \cdot Pr(Compliance)$ ). In the event that the individual already took an ACT in the past 28 days (determined by checking for `TestTreatmentFailureEvent`), they will not take the ACT regardless.
 
 Implementation of this protocol requires that events be scheduled for at model initialization, although the point at which the individuals start taking the ACTs is determined by the configuration. Due to the computational overhead involved with the RAPT protocol, the simulation execution time is longer. If the `rapt_config` entry is not present in the configuration file, the event will not be enabled within the simulation.
+
+**NOTE** that the RAPT protocol is highly experimental and the event has not been extensively tested. 
 
 ```YAML
 rapt_config:
@@ -380,7 +382,7 @@ To Be Written.
 This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all the data for the `info` field following will be provided to the loader function.
 
 ### annual_beta_update_event
-(*Version 4.0*) The annual beta update event increases or decreases the beta for each cell in the model using the formula $beta' = beta + (beta \cdot rate)$ and clamps the lower bounds for the beta a zero. 
+The annual beta update event increases or decreases the beta for each cell in the model using the formula $beta' = beta + (beta \cdot rate)$ and clamps the lower bounds for the beta a zero. 
 
 ```YAML
 events:
@@ -394,7 +396,7 @@ events:
 **rate** (float) : the rate of change for the beta for the cells.
 
 ### annual_coverage_update_event 
-(*Version 4.0*) The annual coverage update event increases the coverage for each cell in the model by reducing the coverage gap by a fixed value provided by rate. If the model is run for a long enough period of time, the presumption should be that the coverage will reach 100%.
+The annual coverage update event increases the coverage for each cell in the model by reducing the coverage gap by a fixed value provided by rate. If the model is run for a long enough period of time, the presumption should be that the coverage will reach 100%.
 
 ```YAML
 events:
@@ -408,7 +410,7 @@ events:
 **rate** (float) : the rate of reduction in the coverage for the cells.
 
 ### importation_periodically_random_event
-(*Version 4.1*) Over the course of the month indicated (January:1 - December:12) introduce the infection into the model at a random location, selected by a draw that is weighted by the population. Each day an infection is introduced based upon a uniform draw against `count / [days in month]`. Once started, this event continues until model termination.
+Over the course of the month indicated (January:1 - December:12) introduce the infection into the model at a random location, selected by a draw that is weighted by the population. Each day an infection is introduced based upon a uniform draw against `count / [days in month]`. Once started, this event continues until model termination.
 
 ```YAML
 events:
@@ -430,7 +432,7 @@ events:
 **log_parasite_density** (double) : the log density of the parasite to be imported. 
 
 ### introduce_mutant_event
-(*Version 4.1.1*) On the specified date, find infected individuals and force the parasite genotype from the given wild type to mutation specified (e.g., C580 to 580Y). This operation will fill the difference between the input fraction and the current frequency of the genotype in the population. **Note** that while this is a one time event, it is recommended that the event be invoked multiple times prior to any policy interventions acting upon a given mutation frequency.
+On the specified date, find infected individuals and force the parasite genotype from the given wild type to mutation specified (e.g., C580 to 580Y). This operation will fill the difference between the input fraction and the current frequency of the genotype in the population. **Note** that while this is a one time event, it is recommended that the event be invoked multiple times prior to any policy interventions acting upon a given mutation frequency.
 
 ```YAML
 events:
@@ -478,7 +480,7 @@ events:
 **mutation_probability** (float) : the mutation probability to use.
 
 ### update_beta_raster_event
-(*Version 4.1.4*) Update all beta values in the simulation to those in the raster file.
+Update all beta values in the simulation to those in the raster file.
 
 ```YAML
 events:
@@ -492,7 +494,7 @@ events:
 **beta_raster** (string) : The beta parameter (float) used for each cell in the model, overrides the current value in the cell. \
 
 ### update_ecozone_event
-(*Version 4.0*) Update all the cells matching the original ecozone to the new ecozone.
+Update all the cells matching the original ecozone to the new ecozone.
 
 ```YAML
 events:
