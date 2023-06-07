@@ -47,7 +47,9 @@ public:
 
   static std::vector<Event*> build_introduce_lumefantrine_mutant_parasite_events(const YAML::Node& node, Config* config);
 
-  static std::vector<Event*> build_introduce_mutant_events(const YAML::Node& node, Config* config);
+  static std::vector<Event*> build_introduce_mutant_event(const YAML::Node& node, Config* config);
+
+  static std::vector<Event*> build_introduce_mutant_raster_event(const YAML::Node& node, Config* config);
 
   static std::vector<Event*> build_annual_coverage_update_event(const YAML::Node& node, Config* config);
 

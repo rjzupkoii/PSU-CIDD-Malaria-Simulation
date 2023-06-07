@@ -28,7 +28,8 @@
 #include "AnnualBetaUpdateEvent.hxx"
 #include "AnnualCoverageUpdateEvent.hxx"
 #include "ImportationPeriodicallyRandomEvent.h"
-#include "IntroduceMutantEvent.hpp"
+#include "IntroduceMutantEvent.hxx"
+#include "IntroduceMutantRasterEvent.hxx"
 #include "UpdateBetaRasterEvent.hxx"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
@@ -342,7 +343,7 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
   }
 }
 
- std::vector<Event*> PopulationEventBuilder::build_introduce_mutant_events(const YAML::Node& node, Config* config) {
+ std::vector<Event*> PopulationEventBuilder::build_introduce_mutant_event(const YAML::Node& node, Config* config) {
   try {
     std::vector<Event*> events;
     for (const auto & entry : node) {
@@ -391,6 +392,10 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
     LOG(ERROR) << "Unrecoverable error parsing YAML value in " << AnnualCoverageUpdateEvent::EventName << " node: " << error.msg;
     exit(1);
   }
+}
+
+std::vector<Event*> PopulationEventBuilder::build_introduce_mutant_raster_event(const YAML::Node& node, Config* config) {
+  // TODO Write this function!
 }
 
 std::vector<Event*> PopulationEventBuilder::build_update_beta_raster_event(const YAML::Node &node, Config *config) {
@@ -477,7 +482,10 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
     events = build_importation_periodically_random_event(node["info"], config);
   }
   if (name == IntroduceMutantEvent::EventName) {
-    events = build_introduce_mutant_events(node["info"], config);
+    events = build_introduce_mutant_event(node["info"], config);
+  }
+  if (name == IntroduceMutantRasterEvent::EventName) {
+    events = build_introduce_mutant_raster_event(node["info"], config);
   }
   if (name == UpdateBetaRasterEvent::EventName) {
     events = build_update_beta_raster_event(node["info"], config);

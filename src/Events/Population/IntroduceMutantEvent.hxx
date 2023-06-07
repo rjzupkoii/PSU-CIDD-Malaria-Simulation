@@ -1,11 +1,11 @@
 /**
- * IntroduceMutantEvent.h
+ * IntroduceMutantEvent.hxx
  *
  * Introduce mutant genotypes into the simulation by randomly selecting infected individuals and switching the relevant
- * genotype from the wild type to the specified mutant.
+ * genotype from the wild type to the specified mutant based upon the district id supplied.
  */
-#ifndef INTRODUCEMUTANTEVENT_H
-#define INTRODUCEMUTANTEVENT_H
+#ifndef INTRODUCEMUTANTEVENT_HXX
+#define INTRODUCEMUTANTEVENT_HXX
 
 #include "IntroduceMutantEventBase.h"
 
@@ -19,7 +19,6 @@
 #include "Events/Event.h"
 #include "GIS/SpatialData.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
-
 
 class IntroduceMutantEvent : public IntroduceMutantEventBase {
   DISALLOW_COPY_AND_ASSIGN(IntroduceMutantEvent)

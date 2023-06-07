@@ -451,6 +451,28 @@ events:
 **locus** (int) : The genotype database locus index of the desired mutation. \
 **mutant_allele** (int) : The genotype database allele index of the mutation allele that will be applied.
 
+### introduce_mutant_raster_event
+Similar to the `introduce_mutant_event` in that infected individuals will be switched from teh wild type to the mutant genotype indicated; however, the selection of individuals is based upon the raster provided as opposed to a district number.
+
+This event follows the "fail fast" paradigm and as part of event initialization during model initialization the raster is loaded and checked to ensure that the cells indicated correspond to populated locations. Determination of cell locations uses the same algorithm as all other raster processing in the simulation, and as a result simulated cells must be labeled as either zero (no mutations) or one (mutations). 
+
+```YAML
+events:
+  - name: introduce_mutant_raster_event
+    info:
+      - day: 2021/12/27
+        raster: locations.asc
+        fraction: 0.01
+        locus: 2
+        mutant_allele: 1   
+```
+
+**day** (date string, YYYY/mm/dd) : The model date when this event should occur. \
+**raster** (string) : An ASC file indicating the locations where the mutations should take place. A cell value of zero indicates no mutations, while a value of one indicates that mutations should occur. \
+**fraction** (int) : The target frequency of the mutation. \
+**locus** (int) : The genotype database locus index of the desired mutation. \
+**mutant_allele** (int) : The genotype database allele index of the mutation allele that will be applied.
+
 ### turn_off_mutation
 Turn off all mutations in the model, recommended during the model burn-in.
 
