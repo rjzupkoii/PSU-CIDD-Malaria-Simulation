@@ -28,7 +28,7 @@
 #include "AnnualBetaUpdateEvent.hxx"
 #include "AnnualCoverageUpdateEvent.hxx"
 #include "ImportationPeriodicallyRandomEvent.h"
-#include "IntroduceMutantEvent.h"
+#include "IntroduceMutantEvent.hpp"
 #include "UpdateBetaRasterEvent.hxx"
 
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
