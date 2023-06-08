@@ -1,7 +1,8 @@
 /**
  * PopulationEventBuilder.cpp
  *
- * Implement the population event builder factory.
+ * Implement the population event builder factory, and most of the functions specific to producing event objects. More
+ * complex functions may be found in separate files under the Builders directory.
  */
 #include "PopulationEventBuilder.h"
 
@@ -23,7 +24,6 @@
 #include "IntroducePlas2CopyParasiteEvent.h"
 #include "IntroduceAQMutantEvent.h"
 #include "IntroduceLumefantrineMutantEvent.h"
-#include "GIS/SpatialData.h"
 
 #include "AnnualBetaUpdateEvent.hxx"
 #include "AnnualCoverageUpdateEvent.hxx"
@@ -32,16 +32,20 @@
 #include "IntroduceMutantRasterEvent.hxx"
 #include "UpdateBetaRasterEvent.hxx"
 
+// Disable data flow analysis (DFA) in CLion
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCDFAInspection"
+
 std::vector<Event*> PopulationEventBuilder::build_introduce_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    int location = node[i]["location"].as<int>();
+  for (const auto & entry : node) {
+    auto location = entry["location"].as<int>();
     if (static_cast<std::size_t>(location) < config->number_of_locations()) {
-      for (std::size_t j = 0; j < node[i]["parasite_info"].size(); j++) {
-        auto genotype_id = node[i]["parasite_info"][j]["genotype_id"].as<int>();
-        auto num = node[i]["parasite_info"][j]["number_of_cases"].as<int>();
+      for (std::size_t j = 0; j < entry["parasite_info"].size(); j++) {
+        auto genotype_id = entry["parasite_info"][j]["genotype_id"].as<int>();
+        auto num = entry["parasite_info"][j]["number_of_cases"].as<int>();
 
-        const auto starting_date = node[i]["parasite_info"][j]["day"].as<date::year_month_day>();
+        const auto starting_date = entry["parasite_info"][j]["day"].as<date::year_month_day>();
         auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
 
         auto* event = new ImportationEvent(location, time, genotype_id, num);
@@ -56,26 +60,26 @@ std::vector<Event*>
 PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
 
-  for (std::size_t i = 0; i < node.size(); i++) {
-    const unsigned long location = node[i]["location"].as<unsigned long>();
+  for (const auto & entry : node) {
+    const auto location = entry["location"].as<unsigned long>();
     const unsigned long location_from = location;
     const auto location_to = std::min(location + 1, config->number_of_locations());
 
     for (auto loc = location_from; loc < location_to; ++loc) {
-      for (std::size_t j = 0; j < node[i]["parasite_info"].size(); j++) {
+      for (std::size_t j = 0; j < entry["parasite_info"].size(); j++) {
         //            InitialParasiteInfo ipi;
         //            ipi.location = location;
         const auto genotype_id = -1;
         // TODO: implement new importation parasite genotype based on allele distribution
 
 
-        const auto dur = node[i]["parasite_info"][j]["duration"].as<int>();
-        const auto num = node[i]["parasite_info"][j]["number_of_cases"].as<int>();
+        const auto dur = entry["parasite_info"][j]["duration"].as<int>();
+        const auto num = entry["parasite_info"][j]["number_of_cases"].as<int>();
 
-        const auto starting_date = node[i]["parasite_info"][j]["start_day"].as<date::year_month_day>();
+        const auto starting_date = entry["parasite_info"][j]["start_day"].as<date::year_month_day>();
         auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
 
-        auto* event = new ImportationPeriodicallyEvent(loc, dur, genotype_id, num, time);
+        auto* event = new ImportationPeriodicallyEvent(static_cast<int>(loc), dur, genotype_id, num, time);
         events.push_back(event);
       }
     }
@@ -86,9 +90,8 @@ PopulationEventBuilder::build_introduce_parasites_periodically_events(const YAML
 std::vector<Event*>
 PopulationEventBuilder::build_change_treatment_coverage_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    auto* tcm = ITreatmentCoverageModel::build(node[i], config);
-    // std::cout << tcm->starting_time << std::endl;
+  for (const auto & entry : node) {
+    auto* tcm = ITreatmentCoverageModel::build(entry, config);
     auto* e = new ChangeTreatmentCoverageEvent(tcm);
     events.push_back(e);
   }
@@ -98,10 +101,10 @@ PopulationEventBuilder::build_change_treatment_coverage_event(const YAML::Node& 
 std::vector<Event*>
 PopulationEventBuilder::build_change_treatment_strategy_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    const auto starting_date = node[i]["day"].as<date::year_month_day>();
+  for (const auto & entry : node) {
+    const auto starting_date = entry["day"].as<date::year_month_day>();
     auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
-    auto strategy_id = node[i]["strategy_id"].as<int>();
+    auto strategy_id = entry["strategy_id"].as<int>();
 
     // Verify that the strategy id is valid, if not fail
     if (strategy_id >= config->strategy_db.value_.size()) {
@@ -118,16 +121,16 @@ PopulationEventBuilder::build_change_treatment_strategy_event(const YAML::Node& 
 
 std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    const auto starting_date = node[i]["day"].as<date::year_month_day>();
+  for (const auto & entry : node) {
+    const auto starting_date = entry["day"].as<date::year_month_day>();
     auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
     auto* e = new SingleRoundMDAEvent(time);
     for (std::size_t loc = 0; loc < config->number_of_locations(); loc++) {
-      auto input_loc = node[i]["fraction_population_targeted"].size() < config->number_of_locations() ? 0 : loc;
-      e->fraction_population_targeted.push_back(node[i]["fraction_population_targeted"][input_loc].as<double>());
+      auto input_loc = entry["fraction_population_targeted"].size() < config->number_of_locations() ? 0 : loc;
+      e->fraction_population_targeted.push_back(entry["fraction_population_targeted"][input_loc].as<double>());
     }
 
-    e->days_to_complete_all_treatments = node[i]["days_to_complete_all_treatments"].as<int>();
+    e->days_to_complete_all_treatments = entry["days_to_complete_all_treatments"].as<int>();
     events.push_back(e);
   }
 
@@ -137,10 +140,10 @@ std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const Y
 std::vector<Event*>
 PopulationEventBuilder::build_modify_nested_mft_strategy_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    const auto starting_date = node[i]["day"].as<date::year_month_day>();
+  for (const auto & entry : node) {
+    const auto starting_date = entry["day"].as<date::year_month_day>();
     auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
-    auto strategy_id = node[i]["strategy_id"].as<int>();
+    auto strategy_id = entry["strategy_id"].as<int>();
 
     auto* e = new ModifyNestedMFTEvent(time, strategy_id);
     events.push_back(e);
@@ -152,14 +155,14 @@ PopulationEventBuilder::build_modify_nested_mft_strategy_event(const YAML::Node&
 std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const YAML::Node& node, Config* config) {
   try {
     std::vector<Event*> events;
-    for (std::size_t i = 0; i < node.size(); i++) {
-      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+    for (const auto & entry : node) {
+      const auto starting_date = entry.as<date::year_month_day>();
       auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
-      double mutation_probability = node[i]["mutation_probability"]
-                                      ? node[i]["mutation_probability"].as<double>()
+      double mutation_probability = entry["mutation_probability"]
+                                      ? entry["mutation_probability"].as<double>()
                                       : Model::CONFIG->drug_db()->at(0)->p_mutation();
 
-      int drug_id = node[i]["drug_id"] ? node[i]["drug_id"].as<int>() : -1;
+      int drug_id = entry["drug_id"] ? entry["drug_id"].as<int>() : -1;
 
       auto* e = new TurnOnMutationEvent(time, mutation_probability, drug_id);
       events.push_back(e);
@@ -174,8 +177,8 @@ std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const Y
 
 std::vector<Event*> PopulationEventBuilder::build_turn_off_mutation_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    const auto starting_date = node[i]["day"].as<date::year_month_day>();
+  for (const auto & entry : node) {
+    const auto starting_date = entry["day"].as<date::year_month_day>();
     auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
     auto* e = new TurnOffMutationEvent(time);
     events.push_back(e);
@@ -187,12 +190,12 @@ std::vector<Event*> PopulationEventBuilder::build_turn_off_mutation_event(const 
 std::vector<Event*>
 PopulationEventBuilder::build_introduce_plas2_parasite_events(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    int location = node[i]["location"].as<int>();
+  for (const auto & entry : node) {
+    int location = entry["location"].as<int>();
     if (static_cast<std::size_t>(location) < config->number_of_locations()) {
-      auto fraction = node[i]["fraction"].as<double>();
+      auto fraction = entry["fraction"].as<double>();
 
-      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+      const auto starting_date = entry["day"].as<date::year_month_day>();
       auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
 
       auto* event = new IntroducePlas2CopyParasiteEvent(location, time, fraction);
@@ -205,12 +208,12 @@ PopulationEventBuilder::build_introduce_plas2_parasite_events(const YAML::Node& 
 std::vector<Event*> PopulationEventBuilder::build_introduce_aq_mutant_parasite_events(const YAML::Node& node,
                                                                                       Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    int location = node[i]["location"].as<int>();
+  for (const auto & entry : node) {
+    auto location = entry["location"].as<int>();
     if (static_cast<std::size_t>(location) < config->number_of_locations()) {
-      auto fraction = node[i]["fraction"].as<double>();
+      auto fraction = entry["fraction"].as<double>();
 
-      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+      const auto starting_date = entry["day"].as<date::year_month_day>();
       auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
 
       auto* event = new IntroduceAQMutantEvent(location, time, fraction);
@@ -223,12 +226,12 @@ std::vector<Event*> PopulationEventBuilder::build_introduce_aq_mutant_parasite_e
 std::vector<Event*> PopulationEventBuilder::build_introduce_lumefantrine_mutant_parasite_events(const YAML::Node& node,
                                                                                                 Config* config) {
   std::vector<Event*> events;
-  for (std::size_t i = 0; i < node.size(); i++) {
-    int location = node[i]["location"].as<int>();
+  for (const auto & entry : node) {
+    int location = entry["location"].as<int>();
     if (static_cast<std::size_t>(location) < config->number_of_locations()) {
-      auto fraction = node[i]["fraction"].as<double>();
+      auto fraction = entry["fraction"].as<double>();
 
-      const auto starting_date = node[i]["day"].as<date::year_month_day>();
+      const auto starting_date = entry["day"].as<date::year_month_day>();
       auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
 
       auto* event = new IntroduceLumefantrineMutantEvent(location, time, fraction);
@@ -343,61 +346,6 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
   }
 }
 
- std::vector<Event*> PopulationEventBuilder::build_introduce_mutant_event(const YAML::Node& node, Config* config) {
-  try {
-    std::vector<Event*> events;
-    for (const auto & entry : node) {
-      // Load the values
-      auto start_date = entry["day"].as<date::year_month_day>();
-      auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
-      auto district = entry["district"].as<int>();
-      auto fraction = entry["fraction"].as<double>();
-      auto locus = entry["locus"].as<int>();
-      auto mutant_allele = entry["mutant_allele"].as<int>();
-
-      // Make sure the district GIS data is loaded and the district id makes sense
-      if (district < 0) {
-        LOG(ERROR) << "The target district must be greater than or equal to zero.";
-        throw std::invalid_argument("Target district must be greater than or equal to zero");
-      }
-      if (district > SpatialData::get_instance().get_district_count()) {
-        LOG(ERROR) << "Target district is greater than the district count.";
-        throw std::invalid_argument("Target district greater than district count.");
-      }
-
-      // Make sure the fraction makes sense
-      if (fraction <= 0) {
-        LOG(ERROR) << "The fraction of the mutants must be greater than zero.";
-        throw std::invalid_argument("Mutant fraction must be greater than zero");
-      }
-
-      // Make sure the locus and alleles make sense
-      if (locus < 0) {
-        LOG(ERROR) << "The locus must be greater than or equal to zero.";
-        throw std::invalid_argument("Locus must be greater than or equal to zero");
-      }
-      if (mutant_allele < 0) {
-        LOG(ERROR) << "The locus must be greater than or equal to zero.";
-        throw std::invalid_argument("Mutant allele must be greater than or equal to zero");
-      }
-
-      // Log and add the event to the queue
-      auto* event = new IntroduceMutantEvent(time, district, fraction, locus, mutant_allele);
-      VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", district: " << district
-              << ", locus: " << locus << ", mutant_allele: " << mutant_allele << ", fraction: " << fraction;
-      events.push_back(event);
-    }
-    return events;
-  } catch (YAML::BadConversion &error) {
-    LOG(ERROR) << "Unrecoverable error parsing YAML value in " << AnnualCoverageUpdateEvent::EventName << " node: " << error.msg;
-    exit(1);
-  }
-}
-
-std::vector<Event*> PopulationEventBuilder::build_introduce_mutant_raster_event(const YAML::Node& node, Config* config) {
-  // TODO Write this function!
-}
-
 std::vector<Event*> PopulationEventBuilder::build_update_beta_raster_event(const YAML::Node &node, Config *config) {
   try {
     std::vector<Event*> events;
@@ -500,3 +448,6 @@ void PopulationEventBuilder::verify_single_node(const YAML::Node& node, const st
     throw std::invalid_argument("Multiple sub nodes for single node event.");
   }
 }
+
+// Re-enable DFA in CLion
+#pragma clang diagnostic pop
