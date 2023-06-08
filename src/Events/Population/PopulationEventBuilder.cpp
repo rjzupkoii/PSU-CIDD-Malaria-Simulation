@@ -2,7 +2,7 @@
  * PopulationEventBuilder.cpp
  *
  * Implement the population event builder factory, and most of the functions specific to producing event objects. More
- * complex functions may be found in separate files under the Builders directory.
+ * complex functions may be found in separate files under the EventBuilders directory.
  */
 #include "PopulationEventBuilder.h"
 

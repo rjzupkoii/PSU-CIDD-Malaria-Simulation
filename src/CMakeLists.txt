@@ -28,7 +28,7 @@ file(GLOB SOURCE *.cpp
         Events/*.cpp 
         Events/Environment/*.cpp
         Events/Population/*.cpp
-        Events/Population/Builders/*.cpp
+        Events/Population/EventBuilders/*.cpp
         GIS/*.cpp
         Helpers/*.cpp 
         Malaria/*.cpp
