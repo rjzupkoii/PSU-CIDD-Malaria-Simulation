@@ -156,7 +156,7 @@ std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const Y
   try {
     std::vector<Event*> events;
     for (const auto & entry : node) {
-      const auto starting_date = entry.as<date::year_month_day>();
+      const auto starting_date = entry["day"].as<date::year_month_day>();
       auto time = (date::sys_days{starting_date} - date::sys_days{config->starting_date()}).count();
       double mutation_probability = entry["mutation_probability"]
                                       ? entry["mutation_probability"].as<double>()
