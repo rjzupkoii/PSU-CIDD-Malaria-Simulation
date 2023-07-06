@@ -16,6 +16,7 @@ class DbReporterDistrict : public DbReporter {
     char get_genotype_level() override { return 'D'; }
 
     void monthly_genome_data(int id, std::string &query) override;
+    void monthly_infected_individuals(int id, std::string &query) override;
     void monthly_site_data(int id, std::string &query) override;
 
   public:

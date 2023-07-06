@@ -121,6 +121,37 @@ void DbReporterDistrict::monthly_genome_data(int id, std::string &query) {
   query.append(infections);
 }
 
+void DbReporterDistrict::monthly_infected_individuals(int id, std::string &query) {
+
+  // Cache some values and prepare the data structure
+  auto districts = SpatialData::get_instance().get_district_count();
+  auto first_index = SpatialData::get_instance().get_first_district();
+  auto* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+  auto age_classes = index->vPerson()[0][0].size();
+  std::vector<int> infections_district(districts, 0);
+
+  // Iterate overall the possible locations and states
+  for (auto location = 0; location < index->vPerson().size(); location++) {
+    for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
+      for (unsigned int ac = 0; ac < age_classes; ac++) {
+        for (auto &person : index->vPerson()[location][hs][ac]) {
+          // Is the individual infected by at least one parasite?
+          if (person->all_clonal_parasite_populations()->parasites()->empty()) { continue; }
+
+          // Calculate the correct index and update the count
+          auto district = district_lookup[location] - first_index;
+          infections_district[district]++;
+        }
+      }
+    }
+  }
+
+  // Iterate over the districts and append the query
+  for (auto district = 0; district < districts; district++) {
+    query.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infections_district[district], id, (district + first_index)));
+  }
+}
+
 void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
   // Prepare the data structures
   auto districts = SpatialData::get_instance().get_district_count();

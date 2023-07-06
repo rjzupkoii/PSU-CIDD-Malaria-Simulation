@@ -52,15 +52,14 @@ class DbReporter : public Reporter {
     int WAIT_TIMESPAN = 10000;
 
     // Configuration and replicate information
-    int config_id = 1;
-    int replicate;
+    int config_id = -9999;
+    int replicate = -9999;
 
     // Prepare a connection to the database, pointer returned must be deleted
     pqxx::connection* get_connection() const;
 
     // Reporter specific
     bool do_monthly_report();
-    void update_infected_individuals(int id, std::string &query);
     void prepare_configuration(pqxx::connection* connection);
     void prepare_replicate(pqxx::connection* connection);
 
@@ -86,6 +85,7 @@ class DbReporter : public Reporter {
     virtual char get_genotype_level() { return 'C'; }
 
     virtual void monthly_genome_data(int id, std::string &query);
+    virtual void monthly_infected_individuals(int id, std::string &query);
     virtual void monthly_site_data(int id, std::string &query);
 
   public:

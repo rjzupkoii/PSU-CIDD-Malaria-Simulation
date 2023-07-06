@@ -17,7 +17,7 @@
 #include "Population/Population.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 
-// Macro to check to see if a value is NAN, report if it is, and update the value as needed
+// Macro to check to see if a value is NaN, report if it is, and update the value as needed
 #define check_nan(value) if (std::isnan(value)) VLOG(1) << "NaN caught: " << #value; value = std::isnan(value) ? 0 : value;
 
 // Macro to check if a value is infinite, report if it is, and update the value as needed
@@ -219,7 +219,7 @@ bool DbReporter::do_monthly_report() {
             monthly_genome_data(id, query);
         } else {
             // If we aren't recording genome data still update the infected individuals
-            update_infected_individuals(id, query);
+            monthly_infected_individuals(id, query);
         }
 
         // Commit the pending data and close with success
@@ -369,7 +369,8 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
     }
 }
 
-void DbReporter::update_infected_individuals(int id, std::string &query) {
+// Update the monthly count of infected individuals.
+void DbReporter::monthly_infected_individuals(int id, std::string &query) {
     // Cache some values
     auto* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
     auto age_classes = index->vPerson()[0][0].size();
