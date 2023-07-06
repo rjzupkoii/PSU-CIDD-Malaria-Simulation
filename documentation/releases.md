@@ -12,6 +12,7 @@ The version 4.1.5 release is focused on adding new features needed for research:
 
 1. Added the `WesolowskiSurface` movement model to the simulation.
 2. Added the `AgeBandReporter` specialist reporter to the simulation.
+3. Corrected district level reporting of infected indivdiuals when genotype data is not also captured.
 
 ### Version 4.1.4
 
