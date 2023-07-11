@@ -102,12 +102,11 @@ void DbReporterDistrict::monthly_genome_data(int id, std::string &query) {
   }
 
   // Iterate over the districts and append the query
-  std::string infections;
-  query.append(INSERT_GENOTYPE_PREFIX);
+  std::string insert_genotypes, update_infections;
   for (auto district = 0; district < districts; district++) {
     for (auto genotype = 0; genotype < genotypes; genotype++) {
       if (weightedOccurrences[district][genotype] == 0) { continue; }
-      query.append(fmt::format(INSERT_GENOTYPE_ROW,
+      insert_genotypes.append(fmt::format(INSERT_GENOTYPE_ROW,
         id, (district + first_index), genotype,
         occurrences[district][genotype],
         clinicalOccurrences[district][genotype],
@@ -115,10 +114,20 @@ void DbReporterDistrict::monthly_genome_data(int id, std::string &query) {
         occurrencesTwoToTen[district][genotype],
         weightedOccurrences[district][genotype]));
     }
-    infections.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infections_district[district], id, (district + first_index)));
+    update_infections.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infections_district[district], id, (district + first_index)));
   }
-  query[query.length() - 1] = ';';
-  query.append(infections);
+
+  // Check to see if there is no data
+  if (insert_genotypes.empty()) {
+    LOG(INFO) << "No genotypes recorded in the simulation at timestep, " << Model::SCHEDULER->current_time();
+    return;
+  }
+
+  // Append the queries to be executed
+  insert_genotypes[insert_genotypes.length() - 1] = ';';
+  query.append(INSERT_GENOTYPE_PREFIX);
+  query.append(insert_genotypes);
+  query.append(update_infections);
 }
 
 void DbReporterDistrict::monthly_infected_individuals(int id, std::string &query) {
@@ -196,8 +205,9 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
   }
 
   // Append the final query
+  query.append(INSERT_SITE_PREFIX);
   for (auto district = 0; district < districts; district++) {
-    query.append(fmt::format(INSERT_SITE,
+    query.append(fmt::format(INSERT_SITE_ROW,
       id, (district + first_index),
       population[district],
       clinical_episodes[district],
@@ -209,4 +219,5 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
       treatment_failures[district],
       nontreatment[district]));
   }
+  query[query.length() - 1] = ';';
 }

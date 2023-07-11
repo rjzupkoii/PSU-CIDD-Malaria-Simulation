@@ -325,6 +325,7 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
 
 // Iterate over all the sites and prepare the query for the site specific data
 void DbReporter::monthly_site_data(int id, std::string &query) {
+    query.append(INSERT_SITE_PREFIX);
     for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
         // Check the population, if there is nobody there, press on
         if (Model::DATA_COLLECTOR->popsize_by_location()[location] == 0) {
@@ -353,7 +354,7 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         check_nan(pfpr_all)
         check_inf(pfpr_all)
 
-        query.append(fmt::format(INSERT_SITE,
+        query.append(fmt::format(INSERT_SITE_ROW,
             id,
             location_index[location],
             Model::DATA_COLLECTOR->popsize_by_location()[location],
@@ -367,6 +368,7 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
             Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location]
         ));
     }
+    query[query.length() - 1] = ';';
 }
 
 // Update the monthly count of infected individuals.
