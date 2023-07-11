@@ -76,7 +76,7 @@ raster_db:
   beta_by_location: [0.0]
 ```
 **beta_raster** (string) : The beta parameter (float) used for each cell in the model, overrides the value set in `beta_by_location`.\
-**district_raster** (string) : Contains the canonical identification values (integer) that should be for each cell in the model.\
+**district_raster** (string) : Contains the canonical identification values (integer) that should be for each cell in the model. The simulation follows the same convention as ArcGIS Pro in that the identification values should be sequential from one to *n* and will verify this when loading the ASC file. Zero indexed districts are supported and consistency is checked (i.e., ten districts would be numbered 0 to 9).\
 **location_raster** (string) : May contain arbitrary numeric values and is used by the simulation to convert the X-Y coordinates to their linear values. Only needed if it is the *only* raster file provided.\
 **population_raster** (string) : Contains the number of individuals (integer) in each cell within the simulation.\
 **travel_raster** (string) : Contains the friction surface (float) that is used for determining the likelihood of travel to a given cell.\
