@@ -22,8 +22,14 @@ The `DbReporterDistrict` is a derivative of the `DbReporter`, except genotype da
 Specialist Reporter \
 Output: Database
 
-The Genotype Carriers Reporter (`GenotypeCarriers`) is a specialist reporter that works in tandem with either of the database reporters and expects to be run after all other reporting has been completed. Which can be done by invoking the reporter as the last option in the switch (e.g., `-r DbReporterDistrict,GenotypeCarriers`). When the reporter 
-initializes it will check for the presence of the `genotypecarriers` column in `sim.monthlysitedata` which is where the absolute count of genotype carriers will be stored during model executing. Since the reporter is hard coded for the first allele mutation on the second locus it will report the count of either 580Y or 561H, depending on model configuration.
+The Genotype Carriers Reporter (`GenotypeCarriers`) is a specialist reporter that works in tandem with either of the database reporters and expects to be run after all other reporting has been completed, which can be done by invoking the reporter as the last option in the switch (e.g., `-r DbReporterDistrict,GenotypeCarriers`). When the reporter is triggered it will report count of the first allele mutation on the second locus (i.e., 580Y, 561H, or 469Y). 
+
+When the reporter initializes it will check for the presence of the `genotypecarriers` column in `sim.monthlysitedata` which is where the absolute count of genotype carriers will be stored during model executing. If the column is not present, it can be added using the following SQL:
+
+```SQL
+ALTER TABLE sim.monthlysitedata
+ADD genotypecarriers integer;
+```
 
 ### Monthly Reporter (MonthlyReporter)
 Primary Reporter \
