@@ -2,7 +2,7 @@
 
 This document is intended to introduce the reader to calibration of the individually-based model (IBM), so the simulation, when spatial modeling is involved. The directions assume that work is being using a Linux workstation, or Windows workstation with [Windows Subsystem for Linux (WSL)](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux) installed. Scripts referenced can typically be found in the [PSU-CIDD-MaSim-Support repository](https://github.com/bonilab/PSU-CIDD-MaSim-Support) and prior to running the scripts it will be necessary to add them to the `PATH`.
 
-## GIS Data
+## Geographic Data
 
 By design the configuration of the simulation is flexible in terms what must be supplied as raster data and what can be supplied as a single value. In general, the following raster files are required to run the model spatially:
 - Beta – The beta parameter determines, in part, how many additional infections occur as a result of a single infection and ultimately influences the *Pf*PR. These values must be calculated for each country based upon the inputs.
@@ -15,6 +15,23 @@ The following raster files a may or may not be needed depending upon the configu
 - Travel time or friction surface: Depending upon the movement algorithm selected, a travel time or friction surface is needed to ensure that individuals move in a reasonable fashion.
 
 Once all of the GIS data has been acquired it and aligned, it is necessary to convert it to an [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm) (`asc` extension) to be loaded into the model. 
+
+### Intitial Population
+
+Typically the simuation is configured to use a constant [crude birth rate](https://databank.worldbank.org/metadataglossary/gender-statistics/series/SP.DYN.CBRT.IN) during exection, which in turn requires that an *initial popuation raster* be produced. Assuming a reference popuation of 1,000 indivdiuals, the initital popuation can be calclauted by applying the equation: 
+
+<p align="center">$p' = \frac{1000}{\left( 1 + \frac{CBR}{1000}\right) ^n}$</p>
+
+Where *CBR* is the crude birth rate, *n* is the number of years prior to calibration year, and *p'* is the initial popuation. The cell mulitplier can then be calculated as:
+
+<p align="center">$multiplier = \frac{1000 - p'}{1000}$</p>
+
+The resulting *multiplier* can then be applied using the Raster Calculator functionality in geographic information system (GIS) software (e.g., [ArcGIS Pro](https://www.esri.com/en-us/arcgis/products/arcgis-pro/overview), [GRASS GIS](https://grass.osgeo.org/), or [QGIS](https://qgis.org/en/site/)) where it is recomended that the floating point result be rounded up to the nearest interger value (i.e., [Round Up](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/round-up.htm) function in ArcGIS Pro) to ensure that cells with a population always maintain a population. Once applied, the results can be validated by applying the equation:
+
+<p align="center">$projected = population * \left( 1 + \frac{CBR}{1000} \right)^n$</p>
+
+Where *projected* is the projected popuation *n* years after the intitial *population* for the given crude brith rate. Depending upon the number of digits used when applying the *multiplier* there may be some difference in the projected popuation versus the reference popuation and while ±1 individual is accepted for large popuations, the result can typically be corrected by increasing the number of digits in the *multiplier*. For cells with a small reference popuation (ex., $< 10$) in the focus should be on ensuring that a population remains in the cell since low popuation cells are subject to high variance in malaria dynamics during model execution.
+
 
 ## Database Preparations 
 
