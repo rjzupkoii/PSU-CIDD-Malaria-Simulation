@@ -278,7 +278,9 @@ void ModelDataCollector::perform_yearly_update() {
     }
   } else if (Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) {
     for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      auto eir = (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
+      // Make sure the divisor is not zero before calculating the EIR
+      auto eir = (person_days_by_location_year_[loc] == 0) ? 0 :
+              (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
       EIR_by_location_year_[loc].push_back(eir);
 
       //this number will be changed whenever a birth or a death occurs
@@ -316,7 +318,8 @@ void ModelDataCollector::calculate_eir() {
       // Collect data for less than 1 year, note that total_time_in_years maybe <= 0 if 
       // the model time is still before collection should take place
       const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / static_cast<double>(Constants::DAYS_IN_YEAR());
-      double eir = (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
+      auto eir = (person_days_by_location_year_[loc] == 0) ? 0 :
+              (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
       eir = eir / total_time_in_years;
       EIR_by_location_[loc] = eir;
 

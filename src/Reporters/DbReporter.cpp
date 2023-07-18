@@ -17,12 +17,6 @@
 #include "Population/Population.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
 
-// Macro to check to see if a value is NaN, report if it is, and update the value as needed
-#define check_nan(value) if (std::isnan(value)) VLOG(1) << "NaN caught: " << #value; value = std::isnan(value) ? 0 : value;
-
-// Macro to check if a value is infinite, report if it is, and update the value as needed
-#define check_inf(value) if (std::isinf(value)) VLOG(1) << "Inf caught " << #value; value = std::isinf(value) ? -9999 : value;
-
 pqxx::connection* DbReporter::get_connection() const {
     // Getting a connection is straightforward, so this function is largely intended to warp retry functionality
     int retry_count = 0;
@@ -338,21 +332,6 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         auto pfpr_under5 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 0, 5) * 100.0;
         auto pfpr_2to10 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100.0;
         auto pfpr_all = Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100.0;
-       
-        // Make make sure we have valid bounds
-        //
-        // TODO odds are these can be deleted once we have robust unit testing in place to validate the MDC
-        check_nan(eir)
-        check_inf(eir)
-
-        check_nan(pfpr_under5)
-        check_inf(pfpr_under5)
-
-        check_nan(pfpr_2to10)
-        check_inf(pfpr_2to10)
-        
-        check_nan(pfpr_all)
-        check_inf(pfpr_all)
 
         query.append(fmt::format(INSERT_SITE_ROW,
             id,
