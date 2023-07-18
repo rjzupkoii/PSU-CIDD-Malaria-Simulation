@@ -7,4 +7,4 @@ rmd_files: [
   "chapters/DxGGenerator.Rmd",
   
   # Appendix starts here
-  "chapters/encoding.Rmd"]
+  "appendices/encoding.Rmd"]
