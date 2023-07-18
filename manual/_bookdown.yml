@@ -1,1 +1,10 @@
-rmd_files: ["index.Rmd", "chapters/calibration.Rmd", "chapters/encoding.Rmd"]
+rmd_files: [
+  # Configuration
+  "index.Rmd", 
+  
+  # Main chapters
+  "chapters/calibration.Rmd",
+  "chapters/DxGGenerator.Rmd",
+  
+  # Appendix starts here
+  "chapters/encoding.Rmd"]

@@ -1,0 +1,28 @@
+# DxG Generator
+
+The DxG Generator is used to calculate the efficacy of therapies in the simulation based upon the therapy's drug combination and the genotypes that are present in the YAML file for a given region. While this tool uses the same  simulation code base, the executable is separate from the primary simulation (i.e., `masim`) and can be invoked as follows:
+
+`./DxGGenerator -i [input]`
+
+With the full scope of options supported:
+
+    -g                  Get the efficacies for a range of genotypes
+    -h / --help         Display the help menu
+    -i / --input        The YAML configuration to read
+    -t                  Get the efficacies for a range of therapies
+    --ec50              EC50 for AS on C580 only
+    --iov               AS inter-occasion-variability
+    --iiv               AS inter-individual-variability
+
+Note that the DxG Generator is very sensitive to the YAML configuration since the *full* configuration is still loaded prior to the efficacy calculations. As such it is recommended that a second, simplified (i.e., non-spatial) configuration be prepared for the DxG Generator. The tool is also only comparable with single therapies (i.e., `SFTStrategy`), which can be used in the configuration as follows:
+
+```YAML
+strategy_db:
+  0:
+    name: SFTStrategy
+    type: SFT
+    therapy_id: 0
+initial_strategy_id: 0
+```
+
+Additionally, the DxG Generator was written with the assumption that `log_parasite_density_detectable` represents the lower detectable limit for a careful clinical study, typically 10 parasites per microliter of blood. However, if `log_parasite_density_detectable_pfpr` is set, then that value will be used instead. Since the *Pf*PR is driven by the more common detectable range of 50 to 100 parasites per microliter of blood, this will result in the efficacies returned being higher than expected. As such, it is recommended that the `log_parasite_density_detectable_pfpr` setting be deleted from the YAML configuration when it is prepared for the DxG Generator.
