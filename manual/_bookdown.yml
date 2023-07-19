@@ -3,6 +3,7 @@ rmd_files: [
   "index.Rmd", 
   
   # Main chapters
+  "chapters/introduction.Rmd",
   "chapters/calibration.Rmd",
   "chapters/DxGGenerator.Rmd",
   
