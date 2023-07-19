@@ -1,14 +1,8 @@
-
 # MaSim Configuration File
-<!-- Note that we presume this will mostly be viewed on GitHub, so TeX and LaTeX is used in some places for rendering equations. Visual Studio Code will also render correctly, but support is uneven on other IDEs. -->
 
-# Introduction
-
-The malaria simulation (MaSim) uses [YAML](https://yaml.org/) to load configuration settings for the simulation. While the configuration was previously forward compatible (i.e., older files would work with newer versions), with the transition to version 4.0 new nodes were added or deprecated that have resulted in a divergence between 3.x and 4.0 onwards. While the absence of nodes implies version 4.0 or greater, care should be taken to ensure it is clear which version a given configuration is intended for.
+The simulation uses [YAML](https://yaml.org/) to load configuration settings for the simulation. While the configuration was previously forward compatible (i.e., older files would work with newer versions), with the transition to version 4.0 new nodes were added or deprecated that have resulted in a divergence between 3.x and 4.0 on wards. While the absence of nodes implies version 4.0 or greater, care should be taken to ensure it is clear which version a given configuration is intended for.
 
 As a matter of convention, the YAML key is generally indicated with **bold** text. The data type (e.g., integer, string, etc.) or the possible values are indicated in parentheses following the key name with any default indicated in **bold**. Generally this document is organized such that headings are organized by operational impact upon the simulation, followed by simple key-value pairs as the first entry in each section, followed by more complex entities as subheadings. Within subsections, the YAML keys should be in alphabetical order, although closely coupled keys (e.g., `number_of_age_classes` and `age_structure`) will break this pattern with the first key that should be read appearing first.
-
-# Nodes
 
 ## Model Operation 
 The following nodes govern how the model executes in terms of simulation execution.
@@ -41,7 +35,6 @@ The following nodes contain the settings for the simulation.
 
 **start_collect_data_day** (integer) : The number of model days that should elapse before data collection begins (e.g., number of clinical episodes, number of deaths, etc.)
 
-<!-- Double check the NFT code to see how that is being done! -->
 **start_of_comparison_period** (date string, YYYY/mm/dd) : The calendar date upon which the simulation should start calculating the number of treatment failures (NTF), artemisinin monotherapy usage (AMU), and useful therapeutic life (UTL). Note that as of version 4.0 the AMU results are considered to be *deprecated* and will be removed at a later date.
 
 **starting_date** (date string, YYYY/mm/dd) : The start date of the simulation, model days elapsed will be indexed from this date.\
@@ -146,19 +139,36 @@ To Be Written.
 **transmission_parameter** (float) : Governs how likely malaria is to be transmitted to a naive individual in the sporozoite challenge.
 
 ### parasite_density_level
-The `parasite_density_level` setting contains several sub-values that govern individual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per μl is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/μl) while 50 per μl is the lower bounds for detection under field conditions (50 - 100 parasites/μl) ([Wongsrichanalai et al. 2007](#Wongsrichanalai2007)). Generally, a higher detection limit for the <em>Pf</em>PR will require a higher transmission for a given <em>Pf</em>PR than a lower detection level. 
+The `parasite_density_level` setting contains several sub-values that govern individual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per $\mu$l is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/$\mu$l) while 50 per $\mu$l is the lower bounds for detection under field conditions (50 - 100 parasites/$\mu$l) ([Wongsrichanalai et al. 2007](#Wongsrichanalai2007)). Generally, a higher detection limit for the <em>Pf</em>PR will require a higher transmission for a given <em>Pf</em>PR than a lower detection level. 
 
 ```YAML
 parasite_density_level:
-  log_parasite_density_cured:          -4.699    # corresponds to 100 total parasites (0.00002 per μl)
-  log_parasite_density_from_liver:     -2.000    # corresponds to 50,000 total parasites (0.01 per μl)
-  log_parasite_density_asymptomatic:    3        # corresponds to 1,000 parasites per microliter of blood
-  log_parasite_density_clinical:        4.301    # corresponds to 20,000 parasites per microliter of blood (total 10^11)
-  log_parasite_density_clinical_from:   3.301    # corresponds to 2,000 parasites per microliter of blood (total 10^10)
-  log_parasite_density_clinical_to:     5.301    # corresponds to 200,000 parasites per microliter of blood (total 10^12)
-  log_parasite_density_detectable:      1.000    # corresponds to 10 parasites per microliter of blood
-  log_parasite_density_detectable_pfpr: 1.699    # corresponds to 50 parasites per microliter of blood
-  log_parasite_density_pyrogenic:       3.398    # corresponds to 2,500 parasites per microliter of blood
+  # corresponds to 100 total parasites (0.00002 per ul)
+  log_parasite_density_cured:          -4.699
+  
+  # corresponds to 50,000 total parasites (0.01 per ul)
+  log_parasite_density_from_liver:     -2.000
+  
+  # corresponds to 1,000 parasites per microliter of blood
+  log_parasite_density_asymptomatic:    3
+  
+  # corresponds to 20,000 parasites per microliter of blood (total 10^11)
+  log_parasite_density_clinical:        4.301
+  
+  # corresponds to 2,000 parasites per microliter of blood (total 10^10)
+  log_parasite_density_clinical_from:   3.301    
+  
+  # corresponds to 200,000 parasites per microliter of blood (total 10^12)
+  log_parasite_density_clinical_to:     5.301    
+  
+  # corresponds to 10 parasites per microliter of blood
+  log_parasite_density_detectable:      1.000    
+  
+  # corresponds to 50 parasites per microliter of blood
+  log_parasite_density_detectable_pfpr: 1.699    
+  
+  # corresponds to 2,500 parasites per microliter of blood
+  log_parasite_density_pyrogenic:       3.398    
 ```
 
 **log_parasite_density_cured** (double) : When an individual is considered to be **cured** of a specific parasite colony. \
@@ -226,8 +236,10 @@ drug_db:
     half_life: 0.0
     maximum_parasite_killing_rate: 0.999
     n: 25
-    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4]
-    age_specific_drug_absorption: [0.7,0.7,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,1.0,1.0,1.0,1.0,1.0]
+    age_specific_drug_concentration_sd: [0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,
+                                         0.4,0.4,0.4,0.4,0.4,0.4]
+    age_specific_drug_absorption: [0.7,0.7,0.85,0.85,0.85,0.85,0.85,0.85,0.85,
+                                   0.85,1.0,1.0,1.0,1.0,1.0]
     mutation_probability: 0.005
     affecting_loci: [2]
     selecting_alleles: [[1]]
@@ -268,7 +280,8 @@ therapy_db:
     therapy_ids: [0, 1]
     regimen: [1, 5]
 
-  # Artemisinin combination therapy (ACT) - artemether–lumefantrine (AL), five days with specified compliance
+  # Artemisinin combination therapy (ACT) - artemether–lumefantrine (AL), 
+  # five days with specified compliance
   3:
     drug_id: [0, 1]
     dosing_days: [5]

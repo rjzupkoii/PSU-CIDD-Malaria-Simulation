@@ -15,5 +15,6 @@ rmd_files: [
 
   # Appendix starts here
   "appendices/encoding.Rmd",
-  "appendices/reporters.Rmd"
+  "appendices/reporters.Rmd",
+  "appendices/configuration.Rmd"
   ]
