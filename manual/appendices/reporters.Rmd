@@ -1,24 +1,24 @@
-# MaSim Reporters
+# Reporters
 
-The malaria simulation (MaSim) exposes a number of different reporters that can be specified via the command line switch `-r` and listed via the `--lr` switch. Reporters currently write data either to a text file (CSV or TSV formatted) or to the database backend. 
+The simulation exposes a number of different reporters that can be specified via the command line switch `-r` and listed via the `--lr` switch. Reporters currently write data either to a text file (CSV or TSV formatted) or to the database back-end. 
 
 *Primary* reporters write extensive amounts of information from the simulation, in contrast, *secondary* reporters tend to be limited in either what is reported, or have limitations on their use.  
 
-# Reporter Types
+## Reporter Types
 
-### Database Reporter (DbReporter)
+### Database Reporter (`DbReporter`)
 Primary Reporter \
 Output: Database
  
-The `DbReporter`, short for Database Reporter, uses the PostgreSQL database as the backend and respects the `record_genome_db` setting in the configuration file when determining if data genotype data should be stored. If genotype data is stored, it is aggregated at the cellular level and can result in large databases.
+The `DbReporter`, short for Database Reporter, uses the PostgreSQL database as the back-end and respects the `record_genome_db` setting in the configuration file when determining if data genotype data should be stored. If genotype data is stored, it is aggregated at the cellular level and can result in large databases.
 
-### Database Reporter by District (DbReporterDistrict)
+### Database Reporter by District (`DbReporterDistrict`)
 Primary Reporter \
 Output: Database
 
 The `DbReporterDistrict` is a derivative of the `DbReporter`, except genotype data will be aggregated to the district level.
 
-### Genotype Carriers Reporter (GenotypeCarriers)
+### Genotype Carriers Reporter (`GenotypeCarriers`)
 Specialist Reporter \
 Output: Database
 
@@ -31,24 +31,24 @@ ALTER TABLE sim.monthlysitedata
 ADD genotypecarriers integer;
 ```
 
-### Monthly Reporter (MonthlyReporter)
+### Monthly Reporter (`MonthlyReporter`)
 Primary Reporter \
 Output: TSV File
 
 The Monthly Reporter `MonthlyReporter` is the original reporter used by the simulation to report the simulation status and produces two tab separated values (TSV) file as described below.
 
-### Seasonal Immunity Reporter (SeasonalImmunity)
+### Seasonal Immunity Reporter (`SeasonalImmunity`)
 Specialist Reporter \
 Output: CSV File
 
 The Seasonal Immunity Reporter (`SeasonalImmunity`) is a specialist reporter that scans all locations and individuals and aggregates summary data at the climatic zone level. This is useful for determining the role that seasonal transmission patterns has upon the genotype evolution and immune response to the parasite. The reporter is hard coded for the first allele mutation on the second locus, so while it reports 580Y in the output, 561H could be captured, depending upon model configuration.
 
-# Reporter Data Files
+## Reporter Data Files
 
-## Monthly Reporter
+### Monthly Reporter
 The `MonthlyReporter` generates two data files in tab separated values (TSV) format with group separators indicated by the sentinel value `-1111` where *n* is a zero-indexed location id.
 
-**monthly_reporter_*n*.txt** - Summary data for the model generated at the end of each simulated month.
+Table: (\#tab:monthlyReporter) **monthly_reporter_*n*.txt** - Summary data for the model generated at the end of each simulated month.
 
 | Block | Column Number(s) | Description |
 | ---|--- | --- |
@@ -62,9 +62,9 @@ The `MonthlyReporter` generates two data files in tab separated values (TSV) for
 | | 10 | Group separator |
 | EIR and PfRP | 1 + (*n* * 5) | EIR by location per year | 
 | | 2 + (*n* * 5) | Group separator |
-| | 3 + (*n* * 5) | Blood slide prevalence, PfPR < 5 |
-| | 4 + (*n* * 5) | Blood slide prevalence, PfPR 2 - 2 | 
-| | 5 + (*n* * 5) | Blood slide prevalence, PfPr all |
+| | 3 + (*n* * 5) | Blood slide prevalence, *Pf*PR < 5 |
+| | 4 + (*n* * 5) | Blood slide prevalence, *Pf*PR 2 - 2 | 
+| | 5 + (*n* * 5) | Blood slide prevalence, *Pf*Pr all |
 | Infections by Location | 1 | Group separator |
 | | 2 + *n* | Number of new infections by location |
 | Treatments by Location | 1 | Group separator |
@@ -74,7 +74,7 @@ The `MonthlyReporter` generates two data files in tab separated values (TSV) for
 | Genotype Frequency | 1 | Group separator |
 | | *...* | See genotype frequency discussion
 
-**summary_reporter_*n*.txt** Summary that is generated after the model has completed execution.
+Table: (\#tab:summaryReporter) **summary_reporter_*n*.txt** Summary that is generated after the model has completed execution.
 
 | Block | Column Number(s) | Description |
 | --- | --- | --- |
@@ -84,14 +84,14 @@ The `MonthlyReporter` generates two data files in tab separated values (TSV) for
 |  | 4 | Population size |
 | EIR and PfRP | 1 + (*n* * 5) | EIR by location per year | 
 | | 2 + (*n* * 5) | Group separator |
-| | 3 + (*n* * 5) | Blood slide prevalence, PfPR < 5 |
-| | 4 + (*n* * 5) | Blood slide prevalence, PfPR 2 - 2 | 
-| | 5 + (*n* * 5) | Blood slide prevalence, PfPr all |
+| | 3 + (*n* * 5) | Blood slide prevalence, *Pf*PR < 5 |
+| | 4 + (*n* * 5) | Blood slide prevalence, *Pf*PR 2 - 2 | 
+| | 5 + (*n* * 5) | Blood slide prevalence, *Pf*Pr all |
 | Summary II | 1 | Treatment strategy id |
 | | 2 | Percent treatment failures per year | 
 
 
-## Genotype Frequency
+### Genotype Frequency
 Genotype frequency is a complex entry that follows a similar output structure, but is generated differently depending upon the approach selected.
 
 **Genotype frequency, by weighted number of parasite-positive individuals**
