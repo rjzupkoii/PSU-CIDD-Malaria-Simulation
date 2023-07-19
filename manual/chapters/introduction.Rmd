@@ -1,3 +1,5 @@
+\newpage
+
 # Introduction
 
 The malaria simulation, or MaSim, is a stochastic, [individually-based model](https://en.wikipedia.org/wiki/Agent-based_model) (or individually-based micro simulation) designed to investigate the evolution of antimalarial resistance by the *[Plasmodium falciparum](https://en.wikipedia.org/wiki/Plasmodium_falciparum)* in the presence of an antimalarial therapy given to a symptomatic individual, with transmission driven by a force of infection model. The simulation may be run as either a regionally-based model or a geographically-based model. While both approaches include the same levels of population heterogeneity, when run as a regionally-based model spatial heterogeneity (i.e., varying prevalence and transmission intensity) is limited whereas the geographically-based model allows for heterogeneity to be modeled at the configuration resolution of the simulation (e.g., 25 km^2^).

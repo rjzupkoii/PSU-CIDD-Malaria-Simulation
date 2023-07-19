@@ -4,7 +4,6 @@ author: "Robert Zupko"
 date: "`r Sys.Date()`"
 
 site: "bookdown::bookdown_site"
-<!-- documentclass: book -->
 output:
   bookdown::pdf_document2:
     toc: yes

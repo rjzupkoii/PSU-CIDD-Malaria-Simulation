@@ -10,8 +10,9 @@ rmd_files: [
   "chapters/DxGGenerator.Rmd",
 
   # Development
+  "chapters/development.Rmd",
   "chapters/database.Rmd",
-    
+
   # Appendix starts here
   "appendices/encoding.Rmd",
   "appendices/reporters.Rmd"

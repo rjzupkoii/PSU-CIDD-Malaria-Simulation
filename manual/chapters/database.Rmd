@@ -1,5 +1,3 @@
-# (PART\*) Development {-}
-
 # Database Infrastructure
 
 Due to the complexity of data storage requirements for simulations involving multiple cells, a database is provided through the `dbreporter` reporter class. The schema is outlined below and was developed against PostgreSQL due to the high storage requirements. Note that the `notes` table presume the usage of the [MaSimLIMS](https://github.com/rjzupkoii/MaSimLIMS) and can be removed if not needed with no impact upon the simulation.     
