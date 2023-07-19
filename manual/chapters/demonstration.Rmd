@@ -1,22 +1,24 @@
 # Demonstration Configuration
 
-The configuration in this directory (`demo.yml`) is configured for a single cell and derives the majority of the settings from the Burkina Faso project, allowing it to emulate a realistic starting point for a model. In addition to the configuration file, there is also a basic raster file (`population.asc`) which informs the model on how to create a single cell with 1,000 individuals in it. The raster files used by the simulation are compliant with the [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm) and can be edited using a text editor, or appropriate geographic information system (GIS) software.
+The configuration included in the `demo` directory (`demo.yml`) is configured for a single cell and derives the majority of the settings from the Burkina Faso project, allowing it to emulate a realistic starting point for a model. In addition to the configuration file, there is also a basic raster file (`population.asc`) which informs the model on how to create a single cell with 1,000 individuals in it. The raster files used by the simulation are compliant with the [Esri ASCII raster format](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/raster-and-images/esri-ascii-raster-format.htm) and can be edited using a text editor, or appropriate geographic information system (GIS) software.
 
-In order to use this demonstration code you first need to build the simulation using the [directions outlined in developer.md](../developer.md#building), after which is recommended that you copy the binary (`MaSim`) and contents of this directory (e.g., `demo.yml`, `population.asc`) into the same location. The simulation can then be executed using the following command:
+In order to use this demonstration code you first need to build the simulation using the guide outlined in [Development], after which is recommended that you copy the binary (`masim`) and contents of the `demo` directory (i.e., `demo/demo.yml` and `demo/population.asc`) into the same location. The simulation can then be executed using the following command:
 
 `./MaSim -i demo.yml -r CellularReporter`
 
-Using the `CellularReporter` will generate a comma separated values (CSV) file in the directory containing model output for select parameters such as population, *Pf*PR<sub>2-10</sub>, and infected individuals to name a few. Running the simulation a second time will cause this file to be overwritten unless the job number (`-j`) switch is used. The `CellularReporter` is intended for models with only one location (i.e., cell) and will generate an error if multiple cells are present in the configuration.
+Using the `CellularReporter` will generate a comma separated values (CSV) file in the directory containing model output for select parameters such as population, *Pf*PR~2-10~, and infected individuals to name a few. Running the simulation a second time will cause this file to be overwritten unless the job number (`-j`) switch is used. The `CellularReporter` is intended for models with only one location (i.e., cell) and will generate an error if multiple cells are present in the configuration.
 
 ## Column Descriptions
 
 The following tables are present in the output from the `CellularReporter`:
 
+Table: (\#tab:demoCellularReporter) Column format for the `CellularReporter` 
+
 | Column | Description |
 | --- | --- |
 | DaysElapsed	| Model days elapsed, should correspond to the length of months. |
 | Population | Total population in the simulation. |
-| PfPR2to10	| The *Plasmodium Falciparum* parasite prevalence for individuals aged 2 to 10 years. |
+| PfPR2to10	| The *Plasmodium falciparum* parasite prevalence for individuals aged 2 to 10 years. |
 | TreatmentCoverage | The current treatment coverage in the simulation as an average for the under-5 and over-5 groups. |
 | InfectedIndividuals	| The number of individuals in the simulation who have *any* level of parasitemia. |
 | ClinicalIndividuals	| The number of individuals in the simulation who have a parasitemia level of clinical symptoms to manifest. |
@@ -36,7 +38,7 @@ The following tables are present in the output from the `CellularReporter`:
 
 ## Example Console Output
 
-<pre>
+```
 [INFO] [default] MaSim version 4.0, experimental
 [INFO] [default] Model initializing...
 [INFO] [default] Read input file: demo.yml
@@ -65,4 +67,4 @@ The following tables are present in the output from the `CellularReporter`:
 [INFO] [default] Model finished!
 [INFO] [default] Final population: 1412
 [INFO] [default] Elapsed time (s): 54.991
-</pre>
+```
