@@ -2,11 +2,16 @@ rmd_files: [
   # Configuration
   "index.Rmd", 
   
-  # Main chapters
+  # Introduction
   "chapters/introduction.Rmd",
+
+  # Simulation
   "chapters/calibration.Rmd",
   "chapters/DxGGenerator.Rmd",
-  
+
+  # Development
+  "chapters/database.Rmd",
+    
   # Appendix starts here
   "appendices/encoding.Rmd",
   "appendices/reporters.Rmd"
