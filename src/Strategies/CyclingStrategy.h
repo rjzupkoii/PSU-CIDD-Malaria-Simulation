@@ -1,8 +1,7 @@
 /* 
- * File:   CyclingStrategy.h
- * Author: nguyentran
+ * CyclingStrategy.h
  *
- * Created on June 4, 2013, 11:10 AM
+ * Define the class for the drug cycling strategy.
  */
 
 #ifndef CYCLINGSTRATEGY_H
@@ -22,8 +21,7 @@ class CyclingStrategy : public IStrategy {
 
   CyclingStrategy();
 
-  //    CyclingStrategy(const CyclingStrategy& orig);
-  virtual ~CyclingStrategy();
+  ~CyclingStrategy() override;
 
   void add_therapy(Therapy *therapy) override;
 
@@ -43,4 +41,4 @@ class CyclingStrategy : public IStrategy {
 
 };
 
-#endif /* CYCLINGSTRATEGY_H */
+#endif
