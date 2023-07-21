@@ -10,8 +10,9 @@ This directory contains the files necessary to build the Malaria Simulation manu
 **Directories / Folders**\
 `chapters` - Contains the chapters of the manual, one chapter per file.\
 `appendices` - Contains the appendices of the manual, one appendix per file.\
+`tex` - Custom TeX files used to configure the layout of the manual.
 
 Additionally, the `demo` and `examples` directories contain the code for the simulation demo and example configuration YAML files respectively.
 
 ## Building the Manual
-The easiest way to edit and build the manual is via [RStudio](https://posit.co/products/open-source/rstudio/) which includes support for source and visual editing along with partial builds of chapters via the **Knit** menu option. The full manual can be built via the **Build** tab, then the **Build Book** command (see figure). The newly compiled PDF will overwrite the `manual.pdf` file in the root of this directory.
+The easiest way to edit and build the manual is via [RStudio](https://posit.co/products/open-source/rstudio/) which includes support for source and visual editing along with partial builds of chapters via the **Knit** menu option. The full manual can be built via the **Build** tab, then the **Build Book** command. The newly compiled PDF will overwrite the `manual.pdf` file in the root of this directory.

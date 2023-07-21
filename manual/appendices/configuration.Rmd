@@ -289,16 +289,59 @@ therapy_db:
     pr_completed_days: [0.1, 0.1, 0.2, 0.2, 0.4]
 ```
 
-***Simple Therapies*** \
+#### Simple Therapies
 **drug_id** (integer array) : One or more integers that correspond to the defined identification numbers (i.e., array index) in the `drug_db`. \
 **dosing_days** (integer) : The number of days that the drug combination should be given for. \
 **pr_completed_days** (float array) : (*Optional, Version 4.1.2*) The probability that the individual will comply with the course of treatment where 1 indicates they will always take it; otherwise, 0 < _n_ < 1 is the probability that they will stop on that day. In the event that the field is not supplied then it is assumed that the individual will always comply with the therapy.
 
-***Complex Therapies*** \
+#### Complex Therapies
 Complex therapies consist of multiple simple therapies that are dosed over several days and may contain gaps in the dosing. Prior to Version 4.1.1 patient compliance with the therapy was determined by the `p_compliance` which generally assumed full compliance with the course of treatment. With complex therapies, noncompliance is currently not support and such configurations will produce an error.  
 
 **therapy_ids** (integer array) : One or more integers that correspond to the defined therapies. \
 **regimen** (integer array) : A one-index list of the days that the corresponding therapy should be given.
+
+### strategy_db and initial_strategy_id
+This setting describes the treatment strategy applied when an individual presents with a clinical case of malaria and typically consists of at least two strategies: an initial 'baseline' that is consistent with the national first-line therapy and one or more interventions that represent the various drug policy approaches that are being applied. Following model initialization and burn-in following the strategy defined in `initial_strategy_id`, a new strategy can be employed using the `change_treatment_strategy` which takes effect upon execution of the event. 
+
+Within the `strategy_db` the indexing should begin at zero although the `initial_strategy_id` allows for any defined strategy to be used. The `type` field used for defining the strategies comes from the `IStrategy::StrategyTypeMap` and are thus case-sensitive. Failure to supply a valid strategy will result in the `StrategyBuilder` logging a `WARNING` before returning `nullptr`.
+
+```YAML
+strategy_db:
+  0:
+    name: Baseline
+    type: MFT
+    therapy_ids: [ 0 ]
+    distribution: [ 1 ]
+  1:
+    name: ExampleMFT
+    type: MFT
+    therapy_ids: [ 1, 2 ]    
+    distribution: [ 0.5, 0.5 ]
+  2:
+    name: ExampleCycling
+    type: Cycling
+    therapy_ids: [ 1, 2 ]
+    cycling_time: 90
+initial_strategy_id: 0
+```
+
+**initial_strategy_id** (integer) : The integer index of the treatment strategy to use from day zero of the simulation.
+
+#### Cycling Strategy
+A cycling strategy calls for the rotation between two or more single first-line therapies (e.g., artemether–lumefantrine and artesunate–amodiaquine) on a strict fixed schedule (e.g., every 90 days as opposed to quarterly). As implemented the simulation supports an unlimited number of days and will return to the first therapy defined in `therapy_ids`. Bookkeeping related to when cycling events occur are automatically managed by the simulation as part of the `Model::daily_update` function.
+
+**name** (string) : A string name used to refer to the treatment in console output and logs. \
+**type** (string) : Always `Cycling` \
+**therapy_ids** (integer array) : The therapies to deploy, based upon the index of the therapies defined in `therapy_db`. \
+**cycling_time** (integer) : The number of days that a therapy is used before switching.
+
+#### Multiple First Line Therapies (MFT)
+The multiple first-line therapies (MFT) approach calls for two or more therapies to be deployed nationally with an individual randomly receiving one at time of treatment, which they then use for the entire course of treatment. As a matter of convention, when a single first-line therapy is deployed, the MFT strategy *should* still be used in the configuration over the deprecated `SFT` (single first-line therapy) strategy and the `MFTStrategy` class works correctly when only a single therapy is defined.
+
+**name** (string) : A string name used to refer to the treatment in console output and logs. \
+**type** (string) : Always `MFT` \
+**therapy_ids** (integer array) : The therapies that may be given, based upon the index of the therapies defined in `therapy_db`. \
+**distribution** (float array) : The probability that an individual will receive the therapy corresponding to the same index where the total of all values provided *must* equal one.
 
 ## Policy Interventions
 While most of the policy interventions can be implemented using the therapies deployed, and switching them via events such as `change_treatment_strategy`, some of the more complex strategies require more in-depth configuration or are closely coupled with how the simulation operates.
@@ -358,6 +401,21 @@ events:
 
 **day** (date string, YYYY/mm/dd) : the date when the update will first occur. \
 **rate** (float) : the rate of reduction in the coverage for the cells.
+
+### change_treatment_strategy
+Change the treatment strategy that is currently deployed in the simulation to the one defined in `strategy_db` with the given index. Simple error checking is performed upon model initialization and the `strategy_id` must be within bounds of the `strategy_db`.
+
+```YAML
+events:
+  - name: change_treatment_strategy
+    info:
+      - day: 2024/1/1
+        strategy_id: 1
+```
+
+**day** (date string, YYYY/mm/dd) : The date when the update will first occur. \
+**strategy_id** (integer) : The index of the strategy defined in `strategy_db`.
+
 
 ### importation_periodically_random_event
 (*Version 4.1*) Over the course of the month indicated (January:1 - December:12) introduce the infection into the model at a random location, selected by a draw that is weighted by the population. Each day an infection is introduced based upon a uniform draw against `count / [days in month]`. Once started, this event continues until model termination.

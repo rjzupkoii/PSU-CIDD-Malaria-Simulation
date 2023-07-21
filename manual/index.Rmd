@@ -6,5 +6,7 @@ date: "`r Sys.Date()`"
 site: "bookdown::bookdown_site"
 output:
   bookdown::pdf_document2:
+    includes:
+      in_header: "tex/parahdr.tex"
     toc: yes
 ---
