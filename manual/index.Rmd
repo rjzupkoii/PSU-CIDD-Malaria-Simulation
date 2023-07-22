@@ -1,12 +1,22 @@
 ---
-title: "Malaria Simulation (MaSim)"
-author: "Robert Zupko"
-date: "`r Sys.Date()`"
-
 site: "bookdown::bookdown_site"
 output:
   bookdown::pdf_document2:
     includes:
       in_header: "tex/parahdr.tex"
     toc: yes
+---
+
+```{r, echo = FALSE}
+library(stringr)
+version <- paste(readLines("../src/version.h", warn = FALSE), collapse = " ")
+version <- str_match(version, '"(.*)"')[1, 2]
+```
+
+---
+title: |
+    | Malaria Simulation (MaSim)
+    | Version: `r version`
+author: "Robert Zupko"
+date: "`r Sys.Date()`"
 ---
