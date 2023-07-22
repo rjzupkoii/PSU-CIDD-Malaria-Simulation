@@ -6,6 +6,7 @@
 .DS_Store
 
 # Ignore R artifacts
+.RData
 .Rhistory
 .Rproj.user
 _book
