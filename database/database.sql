@@ -148,6 +148,7 @@ CREATE TABLE sim.configuration
     cellsize integer NOT NULL DEFAULT '-1'::integer,
     studyid integer,
     CONSTRAINT configuration_pkey PRIMARY KEY (id),
+    CONSTRAINT configuration_md5_unique UNIQUE (md5, studyid),
     CONSTRAINT configuration_studyid_fk FOREIGN KEY (studyid)
         REFERENCES sim.study (id) MATCH SIMPLE
         ON UPDATE NO ACTION

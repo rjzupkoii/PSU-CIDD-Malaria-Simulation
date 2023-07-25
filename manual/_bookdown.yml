@@ -13,12 +13,15 @@ rmd_files: [
 
   # Simulation
   "chapters/calibration.Rmd",
-  "chapters/demonstration.Rmd",
+  "chapters/execution.Rmd",
   "chapters/DxGGenerator.Rmd",
 
   # Development
   "chapters/development.Rmd",
   "chapters/database.Rmd",
+
+  # Demonstration
+  "chapters/demonstration.Rmd",
 
   # Appendix starts here
   "appendices/encoding.Rmd",
