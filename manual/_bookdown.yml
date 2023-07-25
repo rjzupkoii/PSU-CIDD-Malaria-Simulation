@@ -1,0 +1,30 @@
+# Configuration options
+book_filename: "manual.Rmd"
+delete_merged_file: true
+output_dir: "."
+
+# Set the order of the chapters
+rmd_files: [
+  # Configuration
+  "index.Rmd", 
+  
+  # Introduction
+  "chapters/introduction.Rmd",
+
+  # Simulation
+  "chapters/calibration.Rmd",
+  "chapters/execution.Rmd",
+  "chapters/DxGGenerator.Rmd",
+
+  # Development
+  "chapters/development.Rmd",
+  "chapters/database.Rmd",
+
+  # Demonstration
+  "chapters/demonstration.Rmd",
+
+  # Appendix starts here
+  "appendices/encoding.Rmd",
+  "appendices/reporters.Rmd",
+  "appendices/configuration.Rmd"
+  ]

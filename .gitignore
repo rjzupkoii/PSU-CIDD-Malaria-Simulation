@@ -5,6 +5,12 @@
 .vs
 .DS_Store
 
+# Ignore R artifacts
+.RData
+.Rhistory
+.Rproj.user
+_book
+
 # Ignore build artifacts
 build*
 bin
@@ -19,3 +25,4 @@ documentation/diagrams/*.~vsdx
 out
 monthly_data\.txt
 reporter\.txt
+

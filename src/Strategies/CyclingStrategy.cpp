@@ -1,8 +1,7 @@
 /* 
- * File:   CyclingStrategy.cpp
- * Author: nguyentran
- * 
- * Created on June 4, 2013, 11:10 AM
+ * CyclingStrategy.cpp
+ *
+ * Implement the class for the drug cycling strategy.
  */
 
 #include "CyclingStrategy.h"
@@ -23,21 +22,16 @@ void CyclingStrategy::add_therapy(Therapy *therapy) {
 }
 
 void CyclingStrategy::switch_therapy() {
-  //    std::cout << "Switch from: " << index_ << "\t - to: " << index_ + 1;
   index++;
-  index %= therapy_list.size();
+  index %= static_cast<int>(therapy_list.size());
   Model::DATA_COLLECTOR->update_UTL_vector();
 
-  // TODO: cycling_time should be match with calendar day
   next_switching_day = Model::SCHEDULER->current_time() + cycling_time;
   LOG(INFO) << date::year_month_day{Model::SCHEDULER->calendar_date}
-            << ": Cycling Strategy Swith Therapy to: " << therapy_list[index]->id();
+            << ": Cycling Strategy Switch Therapy to: " << therapy_list[index]->id();
 }
 
 Therapy *CyclingStrategy::get_therapy(Person *person) {
-
-  //int index = ((Global::scheduler->currentTime - Global::startTreatmentDay) / circleTime) % therapyList.size();
-  //    std::cout << therapy_list()[index_]->id() << std::endl;
   return therapy_list[index];
 }
 
@@ -55,7 +49,6 @@ std::string CyclingStrategy::to_string() const {
 void CyclingStrategy::update_end_of_time_step() {
   if (Model::SCHEDULER->current_time()==next_switching_day) {
     switch_therapy();
-    //            std::cout << to_string() << std::endl;
   }
 }
 

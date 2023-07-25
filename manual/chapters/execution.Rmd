@@ -1,0 +1,12 @@
+# Model Execution
+
+## Troubleshooting
+
+### MD5 hash collision
+
+An MD5 hash collision error is produced by either the `DbReporter` or the `DbDistrictReporter` detects that YAML file has the same same file name and produces the same MD5 hash of an existing configuration in the database.^[The `DbDistrictReporter` is an inheriting class of `DbReporter` so the error is logged as being produced by `DbReporter::prepare_configuration` regardless of which reporter is being used.] Under normal operations this error should be prevented by the unique constraint upon `sim.configuration.md5` and `sim.configuration.filename` although older instances of the database may contain the error. Correction of the error typically requires manual deletion of the duplicated hashes and all replicates associated with them via the `deleteReplicates.py` script in `PSU-CIDD-MaSim-Support/Python` followed by the addition of the constraint to the database:
+
+```sql
+ALTER TABLE IF EXISTS sim.configuration
+    ADD CONSTRAINT configuration_md5_unique UNIQUE (md5, filename);
+```
