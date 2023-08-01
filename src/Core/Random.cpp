@@ -1,19 +1,18 @@
 /* 
- * File:   Random.cpp
- * Author: nguyentran
- * 
- * Created on May 27, 2013, 10:46 AM
+ * Random.cpp
+ *
+ * This file implements the random number class for use by the simulation.
  */
+#include "Random.h"
+
 #include <cmath>
-#include <cstdlib>
-#include <ctime>
+#include <fmt/format.h>
 #include <gsl/gsl_cdf.h>
 #include <gsl/gsl_randist.h>
-#include <thread>
-#include <fmt/format.h>
-#include "Random.h"
-#include "Helpers/NumberHelpers.h"
+#include <random>
+
 #include "easylogging++.h"
+#include "Helpers/NumberHelpers.h"
 
 Random::Random(gsl_rng* g_rng) : seed_(0ul), G_RNG(g_rng) {}
 
@@ -25,9 +24,9 @@ void Random::initialize(const unsigned long &seed) {
   const auto tt = gsl_rng_mt19937;
   G_RNG = gsl_rng_alloc(tt);
 
-  auto now = std::chrono::high_resolution_clock::now();
-  auto milliseconds = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch());
-  seed_ = seed == 0 ? static_cast<unsigned long>(milliseconds.count()) : seed;
+  // Defer to the random device to generate a random seed
+  std::random_device rd;
+  seed_ = (seed == 0) ? rd() : seed;
 
   LOG(INFO) << fmt::format("Random initializing with seed: {}", seed_);
   gsl_rng_set(G_RNG, seed_);
@@ -39,7 +38,7 @@ void Random::release() const {
 }
 
 int Random::random_poisson(const double &poisson_mean) {
-  return gsl_ran_poisson(G_RNG, poisson_mean);
+  return static_cast<int>(gsl_ran_poisson(G_RNG, poisson_mean));
 }
 
 unsigned long Random::random_uniform(unsigned long range) {
@@ -133,9 +132,9 @@ double Random::cdf_standard_normal_distribution(const double &p) {
 }
 
 int Random::random_binomial(const double &p, const unsigned int &n) {
-  return gsl_ran_binomial(G_RNG, p, n);
+  return static_cast<int>(gsl_ran_binomial(G_RNG, p, n));
 }
 
-void Random::shuffle(void* base, const size_t &n, const size_t &size) {
+void Random::shuffle(void* base, const size_t &n, const size_t &size) const {
   gsl_ran_shuffle(G_RNG, base, n, size);
 }

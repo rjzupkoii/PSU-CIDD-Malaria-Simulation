@@ -71,7 +71,7 @@ class Random {
 
   virtual int random_binomial(const double &p, const unsigned int &n);
 
-  void shuffle(void *base, const size_t &n, const size_t &size);
+  void shuffle(void *base, const size_t &n, const size_t &size) const;
 };
 
 #endif    /* RANDOM_H */
