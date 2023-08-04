@@ -42,11 +42,13 @@ void TestTreatmentFailureEvent::schedule_event(Scheduler *scheduler, Person *p,
 void TestTreatmentFailureEvent::execute() {
   auto *person = dynamic_cast<Person *>(dispatcher);
 
+  // If the parasite is still present at a detectable level, then it's a treatment failure
   if (person->all_clonal_parasite_populations()->contain(clinical_caused_parasite())
-      && clinical_caused_parasite_->last_update_log10_parasite_density() >
-          Model::CONFIG->parasite_density_level().log_parasite_density_detectable) {
+      && clinical_caused_parasite_->last_update_log10_parasite_density() > Model::CONFIG->parasite_density_level().log_parasite_density_detectable) {
 
     Model::DATA_COLLECTOR->record_1_TF(person->location(), true);
     Model::DATA_COLLECTOR->record_1_treatment_failure_by_therapy(person->location(), person->age_class(), therapyId_);
+  } else {
+    Model::DATA_COLLECTOR->record_1_treatment_success_by_therapy(person->location(), person->age_class(), therapyId_);
   }
 }
