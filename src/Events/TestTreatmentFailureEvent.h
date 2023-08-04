@@ -1,12 +1,10 @@
-/* 
- * File:   TestTreatmentFailureEvent.h
- * Author: Merlin
+/*
+ * TestTreatmentFailureEvent.cpp
  *
- * Created on July 31, 2013, 11:36 AM
+ * Defines the event that tests to see if the treatment given to a patient failed or not.
  */
-
 #ifndef TESTTREATMENTFAILUREEVENT_H
-#define    TESTTREATMENTFAILUREEVENT_H
+#define TESTTREATMENTFAILUREEVENT_H
 
 #include "Event.h"
 #include "Core/ObjectPool.h"
@@ -20,22 +18,15 @@ class Person;
 
 class TestTreatmentFailureEvent : public Event {
  DISALLOW_COPY_AND_ASSIGN(TestTreatmentFailureEvent)
-
  OBJECTPOOL(TestTreatmentFailureEvent)
-
  POINTER_PROPERTY(ClonalParasitePopulation, clinical_caused_parasite)
-  //    PROPERTY_REF(bool, isResistance);
  PROPERTY_REF(int, therapyId)
 
  public:
   TestTreatmentFailureEvent();
+  ~TestTreatmentFailureEvent() override;
 
-  //    TestTreatmentFailureEvent(const TestTreatmentFailureEvent& orig);
-  virtual ~TestTreatmentFailureEvent();
-
-  static void
-  schedule_event(Scheduler *scheduler, Person *p, ClonalParasitePopulation *clinical_caused_parasite, const int &time,
-                 const int &t_id = 0);
+  static void schedule_event(Scheduler *scheduler, Person *p, ClonalParasitePopulation *clinical_caused_parasite, const int &time, const int &t_id = 0);
 
   std::string name() override {
     return "TestTreatmentFailureEvent";
@@ -46,4 +37,4 @@ class TestTreatmentFailureEvent : public Event {
 
 };
 
-#endif    /* TESTTREATMENTFAILUREEVENT_H */
+#endif

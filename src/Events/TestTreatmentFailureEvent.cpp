@@ -1,15 +1,13 @@
-/* 
- * File:   TestTreatmentFailureEvent.cpp
- * Author: Merlin
- * 
- * Created on July 31, 2013, 11:36 AM
+/*
+ * TestTreatmentFailureEvent.cpp
+ *
+ * Implement event that tests to see if the treatment given to a patient failed or not.
  */
-
 #include "TestTreatmentFailureEvent.h"
+
 #include "Population/Person.h"
 #include "Population/ClonalParasitePopulation.h"
 #include "Core/Scheduler.h"
-#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
 #include "MDC/ModelDataCollector.h"
@@ -27,20 +25,18 @@ TestTreatmentFailureEvent::~TestTreatmentFailureEvent() {
 void TestTreatmentFailureEvent::schedule_event(Scheduler *scheduler, Person *p,
                                                ClonalParasitePopulation *clinical_caused_parasite,
                                                const int &time, const int &t_id) {
-  if (scheduler==nullptr) {
-    std::cout << "error null" << std::endl;
-    assert(false);
-  }
-  if (scheduler!=nullptr) {
-    auto *e = new TestTreatmentFailureEvent();
-    e->dispatcher = p;
-    e->set_clinical_caused_parasite(clinical_caused_parasite);
-    e->time = time;
-    e->set_therapyId(t_id);
 
-    p->add(e);
-    scheduler->schedule_individual_event(e);
-  }
+  // Ensure that the scheduler exists
+  assert(scheduler != nullptr);
+
+  // Create the event to be added to the queue
+  auto *e = new TestTreatmentFailureEvent();
+  e->dispatcher = p;
+  e->set_clinical_caused_parasite(clinical_caused_parasite);
+  e->time = time;
+  e->set_therapyId(t_id);
+  p->add(e);
+  scheduler->schedule_individual_event(e);
 }
 
 void TestTreatmentFailureEvent::execute() {
