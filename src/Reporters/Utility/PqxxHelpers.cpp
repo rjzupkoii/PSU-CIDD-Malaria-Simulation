@@ -1,20 +1,18 @@
 /*
- * PqxxHelpers.hxx
+ * PqxxHelpers.cpp
  *
- * This header defines some useful helpers for use with PQXX.
+ * This class implements useful helper functions for use with PQXX.
  */
+#include "PqxxHelpers.h"
+
 #include <pqxx/pqxx>
 #include <thread>
 
+#include "Core/Config/Config.h"
+#include "easylogging++.h"
 #include "Model.h"
 
 namespace pqxx_db {
-    // Number of times various retry events should be tried
-    int RETRY_LIMIT = 10;
-
-    // Time to wait between trying to reconnect to the database, 10 seconds in milliseconds
-    int WAIT_TIMESPAN = 10000;
-
     pqxx::connection *get_connection() {
       // Getting a connection is straightforward, so this function is largely intended to warp retry functionality
       int retry_count = 0;
@@ -28,7 +26,7 @@ namespace pqxx_db {
 
           // Sleep for ten seconds before retrying
           LOG(WARNING) << "Waiting " << (WAIT_TIMESPAN * retry_count) / 1000 << " seconds to retry...";
-          std::chrono::milliseconds timespan(WAIT_TIMESPAN *retry_count);
+          std::chrono::milliseconds timespan(WAIT_TIMESPAN * retry_count);
           std::this_thread::sleep_for(timespan);
         }
       }

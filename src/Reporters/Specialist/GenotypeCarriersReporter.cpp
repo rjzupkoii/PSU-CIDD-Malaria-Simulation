@@ -15,7 +15,7 @@
 #include "Population/Person.h"
 #include "Population/Population.h"
 #include "Population/Properties/PersonIndexByLocationStateAgeClass.h"
-#include "Reporters/Utility/PqxxHelpers.hxx"
+#include "Reporters/Utility/PqxxHelpers.h"
 
 void GenotypeCarriersReporter::initialize(int job_number, std::string path) {
   // Query to verify that the database has been properly configured
@@ -29,25 +29,8 @@ void GenotypeCarriersReporter::initialize(int job_number, std::string path) {
     throw std::runtime_error("Missing Genotype Carriers Reporter column");
   }
 
-  // Since the column is there, we next need to determine the aggregation level
-  int replicate = Model::MODEL->replicate();
-  if (replicate == 0) {
-    LOG(ERROR) << "Database replicate number does not appear to be set, unable to determine aggregation level";
-    throw std::runtime_error("Missing database replicate number");
-  }
-  result = db.exec(fmt::format(SELECT_AGGREGATION, replicate));
-  if (result.empty()) {
-    LOG(ERROR) << "Database did not return the aggregation level for the study";
-    throw std::runtime_error("Aggregation level not returned");
-  }
-  aggregation = result[0][0].as<std::string>();
-  if (aggregation != "C" && aggregation != "D") {
-    LOG(ERROR) << "Unknown aggregation level code: " << aggregation;
-    throw std::runtime_error("Unknown aggregation code returned");
-  }
-
-  // Build the lookup for the mapping
-  build_lookup(replicate, connection);
+  // Use the connection to build the lookup table
+  build_lookup(connection);
 
   // Clean up, note that a transaction created, so we need to manage it
   db.abort();
@@ -57,7 +40,7 @@ void GenotypeCarriersReporter::initialize(int job_number, std::string path) {
   // Inform the user that we are running, note the genotype
   LOG(INFO) << fmt::format("Absolute count of carriers of {} (locus {}, allele {}) is being recorded to database.",
                            GENOTYPE, LOCUS, ALLELE);
-  VLOG(1) << "Replicate: " << replicate << ", Aggregation: " << aggregation;
+  VLOG(1) << "Replicate: " << Model::MODEL->replicate() << ", Aggregation: " << aggregation;
 }
 
 void GenotypeCarriersReporter::monthly_report() {
@@ -121,29 +104,4 @@ void GenotypeCarriersReporter::monthly_report() {
   db.commit();
   connection->close();
   delete connection;
-}
-
-void GenotypeCarriersReporter::build_lookup(int replicate,  pqxx::connection* connection) {
-  // District reporting just requires that we build a look-up where each cell is
-  // mapped to the array index, and the array stores the district identification
-  if (aggregation == "D") {
-    auto offset = SpatialData::get_instance().get_first_district();
-    for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      lookup.emplace_back(SpatialData::get_instance().get_district(loc) - offset);
-    }
-    lookup_allocation = SpatialData::get_instance().get_district_count();
-    return;
-  }
-
-  // We must be doing a cellular count, which can be loaded from the database
-  pqxx::work db(*connection);
-  pqxx::result results = db.exec(fmt::format(SELECT_LOCATION, replicate));
-  auto locations = Model::CONFIG->number_of_locations();
-  for (auto ndx = 0; ndx < locations; ndx++) {
-    lookup.emplace_back(results[ndx][0].as<int>());
-  }
-  lookup_allocation = (int)lookup.size();
-
-  // Clear the transaction since we didn't do anything
-  db.abort();
 }

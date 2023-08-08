@@ -38,6 +38,7 @@ file(GLOB SOURCE *.cpp
         Population/Properties/*.cpp
         Reporters/*.cpp
         Reporters/Specialist/*.cpp
+        Reporters/Utility/*.cpp
         Spatial/*.cpp 
         Strategies/*.cpp
         Therapies/*.cpp

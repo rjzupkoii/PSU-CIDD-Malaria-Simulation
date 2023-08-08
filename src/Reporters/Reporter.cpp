@@ -23,6 +23,7 @@
 #include "Specialist/NullReporter.hxx"
 #include "Specialist/PopulationReporter.h"
 #include "Specialist/SeasonalImmunity.h"
+#include "Specialist/TherapyRecordReporter.h"
 
 std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap {
     {"Console", CONSOLE},
@@ -36,6 +37,7 @@ std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap {
     {"GenotypeCarriers", GENOTYPE_CARRIERS},
     {"SeasonalImmunity", SEASONAL_IMMUNITY},
     {"AgeBand", AGE_BAND_REPORTER},
+    {"TherapyRecord", THERAPY_RECORD_REPORTER},
     {"Null", NULL_REPORTER}
 };
 
@@ -73,6 +75,7 @@ Reporter *Reporter::MakeReport(ReportType report_type) {
     case GENOTYPE_CARRIERS: return new GenotypeCarriersReporter();
     case SEASONAL_IMMUNITY: return new SeasonalImmunity();
     case AGE_BAND_REPORTER: return new AgeBandReporter();
+    case THERAPY_RECORD_REPORTER: return new TherapyRecordReporter();
     case NULL_REPORTER: return new NullReporter();
     default:
       LOG(ERROR) << "No reporter type supplied";

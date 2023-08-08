@@ -324,6 +324,27 @@ TABLESPACE pg_default;
 
 ALTER TABLE sim.monthlygenomedata OWNER to sim;
 
+CREATE TABLE IF NOT EXISTS sim.therapyrecord
+(
+    monthlydataid integer NOT NULL,
+    locationid integer NOT NULL,
+    therapyid integer NOT NULL,
+    success integer,
+    failure integer,
+    completed integer,
+    CONSTRAINT therapyrecord_pkey PRIMARY KEY (monthlydataid, locationid, therapyid),
+    CONSTRAINT therapyrecord_monthlydataid_fk FOREIGN KEY (monthlydataid)
+        REFERENCES sim.monthlydata (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS sim.therapyrecord OWNER to sim;
+
 --
 -- Create Releationships
 --
