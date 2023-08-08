@@ -1,5 +1,6 @@
 ---
 site: "bookdown::bookdown_site"
+bibliography: bibliography.bib
 output:
   bookdown::pdf_document2:
     includes:

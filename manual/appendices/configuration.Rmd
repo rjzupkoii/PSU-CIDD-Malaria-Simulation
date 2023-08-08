@@ -143,7 +143,7 @@ spatial_model:
 where the `name` may be of the type `Marshall`, `Wesolowski`, or `WesolowskiSurface` which each have their own configuration values.
 
 #### **Marshall Movement Model**
-The Marshall movement model is based upon the gravity model described in Marshall et al. ([2018](Marshall2018)) which presumes that the probability of a trip is defined by the proportional probability of movement from *i* to *j* such that $P(j|i)\propto N_j^\tau k(d_{i,j})$ where the kernel is defined by $k(d_{i,j})=\left( 1+\frac{d_{i,j}}{\rho }\right )^{-\alpha}$ from the following configuration:
+The Marshall movement model is based upon the gravity model described in @marshall_mathematical_2018 which presumes that the probability of a trip is defined by the proportional probability of movement from *i* to *j* such that $P(j|i)\propto N_j^\tau k(d_{i,j})$ where the kernel is defined by $k(d_{i,j})=\left( 1+\frac{d_{i,j}}{\rho }\right )^{-\alpha}$ from the following configuration:
 
 ```YAML
 spaital_model:
@@ -159,7 +159,7 @@ spaital_model:
 **log_rho** (double) : The calibrated $log_{10}(\rho)$ value.
 
 #### **Wesolowski Movement Model**
-THe Wesolowski movement model is based upon the gravity model described in Wesolowski et al. ([2015](#Wesolowski2015)) where the amount of travel to $N_{ij}$ is defined by $N_{ij}=\frac{pop_i^\alpha pop_j^\beta}{d(i,j)^\gamma} \kappa$ from the following configuration:
+THe Wesolowski movement model is based upon the gravity model described in @wesolowski_evaluating_2015 where the amount of travel to $N_{ij}$ is defined by $N_{ij}=\frac{pop_i^\alpha pop_j^\beta}{d(i,j)^\gamma} \kappa$ from the following configuration:
 
 ```YAML
 spaital_model:
@@ -201,7 +201,7 @@ spaital_model:
 **transmission_parameter** (float) : Governs how likely malaria is to be transmitted to a naive individual in the sporozoite challenge.
 
 ### parasite_density_level
-The `parasite_density_level` setting contains several sub-values that govern individual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per $\mu$l is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/$\mu$l) while 50 per $\mu$l is the lower bounds for detection under field conditions (50 - 100 parasites/$\mu$l) ([Wongsrichanalai et al. 2007](#Wongsrichanalai2007)). Generally, a higher detection limit for the <em>Pf</em>PR will require a higher transmission for a given <em>Pf</em>PR than a lower detection level. 
+The `parasite_density_level` setting contains several sub-values that govern individual behavior or state due to the total number of parasites that are present in the individual's blood stream. When setting the parasite density for the detectable levels note that 10 per $\mu$l is the middle of the bounds for detection under [Giemsa-stained thick blood film](https://apps.who.int/iris/bitstream/handle/10665/274382/MM-SOP-07a-eng.pdf) under laboratory conditions (4 - 20 parasites/$\mu$l) while 50 per $\mu$l is the lower bounds for detection under field conditions (50 - 100 parasites/$\mu$l) [@wongsrichanalai_review_2007]. Generally, a higher detection limit for the <em>Pf</em>PR will require a higher transmission for a given <em>Pf</em>PR than a lower detection level. 
 
 ```YAML
 parasite_density_level:
@@ -282,11 +282,15 @@ immune_system_information:
 **max_clinical_probability** (double) : Maximum probability of clinical symptoms as a result of a new infection. \
 **immune_inflation_rate** (double) : Yearly age-dependent faster acquisition of immunity between ages 1 to 10. \
 **age_mature_immunity** (double) : Age at which the immune function is mature, i.e., age at which the immune acquisition model switches from child to adult. \
-**factor_effect_age_mature_immunity** (double) :  Adjustment to the curve of immune acquisition under the age indicated by `age_mature_immunity`, parameter kappa in supplement to Nguyen et al. ([2015](#Nguyen2015)). \
-**immune_effect_on_progression_to_clinical** (double) : Slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)). \
-**midpoint** (double) : Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to Nguyen et al. ([2015](#Nguyen2015)).
+**factor_effect_age_mature_immunity** (double) :  Adjustment to the curve of immune acquisition under the age indicated by `age_mature_immunity`, parameter kappa in supplement to @nguyen_optimum_2015. \
+**immune_effect_on_progression_to_clinical** (double) : Slope of the sigmoidal probability versus immunity function, parameter z in supplement to @nguyen_optimum_2015. \
+**midpoint** (double) : Adjusts the midpoint of the slope of the sigmoidal probability versus immunity function, parameter z in supplement to @nguyen_optimum_2015.
 
 ## Treatments
+
+The following nodes govern how drugs and treatments are managed by the simulation.
+
+**tf_testing_day** (integer) : The number of days following the administration of a therapy that a individual should be tested for treatment failure.
 
 ### drug_db
 This setting is used to configure the various drugs used in the configuration and is structured as an array of drugs, which contain the specific setting for that particular compound. **Note** that while the simulation assumes that the compounds will be ordered from 0 to *n*, it is the responsibility of the user to ensure that they are assigned and ordered correctly.
@@ -602,12 +606,3 @@ events:
 **day** (date string, YYYY/mm/dd) : the date when the event will occur. \
 **from** (integer) : the id of the ecozone, defined in `seasonal_info`, that is the original ecozone. \
 **to** (integer) : the id of the new ecozone, defined in `seasonal_info`, that will be applied to matching cells.
-
-# References
-<a name="Marshall2018"></a>Marshall, J. M., Wu, S. L., Sanchez C., H. M., Kiware, S. S., Ndhlovu, M., Ouédraogo, A. L., Touré, M. B., Sturrock, H. J., Ghani, A. C., & Ferguson, N. M. (2018). Mathematical models of human mobility of relevance to malaria transmission in Africa. Scientific Reports, 8(1), 7713. https://doi.org/10.1038/s41598-018-26023-1
-
-<a name="Nguyen2015"></a>Nguyen, TD, Olliaro, P, Dondorp, AM, Baird, JK, Lam, HM, Farrar, J, Thwaites, GE, White, NJ, & Boni, MF. (2015). Optimum population-level use of artemisinin combination therapies: A modelling study. *The Lancet Global Health*, 3(12), e758–e766. https://doi.org/10.1016/S2214-109X(15)00162-X
-
-<a name="Wesolowski2015"></a>Wesolowski, A., O’Meara, W. P., Eagle, N., Tatem, A. J., & Buckee, C. O. (2015). Evaluating Spatial Interaction Models for Regional Mobility in Sub-Saharan Africa. PLOS Computational Biology, 11(7), e1004267. https://doi.org/10.1371/journal.pcbi.1004267
-
-<a name="Wongsrichanalai2007"></a>Wongsrichanalai C, Barcus MJ, Muth S, et al. A Review of Malaria Diagnostic Tools: Microscopy and Rapid Diagnostic Test (RDT) In: Breman JG, Alilio MS, White NJ, editors. Defining and Defeating the Intolerable Burden of Malaria III: Progress and Perspectives: Supplement to Volume 77(6) of American Journal of Tropical Medicine and Hygiene. Northbrook (IL): American Society of Tropical Medicine and Hygiene; 2007 Dec. Available from: https://www.ncbi.nlm.nih.gov/books/NBK1695/

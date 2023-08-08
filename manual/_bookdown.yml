@@ -23,9 +23,12 @@ rmd_files: [
   # Demonstration
   "chapters/demonstration.Rmd",
 
-  # Appendix starts here
+  # Appendices
   "appendices/encoding.Rmd",
   "appendices/technicalities.Rmd",
   "appendices/reporters.Rmd",
-  "appendices/configuration.Rmd"
+  "appendices/configuration.Rmd",
+  
+  # References
+  "references.Rmd"
   ]
