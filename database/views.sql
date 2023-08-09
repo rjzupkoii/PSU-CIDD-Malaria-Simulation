@@ -39,3 +39,20 @@ CREATE OR REPLACE VIEW public.v_replicates
 
 ALTER TABLE public.v_replicates
     OWNER TO dbadmin;
+
+
+-- View: public.v_therapyrecords
+CREATE OR REPLACE VIEW public.v_therapyrecords
+ AS
+ SELECT md.replicateid,
+    md.dayselapsed,
+    tr.locationid,
+    tr.therapyid,
+    tr.success,
+    tr.failure,
+    tr.completed
+   FROM sim.therapyrecord tr
+     JOIN sim.monthlydata md ON md.id = tr.monthlydataid;
+
+ALTER TABLE public.v_therapyrecords
+    OWNER TO dbadmin;
