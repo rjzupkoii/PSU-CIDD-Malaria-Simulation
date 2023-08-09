@@ -41,11 +41,7 @@ class StrategyBuilder {
 
   static IStrategy *buildCyclingStrategy(const YAML::Node &ns, const int &strategy_id, Config *config);
 
-  static IStrategy *buildAdaptiveCyclingStrategy(const YAML::Node &ns, const int &strategy_id, Config *config);
-
   static IStrategy *buildMFTStrategy(const YAML::Node &ns, const int &strategy_id, Config *config);
-
-  static IStrategy *buildMFTRebalancingStrategy(const YAML::Node &ns, const int &strategy_id, Config *config);
 
   static IStrategy *buildNestedSwitchingStrategy(const YAML::Node &ns, const int &strategy_id, Config *config);
 
@@ -54,8 +50,6 @@ class StrategyBuilder {
   static IStrategy *
   buildNestedMFTDifferentDistributionByLocationStrategy(const YAML::Node &ns, const int &strategy_id,
                                                         Config *config);
-
-  static IStrategy *buildNovelDrugSwitchingStrategy(const YAML::Node &ns, const int strategy_id, Config *config);
 };
 
 #endif /* STRATEGYBUILDER_H */

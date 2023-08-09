@@ -491,10 +491,6 @@ strategy_db:
     distribution: [0.68, 0.025, 0.013, 0.049, 0.124, 0.022, 0.015, 0.056, 0.016]
 initial_strategy_id: 0
 
-# This number use to determine whether a therapy is "useful" or not and it is used to calculate 
-# the useful therapeutic duration of a therapy
-tf_rate: 0.1
-
 # Days from end of liver-stage infection to appearance of symptoms
 days_to_clinical_under_five: 4
 days_to_clinical_over_five: 6
@@ -554,12 +550,6 @@ allow_new_coinfection_to_cause_symtoms: true
 
 # free recombination among the drug resistance loci
 using_free_recombination: true
-
-# the current treatment failure rate as observed in the population is not really
-# today's treatment failure rate, as these data are never assembled that quickly in
-# real life; rather, it is the average treatment failure rate observed over the 
-# past 60 days
-tf_window_size: 60
 
 # Mosquitoes always finish their blood meal
 fraction_mosquitoes_interrupted_feeding: 0.0

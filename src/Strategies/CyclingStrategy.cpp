@@ -24,7 +24,6 @@ void CyclingStrategy::add_therapy(Therapy *therapy) {
 void CyclingStrategy::switch_therapy() {
   index++;
   index %= static_cast<int>(therapy_list.size());
-  Model::DATA_COLLECTOR->update_UTL_vector();
 
   next_switching_day = Model::SCHEDULER->current_time() + cycling_time;
   LOG(INFO) << date::year_month_day{Model::SCHEDULER->calendar_date}

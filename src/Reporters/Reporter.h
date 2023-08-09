@@ -42,8 +42,6 @@ protected:
 
   std::stringstream ss;
 
-  static double calculate_treatment_failures();
-
  public:
 
    enum ReportType {

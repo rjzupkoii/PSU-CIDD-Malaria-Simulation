@@ -16,13 +16,10 @@
 #include "SFTStrategy.h"
 #include "Core/Config/Config.h"
 #include "CyclingStrategy.h"
-#include "AdaptiveCyclingStrategy.h"
 #include "MFTStrategy.h"
 #include "NestedMFTStrategy.h"
-#include "MFTRebalancingStrategy.h"
 #include "MFTMultiLocationStrategy.h"
 #include "NestedMFTMultiLocationStrategy.h"
-#include "NovelDrugSwitchingStrategy.h"
 
 StrategyBuilder::StrategyBuilder() = default;
 
@@ -36,20 +33,14 @@ IStrategy* StrategyBuilder::build(const YAML::Node &ns, const int &strategy_id, 
         return buildSFTStrategy(ns, strategy_id, config);
       case IStrategy::Cycling:
         return buildCyclingStrategy(ns, strategy_id, config);
-      case IStrategy::AdaptiveCycling:
-        return buildAdaptiveCyclingStrategy(ns, strategy_id, config);
       case IStrategy::MFT:
         return buildMFTStrategy(ns, strategy_id, config);
-      case IStrategy::MFTRebalancing:
-        return buildMFTRebalancingStrategy(ns, strategy_id, config);
       case IStrategy::NestedMFT:
         return buildNestedSwitchingStrategy(ns, strategy_id, config);
       case IStrategy::MFTMultiLocation:
         return buildMFTMultiLocationStrategy(ns, strategy_id, config);
       case IStrategy::NestedMFTMultiLocation:
         return buildNestedMFTDifferentDistributionByLocationStrategy(ns, strategy_id, config);
-      case IStrategy::NovelDrugSwitching:
-        return buildNovelDrugSwitchingStrategy(ns, strategy_id, config);
       default:
         LOG(WARNING) << "Unknown strategy type: " << ns["type"].as<std::string>();
         return nullptr;
@@ -93,19 +84,6 @@ IStrategy* StrategyBuilder::buildCyclingStrategy(const YAML::Node &ns, const int
   return result;
 }
 
-IStrategy* StrategyBuilder::buildAdaptiveCyclingStrategy(const YAML::Node &ns, const int &strategy_id, Config* config) {
-  auto* result = new AdaptiveCyclingStrategy();
-  result->id = strategy_id;
-  result->name = ns["name"].as<std::string>();
-
-  result->trigger_value = ns["trigger_value"].as<double>();
-  result->delay_until_actual_trigger = ns["delay_until_actual_trigger"].as<int>();
-  result->turn_off_days = ns["turn_off_days"].as<int>();
-
-  add_therapies(ns, result, config);
-  return result;
-}
-
 IStrategy* StrategyBuilder::buildMFTStrategy(const YAML::Node &ns, const int &strategy_id, Config* config) {
   auto* result = new MFTStrategy();
   result->id = strategy_id;
@@ -131,23 +109,6 @@ IStrategy* StrategyBuilder::buildNestedSwitchingStrategy(const YAML::Node &ns, c
     result->add_strategy(
         config->strategy_db()[ns["strategy_ids"][i].as<int>()]);
   }
-
-  return result;
-}
-
-IStrategy* StrategyBuilder::buildMFTRebalancingStrategy(const YAML::Node &ns, const int &strategy_id, Config* config) {
-  auto* result = new MFTRebalancingStrategy();
-  result->id = strategy_id;
-  result->name = ns["name"].as<std::string>();
-
-  add_distributions(ns["distribution"], result->distribution);
-  add_distributions(ns["distribution"], result->next_distribution);
-
-  add_therapies(ns, result, config);
-
-  result->update_duration_after_rebalancing = ns["update_duration_after_rebalancing"].as<int>();
-  result->delay_until_actual_trigger = ns["delay_until_actual_trigger"].as<int>();
-  result->latest_adjust_distribution_time = 0;
 
   return result;
 }
@@ -226,17 +187,3 @@ IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrateg
   return result;
 }
 
-IStrategy*
-StrategyBuilder::buildNovelDrugSwitchingStrategy(const YAML::Node &ns, const int strategy_id, Config* config) {
-  auto* result = new NovelDrugSwitchingStrategy();
-  result->id = strategy_id;
-  result->name = ns["name"].as<std::string>();
-
-  add_distributions(ns["distribution"], result->distribution);
-  add_therapies(ns, result, config);
-
-  result->switch_to = ns["switch_to"].as<int>();
-  result->tf_threshold = ns["tf_threshold"].as<double>();
-
-  return result;
-}

@@ -347,9 +347,6 @@ void Model::daily_update(const int &current_time) {
   //for safety remove all dead by calling perform_death_event
   population_->perform_death_event();
 
-  //update / calculate daily UTL
-  data_collector_->end_of_time_step();
-
   //update force of infection
   population_->update_force_of_infection(current_time);
 

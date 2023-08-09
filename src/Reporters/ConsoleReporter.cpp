@@ -79,16 +79,6 @@ void ConsoleReporter::after_run() {
   }
   std::cout << std::endl;
 
-  std::cout << "NTF by location: " << std::endl;
-  for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-    double location_NTF = Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location] * 100 /
-                          (double) Model::DATA_COLLECTOR->popsize_by_location()[location];
-    location_NTF /= total_time_in_years;
-
-    std::cout << location_NTF << "\t";
-  }
-  std::cout << std::endl;
-
   std::cout << "Number of mutations by location: " << std::endl;
   for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
     std::cout << Model::DATA_COLLECTOR->cumulative_mutants_by_location()[location] << "\t";
@@ -112,8 +102,6 @@ void ConsoleReporter::after_run() {
     std::cout << "Number Failed: " << nFail << "-" << success << "-" << nTreaments << std::endl;
 
   }
-
-  std::cout << "Strategy UTL: " << Model::DATA_COLLECTOR->current_utl_duration() << std::endl;
 
   std::cout << "AMU per parasite population: " << Model::DATA_COLLECTOR->AMU_per_parasite_pop() << std::endl;
   std::cout << "AMU per per: " << Model::DATA_COLLECTOR->AMU_per_person() << std::endl;
@@ -141,8 +129,6 @@ void ConsoleReporter::monthly_report() {
       std::cout << Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100 << "\t";
       std::cout << Model::DATA_COLLECTOR->total_immune_by_location()[location] / Model::POPULATION->size(location)
                 << "\t";
-      std::cout << Model::DATA_COLLECTOR->current_RITF_by_location()[location] << "-"
-                << Model::DATA_COLLECTOR->current_TF_by_location()[location] << "\t";
     }
     std::cout << std::endl;
   }

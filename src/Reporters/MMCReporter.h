@@ -24,10 +24,6 @@ public:
 
   void begin_time_step() override;
 
-  void print_treatment_failure_rate_by_therapy();
-
-  void print_ntf_by_location();
-
   void print_genotype_frequency();
 
   void monthly_report() override;

@@ -1,9 +1,13 @@
 /*
  * ModelDataCollector.cpp
  * 
- * Definition of the model data collector class.
- * 
- * NOTE That age_class and age_group are used fairly interchangeably.
+ * Definition of the model data collector class. Note that age_class and age_group are used fairly interchangeably.
+ *
+ * NOTE (2023-08-09, RJZ) Removed concepts related to the useful therapeutic life (UTF) as well as any code that was
+ *    involved with the older way of tracking treatment failures. This work was tracked on GitHub under ticket #20 and
+ *    also resulted in the removal of the end_of_time_step accounting function; AdaptiveCyclingStrategy,
+ *    MFTRebalancingStrateg, and NovelDrugSwitchingStrategy; along with modifications to the ConsoleReporter,
+ *    MMCReporter, and base Reporter class.
  */
 
 #ifndef MODELDATACOLLECTOR_H
@@ -73,36 +77,14 @@ PROPERTY_REF(DoubleVector2, average_number_biten_by_location_person)
 
 PROPERTY_REF(DoubleVector, percentage_bites_on_top_20_by_location)
 
-PROPERTY_REF(DoubleVector, cumulative_discounted_NTF_by_location)
-
-PROPERTY_REF(DoubleVector, cumulative_NTF_by_location)
-
-PROPERTY_REF(IntVector, today_TF_by_location)
-
 PROPERTY_REF(IntVector, today_number_of_treatments_by_location)
 
-PROPERTY_REF(IntVector, today_RITF_by_location)
-
-PROPERTY_REF(IntVector2, total_number_of_treatments_60_by_location)
-
-PROPERTY_REF(IntVector2, total_RITF_60_by_location)
-
-PROPERTY_REF(IntVector2, total_TF_60_by_location)
-
-PROPERTY_REF(DoubleVector, current_RITF_by_location)
-
-PROPERTY_REF(DoubleVector, current_TF_by_location)
-
 PROPERTY_REF(IntVector, cumulative_mutants_by_location)
-
-PROPERTY_REF(int, current_utl_duration)
-
-PROPERTY_REF(IntVector, UTL_duration)
 
 // The total number of treatment given for the given therapy id
 PROPERTY_REF(IntVector, number_of_treatments_with_therapy_ID)
 
-// The total number of treatment failures with the given therapy
+// The total number of treatment failures with the given therapy from the start of the simuation
 // NOTE we are not tracking the number of successes since it is generally
 //      safe to assume that successes = (treatments - failures); however,
 //      some error may be introduced for the treatments given close to 
@@ -171,15 +153,7 @@ PROPERTY_REF(double, art_resistance_frequency_at_15)
 
 PROPERTY_REF(double, total_resistance_frequency_at_15)
 
-PROPERTY_REF(IntVector, today_tf_by_therapy)
-
 PROPERTY_REF(IntVector, today_number_of_treatments_by_therapy)
-
-PROPERTY_REF(DoubleVector, current_tf_by_therapy)
-
-PROPERTY_REF(IntVector2, total_number_of_treatments_60_by_therapy)
-
-PROPERTY_REF(IntVector2, total_tf_60_by_therapy)
 
 PROPERTY_REF(double, mean_moi)
 
@@ -275,10 +249,6 @@ public:
 
   void calculate_percentage_bites_on_top_20();
 
-  // Indicates a combined "treatment failure" due to either 1) failure to treat or 2) the treatment not being successful
-  [[deprecated("Associated with legacy way of counting treatment failures (by drug and failure to treat)")]]
-  void record_1_TF(const int &location, const bool &by_drug);
-
   // Record that one treatment has been given
   void record_1_treatment(const int &location, const int &therapy_id);
 
@@ -288,11 +258,6 @@ public:
   void record_1_mutation(const int &location);
 
   void begin_time_step();
-
-  void end_of_time_step();
-
-  // Update the useful therapeutic life (UTL) vector
-  void update_UTL_vector();
 
   // Records one case in which a treatment was administered but failed due to patient death or failure to clear
   void record_1_treatment_failure_by_therapy(const int &location, const int &age_class, const int &therapy_id);

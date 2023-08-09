@@ -10,7 +10,6 @@
 
 #include <gsl/gsl_rng.h>
 #include "PropertyMacro.h"
-#include "Strategies/AdaptiveCyclingStrategy.h"
 
 class Model;
 

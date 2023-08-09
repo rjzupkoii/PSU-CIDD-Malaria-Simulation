@@ -87,7 +87,6 @@ void ProgressToClinicalEvent::execute() {
       person->cancel_all_events_except(nullptr);
       person->set_host_state(Person::DEAD);
       Model::DATA_COLLECTOR->record_1_malaria_death(person->location(), person->age_class());
-      Model::DATA_COLLECTOR->record_1_TF(person->location(), true);
       ReportTreatmentFailureDeathEvent::schedule_event(Model::SCHEDULER, person, therapy->id(), Model::SCHEDULER->current_time() + Model::CONFIG->tf_testing_day());
       return;
     }
@@ -98,9 +97,7 @@ void ProgressToClinicalEvent::execute() {
     person->schedule_test_treatment_failure_event(clinical_caused_parasite_, Model::CONFIG->tf_testing_day(),therapy->id());
 
   } else {
-    // Did not receieve treatment
-    //Statistic store NTF
-    Model::DATA_COLLECTOR->record_1_TF(person->location(), false);
+    // Did not receive treatment
     Model::DATA_COLLECTOR->record_1_non_treated_case(person->location(), person->age_class());
 
     receive_no_treatment_routine(person);

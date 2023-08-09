@@ -45,24 +45,6 @@ void MMCReporter::print_genotype_frequency() {
 
 }
 
-void MMCReporter::print_treatment_failure_rate_by_therapy() {
-  for (auto tf_by_therapy : Model::DATA_COLLECTOR->current_tf_by_therapy()) {
-    ss << tf_by_therapy << Tsv::sep;
-  }
-}
-
-void MMCReporter::print_ntf_by_location() {
-  double sum_ntf = 0.0;
-  ul pop_size = 0;
-  for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-    sum_ntf += Model::DATA_COLLECTOR->cumulative_NTF_by_location()[location];
-    pop_size += Model::DATA_COLLECTOR->popsize_by_location()[location];
-    
-  }
-
-  ss << (sum_ntf * 100.0 / pop_size) << Tsv::sep;
-}
-
 void MMCReporter::monthly_report() {
   ss << Model::SCHEDULER->current_time() << Tsv::sep;
   ss << std::chrono::system_clock::to_time_t(Model::SCHEDULER->calendar_date) << Tsv::sep;
@@ -85,10 +67,6 @@ void MMCReporter::monthly_report() {
   ss << group_sep;
   print_genotype_frequency();
   ss << group_sep;
-  print_ntf_by_location();
-  ss << group_sep;
-  print_treatment_failure_rate_by_therapy();
-  ss << Model::DATA_COLLECTOR->current_TF_by_location()[0];
   CLOG(INFO, "monthly_reporter") << ss.str();
   ss.str("");
 }
@@ -103,8 +81,6 @@ void MMCReporter::after_run() {
   ss << group_sep;
   //output last strategy information
   ss << Model::TREATMENT_STRATEGY->id << Tsv::sep;
-
-  ss << calculate_treatment_failures() << Tsv::sep;
 
   ss << group_sep;
   //print # mutation events of first 10 years

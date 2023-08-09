@@ -27,7 +27,7 @@
 // Fill the vector indicated with zeros, this should compile into a memset call which is faster than a loop
 #define zero_fill(vector) std::fill(vector.begin(), vector.end(), 0)
 
-ModelDataCollector::ModelDataCollector(Model* model) : model_(model), current_utl_duration_(0),
+ModelDataCollector::ModelDataCollector(Model* model) : model_(model),
                                                        AMU_per_parasite_pop_(0),
                                                        AMU_per_person_(0), AMU_for_clinical_caused_parasite_(0),
                                                        AFU_(0), discounted_AMU_per_parasite_pop_(0),
@@ -84,24 +84,9 @@ void ModelDataCollector::initialize() {
     average_number_biten_by_location_person_ = DoubleVector2(Model::CONFIG->number_of_locations(), DoubleVector());
     percentage_bites_on_top_20_by_location_ = Vector_by_Locations(DoubleVector);
 
-    cumulative_discounted_NTF_by_location_ = Vector_by_Locations(DoubleVector);
-    cumulative_NTF_by_location_ = Vector_by_Locations(DoubleVector);
-
-    today_TF_by_location_ = Vector_by_Locations(IntVector);
     today_number_of_treatments_by_location_ = Vector_by_Locations(IntVector);
-    today_RITF_by_location_ = Vector_by_Locations(IntVector);
-
-    total_number_of_treatments_60_by_location_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->tf_window_size(), 0));
-    total_RITF_60_by_location_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->tf_window_size(), 0));
-    total_TF_60_by_location_ = IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->tf_window_size(), 0));
-
-    current_RITF_by_location_ = Vector_by_Locations(DoubleVector);
-    current_TF_by_location_ = Vector_by_Locations(DoubleVector);
 
     cumulative_mutants_by_location_ = Vector_by_Locations(IntVector);
-
-    current_utl_duration_ = 0;
-    UTL_duration_ = IntVector();
 
     number_of_treatments_with_therapy_ID_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
     number_of_treatments_fail_with_therapy_ID_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
@@ -146,10 +131,6 @@ void ModelDataCollector::initialize() {
     art_resistance_frequency_at_15_ = 0;
     total_resistance_frequency_at_15_ = 0;
 
-    total_number_of_treatments_60_by_therapy_ = IntVector2(Model::CONFIG->therapy_db().size(), IntVector(Model::CONFIG->tf_window_size(), 0));
-    total_tf_60_by_therapy_ = IntVector2(Model::CONFIG->therapy_db().size(), IntVector(Model::CONFIG->tf_window_size(), 0));
-    current_tf_by_therapy_ = DoubleVector(Model::CONFIG->therapy_db().size(), 0.0);
-    today_tf_by_therapy_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
     today_number_of_treatments_by_therapy_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
 
     monthly_number_of_treatment_by_location_ = Vector_by_Locations(IntVector);
@@ -419,67 +400,8 @@ void ModelDataCollector::record_1_non_treated_case(const int &location, const in
 }
 
 void ModelDataCollector::begin_time_step() {
-  for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-    today_number_of_treatments_by_location_[location] = 0;
-    today_RITF_by_location_[location] = 0;
-    today_TF_by_location_[location] = 0;
-  }
-
-  for (auto therapy_id = 0; static_cast<size_t>(therapy_id) < Model::CONFIG->therapy_db().size(); therapy_id++) {
-    today_number_of_treatments_by_therapy_[therapy_id] = 0;
-    today_tf_by_therapy_[therapy_id] = 0;
-  }
-}
-
-void ModelDataCollector::end_of_time_step() {
-  if (recording_data()) {
-
-    // Note the current index for reporting
-    auto report_index = Model::SCHEDULER->current_time() % Model::CONFIG->tf_window_size();
-
-    // Calculate the current treatment failures by location along with the average treatment failures
-    double avg_tf = 0;
-    for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-      total_number_of_treatments_60_by_location_[location][report_index] = today_number_of_treatments_by_location_[location];
-      total_RITF_60_by_location_[location][report_index] = today_RITF_by_location_[location];
-      total_TF_60_by_location_[location][report_index] = today_TF_by_location_[location];
-
-      auto t_treatment60 = 0;
-      auto t_ritf60 = 0;
-      auto t_tf60 = 0;
-      for (auto i = 0; i < Model::CONFIG->tf_window_size(); i++) {
-        t_treatment60 += total_number_of_treatments_60_by_location_[location][i];
-        t_ritf60 += total_RITF_60_by_location_[location][i];
-        t_tf60 += total_TF_60_by_location_[location][i];
-      }
-      current_TF_by_location_[location] = (t_treatment60 == 0) ? 0 : static_cast<double>(t_tf60) / t_treatment60;
-      current_TF_by_location_[location] = (current_TF_by_location_[location]) > 1 ? 1 : current_TF_by_location_[location];
-
-      current_RITF_by_location_[location] = (t_treatment60 == 0) ? 0 : static_cast<double>(t_ritf60) / t_treatment60;
-      current_RITF_by_location_[location] = (current_RITF_by_location_[location]) > 1 ? 1 : current_RITF_by_location_[location];
-
-      avg_tf += current_TF_by_location_[location];
-    }
-
-    // Update the useful therapeutic life (UTL)
-    if ((avg_tf / static_cast<double>(Model::CONFIG->number_of_locations())) <= Model::CONFIG->tf_rate()) {
-      current_utl_duration_ += 1;
-    }
-    for (auto therapy_id = 0; static_cast<size_t>(therapy_id) < Model::CONFIG->therapy_db().size(); therapy_id++) {
-      total_number_of_treatments_60_by_therapy_[therapy_id][report_index] = today_number_of_treatments_by_therapy_[therapy_id];
-      total_tf_60_by_therapy_[therapy_id][report_index] = today_tf_by_therapy_[therapy_id];
-
-      auto t_treatment60 = 0;
-      auto t_tf60 = 0;
-      for (auto i = 0; i < Model::CONFIG->tf_window_size(); i++) {
-        t_treatment60 += total_number_of_treatments_60_by_therapy_[therapy_id][i];
-        t_tf60 += total_tf_60_by_therapy_[therapy_id][i];
-      }
-
-      current_tf_by_therapy_[therapy_id] = (t_treatment60 == 0) ? 0 : static_cast<double>(t_tf60) / t_treatment60;
-      current_tf_by_therapy_[therapy_id] = (current_tf_by_therapy_[therapy_id]) > 1 ? 1 : current_tf_by_therapy_[therapy_id];
-    }
-  }
+  zero_fill(today_number_of_treatments_by_location_);
+  zero_fill(today_number_of_treatments_by_therapy_);
 }
 
 void ModelDataCollector::record_1_treatment(const int &location, const int &therapy_id) {
@@ -500,31 +422,10 @@ void ModelDataCollector::record_1_mutation(const int &location) {
   }
 }
 
-void ModelDataCollector::update_UTL_vector() {
-  UTL_duration_.push_back(current_utl_duration_);
-  current_utl_duration_ = 0;
-}
-
-void ModelDataCollector::record_1_TF(const int &location, const bool &by_drug) {
-  if (recording_data()) {
-    //if treatment failure due to drug (both resistance or not clear)
-    if (by_drug) {
-      today_TF_by_location_[location] += 1;
-    }
-  }
-
-  if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
-    const auto current_discounted_tf = exp(log(0.97) * floor(static_cast<double>(Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / Constants::DAYS_IN_YEAR()));
-    cumulative_discounted_NTF_by_location_[location] += current_discounted_tf;
-    cumulative_NTF_by_location_[location] += 1;
-  }
-}
-
 void ModelDataCollector::record_1_treatment_failure_by_therapy(const int &location, const int &age_class, const int &therapy_id) {
 
-  // NOTE These are old variables that stored data for the given therapy
+  // Track the number of failures from the start of the simulation
   number_of_treatments_fail_with_therapy_ID_[therapy_id] += 1;
-  today_tf_by_therapy_[therapy_id] += 1;
 
   if (recording_data()) {
     // Update the total completed
@@ -554,13 +455,6 @@ void ModelDataCollector::update_after_run() {
 
   calculate_eir();
   calculate_percentage_bites_on_top_20();
-
-  UTL_duration_.push_back(current_utl_duration_);
-
-  current_utl_duration_ = 0;
-  for (int utl : UTL_duration_) {
-    current_utl_duration_ += utl;
-  }
 }
 
 [[maybe_unused]] void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite) {

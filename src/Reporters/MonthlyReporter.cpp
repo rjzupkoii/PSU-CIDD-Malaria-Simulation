@@ -93,9 +93,6 @@ void MonthlyReporter::after_run()
   //output last strategy information
   ss << Model::TREATMENT_STRATEGY->id << Tsv::sep;
 
-  // output NTF
-  ss << calculate_treatment_failures() << Tsv::sep;
-
   CLOG(INFO, "summary_reporter") << ss.str();
   ss.str("");
 }

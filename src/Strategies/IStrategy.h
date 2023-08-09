@@ -31,12 +31,9 @@ class IStrategy {
     SFT = 0,
     Cycling = 1,
     MFT = 2,
-    AdaptiveCycling = 3,
-    MFTRebalancing = 4,
     MFTMultiLocation = 5,
     NestedMFT = 6,
-    NestedMFTMultiLocation = 7,
-    NovelDrugSwitching = 8
+    NestedMFTMultiLocation = 7
   };
 
   static std::map<std::string, StrategyType> StrategyTypeMap;
