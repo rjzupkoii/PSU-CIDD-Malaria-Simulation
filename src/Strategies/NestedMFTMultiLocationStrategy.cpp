@@ -40,7 +40,7 @@ Therapy *NestedMFTMultiLocationStrategy::get_therapy(Person *person) {
 
 std::string NestedMFTMultiLocationStrategy::to_string() const {
   std::stringstream sstm;
-  sstm << id << "-" << name << std::endl;
+  sstm << id() << "-" << name() << std::endl;
 
   // Determine the distribution size
   if (distribution.size() == 0) {

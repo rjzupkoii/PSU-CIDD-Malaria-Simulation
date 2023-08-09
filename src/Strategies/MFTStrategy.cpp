@@ -37,7 +37,7 @@ Therapy *MFTStrategy::get_therapy(Person *person) {
 
 std::string MFTStrategy::to_string() const {
   std::stringstream sstm;
-  sstm << id << "-" << name << "-";
+  sstm << IStrategy::id() << "-" << IStrategy::name() << "-";
   std::string sep;
   for (auto *therapy : therapy_list) {
     sstm << sep << therapy->id();

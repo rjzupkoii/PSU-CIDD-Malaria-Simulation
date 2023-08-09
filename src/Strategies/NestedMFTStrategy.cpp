@@ -25,7 +25,7 @@ Therapy *NestedMFTStrategy::get_therapy(Person *person) {
 
 std::string NestedMFTStrategy::to_string() const {
   std::stringstream sstm;
-  sstm << id << "-" << name << "-";
+  sstm << id() << "-" << name() << "-";
 
   for (auto i : distribution) {
     sstm << i << "::";

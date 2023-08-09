@@ -1,32 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   IStrategy.h
- * Author: Merlin
+ * IStrategy.h
  *
- * Created on August 21, 2017, 3:45 PM
+ * Define the abstract base class for drug policy strategies along with associated enumeration and helper map.
  */
-
 #ifndef ISTRATEGY_H
 #define ISTRATEGY_H
 
+#include <map>
 #include <string>
 #include <utility>
 #include <vector>
+
 #include "Core/PropertyMacro.h"
-#include <map>
 
 class Therapy;
-
 class Person;
 
 class IStrategy {
- public:
+  DISALLOW_COPY_AND_ASSIGN(IStrategy)
 
+public:
+  // Define the various types, note that the numbers are odd since legacy code or results may depend on them
   enum StrategyType {
     SFT = 0,
     Cycling = 1,
@@ -36,43 +30,36 @@ class IStrategy {
     NestedMFTMultiLocation = 7
   };
 
-  static std::map<std::string, StrategyType> StrategyTypeMap;
+  static inline std::map<std::string, IStrategy::StrategyType> StrategyTypeMap {
+          {"SFT", SFT},
+          {"Cycling", Cycling},
+          {"MFT", MFT},
+          {"NestedMFT", NestedMFT},
+          {"MFTMultiLocation", MFTMultiLocation},
+          {"NestedMFTMultiLocation", NestedMFTMultiLocation},
+  };
 
- DISALLOW_COPY_AND_ASSIGN(IStrategy)
+  PROPERTY(int, id)
+  PROPERTY(std::string, name)
+  PROPERTY(StrategyType, type)
 
- public:
-  int id{-1};
-  std::string name;
-  StrategyType type;
- public:
-
-  IStrategy(std::string name, const StrategyType &type) : name{std::move(name)}, type{type} {}
+  IStrategy(std::string name, const StrategyType &type) : id_(-1), name_{ std::move(name) }, type_{ type } { }
 
   virtual ~IStrategy() = default;
-
-  virtual bool is_strategy(const std::string &s_name) {
-    return name==s_name;
-  }
-
-  virtual StrategyType get_type() const {
-    return type;
-  };
 
   virtual void add_therapy(Therapy *therapy) = 0;
 
   virtual Therapy *get_therapy(Person *person) = 0;
 
-  virtual std::string to_string() const = 0;
+  [[nodiscard]] virtual std::string to_string() const = 0;
 
   virtual void adjust_started_time_point(const int &current_time) = 0;
 
-  /**
-   * This function will be executed at end of time step, to check and switch therapy if needed
-   */
+  // This function will be executed at end of time step, to check and switch therapy if needed
   virtual void update_end_of_time_step() = 0;
 
   virtual void monthly_update() = 0;
 
 };
 
-#endif /* ISTRATEGY_H */
+#endif

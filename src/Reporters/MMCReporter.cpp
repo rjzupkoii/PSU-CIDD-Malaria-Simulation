@@ -80,7 +80,7 @@ void MMCReporter::after_run() {
 
   ss << group_sep;
   //output last strategy information
-  ss << Model::TREATMENT_STRATEGY->id << Tsv::sep;
+  ss << Model::TREATMENT_STRATEGY->id() << Tsv::sep;
 
   ss << group_sep;
   //print # mutation events of first 10 years

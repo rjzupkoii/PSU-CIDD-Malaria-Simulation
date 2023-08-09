@@ -37,7 +37,7 @@ Therapy *MFTMultiLocationStrategy::get_therapy(Person *person) {
 
 std::string MFTMultiLocationStrategy::to_string() const {
   std::stringstream sstm;
-  sstm << IStrategy::id << "-" << IStrategy::name << "-";
+  sstm << id() << "-" << name() << "-";
 
   for (std::size_t i = 0; i < therapy_list.size() - 1; i++) {
     sstm << therapy_list[i]->id() <<  "::";

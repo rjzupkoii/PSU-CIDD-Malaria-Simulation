@@ -36,7 +36,7 @@ Therapy *CyclingStrategy::get_therapy(Person *person) {
 
 std::string CyclingStrategy::to_string() const {
   std::stringstream sstm;
-  sstm << id << "-" << name << "-";
+  sstm << id() << "-" << name() << "-";
   std::string sep;
   for (auto *therapy : therapy_list) {
     sstm << sep << therapy->id();

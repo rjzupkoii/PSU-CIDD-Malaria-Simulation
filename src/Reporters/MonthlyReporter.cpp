@@ -91,7 +91,7 @@ void MonthlyReporter::after_run()
 
   ss << group_sep;
   //output last strategy information
-  ss << Model::TREATMENT_STRATEGY->id << Tsv::sep;
+  ss << Model::TREATMENT_STRATEGY->id() << Tsv::sep;
 
   CLOG(INFO, "summary_reporter") << ss.str();
   ss.str("");

@@ -29,7 +29,7 @@ Therapy *SFTStrategy::get_therapy(Person *person) {
 
 std::string SFTStrategy::to_string() const {
   std::stringstream sstm;
-  sstm << id << "-" << name << "-" << therapy_list_[0]->id();
+  sstm << id() << "-" << name() << "-" << therapy_list_[0]->id();
   return sstm.str();
 }
 
