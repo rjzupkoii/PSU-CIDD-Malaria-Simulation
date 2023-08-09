@@ -194,7 +194,7 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
 
     // EIR and PfPR is a bit more complicated since it could be an invalid value early in the simulation, and when
     // aggregating at the district level the weighted mean needs to be reported instead
-    if (ModelDataCollector::recording_data()) {
+    if (Model::DATA_COLLECTOR->recording_data()) {
       auto eir_location = Model::DATA_COLLECTOR->EIR_by_location_year()[location].empty()
               ? 0 : Model::DATA_COLLECTOR->EIR_by_location_year()[location].back();
       eir[district] += (eir_location * location_population);

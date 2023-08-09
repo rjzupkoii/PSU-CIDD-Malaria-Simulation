@@ -16,12 +16,6 @@ OBJECTPOOL_IMPL(TestTreatmentFailureEvent)
 
 TestTreatmentFailureEvent::TestTreatmentFailureEvent() : clinical_caused_parasite_(nullptr), therapyId_(0) {}
 
-TestTreatmentFailureEvent::~TestTreatmentFailureEvent() {
-  if (executable && Model::DATA_COLLECTOR!=nullptr) {
-    Model::DATA_COLLECTOR->number_of_treatments_with_therapy_ID()[therapyId_] -= 1;
-  }
-}
-
 void TestTreatmentFailureEvent::schedule_event(Scheduler *scheduler, Person *p,
                                                ClonalParasitePopulation *clinical_caused_parasite,
                                                const int &time, const int &t_id) {

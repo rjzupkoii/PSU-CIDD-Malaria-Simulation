@@ -36,7 +36,7 @@ void TherapyRecordReporter::initialize(int job_number, std::string path) {
 
 void TherapyRecordReporter::monthly_report() {
   // Return if we are not recording data
-  if (!ModelDataCollector::recording_data()) {
+  if (!Model::DATA_COLLECTOR->recording_data()) {
     return;
   }
 

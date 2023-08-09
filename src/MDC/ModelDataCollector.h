@@ -71,25 +71,15 @@ PROPERTY_REF(DoubleVector2, EIR_by_location_year)
 
 PROPERTY_REF(DoubleVector, EIR_by_location)
 
+// The total number of clinical episodes that have occurred in a location since data recording started
 PROPERTY_REF(LongVector, cumulative_clinical_episodes_by_location)
 
 PROPERTY_REF(DoubleVector2, average_number_biten_by_location_person)
 
 PROPERTY_REF(DoubleVector, percentage_bites_on_top_20_by_location)
 
-PROPERTY_REF(IntVector, today_number_of_treatments_by_location)
-
+// The total number of mutation events that occurred in a location since data recording started
 PROPERTY_REF(IntVector, cumulative_mutants_by_location)
-
-// The total number of treatment given for the given therapy id
-PROPERTY_REF(IntVector, number_of_treatments_with_therapy_ID)
-
-// The total number of treatment failures with the given therapy from the start of the simuation
-// NOTE we are not tracking the number of successes since it is generally
-//      safe to assume that successes = (treatments - failures); however,
-//      some error may be introduced for the treatments given close to 
-//      model completion
-PROPERTY_REF(IntVector, number_of_treatments_fail_with_therapy_ID)
 
 PROPERTY_REF(double, AMU_per_parasite_pop)
 
@@ -137,8 +127,6 @@ PROPERTY_REF(IntVector2, number_of_clinical_by_location_age_group_by_5)
 
 PROPERTY_REF(IntVector2, number_of_death_by_location_age_group)
 
-PROPERTY_REF(IntVector, today_number_of_treatments_by_therapy)
-
 PROPERTY_REF(double, mean_moi)
 
 PROPERTY_REF(LongVector, number_of_mutation_events_by_year)
@@ -171,6 +159,9 @@ PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
 // Monthly treatments by location
 PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
+// Monthly number of treatments by location and therapy
+PROPERTY_REF(IntVector2, monthly_number_of_treatment_by_location_therapy)
+
 // The total number of treatments completed by location and therapy, this should equal successes plus failures
 PROPERTY_REF(IntVector2, monthly_treatment_complete_by_location_therapy);
 
@@ -192,6 +183,14 @@ PROPERTY_REF(IntVector2, monthly_treatment_success_by_location_age_class);
 // Monthly number of treatment successes by location and therapy
 PROPERTY_REF(IntVector2, monthly_treatment_success_by_location_therapy);
 
+private:
+    // Flag to indicate if we are recording or not
+    bool recording = false;
+
+    void update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten);
+
+    // Zero out the population statistics tracked by perform_population_statistic()
+    void zero_population_statistics();
 
 public:
   // The number of reported multiple of infection (MOI)
@@ -258,14 +257,8 @@ public:
   double get_blood_slide_prevalence(const int &location, const int &age_from, const int &age_to);
 
   // Return true if data is being recorded, false otherwise.
-  static bool recording_data();
+  [[nodiscard]] bool recording_data() const { return recording; }
 
-private:
-
-  void update_average_number_bitten(const int &location, const int &birthday, const int &number_of_times_bitten);
-
-  // Zero out the population statistics tracked by perform_population_statistic()
-  void zero_population_statistics();
 };
 
 #endif

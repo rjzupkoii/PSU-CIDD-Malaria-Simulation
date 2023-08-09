@@ -24,7 +24,7 @@ class TestTreatmentFailureEvent : public Event {
 
  public:
   TestTreatmentFailureEvent();
-  ~TestTreatmentFailureEvent() override;
+  ~TestTreatmentFailureEvent() override = default;
 
   static void schedule_event(Scheduler *scheduler, Person *p, ClonalParasitePopulation *clinical_caused_parasite, const int &time, const int &t_id = 0);
 

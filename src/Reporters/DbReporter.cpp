@@ -208,7 +208,7 @@ bool DbReporter::do_monthly_report() {
         // Build the queries that contain the site data
         query = "";
         monthly_site_data(id, query);
-        if (Model::CONFIG->record_genome_db() && ModelDataCollector::recording_data()) {
+        if (Model::CONFIG->record_genome_db() && Model::DATA_COLLECTOR->recording_data()) {
             // Add the genome information, this will also update infected individuals
             monthly_genome_data(id, query);
         } else {

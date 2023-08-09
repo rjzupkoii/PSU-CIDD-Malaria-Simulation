@@ -58,7 +58,7 @@ void SeasonalImmunity::initialize(int job_number, std::string path) {
 
 void SeasonalImmunity::monthly_report() {
   // Hold off on logging until the MDC starts recording, this will help things run a bit faster for large models
-  if (!ModelDataCollector::recording_data()) {
+  if (!Model::DATA_COLLECTOR->recording_data()) {
     return;
   }
 
