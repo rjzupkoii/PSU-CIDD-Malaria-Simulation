@@ -45,7 +45,6 @@ class Config {
   CONFIG_ITEM(start_collect_data_day, int, 365)
 
   CONFIG_ITEM(number_of_tracking_days, int, 0)
-  CONFIG_ITEM(p_infection_from_an_infectious_bite, double, 0.0)
 
   CONFIG_ITEM(age_structure, std::vector<int>, std::vector<int>{})
   CONFIG_ITEM(initial_age_structure, std::vector<int>, std::vector<int>{})
@@ -85,8 +84,6 @@ class Config {
               std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
 
   CONFIG_ITEM(birth_rate, double, 0)
-
-  CONFIG_ITEM(as_iov, double, 0.2)
 
   CONFIG_ITEM(death_rate_by_age_class, DoubleVector, DoubleVector())
 

@@ -37,7 +37,6 @@ void create_cli_option(CLI::App& app);
 std::vector<int> therapies;
 std::vector<int> genotypes;
 
-double as_iov = -1.0;
 double as_iiv = -1.0;
 double as_ec50 = -1.0;
 
@@ -67,10 +66,6 @@ int main(int argc, char** argv) {
   p_model->set_config_filename(input_file);
   p_model->set_reporter_type("Null");
   p_model->initialize();
-
-  if (as_iov != -1) {
-    p_model->CONFIG->as_iov() = as_iov;
-  }
 
   if (as_iiv != -1) {
     for (auto& sd : p_model->CONFIG->drug_db()->at(0)->age_group_specific_drug_concentration_sd()) {
@@ -136,7 +131,6 @@ int main(int argc, char** argv) {
 void create_cli_option(CLI::App& app) {
   app.add_option("-t", therapies, "Get efficacies for range therapies [from to]");
   app.add_option("-g", genotypes, "Get efficacies for range genotypes [from to]");
-  app.add_option("--iov", as_iov, "AS inter-occasion-variability");
   app.add_option("--iiv", as_iiv, "AS inter-individual-variability");
   app.add_option("--ec50", as_ec50, "EC50 for AS on C580 only");
   app.add_option("-i,--input", input_file, "Input filename for DxG");
