@@ -33,14 +33,8 @@ ModelDataCollector::ModelDataCollector(Model* model) : model_(model),
                                                        AFU_(0), discounted_AMU_per_parasite_pop_(0),
                                                        discounted_AMU_per_person_(0),
                                                        discounted_AMU_for_clinical_caused_parasite_(0),
-                                                       discounted_AFU_(0), tf_at_15_(0),
-                                                       single_resistance_frequency_at_15_(0),
-                                                       double_resistance_frequency_at_15_(0),
-                                                       triple_resistance_frequency_at_15_(0),
-                                                       quadruple_resistance_frequency_at_15_(0),
-                                                       quintuple_resistance_frequency_at_15_(0),
-                                                       art_resistance_frequency_at_15_(0),
-                                                       total_resistance_frequency_at_15_(0), mean_moi_(0),
+                                                       discounted_AFU_(0),
+                                                       mean_moi_(0),
                                                        current_number_of_mutation_events_(0) {}
 
 bool ModelDataCollector::recording_data() { 
@@ -121,15 +115,6 @@ void ModelDataCollector::initialize() {
     number_of_clinical_by_location_age_group_ = IntMatrix_Locations_by_AgeClasses();
     number_of_clinical_by_location_age_group_by_5_ = IntMatrix_Locations_by_AgeClasses();
     number_of_death_by_location_age_group_ = IntMatrix_Locations_by_AgeClasses();
-
-    tf_at_15_ = 0;
-    single_resistance_frequency_at_15_ = 0;
-    double_resistance_frequency_at_15_ = 0;
-    triple_resistance_frequency_at_15_ = 0;
-    quadruple_resistance_frequency_at_15_ = 0;
-    quintuple_resistance_frequency_at_15_ = 0;
-    art_resistance_frequency_at_15_ = 0;
-    total_resistance_frequency_at_15_ = 0;
 
     today_number_of_treatments_by_therapy_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
 
@@ -457,7 +442,8 @@ void ModelDataCollector::update_after_run() {
   calculate_percentage_bites_on_top_20();
 }
 
-[[maybe_unused]] void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite) {
+[[maybe_unused]]
+void ModelDataCollector::record_AMU_AFU(Person* person, Therapy* therapy, ClonalParasitePopulation* clinical_caused_parasite) {
   if (Model::SCHEDULER->current_time() >= Model::CONFIG->start_of_comparison_period()) {
     auto sc_therapy = dynamic_cast<SCTherapy*>(therapy);
     if (sc_therapy != nullptr) {

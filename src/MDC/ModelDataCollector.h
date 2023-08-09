@@ -137,22 +137,6 @@ PROPERTY_REF(IntVector2, number_of_clinical_by_location_age_group_by_5)
 
 PROPERTY_REF(IntVector2, number_of_death_by_location_age_group)
 
-PROPERTY_REF(double, tf_at_15)
-
-PROPERTY_REF(double, single_resistance_frequency_at_15)
-
-PROPERTY_REF(double, double_resistance_frequency_at_15)
-
-PROPERTY_REF(double, triple_resistance_frequency_at_15)
-
-PROPERTY_REF(double, quadruple_resistance_frequency_at_15)
-
-PROPERTY_REF(double, quintuple_resistance_frequency_at_15)
-
-PROPERTY_REF(double, art_resistance_frequency_at_15)
-
-PROPERTY_REF(double, total_resistance_frequency_at_15)
-
 PROPERTY_REF(IntVector, today_number_of_treatments_by_therapy)
 
 PROPERTY_REF(double, mean_moi)
