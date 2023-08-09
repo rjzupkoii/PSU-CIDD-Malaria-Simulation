@@ -42,7 +42,7 @@ protected:
 
   std::stringstream ss;
 
-  double calculate_treatment_failures();
+  static double calculate_treatment_failures();
 
  public:
 
@@ -62,6 +62,8 @@ protected:
     CELLULAR_REPORTER,
     GENOTYPE_CARRIERS,
     SEASONAL_IMMUNITY,
+    AGE_BAND_REPORTER,
+    THERAPY_RECORD_REPORTER,
 
     // Null reporter used when the model needs to be initialized for access to functionality
     NULL_REPORTER

@@ -1,0 +1,18 @@
+# Technicalities
+
+Due to the complex nature of the simulation, there are a number of technical decisions that may impact the model performance or results. This chapter contains the technical documentation concerning these decisions.
+
+## Random Numbers
+A single random number generator is used for the entire life cycle of the simulation The simulation class `Random` acts as a wrapper for [GNU Scientific Library Random Number Generation](https://www.gnu.org/software/gsl/doc/html/rng.html) and [Random Number Distributions](https://www.gnu.org/software/gsl/doc/html/randist.html). The simulation uses the Mersenne Twister 19937 generator (`gsl_rng_mt19937`), an implementation of the Mersenne twister [@matsumoto_mersenne_1998], which produces 32-bit numbers with a state size of 19937 bits. Unless a seed is provided by the configuration, the random number generator instance is seeded by `std::random_device` which produces a non-deterministic, uniformly-distributed integer value. 
+
+## Internal Events
+Internal events are scheduled events with the simulation that are cannot be produced as a result of the YAML configuration. These are automatically created by the simulation when appropriate and may be of interest in understanding how the simulation works or how it can be modified.
+
+### `ProgressToClinicalEvent`
+The `ProgressToClinicalEvent` is scheduled when an individual is infected by a parasite and the infection will progress to a clinical infection, and possible death. Upon the event triggering, the simulation first checks to see if the conditions for a clinical infection are still present (i.e., parasites still in their system) and that another clinical infection did not already trigger. If the conditions are acceptable then parasite density is increased to clinical levels, and the determination to seek treatment occurs. If the individual seeks treatment, then it is administered and record keeping takes place and the `TestTreatmentFailureEvent` is scheduled. Otherwise, recording keeping takes place and the individual immune response is replied upon to clear the infection. In the event that the dies due to the infection, the death is immediately recorded and any treatment is logged as a failure by `ReportTreatmentFailureDeathEvent` at the treatment failure testing day (`tf_testing_day`).
+
+### `ReportTreatmentFailureDeathEvent`
+The `ReportTreatmentFailureDeathEvent` is produced by the `ProgressToClinicalEvent` when an individual receives treatment for malaria but dies. This event ensures that treatment failures are logged appropriately for the expected treatment time frame.
+
+### `TestTreatmentFailureEvent`
+The `TestTreatmentFailureEvent` is created when an individual with clinical case of malaria elects to receive treatment and is scheduled to trigger on the configured treatment failure testing day (`tf_testing_day`), which is typically 28 days. Treatment failures are determined by testing to see if the parasite that caused the clinical case has a parasite density above the detectable limit, as configured by the `log_parasite_density_detectable` field. The results of this test are logged for both the individual's location and the associated therapy.

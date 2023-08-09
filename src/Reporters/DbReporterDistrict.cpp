@@ -102,12 +102,11 @@ void DbReporterDistrict::monthly_genome_data(int id, std::string &query) {
   }
 
   // Iterate over the districts and append the query
-  std::string infections;
-  query.append(INSERT_GENOTYPE_PREFIX);
+  std::string insert_genotypes, update_infections;
   for (auto district = 0; district < districts; district++) {
     for (auto genotype = 0; genotype < genotypes; genotype++) {
       if (weightedOccurrences[district][genotype] == 0) { continue; }
-      query.append(fmt::format(INSERT_GENOTYPE_ROW,
+      insert_genotypes.append(fmt::format(INSERT_GENOTYPE_ROW,
         id, (district + first_index), genotype,
         occurrences[district][genotype],
         clinicalOccurrences[district][genotype],
@@ -115,10 +114,51 @@ void DbReporterDistrict::monthly_genome_data(int id, std::string &query) {
         occurrencesTwoToTen[district][genotype],
         weightedOccurrences[district][genotype]));
     }
-    infections.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infections_district[district], id, (district + first_index)));
+    update_infections.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infections_district[district], id, (district + first_index)));
   }
-  query[query.length() - 1] = ';';
-  query.append(infections);
+
+  // Check to see if there is no data
+  if (insert_genotypes.empty()) {
+    LOG(INFO) << "No genotypes recorded in the simulation at timestep, " << Model::SCHEDULER->current_time();
+    return;
+  }
+
+  // Append the queries to be executed
+  insert_genotypes[insert_genotypes.length() - 1] = ';';
+  query.append(INSERT_GENOTYPE_PREFIX);
+  query.append(insert_genotypes);
+  query.append(update_infections);
+}
+
+void DbReporterDistrict::monthly_infected_individuals(int id, std::string &query) {
+
+  // Cache some values and prepare the data structure
+  auto districts = SpatialData::get_instance().get_district_count();
+  auto first_index = SpatialData::get_instance().get_first_district();
+  auto* index = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+  auto age_classes = index->vPerson()[0][0].size();
+  std::vector<int> infections_district(districts, 0);
+
+  // Iterate overall the possible locations and states
+  for (auto location = 0; location < index->vPerson().size(); location++) {
+    for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
+      for (unsigned int ac = 0; ac < age_classes; ac++) {
+        for (auto &person : index->vPerson()[location][hs][ac]) {
+          // Is the individual infected by at least one parasite?
+          if (person->all_clonal_parasite_populations()->parasites()->empty()) { continue; }
+
+          // Calculate the correct index and update the count
+          auto district = district_lookup[location] - first_index;
+          infections_district[district]++;
+        }
+      }
+    }
+  }
+
+  // Iterate over the districts and append the query
+  for (auto district = 0; district < districts; district++) {
+    query.append(fmt::format(UPDATE_INFECTED_INDIVIDUALS, infections_district[district], id, (district + first_index)));
+  }
 }
 
 void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
@@ -165,8 +205,9 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
   }
 
   // Append the final query
+  query.append(INSERT_SITE_PREFIX);
   for (auto district = 0; district < districts; district++) {
-    query.append(fmt::format(INSERT_SITE,
+    query.append(fmt::format(INSERT_SITE_ROW,
       id, (district + first_index),
       population[district],
       clinical_episodes[district],
@@ -178,4 +219,5 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
       treatment_failures[district],
       nontreatment[district]));
   }
+  query[query.length() - 1] = ';';
 }

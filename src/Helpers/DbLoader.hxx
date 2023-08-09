@@ -1,7 +1,7 @@
 /*
  * DbLoader.h
  * 
- * This class defines various methods that can be used to propogate the database
+ * This class defines various methods that can be used to propagate the database
  * for the simulation for the first time. 
  */
 #ifndef DBLOADER_H
@@ -17,12 +17,12 @@
 class DbLoader {
     public:
         // Load the genotypes into the database, assume that these are the same for ALL configurations
-        static bool load_genotypes(std::string configuration) {
+        static bool load_genotypes(const std::string& configuration) {
             const std::string INSERT_GENOTYPE = "INSERT INTO sim.Genotype (id, name) VALUES ({}, '{}');";
 
             try {
                 // Load the configuration to grab the connection string
-                Config* config = new Config();
+                auto* config = new Config();
                 config->read_from_file(configuration);
 
                 // Prepare the bulk query

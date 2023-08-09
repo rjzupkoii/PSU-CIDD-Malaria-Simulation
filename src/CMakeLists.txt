@@ -27,7 +27,8 @@ file(GLOB SOURCE *.cpp
         Environment/*.cpp
         Events/*.cpp 
         Events/Environment/*.cpp
-        Events/Population/*.cpp 
+        Events/Population/*.cpp
+        Events/Population/EventBuilders/*.cpp
         GIS/*.cpp
         Helpers/*.cpp 
         Malaria/*.cpp
@@ -37,6 +38,7 @@ file(GLOB SOURCE *.cpp
         Population/Properties/*.cpp
         Reporters/*.cpp
         Reporters/Specialist/*.cpp
+        Reporters/Utility/*.cpp
         Spatial/*.cpp 
         Strategies/*.cpp
         Therapies/*.cpp

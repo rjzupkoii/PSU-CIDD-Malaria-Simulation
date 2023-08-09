@@ -16,14 +16,16 @@
 #include "Model.h"
 #include "MonthlyReporter.h"
 #include "MMCReporter.h"
+#include "Specialist/AgeBandReporter.h"
 #include "Specialist/CellularReporter.h"
 #include "Specialist/GenotypeCarriersReporter.h"
 #include "Specialist/MovementReporter.h"
 #include "Specialist/NullReporter.hxx"
 #include "Specialist/PopulationReporter.h"
 #include "Specialist/SeasonalImmunity.h"
+#include "Specialist/TherapyRecordReporter.h"
 
-std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
+std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap {
     {"Console", CONSOLE},
     {"MonthlyReporter", MONTHLY_REPORTER},
     {"MMC", MMC_REPORTER},
@@ -34,6 +36,8 @@ std::map<std::string, Reporter::ReportType> Reporter::ReportTypeMap{
     {"CellularReporter", CELLULAR_REPORTER},
     {"GenotypeCarriers", GENOTYPE_CARRIERS},
     {"SeasonalImmunity", SEASONAL_IMMUNITY},
+    {"AgeBand", AGE_BAND_REPORTER},
+    {"TherapyRecord", THERAPY_RECORD_REPORTER},
     {"Null", NULL_REPORTER}
 };
 
@@ -70,6 +74,8 @@ Reporter *Reporter::MakeReport(ReportType report_type) {
     case CELLULAR_REPORTER: return new CellularReporter();
     case GENOTYPE_CARRIERS: return new GenotypeCarriersReporter();
     case SEASONAL_IMMUNITY: return new SeasonalImmunity();
+    case AGE_BAND_REPORTER: return new AgeBandReporter();
+    case THERAPY_RECORD_REPORTER: return new TherapyRecordReporter();
     case NULL_REPORTER: return new NullReporter();
     default:
       LOG(ERROR) << "No reporter type supplied";

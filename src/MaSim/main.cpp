@@ -15,6 +15,9 @@
 #include "Model.h"
 #include "Reporters/Reporter.h"
 
+// Version information, be sure to update the file for major builds
+#include "version.h"
+
 // Set this flag to disable Linux / Unix specific code, this should be provided
 // via CMake automatically or by the compiler for WIN32
 #ifdef _WIN32 
@@ -27,9 +30,6 @@ namespace {
     static const bool SET_TERMINATE = std::set_terminate(crit_err_terminate);
 }
 #endif
-
-// Version information
-const std::string VERSION = "4.1.4";
 
 // Settings read from the CLI
 int job_number = 0;

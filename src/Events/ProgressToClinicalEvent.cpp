@@ -1,14 +1,13 @@
-/* 
- * File:   ProgressToClinicalEvent.cpp
- * Author: Merlin
- * 
- * Created on July 30, 2013, 2:36 PM
+/*
+ * ProgressToClinicalEvent.cpp
+ *
+ * Move the individual from being infected to having a clinical case of malaria, also test to see if they will seek
+ * treatment, and trigger any record keeping.
  */
-
 #include "ProgressToClinicalEvent.h"
+
 #include "Population/Person.h"
 #include "Core/Scheduler.h"
-#include "Population/SingleHostClonalParasitePopulations.h"
 #include "Population/Population.h"
 #include "Model.h"
 #include "Core/Config/Config.h"
@@ -17,6 +16,7 @@
 #include "Population/ClonalParasitePopulation.h"
 #include "Core/Random.h"
 #include "MDC/ModelDataCollector.h"
+#include "Events/ReportTreatmentFailureDeathEvent.h"
 
 OBJECTPOOL_IMPL(ProgressToClinicalEvent)
 
@@ -40,11 +40,6 @@ void ProgressToClinicalEvent::execute() {
     clinical_caused_parasite_->set_update_function(Model::MODEL->immunity_clearance_update_function());
     return;
   }
-
-
-  //    Model* model = person->population()->model();
-  //    Random* random = model->random();
-  //    Config* config = model->config();
 
   const auto density = Model::RANDOM->random_uniform_double(
       Model::CONFIG->parasite_density_level().log_parasite_density_clinical_from,
@@ -73,11 +68,11 @@ void ProgressToClinicalEvent::execute() {
   const auto p_treatment = Model::TREATMENT_COVERAGE->get_probability_to_be_treated(
       person->location(), person->age());
 
-  // std::cout << p_treatment << std::endl;
   if (p <= p_treatment) {
+    // Give the individual the relevant therapy
     auto *therapy = Model::TREATMENT_STRATEGY->get_therapy(person);
-
     person->receive_therapy(therapy, clinical_caused_parasite_);
+
     //Statistic increase today treatments
     Model::DATA_COLLECTOR->record_1_treatment(person->location(), therapy->id());
 
@@ -87,30 +82,20 @@ void ProgressToClinicalEvent::execute() {
     // DEPRECATED CALL
     //Model::DATA_COLLECTOR->record_AMU_AFU(person, therapy, clinical_caused_parasite_);
 
-    // death is 90% lower than no treatment
+    // Check if the person will progress to death despite treatment, this should be 90% lower than no treatment
     if (person->will_progress_to_death_when_receive_treatment()) {
-
-      //for each test treatment failure event inside individual
-      // record treatment failure (not tf)
-      //            person->record_treatment_failure_for_test_treatment_failure_events();
-
-      //no treatment routine
-      receive_no_treatment_routine(person);
-
       person->cancel_all_events_except(nullptr);
       person->set_host_state(Person::DEAD);
       Model::DATA_COLLECTOR->record_1_malaria_death(person->location(), person->age_class());
       Model::DATA_COLLECTOR->record_1_TF(person->location(), true);
-      Model::DATA_COLLECTOR->record_1_treatment_failure_by_therapy(person->location(), person->age_class(),
-                                                                   therapy->id());
+      ReportTreatmentFailureDeathEvent::schedule_event(Model::SCHEDULER, person, therapy->id(), Model::SCHEDULER->current_time() + Model::CONFIG->tf_testing_day());
       return;
     }
 
+    // The person didn't die, so schedule the remainder of the events
     person->schedule_update_by_drug_event(clinical_caused_parasite_);
-
     person->schedule_end_clinical_event(clinical_caused_parasite_);
-    person->schedule_test_treatment_failure_event(clinical_caused_parasite_, Model::CONFIG->tf_testing_day(),
-                                                  therapy->id());
+    person->schedule_test_treatment_failure_event(clinical_caused_parasite_, Model::CONFIG->tf_testing_day(),therapy->id());
 
   } else {
     // Did not receieve treatment
@@ -123,9 +108,6 @@ void ProgressToClinicalEvent::execute() {
       Model::DATA_COLLECTOR->record_1_malaria_death(person->location(), person->age_class());
       return;
     }
-    //
-    //        //schedule for end of clinical event
-    //        std::cout << "progress clinical event" << std::endl;
 
     person->schedule_end_clinical_by_no_treatment_event(clinical_caused_parasite_);
   }
@@ -133,15 +115,16 @@ void ProgressToClinicalEvent::execute() {
 
 void ProgressToClinicalEvent::schedule_event(Scheduler *scheduler, Person *p,
                                              ClonalParasitePopulation *clinical_caused_parasite, const int &time) {
-  if (scheduler!=nullptr) {
-    auto *e = new ProgressToClinicalEvent();
-    e->dispatcher = p;
-    e->set_clinical_caused_parasite(clinical_caused_parasite);
-    e->time = time;
+  // Ensure that the scheduler exists
+  assert(scheduler != nullptr);
 
-    p->add(e);
-    scheduler->schedule_individual_event(e);
-  }
+  // Create the event to be added to the queue
+  auto *e = new ProgressToClinicalEvent();
+  e->dispatcher = p;
+  e->set_clinical_caused_parasite(clinical_caused_parasite);
+  e->time = time;
+  p->add(e);
+  scheduler->schedule_individual_event(e);
 }
 
 void ProgressToClinicalEvent::receive_no_treatment_routine(Person *p) {

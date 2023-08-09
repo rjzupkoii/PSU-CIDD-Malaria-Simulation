@@ -1,12 +1,10 @@
 /* 
- * File:   ProgressToClinicalEvent.h
- * Author: Merlin
+ * ProgressToClinicalEvent.h
  *
- * Created on July 30, 2013, 2:36 PM
+ * Define the event that handles the individual manifesting a clinical case of malaria.
  */
-
 #ifndef PROGRESSTOCLINICALEVENT_H
-#define    PROGRESSTOCLINICALEVENT_H
+#define PROGRESSTOCLINICALEVENT_H
 
 #include "Event.h"
 #include "Core/ObjectPool.h"
@@ -31,7 +29,7 @@ class ProgressToClinicalEvent : public Event {
  public:
   ProgressToClinicalEvent();
 
-  virtual ~ProgressToClinicalEvent();
+  ~ProgressToClinicalEvent() override;
 
   static void schedule_event(Scheduler *scheduler, Person *p, ClonalParasitePopulation *clinical_caused_parasite,
                              const int &time);
@@ -46,4 +44,4 @@ class ProgressToClinicalEvent : public Event {
   void execute() override;
 };
 
-#endif    /* PROGRESSTOCLINICALEVENT_H */
+#endif

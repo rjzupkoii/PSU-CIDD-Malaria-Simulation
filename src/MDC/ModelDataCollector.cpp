@@ -22,6 +22,7 @@
 
 #define DoubleMatrix_Locations_by_AgeClasses() DoubleVector2(Model::CONFIG->number_of_locations(), DoubleVector(Model::CONFIG->number_of_age_classes(), 0.0))
 #define IntMatrix_Locations_by_AgeClasses() IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->number_of_age_classes(), 0))
+#define IntMatrix_Locations_by_Therapies() IntVector2(Model::CONFIG->number_of_locations(), IntVector(Model::CONFIG->therapy_db().size(), 0))
 
 // Fill the vector indicated with zeros, this should compile into a memset call which is faster than a loop
 #define zero_fill(vector) std::fill(vector.begin(), vector.end(), 0)
@@ -47,6 +48,8 @@ bool ModelDataCollector::recording_data() {
 }
 
 void ModelDataCollector::initialize() {
+  // TODO Determine if the _age_group_by_5_ variables can be removed or not.
+
   if (model_ != nullptr) {
     popsize_by_location_ = Vector_by_Locations(IntVector);
     births_by_location_ = Vector_by_Locations(IntVector);
@@ -155,8 +158,14 @@ void ModelDataCollector::initialize() {
     monthly_number_of_clinical_episode_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
     monthly_nontreatment_by_location_ = Vector_by_Locations(IntVector);
     monthly_nontreatment_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
+
+    monthly_treatment_complete_by_location_therapy_ = IntMatrix_Locations_by_Therapies();
     monthly_treatment_failure_by_location_ = Vector_by_Locations(IntVector);
     monthly_treatment_failure_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
+    monthly_treatment_failure_by_location_therapy_ = IntMatrix_Locations_by_Therapies();
+    monthly_treatment_success_by_location_ = Vector_by_Locations(IntVector);
+    monthly_treatment_success_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
+    monthly_treatment_success_by_location_therapy_ = IntMatrix_Locations_by_Therapies();
 
     current_number_of_mutation_events_ = 0;
     number_of_mutation_events_by_year_ = LongVector();
@@ -276,7 +285,9 @@ void ModelDataCollector::perform_yearly_update() {
     }
   } else if (Model::SCHEDULER->current_time() > Model::CONFIG->start_collect_data_day()) {
     for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-      auto eir = (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
+      // Make sure the divisor is not zero before calculating the EIR
+      auto eir = (person_days_by_location_year_[loc] == 0) ? 0 :
+              (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
       EIR_by_location_year_[loc].push_back(eir);
 
       //this number will be changed whenever a birth or a death occurs
@@ -314,7 +325,8 @@ void ModelDataCollector::calculate_eir() {
       // Collect data for less than 1 year, note that total_time_in_years maybe <= 0 if 
       // the model time is still before collection should take place
       const auto total_time_in_years = (Model::SCHEDULER->current_time() - Model::CONFIG->start_collect_data_day()) / static_cast<double>(Constants::DAYS_IN_YEAR());
-      double eir = (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
+      auto eir = (person_days_by_location_year_[loc] == 0) ? 0 :
+              (static_cast<double>(total_number_of_bites_by_location_year_[loc]) / static_cast<double>(person_days_by_location_year_[loc])) * Constants::DAYS_IN_YEAR();
       eir = eir / total_time_in_years;
       EIR_by_location_[loc] = eir;
 
@@ -514,10 +526,26 @@ void ModelDataCollector::record_1_treatment_failure_by_therapy(const int &locati
   number_of_treatments_fail_with_therapy_ID_[therapy_id] += 1;
   today_tf_by_therapy_[therapy_id] += 1;
 
-  // Update the monthly treatment failure count, note that we aren't tracking the therapy
   if (recording_data()) {
+    // Update the total completed
+    monthly_treatment_complete_by_location_therapy_[location][therapy_id]++;
+
+    // Update the monthly treatment failure count
     monthly_treatment_failure_by_location_[location]++;
     monthly_treatment_failure_by_location_age_class_[location][age_class]++;
+    monthly_treatment_failure_by_location_therapy_[location][therapy_id]++;
+  }
+}
+
+void ModelDataCollector::record_1_treatment_success_by_therapy(const int &location, const int &age_class, const int &therapy_id) {
+  if (recording_data()) {
+    // Update the total completed
+    monthly_treatment_complete_by_location_therapy_[location][therapy_id]++;
+
+    // Update the monthly treatment success count
+    monthly_treatment_success_by_location_[location]++;
+    monthly_treatment_success_by_location_age_class_[location][age_class]++;
+    monthly_treatment_success_by_location_therapy_[location][therapy_id]++;
   }
 }
 
@@ -635,12 +663,17 @@ void ModelDataCollector::monthly_reset() {
     zero_fill(monthly_nontreatment_by_location_);
     zero_fill(malaria_deaths_by_location_);
     zero_fill(monthly_treatment_failure_by_location_);
+    zero_fill(monthly_treatment_success_by_location_);
     
     for (auto location = 0ul; location < Model::CONFIG->number_of_locations(); location++) {
       zero_fill(monthly_nontreatment_by_location_age_class_[location]);
       zero_fill(malaria_deaths_by_location_age_class_[location]);
-      zero_fill(monthly_treatment_failure_by_location_age_class_[location]);
       zero_fill(monthly_number_of_clinical_episode_by_location_age_class_[location]);
+      zero_fill(monthly_treatment_complete_by_location_therapy_[location]);
+      zero_fill(monthly_treatment_failure_by_location_age_class_[location]);
+      zero_fill(monthly_treatment_failure_by_location_therapy_[location]);
+      zero_fill(monthly_treatment_success_by_location_age_class_[location]);
+      zero_fill(monthly_treatment_success_by_location_therapy_[location]);
     }
   }
 }

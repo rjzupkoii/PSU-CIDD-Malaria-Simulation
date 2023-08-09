@@ -1,0 +1,5 @@
+\newpage
+
+# (PART\*) References {-}
+
+<div id="refs"></div>

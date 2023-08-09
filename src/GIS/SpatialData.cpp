@@ -83,7 +83,7 @@ void SpatialData::generate_locations() {
     // Reference parameters
     AscFile* reference;
 
-    // Scan for a ASC file to use to generate with
+    // Scan for an ASC file to use to generate with
     auto ndx = 0;
     for (; ndx != SpatialFileType::Count; ndx++) {
         if (data[ndx] == nullptr) { continue; }
@@ -149,29 +149,45 @@ int SpatialData::get_district_count() {
     // Do we already have a count?
     if (district_count != 0) { return district_count; }
 
-    // Determine the count, note that the casting is a bit odd, but the number and index of districts doesn't make sense
-    // as a float whereas data structure underlying the ASC file may be float or int.
-    auto first = INT_MAX;
+    // Perform a consistency check on the districts by first loading all the district IDs while noting the highest value
+    std::list<int> districts;
     for (auto ndx = 0; ndx <  data[SpatialFileType::Districts]->NROWS; ndx++) {
         for (auto ndy = 0; ndy <  data[SpatialFileType::Districts]->NCOLS; ndy++) {
-            if ( data[SpatialFileType::Districts]->data[ndx][ndy] ==  data[SpatialFileType::Districts]->NODATA_VALUE) { continue; }
-            if ( data[SpatialFileType::Districts]->data[ndx][ndy] > static_cast<float>(district_count)) {
-                district_count = static_cast<int>(data[SpatialFileType::Districts]->data[ndx][ndy]);
-            }
+            auto value = data[SpatialFileType::Districts]->data[ndx][ndy];
+            if (value ==  data[SpatialFileType::Districts]->NODATA_VALUE) { continue; }
 
-            // Update the label for the first index
-            if (data[SpatialFileType::Districts]->data[ndx][ndy] < static_cast<float>(first)) {
-              first = static_cast<int>(data[SpatialFileType::Districts]->data[ndx][ndy]);
+            districts.emplace_back(value);
+            if (value > static_cast<float>(district_count)) {
+                district_count = static_cast<int>(value);
             }
         }
     }
 
-    // Verify that the first index is zero or one
-    if (!(first == 0 || first == 1)) {
-      LOG(ERROR) << "Index of first district must be zero or one, found " << first;
-      throw std::invalid_argument("District raster must be zero or one indexed.");
+    // Sort the districts and only keep the unique ones, we should have a list from [0, 1] to n with a step of one
+    districts.sort();
+    districts.unique();
+
+    // Ensure the first value is a zero or one and verify the largest district ID is consistent with the indexing.
+    // This check prevents errors when there are gaps in the numbering of the districts or when a one-indexed file
+    // contains zeros.
+    if (districts.front() == 0) {
+      if ((districts.size() - 1) != district_count || (districts.size() - 1) != districts.back()) {
+        LOG(ERROR) << "Highest district ID is inconsistent with a zero-based index, array size: " << districts.size() << ", last ID value: " << districts.back();
+        throw std::invalid_argument("District raster inconsistently numbered, or contains invalid data.");
+      }
+      // Add a notice to the file since zero-based indexing for ASC files would be unusual
+      LOG(INFO) << "File suggests zero-based district numbering.";
+      first_district = 0;
+    } else if (districts.front() == 1) {
+      if (districts.size() != district_count || districts.size() != districts.back()) {
+        LOG(ERROR) << "Highest district ID is inconsistent with a one-based index, expected " << districts.size() << ", got " << districts.back();
+        throw std::invalid_argument("District raster inconsistently numbered, or contains invalid data.");
+      }
+      first_district = 1;
+    } else {
+      LOG(ERROR) << "Index of first district must be zero or one, found " << districts.front();
+      throw std::invalid_argument("District raster must be zero-based or one-based.");
     }
-    first_district = first;
 
     // Return the result
     return district_count;
@@ -416,9 +432,7 @@ void SpatialData::refresh() {
         throw std::runtime_error(errors);
     }
 
-    // We have data, and we know that it should be located in the same geographic space,
-    // so now we can now refresh the location_db 
-    auto& db = Model::CONFIG->location_db();
+    // We have data, and we know that it should be located in the same geographic space, so now we can now refresh the location_db
     if (Model::CONFIG->number_of_locations() == 0) {
         generate_locations();
     }

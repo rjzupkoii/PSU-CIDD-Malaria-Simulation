@@ -213,11 +213,27 @@ PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
 // Monthly treatments by location
 PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
+// The total number of treatments completed by location and therapy, this should equal successes plus failures
+PROPERTY_REF(IntVector2, monthly_treatment_complete_by_location_therapy);
+
 // Monthly number of treatment failures (i.e., treatment unsuccessfully administered) by location
 PROPERTY_REF(IntVector, monthly_treatment_failure_by_location);
 
 // Monthly number of treatment failures by location and age class
 PROPERTY_REF(IntVector2, monthly_treatment_failure_by_location_age_class);
+
+// Monthly number of treatment failures by location and therapy
+PROPERTY_REF(IntVector2, monthly_treatment_failure_by_location_therapy);
+
+// Monthly number of treatment successes by location at time of follow-up
+PROPERTY_REF(IntVector, monthly_treatment_success_by_location);
+
+// Monthly number of treatment successes by location and age class
+PROPERTY_REF(IntVector2, monthly_treatment_success_by_location_age_class);
+
+// Monthly number of treatment successes by location and therapy
+PROPERTY_REF(IntVector2, monthly_treatment_success_by_location_therapy);
+
 
 public:
   // The number of reported multiple of infection (MOI)
@@ -260,8 +276,10 @@ public:
   void calculate_percentage_bites_on_top_20();
 
   // Indicates a combined "treatment failure" due to either 1) failure to treat or 2) the treatment not being successful
+  [[deprecated("Associated with legacy way of counting treatment failures (by drug and failure to treat)")]]
   void record_1_TF(const int &location, const bool &by_drug);
 
+  // Record that one treatment has been given
   void record_1_treatment(const int &location, const int &therapy_id);
 
   // Records one case in which the individual did not receive treatment
@@ -278,6 +296,9 @@ public:
 
   // Records one case in which a treatment was administered but failed due to patient death or failure to clear
   void record_1_treatment_failure_by_therapy(const int &location, const int &age_class, const int &therapy_id);
+
+  // Records one case in which a treatment was successful upon follow-up
+  void record_1_treatment_success_by_therapy(const int &location, const int &age_class, const int &therapy_id);
 
   void update_after_run();
 

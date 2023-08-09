@@ -1,0 +1,2 @@
+bookdown::pdf_book:
+  toc_depth: 3
