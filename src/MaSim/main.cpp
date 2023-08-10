@@ -1,7 +1,7 @@
 /* 
- * File:   main.cpp
+ * main.cpp
  *
- * Main entry point for the simulation, reads the CLI and starts the model.
+ * Main entry point for the simulation, reads the CLI and starts the simulation.
  */
 #include <args.hxx>
 #include <iostream>
@@ -10,8 +10,9 @@
 
 #include "easylogging++.h"
 #include "error_handler.hxx"
-#include "Helpers/OSHelpers.h"
+#include "Helpers/cpu.hxx"
 #include "Helpers/DbLoader.hxx"
+#include "Helpers/OSHelpers.h"
 #include "Model.h"
 #include "Reporters/Reporter.h"
 
@@ -20,24 +21,24 @@
 
 // Set this flag to disable Linux / Unix specific code, this should be provided
 // via CMake automatically or by the compiler for WIN32
-#ifdef _WIN32 
+#ifdef _WIN32
 #define __DISABLE_CRIT_ERR
 #endif
 
 #ifndef __DISABLE_CRIT_ERR
 namespace {
-    // invoke set_terminate as part of global constant initialization
-    static const bool SET_TERMINATE = std::set_terminate(crit_err_terminate);
+    // Invoke set_terminate as part of global constant initialization to scope it to the full application
+    // NOLINTBEGIN(readability-static-definition-in-anonymous-namespace)
+    [[maybe_unused]] static const bool SET_TERMINATE = std::set_terminate(crit_err_terminate);
+    // NOLINTEND(readability-static-definition-in-anonymous-namespace)
 }
 #endif
 
-// Settings read from the CLI
-int job_number = 0;
-std::string path("");
-
+// NOLINTBEGIN(cert-err58-cpp) / Assume that the logger will work correctly
 INITIALIZE_EASYLOGGINGPP
+// NOLINTEND(cert-err58-cpp)
 
-void handle_cli(Model *model, int argc, char **argv);
+void handle_cli(Model *model, int argc, char **argv, int& job_number, std::string& path);
 
 void config_logger() {
   const std::string OUTPUT_FORMAT = "[%level] [%func] [%loc] %msg";
@@ -63,26 +64,26 @@ void config_logger() {
 
 void config_critical_errors() {
   // Set the last chance error handler
-  struct sigaction sigact;
+  struct sigaction sigact{};
   sigact.sa_sigaction = crit_err_hdlr;
   sigact.sa_flags = SA_RESTART | SA_SIGINFO;
 
-  // Set the error handler for unhandled expections
-  if (sigaction(SIGABRT, &sigact, (struct sigaction *)NULL) != 0) {
+  // Set the error handler for unhandled exceptions
+  if (sigaction(SIGABRT, &sigact, (struct sigaction *)nullptr) != 0) {
       std::cerr << "error setting handler for signal " << SIGABRT 
                 << " (" << strsignal(SIGABRT) << ")\n";
       exit(EXIT_FAILURE);
   }
 
   // Set the error handler for segmentation faults
-  if (sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL) != 0) {
+  if (sigaction(SIGSEGV, &sigact, (struct sigaction *)nullptr) != 0) {
       std::cerr << "error setting handler for signal " << SIGSEGV 
                 << " (" << strsignal(SIGSEGV) << ")\n";
       exit(EXIT_FAILURE);      
   }
 
   // Set the error handler for bus errors
-  if (sigaction(SIGBUS, &sigact, (struct sigaction *)NULL) != 0) {
+  if (sigaction(SIGBUS, &sigact, (struct sigaction *)nullptr) != 0) {
       std::cerr << "error setting handler for signal " << SIGBUS 
                 << " (" << strsignal(SIGBUS) << ")\n";
       exit(EXIT_FAILURE);      
@@ -96,13 +97,16 @@ int main(const int argc, char **argv) {
     #endif
 
     // Parse the CLI
+    int job_number = 0;
+    std::string path;
     auto *m = new Model();
-    handle_cli(m, argc, argv);
+    handle_cli(m, argc, argv, job_number, path);
 
     // Prepare the logger
     config_logger();
     START_EASYLOGGINGPP(argc, argv);
     LOG(INFO) << fmt::format("MaSim version {0}", VERSION);
+    LOG(INFO) << cpu_brand_string();
     VLOG(1) << "Processor Count: " << std::thread::hardware_concurrency();
     VLOG(1) << "Physical: " << OsHelpers::getPhysicalMemoryUsed() << " Kb";
     VLOG(1) << "Virtual: " << OsHelpers::getVirtualMemoryUsed() << " Kb";
@@ -120,7 +124,7 @@ int main(const int argc, char **argv) {
     exit(EXIT_SUCCESS);
 }
 
-void handle_cli(Model *model, int argc, char **argv) {
+void handle_cli(Model *model, int argc, char **argv, int& job_number, std::string& path) {
   /* QUICK REFERENCE
    * -c / --config - config file
    * -h / --help   - help screen
@@ -138,6 +142,7 @@ void handle_cli(Model *model, int argc, char **argv) {
    * --mc          - record the movement between cells
    * --md          - record the movement between districts
    */
+  // NOLINTBEGIN(cppcoreguidelines-slicing) / Disable the slicing check while we define the argument parser
   args::ArgumentParser parser("Individual-based simulation for malaria.", "Boni Lab at Penn State");
   args::Group commands(parser, "commands");
   args::HelpFlag help(commands, "help", "Display this help menu", {'h', "help"});
@@ -157,6 +162,7 @@ void handle_cli(Model *model, int argc, char **argv) {
   // Allow the --v=[int] flag to be processed by START_EASYLOGGINGPP
   args::Group arguments(parser, "verbosity", args::Group::Validators::DontCare, args::Options::Global);
   args::ValueFlag<int> verbosity(arguments, "int", "Sets the verbosity of the logging, default zero", {"v"});
+  // NOLINTEND(cppcoreguidelines-slicing)
 
   try {
     parser.ParseCLI(argc, argv);
@@ -172,7 +178,7 @@ void handle_cli(Model *model, int argc, char **argv) {
     }
 
     // Check to if both --mc and --md are set, if so, generate an error
-    if (cell_movement && district_movement == true) {
+    if (cell_movement && district_movement) {
       std::cerr << "--mc and --md are mutual exclusive and may not be run together.\n";
       exit(EXIT_FAILURE);
     }
@@ -206,7 +212,7 @@ void handle_cli(Model *model, int argc, char **argv) {
   // Check to see if we are listing genotypes, do that and exit
   if (list_genotypes) {
     std::cout << "Genotypes present in configuration and their ids:" << std::endl;
-    Config* config = new Config();
+    auto* config = new Config();
     config->read_from_file(model->config_filename());
     for (auto id = 0ul; id < config->number_of_parasite_types(); id++) {
         auto genotype = (*config->genotype_db())[id];
