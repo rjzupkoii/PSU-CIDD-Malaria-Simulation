@@ -344,6 +344,7 @@ WITH (
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS sim.therapyrecord OWNER to sim;
+GRANT SELECT ON TABLE public.v_therapyrecords TO sim;
 
 --
 -- Create Releationships
