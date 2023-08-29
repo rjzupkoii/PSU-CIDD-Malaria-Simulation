@@ -1,4 +1,62 @@
-# Model Execution
+# Running the Simuation
+
+## Model Exeuction
+
+When the simulation is executed, the operation can be broken into two distinct phases:
+
+1. *Initialization* in which the simulation reads and verifies the YAML configuration file, and instantiates model data collector, population, and other relevant objects (see Figure \@ref(fig:initialization-png)).
+2. *Execution* during which the simulation is executed by executing all scheduled operations and events for each time step that the simulation is configured to run (see Figure \@ref(fig:timestep-png)).
+
+```{r initialization-png, fig.cap = "Typical model initialization sequence", out.width = "450px", echo = FALSE}
+knitr::include_graphics("diagrams/initialization.png")
+```
+
+```{r timestep-png, fig.cap = "Typical model time step sequence", out.width = "450px", echo = FALSE}
+knitr::include_graphics("diagrams/timestep.png")
+```
+
+### Initalization
+
+The main entry point for the simulation is via the `main` function, which first configures last chance error reporting (on Linux platforms), followed by parsing of the command line, configuration of logging, and model initialization (see  Figure \@ref(fig:initialization-png)). 
+
+Model initialization proceeds by first reading the configuration file, which entails the sequential processing of YAML elements.^[While the order of elements in the YAML file does not matter, the simulation is highly sensitive to the order that configuration items are read and changes to the order of entries in the `src/Core/Config/Config.h` file should be carefully tested.] If the YAML file indicates that the simulation is based upon a raster model of geography, then the geographic data (e.g., population distribution, beta values, etc.) is loaded and used to prepare the internal location database (i.e., `location_db`). If a location model of geography is then present in the YAML file, an error will be produced. Likewise, if any errors are encountered during the processing of YAML notes, an error will be produced.^[If a superfluous node is encountered in the YAML file, no errors are produced; however, the lack of a required node will produce an error.]
+
+Once the YAML has been successfully parse, the remaining model initialization proceeds in the following order:
+
+1. The random seed for the simulation is generated and stored.
+1. The model reporters are initialized sequentially in the order that they appear on the command line.
+1. The event scheduler is initialized.
+1. The initial treatment strategy is initialized.
+1. The initial treatment coverage model is loaded.
+1. The model data collector is initialized.
+1. The initial population is initialized based upon the population described in the YAML file.
+1. The movement model is initialized. 
+1. Initial malaria infections are introduced based upon the genotypes indicated in the YAML file.
+1. Any environmental or population events that are configured in the YAML file are added.
+1. Miscellaneous configuration occurs.
+
+Typically the major operations involved in model initialization are preparing the initial population and infections; however, depending on the movement model and geography involved the one-time calculations involved in model movement may consume a significant amount of time.
+
+### Execution
+
+Once initialization is complete, any pre-simulation operations are preformed as part of before run operations, followed by the primary simulation loop which is managed by the `Scheduler::run` function (see  Figure \@ref(fig:timestep-png)).
+
+Each time step of the simulation proceeds in the following manner:
+
+1. If it is the first day of the month, 
+    1. The `monthly_report` function of each reporter supplied is executed in the order that they were added to the reporters list.
+    1. The Model Data Collector resets any variables that are tracked by the month.
+1. If it is the first day of the year,
+    1. The Model Data Collector resets any variables that are tracked by the year.
+1. Any scheduled population events are executed.
+1. All daily population operations are executed,
+    1. Infection events are preformed.
+    1. The birth event is preformed.
+    1. The circulation (i.e., population movement) is preformed.
+1. Any scheduled individual events are executed.
+1. End of time step operations are preformed.
+
+As a result of the order of operations for the simulation, the model data is incremented before the monthly reporter is executed resulting in the date logged reflecting the start of the next month. However, because the Model Data Collector has not been reset, it will reflect all of the data of the previous month. 
 
 ## Troubleshooting
 
