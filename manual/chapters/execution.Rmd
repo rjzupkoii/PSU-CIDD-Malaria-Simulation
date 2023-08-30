@@ -7,11 +7,11 @@ When the simulation is executed, the operation can be broken into two distinct p
 1. *Initialization* in which the simulation reads and verifies the YAML configuration file, and instantiates model data collector, population, and other relevant objects (see Figure \@ref(fig:initialization-png)).
 2. *Execution* during which the simulation is executed by executing all scheduled operations and events for each time step that the simulation is configured to run (see Figure \@ref(fig:timestep-png)).
 
-```{r initialization-png, fig.cap = "Typical model initialization sequence", out.width = "450px", echo = FALSE}
+```{r initialization-png, fig.cap = "Typical model initialization sequence", echo = FALSE}
 knitr::include_graphics("diagrams/initialization.png")
 ```
 
-```{r timestep-png, fig.cap = "Typical model time step sequence", out.width = "450px", echo = FALSE}
+```{r timestep-png, fig.cap = "Typical model time step sequence", echo = FALSE}
 knitr::include_graphics("diagrams/timestep.png")
 ```
 
@@ -59,6 +59,10 @@ Each time step of the simulation proceeds in the following manner:
 As a result of the order of operations for the simulation, the model data is incremented before the monthly reporter is executed resulting in the date logged reflecting the start of the next month. However, because the Model Data Collector has not been reset, it will reflect all of the data of the previous month. 
 
 ## Troubleshooting
+
+### EOF encountered while reading data
+
+This error can be caused by several sources, but if the file being read ends with a `.asc` extension, then it is most likely an Esri ASCII raster format file^[https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/esri-ascii-raster-format.htm] (or ASC file) and the simulation encountered the end of the file before all of the expected data was read. Since the number of rows and number of columns is supplied at the start of an ASC file, the simulation attempts to read that number of cells and will produce this error if it runs out of data. The most likely cause of this error is edits to the ASC file that causes a mismatch between the number of cells and declared rows and columns.
 
 ### MD5 hash collision
 
