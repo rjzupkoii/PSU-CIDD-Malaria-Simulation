@@ -56,7 +56,7 @@ AscFile* AscFileManager::read(const std::string& fileName) {
         throw std::runtime_error("Error opening ASC file: " + fileName);
     }
     if (in.peek() == std::ifstream::traits_type::eof()) {
-	throw std::runtime_error("EOF encountered at start of the file: " + fileName);
+	      throw std::runtime_error("EOF encountered at start of the file: " + fileName);
     } 
     
     // Read the first six lines of the header
@@ -104,7 +104,7 @@ AscFile* AscFileManager::read(const std::string& fileName) {
         for (auto ndy = 0; ndy < results->NCOLS; ndy++) {
             // If the file is malformed then we may encounter the EOF before reading all the data
             if (in.eof()) {
-                throw std::runtime_error("EOF encountered while reading data.");
+                throw std::runtime_error("EOF encountered while reading data from: " +  fileName);
             }
             in >> value;
             results->data[ndx][ndy] = std::stof(value);
