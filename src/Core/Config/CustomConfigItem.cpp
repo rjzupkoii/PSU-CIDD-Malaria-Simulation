@@ -82,9 +82,13 @@ spatial_model::~spatial_model() {
 }
 
 void spatial_model::set_value(const YAML::Node &node) {
-  const auto sm_name = node[name_]["name"].as<std::string>();
-  value_ = Spatial::SpatialModelBuilder::Build(sm_name, node[name_][sm_name]);
-  VLOG(1) << "Using spatial model: " << sm_name;
+  try {
+    const auto sm_name = node[name_]["name"].as<std::string>();
+    value_ = Spatial::SpatialModelBuilder::Build(sm_name, node[name_][sm_name]);
+    VLOG(1) << "Using spatial model: " << sm_name;
+  } catch (YAML::InvalidNode &ex) {
+    throw std::invalid_argument("Spatial model does not contain a name node.");
+  }
 }
 
 void immune_system_information::set_value(const YAML::Node &node) {
