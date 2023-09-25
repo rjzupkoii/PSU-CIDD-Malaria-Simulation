@@ -439,8 +439,8 @@ rapt_config:
 ### genotype_info<a name="genotype_info"></a>
 To Be Written.
 
-## events
-This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all the data for the `info` field following will be provided to the loader function.
+## Events
+The `events` setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all the data for the `info` field following will be provided to the loader function.
 
 ### annual_beta_update_event
 The annual beta update event increases or decreases the beta for each cell in the model using the formula $beta' = beta + (beta \cdot rate)$ and clamps the lower bounds for the beta a zero. 
@@ -508,7 +508,7 @@ events:
 **log_parasite_density** (double) : the log density of the parasite to be imported. 
 
 ### introduce_mutant_event
-On the specified date, find infected individuals and force the parasite genotype from the given wild type to mutation specified (e.g., C580 to 580Y). This operation will fill the difference between the input fraction and the current frequency of the genotype in the population. **Note** that while this is a one time event, it is recommended that the event be invoked multiple times prior to any policy interventions acting upon a given mutation frequency.
+On the specified date, find infected individuals and force the parasite genotype from the given wild type to mutation specified (e.g., C580 to 580Y). This operation will fill the difference between the input fraction and the current frequency of the genotype in the population. This is typically implemented as a one time event since natural mutations tend to be singular in nature with a low probability of occurrence. However, proper calibration of the model may require a significant portion of the wild-type parasites to be mutated. Some decline in the number of mutants following the mutation is expected due to stochastic effects. 
 
 ```YAML
 events:
@@ -528,7 +528,7 @@ events:
 **mutant_allele** (int) : The genotype database allele index of the mutation allele that will be applied.
 
 ### introduce_mutant_raster_event
-Similar to the `introduce_mutant_event` in that infected individuals will be switched from teh wild type to the mutant genotype indicated; however, the selection of individuals is based upon the raster provided as opposed to a district number.
+Similar to the `introduce_mutant_event` in that infected individuals will be switched from the wild type to the mutant genotype indicated; however, the selection of individuals is based upon the raster provided as opposed to a district number.
 
 This event follows the "fail fast" paradigm and as part of event initialization during model initialization the raster is loaded and checked to ensure that the cells indicated correspond to populated locations. Determination of cell locations uses the same algorithm as all other raster processing in the simulation, and as a result simulated cells must be labeled as either zero (no mutations) or one (mutations). 
 
