@@ -163,6 +163,7 @@ void DbReporterDistrict::monthly_infected_individuals(int id, std::string &query
 
 void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
   // Prepare the data structures
+  auto age_classes = Model::CONFIG->age_structure();
   auto districts = SpatialData::get_instance().get_district_count();
   auto first_index = SpatialData::get_instance().get_first_district();
   std::vector<double> eir(districts, 0);
@@ -174,6 +175,8 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
   std::vector<int> treatments(districts, 0);
   std::vector<int> treatment_failures(districts, 0);
   std::vector<int> nontreatment(districts, 0);
+  std::vector<int> under5(districts, 0);
+  std::vector<int> over5(districts, 0);
 
   // Collect the data
   for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
@@ -191,6 +194,15 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
     treatments[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[location];
     treatment_failures[district] += Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[location];
     nontreatment[district] += Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location];
+
+    // Collect the treatment by age class
+    for (auto ndx = 0; ndx < age_classes.size(); ndx++) {
+      if (age_classes[ndx] <= 5) {
+        under5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+      } else {
+        over5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+      }
+    }
 
     // EIR and PfPR is a bit more complicated since it could be an invalid value early in the simulation, and when
     // aggregating at the district level the weighted mean needs to be reported instead
@@ -217,7 +229,9 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
       (pfpr_2to10[district] != 0) ? (pfpr_2to10[district] / population[district]) * 100.0 : 0,
       (pfpr_all[district] != 0) ? (pfpr_all[district] / population[district]) * 100.0 : 0,
       treatment_failures[district],
-      nontreatment[district]));
+      nontreatment[district],
+      under5[district],
+      over5[district]));
   }
   query[query.length() - 1] = ';';
 }

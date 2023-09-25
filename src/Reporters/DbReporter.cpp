@@ -319,6 +319,8 @@ void DbReporter::monthly_genome_data(int id, std::string &query) {
 
 // Iterate over all the sites and prepare the query for the site specific data
 void DbReporter::monthly_site_data(int id, std::string &query) {
+    auto age_classes = Model::CONFIG->age_structure();
+
     query.append(INSERT_SITE_PREFIX);
     for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
         // Check the population, if there is nobody there, press on
@@ -333,6 +335,17 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         auto pfpr_2to10 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100.0;
         auto pfpr_all = Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100.0;
 
+        // Determine the number of treatments for under-5 and over-5
+        auto under5 = 0;
+        auto over5 = 0;
+        for (auto ndx = 0; ndx < age_classes.size(); ndx++) {
+          if (age_classes[ndx] <= 5) {
+            under5 += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+          } else {
+            over5 += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+          }
+        }
+
         query.append(fmt::format(INSERT_SITE_ROW,
             id,
             location_index[location],
@@ -344,7 +357,9 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
             pfpr_2to10,
             pfpr_all,
             Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[location],
-            Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location]
+            Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location],
+            under5,
+            over5
         ));
     }
     query[query.length() - 1] = ';';

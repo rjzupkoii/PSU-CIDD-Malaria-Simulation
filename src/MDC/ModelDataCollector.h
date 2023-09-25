@@ -159,6 +159,9 @@ PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
 // Monthly treatments by location
 PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
+// Monthly number of treatments by location and age class
+PROPERTY_REF(IntVector2, monthly_number_of_treatment_by_location_age_class);
+
 // Monthly number of treatments by location and therapy
 PROPERTY_REF(IntVector2, monthly_number_of_treatment_by_location_therapy)
 
@@ -233,7 +236,7 @@ public:
   void calculate_percentage_bites_on_top_20();
 
   // Record that one treatment has been given
-  void record_1_treatment(const int &location, const int &therapy_id);
+  void record_1_treatment(const int &location, const int &age_class, const int &therapy_id);
 
   // Records one case in which the individual did not receive treatment
   void record_1_non_treated_case(const int &location, const int &age_class);

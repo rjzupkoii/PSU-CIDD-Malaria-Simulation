@@ -71,10 +71,10 @@ class DbReporter : public Reporter {
     const std::string INSERT_GENOTYPE_ROW = "({}, {}, {}, {}, {}, {}, {}, {}),";
 
     const std::string INSERT_SITE_PREFIX =
-    "INSERT INTO sim.MonthlySiteData (MonthlyDataId, Location, Population, ClinicalEpisodes, Treatments, EIR, PfPrUnder5, PfPr2to10, PfPrAll, TreatmentFailures, NonTreatment) VALUES ";
+    "INSERT INTO sim.MonthlySiteData (MonthlyDataId, Location, Population, ClinicalEpisodes, Treatments, EIR, PfPrUnder5, PfPr2to10, PfPrAll, TreatmentFailures, NonTreatment, Under5Treatment, Over5Treatment) VALUES ";
 
     // To be appended to the INSERT_SITE_PREFIX, note that the last character must be replaced with a semicolon
-    const std::string INSERT_SITE_ROW = "({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}),";
+    const std::string INSERT_SITE_ROW = "({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}),";
 
     const std::string UPDATE_INFECTED_INDIVIDUALS =
     "UPDATE sim.MonthlySiteData SET InfectedIndividuals = {} WHERE MonthlyDataId = {} AND Location = {};";

@@ -108,6 +108,7 @@ void ModelDataCollector::initialize() {
   number_of_death_by_location_age_group_ = IntMatrix_Locations_by_AgeClasses();
 
   monthly_number_of_treatment_by_location_ = Vector_by_Locations(IntVector);
+  monthly_number_of_treatment_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
   monthly_number_of_treatment_by_location_therapy_ = IntMatrix_Locations_by_Therapies();
   monthly_number_of_new_infections_by_location_ = Vector_by_Locations(IntVector);
   monthly_number_of_clinical_episode_by_location_ = Vector_by_Locations(IntVector);
@@ -369,9 +370,10 @@ void ModelDataCollector::begin_time_step() {
   recording = (Model::SCHEDULER->current_time() >= Model::CONFIG->start_collect_data_day());
 }
 
-void ModelDataCollector::record_1_treatment(const int &location, const int &therapy_id) {
+void ModelDataCollector::record_1_treatment(const int &location, const int &age_class, const int &therapy_id) {
   if (!recording) { return; }
   monthly_number_of_treatment_by_location_[location] += 1;
+  monthly_number_of_treatment_by_location_age_class_[location][age_class] += 1;
   monthly_number_of_treatment_by_location_therapy_[location][therapy_id] += 1;
 }
 
