@@ -30,8 +30,7 @@ file(GLOB SOURCE *.cpp
         Events/Population/*.cpp
         Events/Population/EventBuilders/*.cpp
         GIS/*.cpp
-        Helpers/*.cpp 
-        Malaria/*.cpp
+        Helpers/*.cpp
         MDC/*.cpp 
         Parasites/*.cpp 
         Population/*.cpp
@@ -41,6 +40,7 @@ file(GLOB SOURCE *.cpp
         Reporters/Utility/*.cpp
         Spatial/*.cpp 
         Strategies/*.cpp
+        Treatment/*.cpp
         Therapies/*.cpp
         Utility/*.cpp
         Validation/*.cpp

@@ -11,7 +11,7 @@
 #include "Core/Scheduler.h"
 #include "Population/ClinicalUpdateFunction.h"
 #include "Population/ImmunityClearanceUpdateFunction.h"
-#include "Malaria/ITreatmentCoverageModel.h"
+#include "Treatment/ITreatmentCoverageModel.h"
 
 class Scheduler;
 class Population;

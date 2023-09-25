@@ -2,7 +2,7 @@
 #define CHANGETREATMENTCOVERAGEEVENT_H
 
 #include "Events/Event.h"
-#include "Malaria/ITreatmentCoverageModel.h"
+#include "Treatment/ITreatmentCoverageModel.h"
 
 class ChangeTreatmentCoverageEvent : public Event {
 

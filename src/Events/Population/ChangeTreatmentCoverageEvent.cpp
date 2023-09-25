@@ -1,7 +1,7 @@
 #include "ChangeTreatmentCoverageEvent.h"
 #include "Model.h"
 #include "Helpers/ObjectHelpers.h"
-#include "Malaria/LinearTCM.h"
+#include "Treatment/LinearTCM.h"
 
 ChangeTreatmentCoverageEvent::ChangeTreatmentCoverageEvent(ITreatmentCoverageModel *tcm) {
   time = tcm->starting_time;

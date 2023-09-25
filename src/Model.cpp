@@ -37,7 +37,7 @@
 #include "Helpers/ObjectHelpers.h"
 #include "Helpers/StringHelpers.h"
 #include "Strategies/IStrategy.h"
-#include "Malaria/SteadyTCM.h"
+#include "Treatment/SteadyTCM.h"
 #include "Validation/MovementValidation.h"
 #include "Spatial/SpatialModel.hxx"
 

@@ -15,7 +15,7 @@
 #include "Core/Scheduler.h"
 #include "Events/Event.h"
 #include "Helpers/TimeHelpers.h"
-#include "Malaria/ITreatmentCoverageModel.h"
+#include "Treatment/ITreatmentCoverageModel.h"
 #include "Model.h"
 
 class AnnualCoverageUpdateEvent : public Event {
