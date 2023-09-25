@@ -230,8 +230,8 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
       (pfpr_all[district] != 0) ? (pfpr_all[district] / population[district]) * 100.0 : 0,
       treatment_failures[district],
       nontreatment[district],
-      under5[district],
-      over5[district]));
+      treatments_under5[district],
+      treatments_over5[district]));
   }
   query[query.length() - 1] = ';';
 }
