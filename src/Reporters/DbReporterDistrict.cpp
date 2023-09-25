@@ -195,9 +195,9 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
     treatment_failures[district] += Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[location];
     nontreatment[district] += Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location];
 
-    // Collect the treatment by age class
+    // Collect the treatment by age class, following the 0-59 month convention for under-5
     for (auto ndx = 0; ndx < age_classes.size(); ndx++) {
-      if (age_classes[ndx] <= 5) {
+      if (age_classes[ndx] < 5) {
         treatments_under5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
       } else {
         treatments_over5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];

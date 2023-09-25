@@ -1,9 +1,15 @@
+/*
+ * ITreatmentCoverageModel.h
+ *
+ * Define the abstract class for the treatment coverage models.
+ */
 #ifndef TREATMENTCOVERAGEMODEL_H
 #define TREATMENTCOVERAGEMODEL_H
 
-#include <vector>
-#include "Core/PropertyMacro.h"
 #include <yaml-cpp/yaml.h>
+#include <vector>
+
+#include "Core/PropertyMacro.h"
 #include "Core/Config/CustomConfigItem.h"
 
 class ITreatmentCoverageModel {
@@ -20,6 +26,7 @@ class ITreatmentCoverageModel {
 
   virtual ~ITreatmentCoverageModel() = default;
 
+  // Get the probability to be treated based upon the individual's location and age, presuming under-5 (< 5) or over-5
   virtual double get_probability_to_be_treated(const int &location, const int &age);
 
   virtual void monthly_update() = 0;
@@ -35,4 +42,4 @@ class ITreatmentCoverageModel {
   static ITreatmentCoverageModel *build(const YAML::Node &node, Config *config);
 };
 
-#endif // TREATMENTCOVERAGEMODEL_H
+#endif

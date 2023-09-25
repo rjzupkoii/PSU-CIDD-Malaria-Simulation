@@ -38,10 +38,11 @@ void RaptEvent::execute() {
       && person->age() >= raptConfig.age_start
       && !person->has_event<TestTreatmentFailureEvent>()) {
 
-    // Is their base compliance over-5 or under-5 treatment rate?
-    auto pr_treatment = person->age() > 5
-            ? Model::CONFIG->location_db()[person->location()].p_treatment_more_than_5
-            : Model::CONFIG->location_db()[person->location()].p_treatment_less_than_5;
+    // Is their base compliance over-5 or under-5 treatment rate, presume that we are following the Malaria Indicator
+    // Survey convention of under-5 being 0 - 59 months.
+    auto pr_treatment = person->age() < 5
+            ? Model::CONFIG->location_db()[person->location()].p_treatment_less_than_5
+            : Model::CONFIG->location_db()[person->location()].p_treatment_more_than_5;
 
     // Adjust the probability based upon the configured compliance rate with RAPT
     double pr_rapt = pr_treatment * raptConfig.compliance;

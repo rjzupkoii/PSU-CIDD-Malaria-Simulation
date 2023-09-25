@@ -335,11 +335,11 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         auto pfpr_2to10 = Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * 100.0;
         auto pfpr_all = Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100.0;
 
-        // Determine the number of treatments for under-5 and over-5
+        // Collect the treatment by age class, following the 0-59 month convention for under-5
         auto treatments_under5 = 0;
         auto treatments_over5 = 0;
         for (auto ndx = 0; ndx < age_classes.size(); ndx++) {
-          if (age_classes[ndx] <= 5) {
+          if (age_classes[ndx] < 5) {
             treatments_under5 += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
           } else {
             treatments_over5 += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];

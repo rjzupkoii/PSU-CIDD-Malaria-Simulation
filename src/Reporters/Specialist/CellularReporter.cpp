@@ -148,7 +148,7 @@ void CellularReporter::monthly_report() {
     auto clinical_u5 = 0;
     for (auto ndx = 0; ndx < Model::CONFIG->number_of_age_classes(); ndx++) {
         // Check to see if we are still under five in the age structure
-        if (Model::CONFIG->age_structure()[ndx] > 5) {
+        if (Model::CONFIG->age_structure()[ndx] < 5) {
             break;
         }
 
