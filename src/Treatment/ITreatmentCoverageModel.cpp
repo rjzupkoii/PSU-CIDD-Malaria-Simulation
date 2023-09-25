@@ -20,7 +20,6 @@ double ITreatmentCoverageModel::get_probability_to_be_treated(const int &locatio
 
   // This is abased upon the Malaria Indicator Survey, so we presume 0 - 59 months for under-5
   return (age < 5) ? p_treatment_less_than_5[location] : p_treatment_more_than_5[location];
-}
 
 ITreatmentCoverageModel *ITreatmentCoverageModel::build_steady_tcm(const YAML::Node &node, Config *config) {
   auto *result = new SteadyTCM();
