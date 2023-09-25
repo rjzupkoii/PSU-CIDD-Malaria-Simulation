@@ -79,7 +79,7 @@ void ProgressToClinicalEvent::execute() {
 
     person->receive_therapy(therapy, clinical_caused_parasite_);
     //Statistic increase today treatments
-    Model::DATA_COLLECTOR->record_1_treatment(person->location(), therapy->id());
+    Model::DATA_COLLECTOR->record_1_treatment(person->location(), person->age_class(), therapy->id());
 
     clinical_caused_parasite_->set_update_function(Model::MODEL->having_drug_update_function());
 

@@ -150,6 +150,7 @@ void ModelDataCollector::initialize() {
     today_number_of_treatments_by_therapy_ = IntVector(Model::CONFIG->therapy_db().size(), 0);
 
     monthly_number_of_treatment_by_location_ = Vector_by_Locations(IntVector);
+    monthly_number_of_treatment_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
     monthly_number_of_new_infections_by_location_ = Vector_by_Locations(IntVector);
     monthly_number_of_clinical_episode_by_location_ = Vector_by_Locations(IntVector);
     monthly_number_of_clinical_episode_by_location_age_class_ = IntMatrix_Locations_by_AgeClasses();
@@ -470,12 +471,13 @@ void ModelDataCollector::end_of_time_step() {
   }
 }
 
-void ModelDataCollector::record_1_treatment(const int &location, const int &therapy_id) {
+void ModelDataCollector::record_1_treatment(const int &location, const int &age_class, const int &therapy_id) {
   if (recording_data()) {
     today_number_of_treatments_by_location_[location] += 1;
     today_number_of_treatments_by_therapy_[therapy_id] += 1;
     number_of_treatments_with_therapy_ID_[therapy_id] += 1;
     monthly_number_of_treatment_by_location_[location] += 1;
+    monthly_number_of_treatment_by_location_age_class_[location][age_class] += 1;
   }
 }
 

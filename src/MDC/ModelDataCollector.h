@@ -213,6 +213,9 @@ PROPERTY_REF(IntVector, monthly_number_of_new_infections_by_location);
 // Monthly treatments by location
 PROPERTY_REF(IntVector, monthly_number_of_treatment_by_location);
 
+// Monthly treatments by location and age class
+PROPERTY_REF(IntVector2, monthly_number_of_treatment_by_location_age_class);
+
 // Monthly number of treatment failures (i.e., treatment unsuccessfully administered) by location
 PROPERTY_REF(IntVector, monthly_treatment_failure_by_location);
 
@@ -262,7 +265,7 @@ public:
   // Indicates a combined "treatment failure" due to either 1) failure to treat or 2) the treatment not being successful
   void record_1_TF(const int &location, const bool &by_drug);
 
-  void record_1_treatment(const int &location, const int &therapy_id);
+  void record_1_treatment(const int &location, const int &age_class, const int &therapy_id);
 
   // Records one case in which the individual did not receive treatment
   void record_1_non_treated_case(const int &location, const int &age_class);

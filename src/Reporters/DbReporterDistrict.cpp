@@ -123,6 +123,7 @@ void DbReporterDistrict::monthly_genome_data(int id, std::string &query) {
 
 void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
   // Prepare the data structures
+  auto age_classes = Model::CONFIG->age_structure();
   auto districts = SpatialData::get_instance().get_district_count();
   auto first_index = SpatialData::get_instance().get_first_district();
   std::vector<double> eir(districts, 0);
@@ -134,6 +135,8 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
   std::vector<int> treatments(districts, 0);
   std::vector<int> treatment_failures(districts, 0);
   std::vector<int> nontreatment(districts, 0);
+  std::vector<int> treatments_under5(districts, 0);
+  std::vector<int> treatments_over5(districts, 0);
 
   // Collect the data
   for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
@@ -162,6 +165,15 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
       pfpr_2to10[district] += (Model::DATA_COLLECTOR->get_blood_slide_prevalence(location, 2, 10) * location_population);
       pfpr_all[district] += (Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * location_population);
     }
+
+    // Collect the under-5 and over-5 treatments
+    for (auto ndx = 0; ndx < age_classes.size(); ndx++) {
+      if (age_classes[ndx] <= 5) {
+        treatments_under5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+      } else {
+        treatments_over5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+      }
+    }
   }
 
   // Append the final query
@@ -176,6 +188,8 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
       (pfpr_2to10[district] != 0) ? (pfpr_2to10[district] / population[district]) * 100.0 : 0,
       (pfpr_all[district] != 0) ? (pfpr_all[district] / population[district]) * 100.0 : 0,
       treatment_failures[district],
-      nontreatment[district]));
+      nontreatment[district],
+      treatments_under5[district],
+      treatments_over5[district]));
   }
 }
