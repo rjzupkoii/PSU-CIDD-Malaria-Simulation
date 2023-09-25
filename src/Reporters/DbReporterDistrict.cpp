@@ -175,8 +175,8 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
   std::vector<int> treatments(districts, 0);
   std::vector<int> treatment_failures(districts, 0);
   std::vector<int> nontreatment(districts, 0);
-  std::vector<int> under5(districts, 0);
-  std::vector<int> over5(districts, 0);
+  std::vector<int> treatments_under5(districts, 0);
+  std::vector<int> treatments_over5(districts, 0);
 
   // Collect the data
   for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
@@ -198,9 +198,9 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
     // Collect the treatment by age class
     for (auto ndx = 0; ndx < age_classes.size(); ndx++) {
       if (age_classes[ndx] <= 5) {
-        under5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+        treatments_under5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
       } else {
-        over5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+        treatments_over5[district] += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
       }
     }
 

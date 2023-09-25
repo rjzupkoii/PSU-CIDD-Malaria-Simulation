@@ -336,13 +336,13 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         auto pfpr_all = Model::DATA_COLLECTOR->blood_slide_prevalence_by_location()[location] * 100.0;
 
         // Determine the number of treatments for under-5 and over-5
-        auto under5 = 0;
-        auto over5 = 0;
+        auto treatments_under5 = 0;
+        auto treatments_over5 = 0;
         for (auto ndx = 0; ndx < age_classes.size(); ndx++) {
           if (age_classes[ndx] <= 5) {
-            under5 += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+            treatments_under5 += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
           } else {
-            over5 += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
+            treatments_over5 += Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location_age_class()[location][ndx];
           }
         }
 
@@ -358,8 +358,8 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
             pfpr_all,
             Model::DATA_COLLECTOR->monthly_treatment_failure_by_location()[location],
             Model::DATA_COLLECTOR->monthly_nontreatment_by_location()[location],
-            under5,
-            over5
+            treatments_under5,
+            treatments_over5
         ));
     }
     query[query.length() - 1] = ';';
