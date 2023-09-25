@@ -74,7 +74,7 @@ class DbReporter : public Reporter {
     const std::string INSERT_SITE =
     "INSERT INTO sim.MonthlySiteData "
     "(MonthlyDataId, Location, Population, ClinicalEpisodes, Treatments, EIR, PfPrUnder5, PfPr2to10, PfPrAll, TreatmentFailures, NonTreatment, under5treatment, over5treatment) "
-    "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});";
+    "VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});";
 
     const std::string UPDATE_INFECTED_INDIVIDUALS =
     "UPDATE sim.MonthlySiteData SET InfectedIndividuals = {} WHERE MonthlyDataId = {} AND Location = {};";
