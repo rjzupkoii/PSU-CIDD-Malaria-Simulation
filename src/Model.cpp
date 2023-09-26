@@ -37,7 +37,7 @@
 #include "Helpers/ObjectHelpers.h"
 #include "Helpers/StringHelpers.h"
 #include "Strategies/IStrategy.h"
-#include "Treatment/SteadyTCM.h"
+#include "Treatment/SteadyTCM.hxx"
 #include "Validation/MovementValidation.h"
 #include "Spatial/SpatialModel.hxx"
 

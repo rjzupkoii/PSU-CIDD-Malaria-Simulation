@@ -4,7 +4,7 @@
 #include "Treatment/LinearTCM.h"
 
 ChangeTreatmentCoverageEvent::ChangeTreatmentCoverageEvent(ITreatmentCoverageModel *tcm) {
-  time = tcm->starting_time;
+  time = tcm->starting_time();
   treatment_coverage_model = tcm;
 }
 

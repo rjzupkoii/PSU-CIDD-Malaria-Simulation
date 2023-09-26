@@ -467,8 +467,72 @@ events:
         rate: 0.025
 ```
 
-**day** (date string, YYYY/mm/dd) : the date when the update will first occur. \
-**rate** (float) : the rate of reduction in the coverage for the cells.
+**day** (date string, YYYY/mm/dd) : The date when the update will first occur. \
+**rate** (float) : The rate of reduction in the coverage for the cells.
+
+### change_treatment_coverage
+Change the current treatment coverage to be either `SteadyTCM`, `InflatedTCM`, or `LinearTCM`. Passing an invalid treatment coverage name will result in a run time error, and the YAML depends on the treatment coverage model named. Since the simulation defaults to the `SteadyTCM` it is recommended that if there are geographic scale differences in treatment coverage that the `pr_treatment_under5` and `pr_treatment_over5` rasters be used via the `raster_db` setting.\footnote{This event is largely provided for legacy functionality or very small simuations since the ablity to supply rasters via the event is not supported.}
+
+#### Steady Treatment Coverage Model
+The steady treatment coverage model is the simulation default and maintains a fixed treatment coverage unless updated by the `annual_coverage_update_event`.
+
+```YAML
+events:
+  - name: change_treatment_coverage
+    info:
+      - type: SteadyTCM
+        day: 2023/09/26
+        p_treatment_less_than_5: [0.1]
+        p_treatment_more_than_5: [0.1]
+```
+**type** (string): Must be `SteadyTCM` to use this treatment coverage model.\
+**day** (date string, YYYY/mm/dd) : The date when this treatment coverage model will begin. \
+**p_treatment_less_than_5** (float array) : An array of floating point values that correspond to the treatment coverage for under five (< 5) in each cell.\
+**p_treatment_more_than_5** (float array) : An array of floating point values that correspond to the treatment coverage for under five (< 5) in each cell.
+
+#### Inflated Treatment Coverage Model
+
+
+```YAML
+events:
+  - name: change_treatment_coverage
+    info:
+      - type: InflatedTCM
+        day: 2023/09/26
+        annual_inflation_rate: 0.03
+        p_treatment_less_than_5: [0.1]
+        p_treatment_more_than_5: [0.1]
+```
+
+**type** (string): Must be `InflatedTCM` to use this treatment coverage model.\
+**day** (date string, YYYY/mm/dd) : The date when this treatment coverage model will begin. \
+**annual_inflation_rate** (float) : The inflation rate to apply to the treatment converge until it reaches 100%.\
+**p_treatment_less_than_5** (float array) : An array of floating point values that correspond to the treatment coverage for under five (< 5) in each cell.\
+**p_treatment_more_than_5** (float array) : An array of floating point values that correspond to the treatment coverage for under five (< 5) in each cell.
+
+#### Linear Treatment Coverage Model
+The linear treatment coverage model increases the treatment coverage by a linear amount, calculated at run time, with a monthly update based upon the start and end dates.
+      
+```YAML
+events:
+  - name: change_treatment_coverage
+    info:
+      - type: LinearTCM
+        from_day: 2023/09/26
+        to_day: 2024/01/01
+        p_treatment_for_less_than_5_by_location_from: [0.1]
+        p_treatment_for_more_than_5_by_location_from: [0.1]
+        p_treatment_for_less_than_5_by_location_to: [0.3]
+        p_treatment_for_less_than_5_by_location_to: [0.2]
+```
+
+**type** (string): Must be `LinearTCM` to use this treatment coverage model.\
+**from_day** (date string, YYYY/mm/dd) : The date when the update will start to occur. \
+**to_day** (date string, YYYY/mm/dd) : The date when the updates will end. \
+**p_treatment_for_less_than_5_by_location_from** (float array) : An array of floating point values that correspond to the initial treatment coverage for under five (< 5) in each cell.\
+**p_treatment_for_more_than_5_by_location_from** (float array) : An array of floating point values that correspond to the initial treatment coverage for under five (< 5) in each cell.\
+**p_treatment_for_less_than_5_by_location_to** (float array) : An array of floating point values that correspond to the initial treatment coverage for under five (< 5) in each cell.\
+**p_treatment_for_less_than_5_by_location_to** (float array) : An array of floating point values that correspond to the initial treatment coverage for under five (< 5) in each cell.
 
 ### change_treatment_strategy
 Change the treatment strategy that is currently deployed in the simulation to the one defined in `strategy_db` with the given index. Simple error checking is performed upon model initialization and the `strategy_id` must be within bounds of the `strategy_db`.
@@ -483,7 +547,6 @@ events:
 
 **day** (date string, YYYY/mm/dd) : The date when the update will first occur. \
 **strategy_id** (integer) : The index of the strategy defined in `strategy_db`.
-
 
 ### importation_periodically_random_event
 Over the course of the month indicated (January:1 - December:12) introduce the infection into the model at a random location, selected by a draw that is weighted by the population. Each day an infection is introduced based upon a uniform draw against `count / [days in month]`. Once started, this event continues until model termination.

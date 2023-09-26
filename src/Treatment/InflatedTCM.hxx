@@ -1,3 +1,8 @@
+/*
+ * InflatedTCM.hxx
+ *
+ * Implement the inflated treatment coverage model,
+ */
 #ifndef INFLATEDICM_H
 #define INFLATEDICM_H
 
@@ -21,4 +26,4 @@ class InflatedTCM : public ITreatmentCoverageModel {
   }
 };
 
-#endif // INFLATEDICM_H
+#endif
