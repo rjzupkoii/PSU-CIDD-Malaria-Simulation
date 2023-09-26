@@ -18,8 +18,8 @@ if (WIN32)
   set(CMAKE_CXX_FLAGS_RELEASE "-DNOMINMAX ${CMAKE_CXX_FLAGS_RELEASE} /MT")
   set(CMAKE_CXX_FLAGS_DEBUG "-DNOMINMAX ${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
-  # Sets the flag to disable Linux specific error handling 
-  add_definitions(-D__DISABLE_CRIT_ERR)  
+  # Sets the flag to disable Linux specific error handling
+  add_definitions(-D__DISABLE_CRIT_ERR)
 endif ()
 
 IF(APPLE)
@@ -32,12 +32,15 @@ ENDIF()
 find_package(GSL REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+find_package(libpqxx CONFIG REQUIRED)
+find_package(PostgreSQL REQUIRED)
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+find_package(CLI11 CONFIG REQUIRED)
+find_package(date CONFIG REQUIRED)
+find_package(args CONFIG REQUIRED)
 
 # Include external projects
 set(EXT_PROJECTS_DIR ${PROJECT_SOURCE_DIR}/ext)
-add_subdirectory(${EXT_PROJECTS_DIR}/date)
-add_subdirectory(${EXT_PROJECTS_DIR}/args)
-include_directories(${YAML_CPP_INCLUDE_DIR} ${DATE_INCLUDE_DIR} ${ARGS_INCLUDE_DIR} ${EXT_PROJECTS_DIR}/CLI11)
 
 # Add the source subdirectory
 add_subdirectory(src)

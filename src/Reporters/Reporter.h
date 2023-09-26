@@ -1,7 +1,7 @@
-/* 
+/*
  * Reporter.h
  *
- * Define various enumerations and constants related to reporters as well as the 
+ * Define various enumerations and constants related to reporters as well as the
  * factory pattern used to initialize reporters.
  */
 
@@ -16,35 +16,33 @@ class Model;
 
 // Wrapper for TSV file constants
 namespace Tsv {
-  const std::string sep = "\t";
-  const std::string end_line = "\n";
-  const std::string extension = "tsv";
-}
+const std::string sep = "\t";
+const std::string end_line = "\n";
+const std::string extension = "tsv";
+} // namespace Tsv
 
 // Wrapper for CSV file constants
 namespace Csv {
-  const std::string sep = ",";
-  const std::string end_line = "\n";
-  const std::string extension = "csv";
-}
+const std::string sep = ",";
+const std::string end_line = "\n";
+const std::string extension = "csv";
+} // namespace Csv
 
 class Reporter {
- DISALLOW_COPY_AND_ASSIGN(Reporter)
+  DISALLOW_COPY_AND_ASSIGN(Reporter)
 
- DISALLOW_MOVE(Reporter)
+  DISALLOW_MOVE(Reporter)
 
- POINTER_PROPERTY(Model, model)
+  POINTER_PROPERTY(Model, model)
 
 protected:
-
   // Constants used when generating TSV files
   const std::string group_sep = "-1111\t";
 
   std::stringstream ss;
 
- public:
-
-   enum ReportType {
+public:
+  enum ReportType {
     CONSOLE,
     GUI,
     MONTHLY_REPORTER,
@@ -53,7 +51,7 @@ protected:
     // Reporter(s) with database dependency
     DB_REPORTER,
     DB_REPORTER_DISTRICT,
-    
+    SQLITE_DISTRICT_REPORTER,
     // Specialist reporters for specific experiments
     MOVEMENT_REPORTER,
     POPULATION_REPORTER,
@@ -63,13 +61,14 @@ protected:
     AGE_BAND_REPORTER,
     THERAPY_RECORD_REPORTER,
 
-    // Null reporter used when the model needs to be initialized for access to functionality
+    // Null reporter used when the model needs to be initialized for access to
+    // functionality
     NULL_REPORTER
   };
 
   static std::map<std::string, ReportType> ReportTypeMap;
 
-  Reporter() : model_(nullptr) { }
+  Reporter() : model_(nullptr) {}
 
   virtual ~Reporter() = default;
 
@@ -84,7 +83,6 @@ protected:
   virtual void monthly_report() = 0;
 
   static Reporter *MakeReport(ReportType report_type);
-
 };
 
 #endif

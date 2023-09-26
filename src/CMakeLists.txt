@@ -19,27 +19,27 @@ endfunction()
 include_directories(${PROJECT_SOURCE_DIR}/src ${EXT_PROJECTS_DIR}/easyloggingpp.9.96.4)
 
 # Define the core simulation files
-file(GLOB SOURCE *.cpp 
-        Core/*.cpp 
-        Core/Config/*.cpp 
+file(GLOB SOURCE *.cpp
+        Core/*.cpp
+        Core/Config/*.cpp
         Core/Config/Decoders/*.cpp
         Core/Index/*.cpp
         Environment/*.cpp
-        Events/*.cpp 
+        Events/*.cpp
         Events/Environment/*.cpp
         Events/Population/*.cpp
         Events/Population/EventBuilders/*.cpp
         GIS/*.cpp
-        Helpers/*.cpp 
+        Helpers/*.cpp
         Malaria/*.cpp
-        MDC/*.cpp 
-        Parasites/*.cpp 
+        MDC/*.cpp
+        Parasites/*.cpp
         Population/*.cpp
         Population/Properties/*.cpp
         Reporters/*.cpp
         Reporters/Specialist/*.cpp
         Reporters/Utility/*.cpp
-        Spatial/*.cpp 
+        Spatial/*.cpp
         Strategies/*.cpp
         Therapies/*.cpp
         Utility/*.cpp
@@ -55,35 +55,31 @@ file(GLOB LIBRARY
 # Set the source files
 set(SRC_FILES ${SOURCE} ${LIBRARY})
 add_library(MaSimCore STATIC ${SRC_FILES})
-add_dependencies(MaSimCore date args)
 
-# Pull in date::date for the correct location if we are on not on WSL or are on the cluster
-if (NOT BUILD_WSL OR BUILD_CLUSTER)
-        # Depending upon when someone built for the first time, date could
-        # be under "date" or "unoffical-date"
-        CheckHasModule(date)
-        if (${HAS_MODULE_date})
-                message(STATUS "Using date::date")
-                find_package(date CONFIG REQUIRED)
-                target_link_libraries(MaSimCore PUBLIC date::date)
-        else()
-                message(STATUS "Using unofficial::date::date")
-                find_package(unofficial-date CONFIG REQUIRED)
-                target_link_libraries(MaSimCore PUBLIC unofficial::date::date)
-        endif()
-endif()
 
 if (BUILD_WSL)
 target_link_libraries(MaSimCore PUBLIC
         yaml-cpp
         GSL::gsl GSL::gslcblas
         fmt::fmt
+        PostgreSQL::PostgreSQL
+        unofficial::sqlite3::sqlite3
+        CLI11::CLI11
+        date::date
+        date::date-tz
+        taywee::args
         )
 else()
 target_link_libraries(MaSimCore PUBLIC
         yaml-cpp
         GSL::gsl GSL::gslcblas
         fmt::fmt fmt::fmt-header-only
+        PostgreSQL::PostgreSQL
+        unofficial::sqlite3::sqlite3
+        CLI11::CLI11
+        date::date
+        date::date-tz
+        taywee::args
         )
 endif()
 
@@ -94,21 +90,13 @@ if (BUILD_WARNINGS)
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable")
 endif()
 
-# Update the linker for libpqxx
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpqxx -lpq")
-if (BUILD_CLUSTER)
-        include_directories($ENV{HOME}/work/build_env/lib/include)
-        find_library(PQXX_LIB pqxx PATHS $ENV{HOME}/work/build_env/lib/lib)
-        find_library(PQ_LIB pq PATHS $ENV{HOME}/work/build_env/postgres/lib)
-else()
-        find_library(PQXX_LIB pqxx)
-        find_library(PQ_LIB pq)
-endif()
+find_library(PQXX_LIB pqxx)
+find_library(PQ_LIB pq)
 
 # Prepare to build the executables
 add_executable(MaSim MaSim/main.cpp)
 add_dependencies(MaSim MaSimCore)
-target_link_libraries(MaSim PRIVATE MaSimCore ${PQXX_LIB} ${PQ_LIB})
+target_link_libraries(MaSim PRIVATE MaSimCore ${PQXX_LIB} ${PQ_LIB} )
 target_compile_features(MaSim PRIVATE cxx_range_for)
 
 install(TARGETS MaSim DESTINATION ${PROJECT_SOURCE_DIR}/bin)
@@ -118,7 +106,7 @@ file(GLOB DXG_SRC_FILES DxGGenerator/*.cpp DxGGenerator/*.h)
 
 add_executable(DxGGenerator ${DXG_SRC_FILES})
 add_dependencies(DxGGenerator  MaSimCore)
-target_link_libraries(DxGGenerator PRIVATE MaSimCore ${PQXX_LIB} ${PQ_LIB})
+target_link_libraries(DxGGenerator PRIVATE MaSimCore ${PQXX_LIB} ${PQ_LIB} )
 target_compile_features(DxGGenerator PRIVATE cxx_range_for)
 
 # Note the flags that we ran with

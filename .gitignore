@@ -1,4 +1,4 @@
-
+.cache
 # Ignore IDE directories
 .idea
 .vscode
@@ -25,4 +25,3 @@ documentation/diagrams/*.~vsdx
 out
 monthly_data\.txt
 reporter\.txt
-
