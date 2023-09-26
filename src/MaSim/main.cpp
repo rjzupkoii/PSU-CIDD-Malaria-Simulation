@@ -20,8 +20,8 @@
 #include "version.h"
 
 // Set this flag to disable Linux / Unix specific code, this should be provided
-// via CMake automatically or by the compiler for WIN32
-#ifdef _WIN32
+// via CMake automatically or by the compiler for WIN32 or macOS
+#if defined(_WIN32) || defined(__APPLE__)
 #define __DISABLE_CRIT_ERR
 #endif
 
