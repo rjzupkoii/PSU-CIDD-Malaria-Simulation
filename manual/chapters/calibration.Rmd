@@ -93,3 +93,11 @@ Once the bounds have been found it is necessary to reduce the epsilon values to 
 
 3.	As the epsilon values are reduced, they need to be checked against the reference values by performing a validation run.\
   3.1. Using the beta map generated and the status quo parameters for the country, run the model at scale.
+
+### Beta Calibration Assessment
+
+```{r plosgphfig1a-png, fig.cap = "Example of a calibration assessment comparing the projected prevelence versus the reference prevelence", out.width = "450px", echo = FALSE}
+knitr::include_graphics("diagrams/plos_gph_fig1a.png")
+```
+
+The primary metric for evaluating the beta calibration is a comparison of the projected prevalence against the population weighted prevalence for an administrative region. Typically this is done using data from the Malaria Atlas Project [@weiss_mapping_2019], although the preference should be to use the most reliable and timely data that can be sourced. As shown in Figure \@ref(fig:plosgphfig1a-png) on the left [@zupko_long_term_2022], in administrative regions with a high malaria burden, calibrations that are within ±5% is very achievable. However, as the malaria burden declines, the calibration is typically in the range of ±10%. At this point it is necessary to critically evaluate the model calibration to ensure that it is acceptable for the research question being evaluated. Likewise, in most regions the number of clinical cases is going to exceed the number of reported clinical cases by a sizable margin (Figure \@ref(fig:plosgphfig1a-png), Right). Awareness of what this differential should be is an important part of ensuring the model is properly calibrated.
