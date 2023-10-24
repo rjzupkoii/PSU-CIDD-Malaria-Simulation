@@ -9,19 +9,20 @@ rmd_files: [
   "index.Rmd", 
   
   # Introduction
-  "chapters/introduction.Rmd",
+  "chapters/01_introduction.Rmd",
+  "chapters/02_description.Rmd",
 
   # Simulation
-  "chapters/calibration.Rmd",
-  "chapters/execution.Rmd",
-  "chapters/DxGGenerator.Rmd",
+  "chapters/03_calibration.Rmd",
+  "chapters/04_execution.Rmd",
+  "chapters/05_DxGGenerator.Rmd",
 
   # Development
-  "chapters/development.Rmd",
-  "chapters/database.Rmd",
+  "chapters/06_development.Rmd",
+  "chapters/07_database.Rmd",
 
   # Demonstration
-  "chapters/demonstration.Rmd",
+  "chapters/08_demonstration.Rmd",
 
   # Appendices
   "appendices/encoding.Rmd",

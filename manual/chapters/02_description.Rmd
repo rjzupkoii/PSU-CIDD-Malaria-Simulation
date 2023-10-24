@@ -1,0 +1,27 @@
+# Model Description
+
+## Infection Life Cycle
+
+The infection life cycle for an individual begins when they are selected by the simulation to be "bitten" by an infectious mosquito. This triggers a sporozite challenge in the individual in which the infection proceeds to based upon the following equation [@zupko_long_term_2022]:
+
+$$
+Pr_{inf}= \left\{
+\begin{matrix}
+Pr & \text{if } \theta < 0.2 \\
+0.1 & \text{if } \theta > 0.8 \\
+Pr\left ( 1 - \frac{\theta - 0.2}{0.6} + 0.1 \frac{\theta - 0.2}{0.6} \right ) & \text{otherwise}
+\end{matrix}\right.
+$$
+
+Where *Pr* is the probability of infection for an immunological naïve individual, $\theta$ is the individual's current immunity, and *Pr~inf~* is the final probability of infection. Upon failing the challenge the individual's state is set to `exposed`, the infection then proceeds to the liver stage, and seven days later, the blood stage. Upon entering the blood stage the individual's state is set to `asymptomatic`, the parasitemia is set to a random value within the asymptomatic bounds. Next, the individual is checked to see if they have an effective drug in their blood^[This can occur if they are treating a recent infection, participated in a mass drug administration campaign, or are taking seasonal malaria chemoprophylaxis.], if they do then the infection will remain asymptomatic, otherwise it may progress to a clinical infection.
+
+The probability that an asymptomatic infection will progress to clinical is dependent upon the individual immune response [@nguyen_optimum_2015]:
+
+$$Pr_{clin}= \frac{0.999}{1 + \left( \frac{\theta}{\theta_{mid}} \right) ^z}$$
+Where $\theta_{mid}$ is the configured midpoint infliction of the immunity curve, and *Pr~clin~* is the final probability of a clinical infection. In the event that the individual proceeds to a clinical infection, then after the appropriate number of days for their age, the clinical infection manifests. At this point the individual's state is set to `clinical` and the parasitemia is increased to be within the clinical bounds. While the simulation assumes that all clinical infections manifest with recognizable symptoms, treatment seeking may not always occur. As a result, following progressing to clinical, the individual then decides to seek treatment with a probability that is appropriate for their current location and their age group.^[In other words, the probability of seeking treatment is determined by the location that the individual is currently in, not their original location or intended destination.] 
+
+When an individual seeks treatment, the simulation first checks to ensure that it will prevent death. If the treatment is insufficient, then the individual state is set to `dead` and the death is processed by the simulation. Otherwise, a series of events are scheduled wherein the individual may take the prescribed therapy each day, and parasites are cleared from the blood based upon the current immune response and level of drugs in the blood. During this time, the individual's state may progress from `clinical` to `asymptomatic` based upon the parasitemia. Once the individual has completed the course of treatment, if there are still parasites present in the blood, then the individual is checked to see if they will relapse based upon the configured value. Otherwise, they continue to clear the parasite based upon their immunity clearance rate. Once the parasite is cleared, and if there are no other clones present, the individual state will be restored to `susceptible`.
+
+In the event that the individual does not seek treatment, the checks to see if the infection will result in death. If so then the individual state is set to `dead` and the death is processed by the simulation. Otherwise, the individual slowly clears the infection via their immunity clearance rate which will progress them from `clinical` to `asymptomatic` to `susceptible`.
+
+In areas with a high prevalence, multiple infections with different clones is possible and the progression is the same as described in this section for each clone. In the event that multiple clones are present in the blood, then the killing rate is calculated for each of the clones based upon the drugs efficacy upon that clone.
