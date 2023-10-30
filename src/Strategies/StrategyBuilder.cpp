@@ -1,25 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * StrategyBuilder.cpp
+ *
+ * Implement the factory for the strategies.
  */
-
-/* 
- * File:   StrategyBuilder.cpp
- * Author: Merlin
- * 
- * Created on August 23, 2017, 11:03 AM
- */
-
 #include "StrategyBuilder.h"
-#include "IStrategy.h"
-#include "SFTStrategy.h"
+
 #include "Core/Config/Config.h"
 #include "CyclingStrategy.h"
-#include "MFTStrategy.h"
-#include "NestedMFTStrategy.h"
+#include "DistrictMftStrategy.h"
+#include "GIS/SpatialData.h"
+#include "IStrategy.h"
 #include "MFTMultiLocationStrategy.h"
+#include "MFTStrategy.h"
 #include "NestedMFTMultiLocationStrategy.h"
+#include "NestedMFTStrategy.h"
+#include "SFTStrategy.h"
 
 StrategyBuilder::StrategyBuilder() = default;
 
@@ -41,6 +36,8 @@ IStrategy* StrategyBuilder::build(const YAML::Node &ns, const int &strategy_id, 
         return buildMFTMultiLocationStrategy(ns, strategy_id, config);
       case IStrategy::NestedMFTMultiLocation:
         return buildNestedMFTDifferentDistributionByLocationStrategy(ns, strategy_id, config);
+      case IStrategy::DistrictMftStrategy:
+        return buildDistrictMftStrategy(ns, strategy_id, config);
       default:
         LOG(WARNING) << "Unknown strategy type: " << ns["type"].as<std::string>();
         return nullptr;
@@ -113,8 +110,7 @@ IStrategy* StrategyBuilder::buildNestedSwitchingStrategy(const YAML::Node &ns, c
   return result;
 }
 
-IStrategy*
-StrategyBuilder::buildMFTMultiLocationStrategy(const YAML::Node &ns, const int &strategy_id, Config* config) {
+IStrategy* StrategyBuilder::buildMFTMultiLocationStrategy(const YAML::Node &ns, const int &strategy_id, Config* config) {
   auto* result = new MFTMultiLocationStrategy();
   result->set_id(strategy_id);
   result->set_name(ns["name"].as<std::string>());
@@ -147,9 +143,7 @@ StrategyBuilder::buildMFTMultiLocationStrategy(const YAML::Node &ns, const int &
   return result;
 }
 
-IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrategy(const YAML::Node &ns,
-                                                                                  const int &strategy_id,
-                                                                                  Config* config) {
+IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrategy(const YAML::Node &ns, const int &strategy_id, Config* config) {
   auto* result = new NestedMFTMultiLocationStrategy();
   result->set_id(strategy_id);
   result->set_name(ns["name"].as<std::string>());
@@ -182,8 +176,84 @@ IStrategy* StrategyBuilder::buildNestedMFTDifferentDistributionByLocationStrateg
   }
 
   result->peak_after = ns["peak_after"].as<int>();
-  //    std::cout << result->to_string() << std::endl;
 
   return result;
 }
 
+// Read the YAML and create the DistrictMftStrategy object.
+IStrategy *StrategyBuilder::buildDistrictMftStrategy(const YAML::Node &node, const int &strategy_id, Config *config) {
+  // Load the initial parts of the object
+  auto *strategy = new DistrictMftStrategy();
+  strategy->set_id(strategy_id);
+  strategy->set_name(node["name"].as<std::string>());
+
+  // Track the districts that have been assigned an MFT, we should see all of them once
+  std::vector<int> districts;
+
+  // Read each of the definitions
+  for (auto ndx = 0; ndx < node["definitions"].size(); ndx++) {
+    // Read the MFT from the child node
+    auto child = node["definitions"][std::to_string(ndx)];
+    DistrictMftStrategy::MftStrategy mft;
+
+    // Make sure the sizes are valid
+    if (child["therapy_ids"].size() != child["distribution"].size()) {
+      LOG(ERROR) << "The number of therapies and distributions should be the same, reading " << ndx;
+      throw std::invalid_argument("Matched therapy and distribution array size.");
+    }
+
+    // Read the therapy ids and make sure they make sense
+    for (auto ndy = 0; ndy < child["therapy_ids"].size(); ndy++) {
+      auto id = child["therapy_ids"][ndy].as<int>();
+      if (id < 0) {
+        LOG(ERROR) << "Drug id should not be less than zero, reading " << ndx;
+        throw std::invalid_argument("Drug id should not be less than zero.");
+      }
+      if (id > config->therapy_db().size()) {
+        LOG(ERROR) << "Drug id exceeds count of known drugs, reading " << ndx;
+        throw std::invalid_argument("Drug id exceeds count of known drugs.");
+      }
+      mft.therapies.push_back(config->therapy_db()[id]);
+    }
+
+    // Read the distribution percentages for the MFT and make sure they make sense
+    auto sum = 0.0f;
+    for (auto ndy = 0; ndy < child["distribution"].size(); ndy++) {
+      auto percent = child["distribution"][ndy].as<float>();
+      if (percent <= 0.0) {
+        LOG(ERROR) << "Distribution percentage cannot be less than or equal to zero, reading " << ndx;
+        throw std::invalid_argument("Distribution percentage cannot be less than or equal to zero.");
+      }
+      if (percent > 1.0) {
+        LOG(ERROR) << "Distribution percentage cannot be greater than 100%, reading " << ndx;
+        throw std::invalid_argument("Distribution percentage cannot be greater than 100%.");
+      }
+      sum += percent;
+      mft.percentages.push_back(percent);
+    }
+    if (int(sum) != 1) {
+      LOG(ERROR) << "Distribution percentage sum does not equal 100%, reading " << ndx;
+      throw std::invalid_argument("Distribution percentage sum must equal 100%.");
+    }
+
+    // Assign the MFT to each of the districts
+    for (auto ndy = 0; ndy < child["district_ids"].size(); ndy++) {
+      auto id = child["district_ids"][ndy].as<int>();
+      if (std::find(districts.begin(), districts.end(), id) != districts.end()) {
+        LOG(ERROR) << "District encountered a second time, reading " << ndx;
+        throw std::invalid_argument("District duplication detected.");
+      }
+      strategy->assign_mft(id, mft);
+      districts.push_back(id);
+    }
+  }
+
+  // All the distributions and been read and assigned, make sure each district has one
+  if (districts.size() < SpatialData::get_instance().get_district_count()) {
+    LOG(ERROR) << "Number of districts with MFT assigned is less than total district count.";
+    throw std::invalid_argument("Districts missing MFT assignment.");
+  }
+
+  // Everything looks good, return the strategy
+  return strategy;
+}

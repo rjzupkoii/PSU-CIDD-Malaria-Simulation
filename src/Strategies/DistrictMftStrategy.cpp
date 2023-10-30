@@ -5,6 +5,8 @@
  */
 #include "DistrictMftStrategy.h"
 
+#include <utility>
+
 #include "Core/Random.h"
 #include "GIS/SpatialData.h"
 #include "Model.h"
@@ -19,9 +21,8 @@ void DistrictMftStrategy::add_therapy(Therapy *therapy) {
   throw std::runtime_error("Invalid function called to add therapy to the District MFT Strategy.");
 }
 
-void DistrictMftStrategy::add_therapy(Therapy *therapy, int district, float percentage) {
-  district_strategies[district].therapies.push_back(therapy);
-  district_strategies[district].percentages.push_back(percentage);
+void DistrictMftStrategy::assign_mft(int district, MftStrategy mft) {
+  district_strategies[district] = std::move(mft);
 }
 
 Therapy *DistrictMftStrategy::get_therapy(Person *person) {
@@ -42,31 +43,4 @@ Therapy *DistrictMftStrategy::get_therapy(Person *person) {
   // Since we should ways return above, throw an error if we get here
   throw std::runtime_error("Scanned for therapy without finding a match: " + this->name() +
     ", district: " + std::to_string(district) + ", pr: " + std::to_string(pr));
-}
-
-std::string DistrictMftStrategy::validate(DistrictMftStrategy strategy) {
-  // Define our variables
-  std::string errors;
-
-  // Iterate over all the strategies to confirm that they are valid
-  for (auto id = 0; id < SpatialData::get_instance().get_district_count(); id++) {
-    auto mft = strategy.district_strategies[id];
-
-    // There should be at least one therapy defined
-    if (mft.therapies.empty()) {
-      errors.append("No therapies defined for district id: " + std::to_string(id));
-    }
-
-    // Sum of percentages should be 100%
-    auto total = 0.0;
-    for (auto value : mft.percentages) {
-      total += value;
-    }
-    if (int(total) != 1) {
-      errors.append("Total of the percentages is not 100% for district id: " + std::to_string(id));
-    }
-  }
-
-  // Return the errors that were found
-  return errors;
 }

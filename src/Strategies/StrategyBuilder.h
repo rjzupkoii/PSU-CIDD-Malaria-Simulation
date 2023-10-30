@@ -1,16 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   StrategyBuilder.h
- * Author: Merlin
+ * StrategyBuilder.h
  *
- * Created on August 23, 2017, 11:03 AM
+ * Define the factory for strategy objects.
  */
-
 #ifndef STRATEGYBUILDER_H
 #define STRATEGYBUILDER_H
 
@@ -47,9 +39,9 @@ class StrategyBuilder {
 
   static IStrategy *buildMFTMultiLocationStrategy(const YAML::Node &node, const int &id, Config *config);
 
-  static IStrategy *
-  buildNestedMFTDifferentDistributionByLocationStrategy(const YAML::Node &ns, const int &strategy_id,
-                                                        Config *config);
+  static IStrategy *buildNestedMFTDifferentDistributionByLocationStrategy(const YAML::Node &ns, const int &strategy_id, Config *config);
+
+  static IStrategy *buildDistrictMftStrategy(const YAML::Node &node, const int &strategy_id, Config *config);
 };
 
-#endif /* STRATEGYBUILDER_H */
+#endif
