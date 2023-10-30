@@ -38,7 +38,7 @@ public:
           {"NestedMFT", NestedMFT},
           {"MFTMultiLocation", MFTMultiLocation},
           {"NestedMFTMultiLocation", NestedMFTMultiLocation},
-          {"DistrictMftStrategy", DistrictMftStrategy}
+          {"DistrictMFT", DistrictMftStrategy}
   };
 
   PROPERTY(int, id)
