@@ -16,7 +16,7 @@ class DistrictMftStrategy : public IStrategy {
 public:
   // The basic structure of an MFT
   struct MftStrategy {
-      std::vector<Therapy*> therapies;
+      std::vector<int> therapies;
       std::vector<float> percentages;
   };
 

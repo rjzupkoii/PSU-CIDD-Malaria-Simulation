@@ -7,6 +7,7 @@
 
 #include <utility>
 
+#include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "GIS/SpatialData.h"
 #include "Model.h"
@@ -36,7 +37,7 @@ Therapy *DistrictMftStrategy::get_therapy(Person *person) {
   for (auto ndx = 0; ndx < mft.percentages.size(); ndx++) {
     sum += mft.percentages[ndx];
     if (pr <= sum) {
-      return mft.therapies[ndx];
+      return Model::CONFIG->therapy_db()[mft.therapies[ndx]];
     }
   }
 

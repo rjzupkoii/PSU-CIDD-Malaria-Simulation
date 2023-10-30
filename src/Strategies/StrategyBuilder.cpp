@@ -213,7 +213,7 @@ IStrategy *StrategyBuilder::buildDistrictMftStrategy(const YAML::Node &node, con
         LOG(ERROR) << "Drug id exceeds count of known drugs, reading " << ndx;
         throw std::invalid_argument("Drug id exceeds count of known drugs.");
       }
-      mft.therapies.push_back(config->therapy_db()[id]);
+      mft.therapies.push_back(id);
     }
 
     // Read the distribution percentages for the MFT and make sure they make sense
