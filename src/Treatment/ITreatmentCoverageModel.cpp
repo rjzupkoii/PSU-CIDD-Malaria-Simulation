@@ -14,9 +14,9 @@
 #include "SteadyTCM.hxx"
 
 double ITreatmentCoverageModel::get_probability_to_be_treated(const int &location, const int &age) {
-  assert(location >= 0);                                                          // Location should not be less than zero
-  assert(static_cast<std::size_t>(location) >= p_treatment_less_than_5.size() ||
-         static_cast<std::size_t>(location) >= p_treatment_more_than_5.size());   // Location is greater than the array size
+  assert(location >= 0);                                                         // Location should not be less than zero
+  assert(static_cast<std::size_t>(location) < p_treatment_less_than_5.size() &&
+         static_cast<std::size_t>(location) < p_treatment_more_than_5.size());   // Location is greater than the array size
 
   // This is abased upon the Malaria Indicator Survey, so we presume 0 - 59 months for under-5
   return (age < 5) ? p_treatment_less_than_5[location] : p_treatment_more_than_5[location];

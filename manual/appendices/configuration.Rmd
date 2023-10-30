@@ -409,10 +409,46 @@ The multiple first-line therapies (MFT) approach calls for two or more therapies
 **therapy_ids** (integer array) : The therapies that may be given, based upon the index of the therapies defined in `therapy_db`. \
 **distribution** (float array) : The probability that an individual will receive the therapy corresponding to the same index where the total of all values provided *must* equal one.
 
+### District MFT Strategy 
+
+The district MFT strategy approach allows for different MFT approach to be targeted on a regional bases based upon the district id provided. These district ids should align with those defined in the `district_raster`. Upon initialization of the strategy when the configuration file is read, the strategy is checked for errors which includes: all district ids are used, all therapies actually exist, and the total sum of the distribution is 100%.
+
+```YAML
+strategy_db:
+  0:
+    name: Baseline
+    type: MFT
+    therapy_ids: [ 0 ]
+    distribution: [ 1 ]
+  1:
+    name: ExampleDistrictMFT
+    type: DistrictMFT
+    definitions:
+      0: 
+        district_ids: [ 1, 2, 3 ]
+        therapy_ids: [ 1, 2 ]    
+        distribution: [ 0.75, 0.25 ]
+      1: 
+        district_ids: [ 4, 5, 6 ]
+        therapy_ids: [ 1, 2 ]    
+        distribution: [ 0.5, 0.5 ]
+      2: 
+        district_ids: [ 7, 8, 9 ]
+        therapy_ids: [ 1, 2 ]    
+        distribution: [ 0.25, 0.75 ]
+```
+
+**name** (string) : A string name used to refer to the treatment in console output and logs. \
+**type** (string) : Always `DistrictMFT` \
+**definitions** : Indicates the start of a new list of definitions numbered zero to *n*. \
+**district_ids** (integer array) : The ids of the districts where the therapies may be given. \
+**therapy_ids** (integer array) : The therapies that may be given, based upon the index of the therapies defined in `therapy_db`. \
+**distribution** (float array) : The probability that an individual will receive the therapy corresponding to the same index where the total of all values provided *must* equal one.
+
 ## Policy Interventions
 While most of the policy interventions can be implemented using the therapies deployed, and switching them via events such as `change_treatment_strategy`, some of the more complex strategies require more in-depth configuration or are closely coupled with how the simulation operates.
 
-### Regular administration of prophylactic therapy (version 4.1.3, untested)
+### Regular administration of prophylactic therapy (Untested)
 The regular administration of prophylactic therapy, or RAPT protocol, is a speculative approach to malaria control that calls for individual to take an artemisinin combination therapy (ACT) periodically without the presentation of clinical symptoms for malaria. The protocol presumes an individual will remember the month to take then next ACT, and at some point during that month a check will be performed to see if they take the therapy. The probability is based upon the probability that an individual in their age group will seek treatment and the probability of compliance with the RAPT protocol (i.e., $Pr(RAPT) = Pr(Treatment) \cdot Pr(Compliance)$ ). In the event that the individual already took an ACT in the past 28 days (determined by checking for `TestTreatmentFailureEvent`), they will not take the ACT regardless.
 
 Implementation of this protocol requires that events be scheduled for at model initialization, although the point at which the individuals start taking the ACTs is determined by the configuration. Due to the computational overhead involved with the RAPT protocol, the simulation execution time is longer. If the `rapt_config` entry is not present in the configuration file, the event will not be enabled within the simulation.

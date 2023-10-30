@@ -194,7 +194,7 @@ IStrategy *StrategyBuilder::buildDistrictMftStrategy(const YAML::Node &node, con
   for (auto ndx = 0; ndx < node["definitions"].size(); ndx++) {
     // Read the MFT from the child node
     auto child = node["definitions"][std::to_string(ndx)];
-    DistrictMftStrategy::MftStrategy mft;
+    auto mft = new DistrictMftStrategy::MftStrategy();
 
     // Make sure the sizes are valid
     if (child["therapy_ids"].size() != child["distribution"].size()) {
@@ -213,7 +213,7 @@ IStrategy *StrategyBuilder::buildDistrictMftStrategy(const YAML::Node &node, con
         LOG(ERROR) << "Drug id exceeds count of known drugs, reading " << ndx;
         throw std::invalid_argument("Drug id exceeds count of known drugs.");
       }
-      mft.therapies.push_back(id);
+      mft->therapies.push_back(id);
     }
 
     // Read the distribution percentages for the MFT and make sure they make sense
@@ -229,7 +229,7 @@ IStrategy *StrategyBuilder::buildDistrictMftStrategy(const YAML::Node &node, con
         throw std::invalid_argument("Distribution percentage cannot be greater than 100%.");
       }
       sum += percent;
-      mft.percentages.push_back(percent);
+      mft->percentages.push_back(percent);
     }
     if (int(sum) != 1) {
       LOG(ERROR) << "Distribution percentage sum does not equal 100%, reading " << ndx;

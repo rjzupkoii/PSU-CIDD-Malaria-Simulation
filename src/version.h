@@ -4,4 +4,4 @@
  * This file exposes the simulation version so that it can be retrieved by other scripts.
  */
 
-const char *VERSION = "4.1.6.uganda";
+const char *VERSION = "4.1.7.development";

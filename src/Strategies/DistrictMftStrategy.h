@@ -21,7 +21,7 @@ public:
   };
 
 private:
-  std::vector<MftStrategy> district_strategies;
+    std::map<int, MftStrategy*> district_strategies;
 
 public:
   DistrictMftStrategy();
@@ -31,7 +31,7 @@ public:
   void add_therapy(Therapy *therapy) override;
 
   // Associate the given MFT with the indicated district
-  void assign_mft(int district, MftStrategy mft);
+  void assign_mft(int district, MftStrategy* mft);
 
   // Get the therapy that should be given to the individual.
   Therapy *get_therapy(Person *person) override;

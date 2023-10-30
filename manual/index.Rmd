@@ -6,8 +6,6 @@ output:
     includes:
       in_header: "tex/parahdr.tex"
     toc: yes
-header-includes:
-  - \setlength{\parindent}{2em}
 ---
 
 ```{r, echo = FALSE}
