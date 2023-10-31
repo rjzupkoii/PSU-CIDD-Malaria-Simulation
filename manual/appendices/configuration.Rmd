@@ -83,10 +83,6 @@ raster_db:
 
 **beta_by_location** : (*Array deprecated in Version 4.0, single value recommended or raster*) Contains the beta value (float) to be used in the simulation. If the array length is one, then the value supplied (float) is used for all locations in the model. Otherwise, each element in the array is presumed to correspond to a different location. 
 
-### location_db
-To Be Written.
-
-
 ### seasonal_info 
 This setting governs the malaria season in the model and operates differently depending upon the setting and version of the simulation.
 
