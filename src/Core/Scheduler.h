@@ -43,8 +43,8 @@ private:
   static void execute_events_list(EventPtrVector &events_list);
   virtual void schedule_event(EventPtrVector &time_events, Event *event);
 
-  bool is_today_first_day_of_month() const;
-  bool is_today_first_day_of_year() const;
+  [[nodiscard]] bool is_today_first_day_of_month() const;
+  [[nodiscard]] bool is_today_first_day_of_year() const;
 
 public:
   date::sys_days calendar_date;
@@ -57,7 +57,7 @@ public:
   virtual ~Scheduler();
 
   // Extend the total time that the current schedule will run
-  void extend_total_time(int new_total_time);
+  [[maybe_unused]] void extend_total_time(int new_total_time);
 
   // Schedule an event that only operates upon an individual
   void schedule_individual_event(Event *event);
@@ -72,10 +72,10 @@ public:
   void run();
 
   // Return true if the simulation can stop, false otherwise
-  bool can_stop() const;
+  [[nodiscard]] bool can_stop() const;
 
   // Return the current day in the year based upon the current scheduler day
-  int current_day_in_year() const;
+  [[nodiscard]] int current_day_in_year() const;
 };
 
 #endif

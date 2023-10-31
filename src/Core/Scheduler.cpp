@@ -18,17 +18,17 @@
 using namespace date;
 
 Scheduler::Scheduler(Model *model) :
-  current_time_(-1), total_available_time_(-1), model_(model), is_force_stop_(false) {}
+  current_time_(-1), total_available_time_(-1), model_(model), is_force_stop_(false), days_between_notifications_(0) {}
 
 Scheduler::~Scheduler() {
   clear_all_events();
 }
 
-void Scheduler::extend_total_time(int new_total_time) {
+[[maybe_unused]] void Scheduler::extend_total_time(int new_total_time) {
   if (total_available_time_ < new_total_time)
     for (auto i = total_available_time_; i <= new_total_time; i++) {
-      individual_events_list_.push_back(EventPtrVector());
-      population_events_list_.push_back(EventPtrVector());
+      individual_events_list_.emplace_back();
+      population_events_list_.emplace_back();
     }
   total_available_time_ = new_total_time;
 }
