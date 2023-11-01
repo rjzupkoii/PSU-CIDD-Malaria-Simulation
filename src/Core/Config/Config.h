@@ -1,34 +1,34 @@
-/* 
- * File:   Config.h
- * Author: nguyentran
+/*
+ * Config.h
  *
- * Created on March 27, 2013, 10:38 AM
+ * Define the fields that are contained in the YAML file that is used to configure the simulation. Note that since
+ * objects are created as the YAML file is read, a fair number of the fields in this file are sensitive to the order
+ * that they appear.
  */
-
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "Core/PropertyMacro.h"
-#include "Core/TypeDef.h"
-#include "CustomConfigItem.h"
-#include "ConfigItem.hxx"
-#include "PreconfigEvents.hxx"
-#include "Spatial/Location.h"
-#include "Core/MultinomialDistributionGenerator.h"
-#include "rapt_config.h"
+#include <date/date.h>
 #include <string>
 #include <vector>
-#include <date/date.h>
+
+#include "Core/MultinomialDistributionGenerator.h"
+#include "Core/PropertyMacro.h"
+#include "Core/TypeDef.h"
+#include "ConfigItem.hxx"
+#include "CustomConfigItem.h"
+#include "PreconfigEvents.hxx"
+#include "rapt_config.h"
+#include "Spatial/Location.h"
 
 class Model;
 
 class Config {
  DISALLOW_COPY_AND_ASSIGN(Config)
-
  DISALLOW_MOVE(Config)
 
  public:
- POINTER_PROPERTY(Model, model)
+  POINTER_PROPERTY(Model, model)
 
   std::vector<IConfigItem *> config_items{};
 
@@ -75,11 +75,10 @@ class Config {
   // Used primarily by Person::inflect_bite when the immune system is challenged
   CONFIG_ITEM(transmission_parameter, double, 0.0)
 
-  // Either the raster_db field or the location_db MUST be supplied in the YAML
-  // and they MUST appear by this point in the file as well
+  // The location_db stores the location information, but it is instantiated by the RasterDb which handles the YAML
+  PROPERTY_REF(std::vector<Spatial::Location>, location_db)
+  PROPERTY_REF(DoubleVector2, spatial_distance_matrix)
   CONFIG_ITEM(raster_db, RasterDb, RasterDb())
-  CONFIG_ITEM(location_db, std::vector<Spatial::Location>,
-              std::vector<Spatial::Location>{Spatial::Location(0, 0, 0, 10000)})
 
   CONFIG_ITEM(birth_rate, double, 0)
 
@@ -110,8 +109,6 @@ class Config {
   CUSTOM_CONFIG_ITEM(number_of_age_classes, 0)
 
   CUSTOM_CONFIG_ITEM(number_of_locations, 0)
-
-  CUSTOM_CONFIG_ITEM(spatial_distance_matrix, DoubleVector2())
 
   CUSTOM_CONFIG_ITEM(seasonal_info, nullptr)
 
@@ -161,4 +158,4 @@ class Config {
 
 };
 
-#endif /* CONFIG_H */
+#endif

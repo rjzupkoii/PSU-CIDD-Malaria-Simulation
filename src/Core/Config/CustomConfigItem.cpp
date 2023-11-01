@@ -1,31 +1,23 @@
 /*
  * CustomConfigItem.cpp
  * 
- * Implement the custom configuration items. 
- *  
- * NOTE that the compiler has a hard time determining the correct data type for
- *      iterators at times, so they may need to be manually supplied.
+ * Implement the custom configuration items.
  */
-
-#define _USE_MATH_DEFINES
-#define NOMINMAX
-
 #include "CustomConfigItem.h"
-#include "Config.h"
-#include "Spatial/SpatialModelBuilder.hxx"
-#include "Helpers/ObjectHelpers.h"
-#include "Helpers/NumberHelpers.h"
-#include "Therapies/Therapy.hxx"
-#include "Therapies/TherapyBuilder.h"
-#include "Strategies/IStrategy.h"
-#include "Strategies/StrategyBuilder.h"
-#include "Events/Population/PopulationEventBuilder.h"
-#include <gsl/gsl_cdf.h>
+
+#include <algorithm>
 #include <cmath>
 #include <date/date.h>
-#include <algorithm>
+#include <gsl/gsl_cdf.h>
 
-#include "GIS/SpatialData.h"
+#include "Config.h"
+#include "Helpers/NumberHelpers.h"
+#include "Helpers/ObjectHelpers.h"
+#include "Spatial/SpatialModelBuilder.hxx"
+#include "Strategies/IStrategy.h"
+#include "Strategies/StrategyBuilder.h"
+#include "Therapies/Therapy.hxx"
+#include "Therapies/TherapyBuilder.h"
 
 void total_time::set_value(const YAML::Node &node) {
   value_ = (date::sys_days{config_->ending_date()} - date::sys_days(config_->starting_date())).count();
@@ -41,26 +33,6 @@ void number_of_locations::set_value() {
 
 void number_of_locations::set_value(const YAML::Node &node) {
   set_value();
-}
-
-void spatial_distance_matrix::set_value(const YAML::Node &node) {
-  if (SpatialData::get_instance().has_raster()) {
-    VLOG(1) << "Raster data detected, using it to generate distances";
-    SpatialData::get_instance().generate_distances();
-    return;
-  }
-
-  VLOG(1) << "Generating Euclidian distances using coordinates provided";
-  value_.resize(static_cast<unsigned long>(config_->number_of_locations()));
-  for (auto from_location = 0ul; from_location < config_->number_of_locations(); from_location++) {
-    value_[from_location].resize(static_cast<unsigned long long int>(config_->number_of_locations()));
-    for (auto to_location = 0ul; to_location < config_->number_of_locations(); to_location++) {
-      value_[from_location][to_location] = Spatial::Coordinate::calculate_distance_in_km(
-        *config_->location_db()[from_location].coordinate,
-        *config_->location_db()[to_location].coordinate);
-    }
-  }
-
 }
 
 seasonal_info::~seasonal_info() {
@@ -124,7 +96,7 @@ void immune_system_information::set_value(const YAML::Node &node) {
 
   value_.midpoint = read_node<double>(is_node, "midpoint");
 
-  // implement inlation rate
+  // implement inflation rate
   double acR = value_.acquire_rate;
   value_.acquire_rate_by_age.clear();
   for (int age = 0; age <= 80; age++) {
@@ -192,7 +164,7 @@ void drug_db::set_value(const YAML::Node &node) {
   ObjectHelpers::delete_pointer<DrugDatabase>(value_);
   value_ = new DrugDatabase();
 
-  for (unsigned int drug_id = 0; drug_id < node[name_].size(); drug_id++) {
+  for (auto drug_id = 0; drug_id < node[name_].size(); drug_id++) {
     auto* dt = new DrugType();
     dt->set_id(drug_id);
 
@@ -247,14 +219,14 @@ void EC50_power_n_table::set_value(const YAML::Node &node) {
   value_.assign(config_->genotype_db()->size(), std::vector<double>());
 
   for (unsigned int g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-    for (unsigned int i = 0; i < config_->drug_db()->size(); i++) {
+    for (auto i = 0; i < config_->drug_db()->size(); i++) { // NOLINT(modernize-loop-convert)
       value_[g_id].push_back(config_->drug_db()->at(i)->infer_ec50(config_->genotype_db()->at(g_id)));
     }
   }
 
 
   for (unsigned int g_id = 0; g_id < config_->genotype_db()->size(); g_id++) {
-    for (unsigned int i = 0; i < config_->drug_db()->size(); i++) {
+    for (auto i = 0; i < config_->drug_db()->size(); i++) {
       value_[g_id][i] = pow(value_[g_id][i], config_->drug_db()->at(i)->n());
     }
   }
@@ -291,8 +263,7 @@ void circulation_info::set_value(const YAML::Node &node) {
   double sum = 0;
   for (double i = 0; i <= max + 0.0001; i += step) {
     const auto p = gsl_cdf_gamma_P(i + step, a, b);
-    double value = 0;
-    value = (j == 0) ? p : p - old_p;
+    auto value = (j == 0) ? p : p - old_p;
     value_.v_moving_level_density.push_back(value);
     old_p = p;
     value_.v_moving_level_value.push_back(i + 1);
@@ -304,7 +275,7 @@ void circulation_info::set_value(const YAML::Node &node) {
   //normalized
   double t = 0;
   for (auto &i : value_.v_moving_level_density) {
-    i = i + (1 - sum) / value_.v_moving_level_density.size();
+    i = i + (1 - sum) / static_cast<double>(value_.v_moving_level_density.size());
     t += i;
   }
 
@@ -356,8 +327,7 @@ void relative_bitting_info::set_value(const YAML::Node &node) {
 
   for (double i = 0; i <= max + 0.0001; i += step) {
     const auto p = gsl_cdf_gamma_P(i + step, a, b);
-    double value = 0;
-    value = (j == 0) ? p : p - old_p;
+    auto value = (j == 0) ? p : p - old_p;
     value_.v_biting_level_density.push_back(value);
     old_p = p;
     value_.v_biting_level_value.push_back(i + 1);
@@ -370,7 +340,7 @@ void relative_bitting_info::set_value(const YAML::Node &node) {
   //normalized
   double t = 0;
   for (auto &i : value_.v_biting_level_density) {
-    i = i + (1 - sum) / value_.v_biting_level_density.size();
+    i = i + (1 - sum) / static_cast<double>(value_.v_biting_level_density.size());
     t += i;
   }
 
@@ -426,16 +396,16 @@ void initial_parasite_info::set_value(const YAML::Node &node) {
 
   const auto &info_node = node[name_];
 
-  for (size_t index = 0; index < info_node.size(); index++) {
-    const auto location = info_node[index]["location_id"].as<int>();
+  for (const auto & index : info_node) {
+    const auto location = index["location_id"].as<int>();
     const auto location_from = location == -1 ? 0 : location;
-    const auto location_to = location == -1 ? config_->number_of_locations() : std::min<int>(location + 1, config_->number_of_locations());
+    const auto location_to = location == -1 ? config_->number_of_locations() : std::min<int>(location + 1, static_cast<int>(config_->number_of_locations()));
 
     //apply for all location, note that the compiler has a hard time guessing the right type for auto here
     for (unsigned long loc = location_from; loc < location_to; ++loc) {
-      for (std::size_t j = 0; j < info_node[index]["parasite_info"].size(); j++) {
-        auto parasite_type_id = info_node[index]["parasite_info"][j]["parasite_type_id"].as<int>();
-        auto prevalence = info_node[index]["parasite_info"][j]["prevalence"].as<double>();
+      for (std::size_t j = 0; j < index["parasite_info"].size(); j++) {
+        auto parasite_type_id = index["parasite_info"][j]["parasite_type_id"].as<int>();
+        auto prevalence = index["parasite_info"][j]["prevalence"].as<double>();
         value_.emplace_back(loc, parasite_type_id, prevalence);
       }
     }

@@ -2,9 +2,17 @@
  * YamlConverter.hxx
  * 
  * This file defines several converters that are used for parsing the YAML configuration file.
+ *
+ * Due to how the YAML is being parsed, Clang-tidy returns a false positive for unused structures and functions, so we
+ * have them disabled at the file level. Likewise, some parameters are required to comply with interfaces despite not
+ * being used in the functions.
  */ 
-#ifndef YAMLCONVERTER_H
-#define YAMLCONVERTER_H
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "UnusedParameter"
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
+#pragma ide diagnostic ignored "OCUnusedStructInspection"
+#ifndef YAML_CONVERTER_HXX
+#define YAML_CONVERTER_HXX
 
 #include <cmath>
 #include <date/date.h>
@@ -62,73 +70,9 @@ namespace YAML {
       return node;
     }
     static bool decode(const Node &node, RasterDb &rdb) {
-      return SpatialData::get_instance().parse(node);
-    }
-  };
-
-  template<>
-  struct convert<std::vector<Spatial::Location>> {
-    static Node encode(const std::vector<Spatial::Location> &rhs) {
-      Node node;
-      node.push_back("location_db");
-      return node;
-    }
-
-    // Decode the contents of the location_db node
-    static bool decode(const Node &node, std::vector<Spatial::Location> &location_db) {
-
-      // Check to see if the location informatoin has already been entered, this implies
-      // that there was a raster_db node present and an error starte exists
-      if (location_db.size() != 0) {
-        throw std::runtime_error("location_db has already been instantaied, is a raster_db present in the file?");
-      }
-
-      // If the user is supplying raster data, location_info will likely not be there.
-      // Since we are just decoding the file, just focus on loading the data and defer
-      // validation of the file to the recipent of the data
-      auto number_of_locations = node["location_info"].size();
-      for (std::size_t i = 0; i < number_of_locations; i++) {
-        location_db.emplace_back(node["location_info"][i][0].as<int>(),
-                                  node["location_info"][i][1].as<float>(),
-                                  node["location_info"][i][2].as<float>(), 0);
-      }
-
-      for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-        auto input_loc = node["age_distribution_by_location"].size() < number_of_locations ? 0 : loc;
-
-        for (std::size_t i = 0; i < node["age_distribution_by_location"][input_loc].size(); i++) {
-          location_db[loc].age_distribution.push_back(
-            node["age_distribution_by_location"][input_loc][i].as<double>());
-        }
-      }
-      for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-        auto input_loc = node["p_treatment_for_less_than_5_by_location"].size() < number_of_locations ? 0 : loc;
-        location_db[loc].p_treatment_less_than_5 = node["p_treatment_for_less_than_5_by_location"][input_loc].as<float>();
-      }
-      for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-        auto input_loc = node["p_treatment_for_more_than_5_by_location"].size() < number_of_locations ? 0 : loc;
-        location_db[loc].p_treatment_more_than_5 = node["p_treatment_for_more_than_5_by_location"][input_loc].as<float>();
-      }
-
-      // If a raster was loaded for these items then use that instead
-      if (SpatialData::get_instance().has_raster(SpatialData::SpatialFileType::Beta)) {
-        LOG(WARNING) << "Beta raster and value supplied, ignoring beta_by_location setting";
-      } else { 
-        for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-          auto input_loc = node["beta_by_location"].size() < number_of_locations ? 0 : loc;
-          location_db[loc].beta = node["beta_by_location"][input_loc].as<float>();
-        }
-      }
-      if (SpatialData::get_instance().has_raster(SpatialData::SpatialFileType::Population)) {
-        LOG(WARNING) << "Population raster and value supplied, ignoring population_size_by_location setting";
-      } else {
-        for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-          auto input_loc = node["population_size_by_location"].size() < number_of_locations ? 0 : loc;
-          location_db[loc].population_size = node["population_size_by_location"][input_loc].as<int>();
-        }
-      }
-
-      return true;
+      auto result = SpatialData::get_instance().parse(node);
+      SpatialData::get_instance().generate_distances();
+      return result;
     }
   };
 
@@ -141,9 +85,6 @@ namespace YAML {
     }
 
     static bool decode(const Node &node, ParasiteDensityLevel &parasite_density_level) {
-      //
-      // if (!node.IsScalar()) {
-      //   return false;
       parasite_density_level.log_parasite_density_cured = node["log_parasite_density_cured"].as<double>();
       parasite_density_level.log_parasite_density_from_liver = node["log_parasite_density_from_liver"].as<double>();
       parasite_density_level.log_parasite_density_asymptomatic = node["log_parasite_density_asymptomatic"].as<double>();
@@ -152,11 +93,13 @@ namespace YAML {
       parasite_density_level.log_parasite_density_clinical_to = node["log_parasite_density_clinical_to"].as<double>();
       parasite_density_level.log_parasite_density_detectable = node["log_parasite_density_detectable"].as<double>();
 
+      // log_parasite_density_detectable_pfpr is preferred and used by the simulation; however, log_parasite_density_detectable
+      // is still supported since the DxG Generator uses the value.
       parasite_density_level.log_parasite_density_detectable_pfpr = node["log_parasite_density_detectable_pfpr"]
                                                                     ? node["log_parasite_density_detectable_pfpr"].as<double>()
                                                                     : node["log_parasite_density_detectable"].as<double>();
-      parasite_density_level.log_parasite_density_pyrogenic = node["log_parasite_density_pyrogenic"].as<double>();
 
+      parasite_density_level.log_parasite_density_pyrogenic = node["log_parasite_density_pyrogenic"].as<double>();
       return true;
     }
   };
@@ -221,3 +164,5 @@ namespace YAML {
   };
 }
 #endif
+
+#pragma clang diagnostic pop

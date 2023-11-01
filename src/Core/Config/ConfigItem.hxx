@@ -3,16 +3,17 @@
  *
  * This file contains various templates for the YAML file.
  */
-#ifndef CONFIGITEM_H
-#define CONFIGITEM_H
+#ifndef CONFIG_ITEM_H
+#define CONFIG_ITEM_H
 
-#include "IConfigItem.h"
-#include "YamlConverter.hxx"
-#include "easylogging++.h"
-#include <yaml-cpp/yaml.h>
 #include <fmt/format.h>
 #include <utility>
 #include <vector>
+#include <yaml-cpp/yaml.h>
+
+#include "easylogging++.h"
+#include "IConfigItem.h"
+#include "YamlConverter.hxx"
 
 #define CONFIG_ITEM(name, type, default_value)\
   ConfigItem<type> name{#name,default_value, this};
@@ -59,7 +60,7 @@ ConfigItem<T>::ConfigItem(const std::string &name, T default_value, Config* conf
 template<typename T>
 T &ConfigItem<T>::operator()() {
   return value_;
-};
+}
 
 template<typename T>
 void ConfigItem<T>::set_value(const YAML::Node &node) {
@@ -69,10 +70,10 @@ void ConfigItem<T>::set_value(const YAML::Node &node) {
     return;
   }
 
-  // Otherwise log relevent warnings
+  // Otherwise log relevant warnings
   if (name_ == "initial_seed_number") {
     // Random seed is rarely set through YAML so only display this as a VLOG
-    VLOG(1) << name_ << "set to defaut value of " << value_;
+    VLOG(1) << name_ << "set to default value of " << value_;
   } else {
     LOG(WARNING) << name_ << " used default value of " << value_;
   }
@@ -132,13 +133,6 @@ std::vector<T> &ConfigItem<std::vector<T>>::operator()() {
 
 template<typename T>
 void ConfigItem<std::vector<T>>::set_value(const YAML::Node &node) {
-
-  // Are we looking at the location_db type?
-  if (typeid(T) == typeid(Spatial::Location) && this->value_.size() != 0) {
-    LOG(INFO) << "location_db appears to have been set by raster_db";
-    return;
-  }
-
   typedef std::vector<T> VectorT;
   if (node[this->name_]) {
     this->value_ = node[this->name_].template as<VectorT>();
@@ -155,4 +149,4 @@ void ConfigItem<std::vector<T>>::set_value(const YAML::Node &node) {
   }
 }
 
-#endif // CONFIGITEM_H
+#endif
