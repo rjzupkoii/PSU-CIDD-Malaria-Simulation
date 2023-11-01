@@ -29,6 +29,9 @@ void GenotypeCarriersReporter::initialize(int job_number, std::string path) {
     throw std::runtime_error("Missing Genotype Carriers Reporter column");
   }
 
+  // Clean-up the prior transaction
+  db.abort();
+
   // Use the connection to build the lookup table
   build_lookup(connection);
 
