@@ -5,9 +5,10 @@ output:
   bookdown::pdf_document2:
     includes:
       in_header: "tex/parahdr.tex"
-    toc: yes
+    toc: false
 ---
 
+<!-- Read the version number in so we can include it in the title -->
 ```{r, echo = FALSE}
 library(stringr)
 version <- paste(readLines("../src/version.h", warn = FALSE), collapse = " ")
@@ -16,8 +17,24 @@ version <- str_match(version, '"(.*)"')[1, 2]
 
 ---
 title: |
-    | Malaria Simulation (MaSim)
+    | \vspace{2in}Malaria Simulation (MaSim)
     | Version: `r version`
 author: "Robert Zupko"
-date: "`r Sys.Date()`"
 ---
+
+<!-- Edition notice -->
+```{=latex}
+\newpage
+$\\[7.5in]$
+```
+Compilation date `r Sys.Date()` for version `r version`
+
+Copyright `r format(Sys.Date(), "%Y")` by Robert Zupko
+
+This document was produced in part through funding from the National Institutes of Health (NIAID R01AI153355), and the Bill and Melinda Gates Foundation (OPP159934, INV-005517).
+
+<!-- Table of Contents -->
+```{=latex}
+\newpage
+\tableofcontents
+```
