@@ -6,6 +6,8 @@ output:
     includes:
       in_header: "tex/parahdr.tex"
     toc: false
+header-includes:
+  - \pagenumbering{gobble}
 ---
 
 <!-- Read the version number in so we can include it in the title -->
@@ -36,5 +38,6 @@ This document was produced in part through funding from the National Institutes 
 <!-- Table of Contents -->
 ```{=latex}
 \newpage
+\pagenumbering{roman}
 \tableofcontents
 ```

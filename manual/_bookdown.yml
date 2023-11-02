@@ -25,10 +25,10 @@ rmd_files: [
   "chapters/08_demonstration.Rmd",
 
   # Appendices
-  "appendices/encoding.Rmd",
   "appendices/technicalities.Rmd",
   "appendices/reporters.Rmd",
   "appendices/configuration.Rmd",
+  "appendices/encoding.Rmd",
   
   # References
   "references.Rmd"
