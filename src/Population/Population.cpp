@@ -31,7 +31,6 @@
 Population::Population(Model* model) : model_(model) {
   person_index_list_ = new PersonIndexPtrList();
   all_persons_ = new PersonIndexAll();
-
   person_index_list_->push_back(all_persons_);
 }
 
@@ -59,7 +58,6 @@ Population::~Population() {
 }
 
 void Population::add_person(Person* person) {
-
   for (PersonIndex* person_index : *person_index_list_) {
     person_index->add(person);
   }
@@ -68,6 +66,9 @@ void Population::add_person(Person* person) {
   if (person->all_clonal_parasite_populations()->size() > 0) {
     person->all_clonal_parasite_populations()->add_all_infection_force();
   }
+
+  // Update the count at the location
+  popsize_by_location_[person->location()]++;
 }
 
 void Population::remove_person(Person* person) {
@@ -80,6 +81,10 @@ void Population::remove_person(Person* person) {
     person_index->remove(person);
   }
   person->set_population(nullptr);
+
+  // Update the count at the location
+  popsize_by_location_[person->location()]--;
+  assert(popsize_by_location_[person->location()] >= 0);
 }
 
 void Population::remove_dead_person(Person* person) {
@@ -95,37 +100,18 @@ void Population::notify_change(Person* p, const Person::Property &property, cons
   }
 }
 
-std::size_t Population::size(const int &location, const int &age_class) {
-  if (location==-1) {
-    return all_persons_->size();
-  }
-  auto pi_lsa = get_person_index<PersonIndexByLocationStateAgeClass>();
-
-  if (pi_lsa==nullptr) {
-    return 0;
-  }
-  std::size_t temp = 0;
-  if (age_class==-1) {
-
-    for (std::size_t state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
-      for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-        temp += pi_lsa->vPerson()[location][state][ac].size();
-      }
-    }
-  } else {
-    for (std::size_t state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
-      temp += pi_lsa->vPerson()[location][state][age_class].size();
-    }
-  }
-  return temp;
+void Population::notify_movement(const int source, const int destination) {
+  popsize_by_location_[source]--;
+  assert(popsize_by_location_[source] >= 0);
+  popsize_by_location_[destination]++;
 }
 
-std::size_t Population::size(const int &location, const Person::HostStates &hs, const int &age_class) {
-  if (location==-1) {
-    return all_persons_->size();
-  }
-  auto pi_lsa = get_person_index<PersonIndexByLocationStateAgeClass>();
-  return (pi_lsa->vPerson()[location][hs][age_class].size());
+std::size_t Population::size() {
+  return all_persons_->size();
+}
+
+std::size_t Population::size(const int &location) {
+  return popsize_by_location_[location];
 }
 
 void Population::perform_infection_event() {
@@ -214,6 +200,9 @@ void Population::perform_infection_event() {
 void Population::initialize() {
   // Return if there is no model
   if (model() == nullptr) { return; }
+
+  // Prepare the population size vector
+  popsize_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
 
   // Prepare the various mappings
   const auto number_of_location = Model::CONFIG->number_of_locations();
@@ -403,7 +392,7 @@ void Population::notify_change_in_force_of_infection(const int &location, const 
 }
 
 void Population::update_force_of_infection(const int &current_time) {
-  perform_interupted_feeding_recombination();
+  perform_interrupted_feeding_recombination();
 
   for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     for (std::size_t p_type = 0; p_type < Model::CONFIG->number_of_parasite_types(); p_type++) {
@@ -638,7 +627,7 @@ void Population::initialize_person_indices() {
   person_index_list_->push_back(p_index_location_moving_level);
 }
 
-void Population::perform_interupted_feeding_recombination() {
+void Population::perform_interrupted_feeding_recombination() {
   // Cache some values
   auto parasite_types = Model::CONFIG->number_of_parasite_types();
   auto number_of_locations = Model::CONFIG->number_of_locations();

@@ -1,22 +1,18 @@
 /* 
- * File:   CirculateToTargetLocationNextDayEvent.cpp
- * Author: Merlin
- * 
- * Created on August 2, 2013, 10:57 AM
+ * CirculateToTargetLocationNextDayEvent.cpp
+ *
+ * Implement the event to move the individual to the next location.
  */
-
 #include "CirculateToTargetLocationNextDayEvent.h"
-#include "Population/Person.h"
-#include "Model.h"
-#include "Core/Random.h"
+
 #include "Core/Config/Config.h"
+#include "Core/Random.h"
+#include "Model.h"
+#include "Population/Person.h"
+#include "Population/Population.h"
 #include "ReturnToResidenceEvent.h"
 
 OBJECTPOOL_IMPL(CirculateToTargetLocationNextDayEvent)
-
-CirculateToTargetLocationNextDayEvent::CirculateToTargetLocationNextDayEvent() : target_location_(0) {}
-
-CirculateToTargetLocationNextDayEvent::~CirculateToTargetLocationNextDayEvent() = default;
 
 void CirculateToTargetLocationNextDayEvent::schedule_event(Scheduler *scheduler, Person *p, const int &target_location,
                                                            const int &time) {
@@ -36,30 +32,31 @@ std::string CirculateToTargetLocationNextDayEvent::name() {
 }
 
 void CirculateToTargetLocationNextDayEvent::execute() {
+  // Get the person and perform the movement
   auto *person = dynamic_cast<Person *>(dispatcher);
+  auto source_location = person->location();
   person->set_location(target_location_);
 
-  if (target_location_!=person->residence_location()) {
-    //if person already have return trip then no need to reschedule it
-    //elase
-    //Schedule for a return trip in next several days base on gamma distribution
-    if (!person->has_return_to_residence_event()) {
-      int length_of_trip = 0;
-      while (length_of_trip < 1) {
-        length_of_trip = static_cast<int>(std::round(
-            Model::RANDOM->random_gamma(Model::CONFIG->circulation_info().length_of_stay_theta,
-                                        Model::CONFIG->circulation_info().length_of_stay_k)));
-      }
+  // Notify the population of the change
+  Model::POPULATION->notify_movement(source_location, target_location_);
 
-      //            std::cout << length_of_trip << std::endl;
-      ReturnToResidenceEvent::schedule_event(Model::SCHEDULER, person,
-                                             Model::SCHEDULER->current_time() + length_of_trip);
-
-    }
-  } else {
-    //return by chance so we cancel all return event
-    //cancel return trip and do nothing
+  // Did we randomly arrive back at the residence location?
+  if (target_location_ == person->residence_location()) {
+    // Cancel any outstanding return trips and return
     person->cancel_all_return_to_residence_events();
+    return;
   }
 
+  // If the person already ahs a return trip scheduled then we can return
+  if (person->has_return_to_residence_event()) { return; }
+
+  // Since a return is not scheduled, we need to create a return event based upon a gamma distribution
+  auto length_of_trip = 0;
+  while (length_of_trip < 1) {
+    length_of_trip = static_cast<int>(
+            std::round(Model::RANDOM->random_gamma(
+                    Model::CONFIG->circulation_info().length_of_stay_theta,
+                    Model::CONFIG->circulation_info().length_of_stay_k)));
+  }
+  ReturnToResidenceEvent::schedule_event(Model::SCHEDULER, person,Model::SCHEDULER->current_time() + length_of_trip);
 }

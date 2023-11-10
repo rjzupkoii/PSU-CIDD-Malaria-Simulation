@@ -42,6 +42,19 @@ class Population : public Dispatcher {
     // Generate the individual at the given location
     void generate_individual(int location, int age_class);
 
+    void give_1_birth(const int &location);
+
+    void initial_infection(Person *person, Genotype *parasite_type) const;
+
+    void initialize_person_indices();
+
+    void introduce_parasite(const int &location, Genotype *parasite_type, const int &num_of_infections);
+
+    void perform_circulation_for_1_location(const int &from_location, const int &target_location,
+                                            const int &number_of_circulation, std::vector<Person *> &today_circulations);
+
+    void perform_interrupted_feeding_recombination();
+
  public:
   explicit Population(Model *model = nullptr);
 
@@ -73,14 +86,11 @@ class Population : public Dispatcher {
   virtual void
   notify_change(Person *p, const Person::Property &property, const void *oldValue, const void *newValue);
 
-  /**
-   * Return the number of individuals in the population
-   * If the input location is -1, return total size
-   * @param location
-   */
-  virtual std::size_t size(const int &location = -1, const int &age_class = -1);
+  /** Return the total number of individuals in the simulation. */
+  virtual std::size_t size();
 
-  virtual std::size_t size(const int &location, const Person::HostStates &hs, const int &age_class);
+  /** Return the total number of individuals in the given location. */
+  virtual std::size_t size(const int &location);
 
   virtual void perform_infection_event();
 
@@ -88,12 +98,7 @@ class Population : public Dispatcher {
 
   void introduce_initial_cases();
 
-  template<typename T>
-  T *get_person_index();
-
-  void introduce_parasite(const int &location, Genotype *parasite_type, const int &num_of_infections);
-
-  void initial_infection(Person *person, Genotype *parasite_type) const;
+  template<typename T> T *get_person_index();
 
   virtual void notify_change_in_force_of_infection(const int &location, const int &parasite_type_id,
                                                    const double &relative_force_of_infection);
@@ -106,17 +111,10 @@ class Population : public Dispatcher {
 
   void perform_death_event();
 
-  void give_1_birth(const int &location);
-
   void perform_circulation_event();
 
-  void perform_circulation_for_1_location(const int &from_location, const int &target_location,
-                                          const int &number_of_circulation, std::vector<Person *> &today_circulations);
-
-  void initialize_person_indices();
-
-  void perform_interupted_feeding_recombination();
-
+  // Notify the population that a person has moved from the source location, to the destination location
+  void notify_movement(int source, int destination);
 };
 
 template<typename T>
