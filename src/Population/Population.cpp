@@ -198,8 +198,9 @@ void Population::perform_infection_event() {
 }
 
 void Population::initialize() {
-  // Return if there is no model
+  // Verify that our assumptions are correct
   if (model() == nullptr) { return; }
+  assert(Model::CONFIG->death_rate_by_age_class().size()==Model::CONFIG->number_of_age_classes());
 
   // Prepare the population size vector
   popsize_by_location_ = IntVector(Model::CONFIG->number_of_locations(), 0);
@@ -468,10 +469,6 @@ void Population::give_1_birth(const int &location) {
 
 // Scan the population and perform death events and clear the deceased persons from other parts of the model. 
 void Population::perform_death_event() {
-
-  // TODO Move this elsewhere
-  assert(Model::CONFIG->death_rate_by_age_class().size()==Model::CONFIG->number_of_age_classes());
-
   // Get the person index and return if it is null
   auto pi = get_person_index<PersonIndexByLocationStateAgeClass>();
   if (pi == nullptr) { return; }
