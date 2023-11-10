@@ -1,33 +1,27 @@
-/* 
- * File:   Population.h
- * Author: nguyentran
+/*
+ * Population.h
  *
- * Created on April 15, 2013, 10:49 AM
+ * Define the population data structure for the simulation.
  */
-
 #ifndef POPULATION_H
-#define    POPULATION_H
+#define POPULATION_H
 
+#include <vector>
+
+#include "Core/Dispatcher.h"
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
 #include "Person.h"
 #include "Properties/PersonIndex.hxx"
-#include "Core/Dispatcher.h"
-#include <vector>
 
 class Model;
-
 class PersonIndexAll;
-
 class PersonIndexByLocationStateAgeClass;
-
 class PersonIndexByLocationBittingLevel;
 
 /**
- * Population will manage the life cycle of Person object
- * it will release/delete all person object when it is deleted
- * all person index will do nothing
- * 
+ * Population will manage the life cycle of Person object it will release/delete all person object when it is deleted
+ * all person index will do nothing.
  */
 class Population : public Dispatcher {
  DISALLOW_COPY_AND_ASSIGN(Population)
@@ -41,14 +35,17 @@ class Population : public Dispatcher {
  PROPERTY_REF(std::vector<std::vector<double> >, interupted_feeding_force_of_infection_by_location_parasite_type);
  PROPERTY_REF(std::vector<std::vector<std::vector<double> > >, force_of_infection_for7days_by_location_parasite_type);
 
+  // Population size currently in the location
+  PROPERTY_REF(IntVector, popsize_by_location)
+
   private:
     // Generate the individual at the given location
     void generate_individual(int location, int age_class);
 
  public:
-  Population(Model *model = nullptr);
+  explicit Population(Model *model = nullptr);
 
-  virtual ~Population();
+  ~Population() override;
 
   /**
    * This function will add Person pointer to all of the person indexes
@@ -114,16 +111,12 @@ class Population : public Dispatcher {
   void perform_circulation_event();
 
   void perform_circulation_for_1_location(const int &from_location, const int &target_location,
-                                          const int &number_of_circulation,
-                                          std::vector<Person *> &today_circulations);
-
-  bool has_0_case();
+                                          const int &number_of_circulation, std::vector<Person *> &today_circulations);
 
   void initialize_person_indices();
 
   void perform_interupted_feeding_recombination();
 
-  std::size_t size_residents_only(const int &location);
 };
 
 template<typename T>

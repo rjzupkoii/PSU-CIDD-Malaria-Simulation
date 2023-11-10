@@ -1,34 +1,32 @@
-/* 
- * File:   Population.cpp
- * Author: nguyentran
- * 
- * Created on April 15, 2013, 10:49 AM
+/*
+ * Population.cpp
+ *
+ * Implement the population data structure.
  */
+#include "Population.h"
 
+#include <cfloat>
+#include <cmath>
 
 #include "Constants.h"
-#include "Population.h"
-#include "Model.h"
-#include "Properties/PersonIndexAll.h"
 #include "Core/Config/Config.h"
-#include "Properties/PersonIndexByLocationStateAgeClass.h"
-#include "InfantImmuneComponent.h"
-#include "NonInfantImmuneComponent.h"
-#include "ImmuneSystem.h"
-#include "Events/SwitchImmuneComponentEvent.h"
+#include "Core/Random.h"
+#include "easylogging++.h"
 #include "Events/BirthdayEvent.h"
 #include "Events/RaptEvent.h"
-#include "Properties/PersonIndexByLocationBittingLevel.h"
-#include "Core/Random.h"
-#include "Properties/PersonIndexByLocationMovingLevel.h"
-#include "MDC/ModelDataCollector.h"
-#include "SingleHostClonalParasitePopulations.h"
-#include "Helpers/TimeHelpers.h"
-#include "easylogging++.h"
+#include "Events/SwitchImmuneComponentEvent.h"
 #include "Helpers/ObjectHelpers.h"
+#include "Helpers/TimeHelpers.h"
+#include "ImmuneSystem.h"
+#include "InfantImmuneComponent.h"
+#include "MDC/ModelDataCollector.h"
+#include "Model.h"
+#include "NonInfantImmuneComponent.h"
+#include "Properties/PersonIndexAll.h"
+#include "Properties/PersonIndexByLocationBittingLevel.h"
+#include "Properties/PersonIndexByLocationMovingLevel.h"
+#include "Properties/PersonIndexByLocationStateAgeClass.h"
 #include "Spatial/SpatialModel.hxx"
-#include <cmath>
-#include <cfloat>
 
 Population::Population(Model* model) : model_(model) {
   person_index_list_ = new PersonIndexPtrList();
@@ -130,30 +128,6 @@ std::size_t Population::size(const int &location, const Person::HostStates &hs, 
   return (pi_lsa->vPerson()[location][hs][age_class].size());
 }
 
-//new
-std::size_t Population::size_residents_only(const int &location) {
-  if (location==-1) {
-    return all_persons_->size();
-  }
-
-  auto pi_lsa = get_person_index<PersonIndexByLocationStateAgeClass>();
-
-  if (pi_lsa==nullptr) {
-    return 0;
-  }
-  auto temp = 0ul;
-  for (std::size_t state = 0; state < Person::NUMBER_OF_STATE - 1; state++) {
-    for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-      for (std::size_t i = 0; i < pi_lsa->vPerson()[location][state][ac].size(); i++) {
-        if (pi_lsa->vPerson()[location][state][ac][i]->residence_location()==location) {
-          temp++;
-        }
-      }
-    }
-  }
-  return temp;
-}
-
 void Population::perform_infection_event() {
   PersonPtrVector today_infections;
   
@@ -165,13 +139,13 @@ void Population::perform_infection_event() {
   auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
   // Iterate over all the locations in the model
-  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
 
     // Calculate location adjustments
     
     const auto new_beta = Model::CONFIG->location_db()[loc].beta * Model::CONFIG->seasonal_info()->get_seasonal_factor(Model::SCHEDULER->calendar_date, loc);
 
-    // Iterate over all of the parasite types
+    // Iterate over all the parasite types
     for (std::size_t parasite_type_id = 0; parasite_type_id < Model::CONFIG->number_of_parasite_types(); parasite_type_id++) {
 
       // Calculate the force of infection if ~0 then press on 
@@ -190,22 +164,22 @@ void Population::perform_infection_event() {
       // Determine the distribution of the bites
       DoubleVector vLevelDensity;
       for (int i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
-        auto temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] * pi->vPerson()[loc][i].size();
+        auto temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] * static_cast<double>(pi->vPerson()[loc][i].size());
         vLevelDensity.push_back(temp);
       }
       std::vector<unsigned int> v_int_number_of_bites(vLevelDensity.size());
       model_->random()->random_multinomial(vLevelDensity.size(), number_of_bites, &vLevelDensity[0], &v_int_number_of_bites[0]);
 
       // Inflict the bites upon the population
-      for (std::size_t bitting_level = 0; bitting_level < v_int_number_of_bites.size(); bitting_level++) {
+      for (std::size_t biting_level = 0; biting_level < v_int_number_of_bites.size(); biting_level++) {
         // If there is nobody at this level, press on
-        const auto size = pi->vPerson()[loc][bitting_level].size();
+        const auto size = pi->vPerson()[loc][biting_level].size();
         if (size==0) { continue; }
 
-        for (std::size_t j = 0u; j < v_int_number_of_bites[bitting_level]; j++) {
+        for (std::size_t j = 0u; j < v_int_number_of_bites[biting_level]; j++) {
           //select 1 random person from level i
           const auto index = model_->random()->random_uniform(size);
-          auto* person = pi->vPerson()[loc][bitting_level][index];
+          auto* person = pi->vPerson()[loc][biting_level][index];
 
           // If the person is not dead, inflict the bite upon them,
           // an update today's infection if they get infected
@@ -259,12 +233,12 @@ void Population::initialize() {
 
   // Initialize population
   auto& location_db = Model::CONFIG->location_db();
-  for (std::size_t loc = 0; loc < number_of_location; loc++) {
+  for (auto loc = 0; loc < number_of_location; loc++) {
     VLOG(9) << fmt::format("Cell {}, population {}", loc, location_db[loc].population_size);
 
     const auto popsize_by_location = static_cast<int>(location_db[loc].population_size * Model::CONFIG->artificial_rescaling_of_population_size());
     auto temp_sum = 0;
-    for (std::size_t age_class = 0; age_class < Model::CONFIG->initial_age_structure().size(); age_class++) {
+    for (auto age_class = 0; age_class < Model::CONFIG->initial_age_structure().size(); age_class++) {
       auto number_of_individual_by_loc_ageclass = 0;
       if (age_class == Model::CONFIG->initial_age_structure().size() - 1) {
         number_of_individual_by_loc_ageclass = popsize_by_location - temp_sum;
@@ -287,22 +261,21 @@ void Population::generate_individual(int location, int age_class) {
   p->set_residence_location(location);
   p->set_host_state(Person::SUSCEPTIBLE);
 
-  const auto age_from = (age_class==0) ? 0 : Model::CONFIG->initial_age_structure()[age_class - 1];
-  const auto age_to = Model::CONFIG->initial_age_structure()[age_class];
+  // Set the age of the individual, which also sets the age class. Note that we are defining the types to conform to the
+  // signature of random_uniform_int
+  unsigned long age_from = (age_class==0) ? 0 : Model::CONFIG->initial_age_structure()[age_class - 1];
+  unsigned long age_to = Model::CONFIG->initial_age_structure()[age_class];
+  p->set_age(static_cast<int>(Model::RANDOM->random_uniform_int(age_from, age_to + 1)));
 
-  //set age will also set ageclass
-  p->set_age(static_cast<const int &>(Model::RANDOM->random_uniform_int(age_from, age_to + 1)));
-
-  int days_to_next_birthday = Model::RANDOM->random_uniform(Constants::DAYS_IN_YEAR());
-
+  auto days_to_next_birthday = static_cast<int>(Model::RANDOM->random_uniform(Constants::DAYS_IN_YEAR()));
   auto simulation_time_birthday = TimeHelpers::get_simulation_time_birthday(days_to_next_birthday, p->age(), Model::SCHEDULER->calendar_date);
   p->set_birthday(simulation_time_birthday);
 
   LOG_IF(simulation_time_birthday > 0, FATAL) << "simulation_time_birthday have to be <= 0 when initializing population";
 
   BirthdayEvent::schedule_event(Model::SCHEDULER, p, days_to_next_birthday);
-
   RaptEvent::schedule_event(Model::SCHEDULER, p, days_to_next_birthday);
+
   //set immune component
   if (simulation_time_birthday + Constants::DAYS_IN_YEAR()/2 >= 0) {
     LOG_IF(p->age() > 0, FATAL) << "Error in calculating simulation_time_birthday";
@@ -327,7 +300,7 @@ void Population::generate_individual(int location, int age_class) {
 
   p->set_latest_update_time(0);
 
-  int time = Model::RANDOM->random_uniform(Model::CONFIG->update_frequency()) + 1;
+  auto time = static_cast<int>(Model::RANDOM->random_uniform(Model::CONFIG->update_frequency()) + 1);
   p->schedule_update_every_K_days_event(time);
   p->generate_prob_present_at_mda_by_age();
 
@@ -346,7 +319,8 @@ void Population::introduce_initial_cases() {
       exit(EXIT_FAILURE);
     }
 
-    auto num_of_infections = Model::RANDOM->random_poisson(std::round(size(p_info.location)*p_info.prevalence));
+    auto count = static_cast<double>(size(p_info.location));
+    auto num_of_infections = Model::RANDOM->random_poisson(std::round(count * p_info.prevalence));
     num_of_infections = num_of_infections <= 0 ? 1 : num_of_infections;
     
     auto* genotype = Model::CONFIG->genotype_db()->at(p_info.parasite_type_id);
@@ -374,7 +348,7 @@ void Population::introduce_parasite(const int &location, Genotype* parasite_type
   auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
 
   for (int i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
-    auto temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] * pi->vPerson()[location][i].size();
+    auto temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] * static_cast<double>(pi->vPerson()[location][i].size());
     vLevelDensity.push_back(temp);
   }
 
@@ -382,12 +356,12 @@ void Population::introduce_parasite(const int &location, Genotype* parasite_type
   model_->random()->random_multinomial(vLevelDensity.size(), num_of_infections, &vLevelDensity[0], &vIntNumberOfBites[0]);
 
   for (std::size_t biting_level = 0; biting_level < vIntNumberOfBites.size(); biting_level++) {
-    const int size = pi->vPerson()[location][biting_level].size();
+    auto size = pi->vPerson()[location][biting_level].size();
     if (size==0) continue;
     for (std::size_t j = 0u; j < vIntNumberOfBites[biting_level]; j++) {
 
       //select 1 random person from level i
-      const int index = model_->random()->random_uniform(size);
+      auto index = model_->random()->random_uniform(size);
       auto* p = pi->vPerson()[location][biting_level][index];
 
       initial_infection(p, parasite_type);
@@ -449,8 +423,8 @@ void Population::update() {
 }
 
 void Population::perform_birth_event() {
-  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    auto poisson_means = size(loc)*Model::CONFIG->birth_rate()/Constants::DAYS_IN_YEAR();
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
+    auto poisson_means = static_cast<double>(size(loc)) * Model::CONFIG->birth_rate() / Constants::DAYS_IN_YEAR();
     const auto number_of_births = Model::RANDOM->random_poisson(poisson_means);
     for (int i = 0; i < number_of_births; i++) {
       give_1_birth(loc);
@@ -526,17 +500,17 @@ void Population::perform_death_event() {
         }
       
         // Press on if there is nothing to do
-        const int size = pi->vPerson()[loc][hs][ac].size();
+        auto size = pi->vPerson()[loc][hs][ac].size();
         if (size == 0) { continue; }
 
         // Determine the number of deaths, press on if there are none
-        auto poisson_means = size*Model::CONFIG->death_rate_by_age_class()[ac]/Constants::DAYS_IN_YEAR();
+        auto poisson_means = static_cast<double>(size) * Model::CONFIG->death_rate_by_age_class()[ac] / Constants::DAYS_IN_YEAR();
         const auto number_of_deaths = Model::RANDOM->random_poisson(poisson_means);
         if (number_of_deaths == 0) { continue; }
 
         // Change the state for the number of deaths based upon the actuarial likelihood
         for (int i = 0; i < number_of_deaths; i++) {
-          const int index = Model::RANDOM->random_uniform(size);
+          auto index = Model::RANDOM->random_uniform(size);
           auto* p = pi->vPerson()[loc][hs][ac][index];
           p->cancel_all_events_except(nullptr);
           p->set_host_state(Person::DEAD);
@@ -574,26 +548,26 @@ void Population::perform_circulation_event() {
   // get number of circulations based on size * circulation_percent
   // distributes that number into others location based of other location size
   // for each number in that list select an individual, and schedule a movement event on next day
-  for (std::size_t from_location = 0; from_location < Model::CONFIG->number_of_locations(); from_location++) {
+  for (auto from_location = 0; from_location < Model::CONFIG->number_of_locations(); from_location++) {
     
     // How much of the population is moving? If none then press on
-    auto poisson_means = size(from_location) * circulation_percent;
+    auto poisson_means = static_cast<double>(size(from_location)) * circulation_percent;
     if (poisson_means == 0) { continue; }
     const auto number_of_circulating_from_this_location = Model::RANDOM->random_poisson(poisson_means);
     if (number_of_circulating_from_this_location == 0) { continue; }
 
     DoubleVector v_relative_outmovement_to_destination(Model::CONFIG->number_of_locations(), 0);
     v_relative_outmovement_to_destination = Model::CONFIG->spatial_model()->get_v_relative_out_movement_to_destination(
-      from_location, Model::CONFIG->number_of_locations(), Model::CONFIG->spatial_distance_matrix()[from_location], residents_by_location);
+      from_location, static_cast<int>(Model::CONFIG->number_of_locations()), Model::CONFIG->spatial_distance_matrix()[from_location], residents_by_location);
 
     std::vector<unsigned int> v_num_leavers_to_destination(static_cast<unsigned long long int>(Model::CONFIG->number_of_locations()));
     Model::RANDOM->random_multinomial(static_cast<int>(v_relative_outmovement_to_destination.size()),
                                       static_cast<unsigned int>(number_of_circulating_from_this_location),
                                       &v_relative_outmovement_to_destination[0], &v_num_leavers_to_destination[0]);
 
-    for (std::size_t target_location = 0; target_location < Model::CONFIG->number_of_locations(); target_location++) {
+    for (auto target_location = 0; target_location < Model::CONFIG->number_of_locations(); target_location++) {
       if (v_num_leavers_to_destination[target_location]==0) { continue; }
-      perform_circulation_for_1_location(from_location, target_location, v_num_leavers_to_destination[target_location], today_circulations);
+      perform_circulation_for_1_location(from_location, target_location, static_cast<int>(v_num_leavers_to_destination[target_location]), today_circulations);
     }
   }
 
@@ -618,8 +592,7 @@ void Population::perform_circulation_for_1_location(const int &from_location, co
   auto pi = get_person_index<PersonIndexByLocationMovingLevel>();
 
   for (int i = 0; i < Model::CONFIG->circulation_info().number_of_moving_levels; i++) {
-    double temp = Model::CONFIG->circulation_info().v_moving_level_value[i]*
-        pi->vPerson()[from_location][i].size();
+    auto temp = Model::CONFIG->circulation_info().v_moving_level_value[i] * static_cast<double>(pi->vPerson()[from_location][i].size());
     vLevelDensity.push_back(temp);
   }
 
@@ -636,7 +609,7 @@ void Population::perform_circulation_for_1_location(const int &from_location, co
 
 
       //select 1 random person from level i
-      int index = model_->random()->random_uniform(size);
+      auto index = model_->random()->random_uniform(size);
       Person* p = pi->vPerson()[from_location][moving_level][index];
       assert(p->host_state()!=Person::DEAD);
 
@@ -647,39 +620,22 @@ void Population::perform_circulation_for_1_location(const int &from_location, co
   }
 }
 
-bool Population::has_0_case() {
-  auto pi = get_person_index<PersonIndexByLocationStateAgeClass>();
-  for (std::size_t loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
-    for (std::size_t hs = Person::EXPOSED; hs <= Person::CLINICAL; hs++) {
-      for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-        if (!pi->vPerson()[loc][hs][ac].empty()) {
-          return false;
-        }
-      }
-    }
-  }
-  return true;
-}
-
 void Population::initialize_person_indices() {
+  auto number_of_location = static_cast<int>(Model::CONFIG->number_of_locations());
+  auto number_of_host_states = Person::NUMBER_OF_STATE;
+  auto number_of_age_classes = static_cast<int>(Model::CONFIG->number_of_age_classes());
 
-  const auto number_of_location = Model::CONFIG->number_of_locations();
-  const int number_of_hoststate = Person::NUMBER_OF_STATE;
-  const auto number_of_ageclasses = Model::CONFIG->number_of_age_classes();
-
-  auto p_index_by_l_s_a = new PersonIndexByLocationStateAgeClass(number_of_location,
-                                                                 number_of_hoststate,
-                                                                 number_of_ageclasses);
+  auto p_index_by_l_s_a = new PersonIndexByLocationStateAgeClass(
+          number_of_location, number_of_host_states, number_of_age_classes);
   person_index_list_->push_back(p_index_by_l_s_a);
 
-  auto p_index_location_bitting_level = new PersonIndexByLocationBittingLevel(
+  auto p_index_location_biting_level = new PersonIndexByLocationBittingLevel(
       number_of_location, Model::CONFIG->relative_bitting_info().number_of_biting_levels);
-  person_index_list_->push_back(p_index_location_bitting_level);
+  person_index_list_->push_back(p_index_location_biting_level);
 
   auto p_index_location_moving_level = new PersonIndexByLocationMovingLevel(
       number_of_location, Model::CONFIG->circulation_info().number_of_moving_levels);
   person_index_list_->push_back(p_index_location_moving_level);
-
 }
 
 void Population::perform_interupted_feeding_recombination() {
@@ -706,7 +662,7 @@ void Population::perform_interupted_feeding_recombination() {
 
   auto pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
   for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-    //hs 2: assymptomatic, 3: clinical
+    //hs 2: asymptomatic, 3: clinical
     for (std::size_t hs = 2; hs <= 3; hs++) {
       for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         for (auto p : pi->vPerson()[loc][hs][ac]) {
@@ -731,7 +687,7 @@ void Population::perform_interupted_feeding_recombination() {
   sum_z = 0;
   for (std::size_t loc = 0; loc < number_of_locations; loc++) {
     for (std::size_t parasite_type_id = 0; parasite_type_id < parasite_types; parasite_type_id++) {
-      z[loc][parasite_type_id] = std::lround(a * z[loc][parasite_type_id]);
+      z[loc][parasite_type_id] = static_cast<double>(std::lround(a * z[loc][parasite_type_id]));
       sum_z += z[loc][parasite_type_id];
     }
   }
@@ -744,23 +700,23 @@ void Population::perform_interupted_feeding_recombination() {
   // }
   
 
-  //expected allel frequencies after recombination
+  //expected allele frequencies after recombination
   auto eafar = DoubleVector2(static_cast<unsigned long long int>(number_of_locations), DoubleVector(parasite_types, 0));
 
   // perform free recombination in Z
   double sum_eafar = 0;
   if (sum_z > 0.0001) {
     for (std::size_t loc = 0; loc < number_of_locations; loc++) {
-      for (std::size_t i = 0; i < parasite_types; i++) {
+      for (auto i = 0; i < parasite_types; i++) {
         if (z[loc][i]==0) continue;
-        for (std::size_t j = 0; j < parasite_types; j++) {
+        for (auto j = 0; j < parasite_types; j++) {
           if (z[loc][j]==0) continue;
           if (i==j) {
             const auto weight = z[loc][i]*z[loc][i];
             eafar[loc][i] += weight;
           } else {
             const auto weight = 2*z[loc][i]*z[loc][j];
-            for (std::size_t p = 0; p < parasite_types; p++) {
+            for (auto p = 0; p < parasite_types; p++) {
               if (Model::CONFIG->genotype_db()->get_offspring_density(i, j, p)==0) continue;
               eafar[loc][p] += weight*Model::CONFIG->genotype_db()->get_offspring_density(i, j, p);
             }
