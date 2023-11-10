@@ -124,8 +124,6 @@ PROPERTY_REF(IntVector2, number_of_clinical_by_location_age_group_by_5)
 
 PROPERTY_REF(IntVector2, number_of_death_by_location_age_group)
 
-PROPERTY_REF(double, mean_moi)
-
 PROPERTY_REF(LongVector, number_of_mutation_events_by_year)
 PROPERTY_REF(long, current_number_of_mutation_events)
 

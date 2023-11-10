@@ -32,7 +32,6 @@ ModelDataCollector::ModelDataCollector(Model* model) : model_(model),
                                                        discounted_AMU_per_person_(0),
                                                        discounted_AMU_for_clinical_caused_parasite_(0),
                                                        discounted_AFU_(0),
-                                                       mean_moi_(0),
                                                        current_number_of_mutation_events_(0) {}
 
 void ModelDataCollector::initialize() {
@@ -132,11 +131,8 @@ void ModelDataCollector::perform_population_statistic() {
   // Start by zeroing out the population statistics from the previous month
   zero_population_statistics();
 
+  // Get the pointer to work with
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
-
-  // These rolling sums are both used to calculate the MOI in the given location
-  int sum_population = 0;
-  int sum_moi = 0;
 
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     // Calculate the basic statistics for the population in this location
@@ -144,7 +140,6 @@ void ModelDataCollector::perform_population_statistic() {
       for (auto ac = 0ul; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         std::size_t size = pi->vPerson()[loc][hs][ac].size();
 
-        sum_population += static_cast<int>(size);
         popsize_by_location_hoststate_[loc][hs] += static_cast<int>(size);
         popsize_by_location_age_class_[loc][ac] += static_cast<int>(size);
 
@@ -183,7 +178,6 @@ void ModelDataCollector::perform_population_statistic() {
           // Calculate the multiple of infection (MOI)
           int moi = p->all_clonal_parasite_populations()->size();
           if (moi > 0) {
-            sum_moi += moi;
             total_parasite_population_by_location_[loc] += moi;
             total_parasite_population_by_location_age_group_[loc][p->age_class()] += moi;
             if (moi <= NUMBER_OF_REPORTED_MOI) {
@@ -193,8 +187,6 @@ void ModelDataCollector::perform_population_statistic() {
         }
       }
     }
-
-    mean_moi_ = sum_moi / static_cast<double>(sum_population);
 
     fraction_of_positive_that_are_clinical_by_location_[loc] =
       (blood_slide_prevalence_by_location_[loc] == 0) ? 0 : static_cast<double>(popsize_by_location_hoststate_[loc][Person::CLINICAL]) / blood_slide_prevalence_by_location_[loc];
