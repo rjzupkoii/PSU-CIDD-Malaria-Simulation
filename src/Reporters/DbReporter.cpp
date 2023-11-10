@@ -324,7 +324,7 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
     query.append(INSERT_SITE_PREFIX);
     for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
         // Check the population, if there is nobody there, press on
-        if (Model::DATA_COLLECTOR->popsize_by_location()[location] == 0) {
+        if (Model::POPULATION->size(location) == 0) {
             continue;
         }
 
@@ -349,7 +349,7 @@ void DbReporter::monthly_site_data(int id, std::string &query) {
         query.append(fmt::format(INSERT_SITE_ROW,
             id,
             location_index[location],
-            Model::DATA_COLLECTOR->popsize_by_location()[location],
+            Model::POPULATION->size(location),
             Model::DATA_COLLECTOR->monthly_number_of_clinical_episode_by_location()[location],
             Model::DATA_COLLECTOR->monthly_number_of_treatment_by_location()[location],
             eir,

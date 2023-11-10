@@ -36,7 +36,7 @@ void report_number_by_state(const int &location, PersonIndexByLocationStateAgeCl
     //            sum += pi->vPerson()[location][hs][ac].size();
     //        }
     double v = Model::DATA_COLLECTOR->popsize_by_location_hoststate()[location][hs] * 100 /
-               (double) Model::DATA_COLLECTOR->popsize_by_location()[location];
+               (double) Model::POPULATION->size(location);
     //        double v = sum;
 
     fmt::printf("%.3f\t", v);

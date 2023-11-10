@@ -182,7 +182,7 @@ void DbReporterDistrict::monthly_site_data(int id, std::string &query) {
   for (auto location = 0; location < Model::CONFIG->number_of_locations(); location++) {
 
     // If the population is zero, press on
-    auto location_population = Model::DATA_COLLECTOR->popsize_by_location()[location];
+    auto location_population = static_cast<int>(Model::POPULATION->size(location));
     if (location_population == 0) { continue; }
 
     // Note the district we are in, make sure things are zero indexed

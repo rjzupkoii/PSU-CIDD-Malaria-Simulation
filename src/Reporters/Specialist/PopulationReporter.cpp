@@ -7,6 +7,7 @@
 
 #include "Core/Config/Config.h"
 #include "MDC/ModelDataCollector.h"
+#include "Population/Population.h"
 #include "Model.h"
 #include "easylogging++.h"
 
@@ -36,7 +37,7 @@ void PopulationReporter::monthly_report() {
 
   // Calculate the summary data
   for (std::size_t location = 0; location < Model::CONFIG->number_of_locations(); location++) {
-      population += Model::DATA_COLLECTOR->popsize_by_location()[location];
+      population += Model::POPULATION->size(location);
       births += Model::DATA_COLLECTOR->births_by_location()[location];
       deaths += Model::DATA_COLLECTOR->deaths_by_location()[location];
       malariaDeaths += Model::DATA_COLLECTOR->malaria_deaths_by_location()[location];

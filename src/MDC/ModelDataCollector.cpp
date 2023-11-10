@@ -41,7 +41,6 @@ void ModelDataCollector::initialize() {
   // TODO Determine if this can ever actually happen for the MDC
   if (model_ == nullptr) { return; }
 
-  popsize_by_location_ = Vector_by_Locations(IntVector);
   births_by_location_ = Vector_by_Locations(IntVector);
   deaths_by_location_ = Vector_by_Locations(IntVector);
   malaria_deaths_by_location_ = Vector_by_Locations(IntVector);
@@ -134,17 +133,18 @@ void ModelDataCollector::perform_population_statistic() {
   zero_population_statistics();
 
   auto* pi = Model::POPULATION->get_person_index<PersonIndexByLocationStateAgeClass>();
+
+  // These rolling sums are both used to calculate the MOI in the given location
+  int sum_population = 0;
   int sum_moi = 0;
 
-  for (auto loc = 0ul; loc < Model::CONFIG->number_of_locations(); loc++) {
-    auto pop_sum_location = 0;
-
+  for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
     // Calculate the basic statistics for the population in this location
     for (auto hs = 0; hs < Person::NUMBER_OF_STATE - 1; hs++) {
       for (auto ac = 0ul; ac < Model::CONFIG->number_of_age_classes(); ac++) {
         std::size_t size = pi->vPerson()[loc][hs][ac].size();
-        
-        pop_sum_location += static_cast<int>(size);
+
+        sum_population += static_cast<int>(size);
         popsize_by_location_hoststate_[loc][hs] += static_cast<int>(size);
         popsize_by_location_age_class_[loc][ac] += static_cast<int>(size);
 
@@ -194,19 +194,17 @@ void ModelDataCollector::perform_population_statistic() {
       }
     }
 
-    popsize_by_location_[loc] = pop_sum_location;
+    mean_moi_ = sum_moi / static_cast<double>(sum_population);
 
-    const auto sum_pop_size_by_location = std::accumulate(popsize_by_location_.begin(), popsize_by_location_.end(), 0);
-    mean_moi_ = sum_moi / static_cast<double>(sum_pop_size_by_location);
-
-    fraction_of_positive_that_are_clinical_by_location_[loc] = 
+    fraction_of_positive_that_are_clinical_by_location_[loc] =
       (blood_slide_prevalence_by_location_[loc] == 0) ? 0 : static_cast<double>(popsize_by_location_hoststate_[loc][Person::CLINICAL]) / blood_slide_prevalence_by_location_[loc];
 
+    auto location_population = static_cast<double>(Model::POPULATION->size(loc));
     const auto number_of_blood_slide_positive = blood_slide_prevalence_by_location_[loc];
-    blood_slide_prevalence_by_location_[loc] = blood_slide_prevalence_by_location_[loc] / static_cast<double>(pop_sum_location);
+    blood_slide_prevalence_by_location_[loc] = blood_slide_prevalence_by_location_[loc] / location_population;
 
-    current_EIR_by_location_[loc] = 
-      static_cast<double>(total_number_of_bites_by_location_[loc] - last_update_total_number_of_bites_by_location_[loc]) / static_cast<double>(popsize_by_location_[loc]);
+    current_EIR_by_location_[loc] =
+      static_cast<double>(total_number_of_bites_by_location_[loc] - last_update_total_number_of_bites_by_location_[loc]) / location_population;
 
     last_update_total_number_of_bites_by_location_[loc] = total_number_of_bites_by_location_[loc];
 
@@ -215,10 +213,10 @@ void ModelDataCollector::perform_population_statistic() {
     last_10_fraction_positive_that_are_clinical_by_location_[loc][report_index] = fraction_of_positive_that_are_clinical_by_location_[loc];
 
     for (std::size_t ac = 0; ac < Model::CONFIG->number_of_age_classes(); ac++) {
-      last_10_fraction_positive_that_are_clinical_by_location_age_class_[loc][ac][report_index] = 
+      last_10_fraction_positive_that_are_clinical_by_location_age_class_[loc][ac][report_index] =
         (blood_slide_prevalence_by_location_age_group_[loc][ac] == 0) ? 0 : number_of_clinical_by_location_age_group_[loc][ac] / static_cast<double>(blood_slide_prevalence_by_location_age_group_[loc][ac]);
 
-      last_10_fraction_positive_that_are_clinical_by_location_age_class_by_5_[loc][ac][report_index] = 
+      last_10_fraction_positive_that_are_clinical_by_location_age_class_by_5_[loc][ac][report_index] =
         (number_of_blood_slide_positive == 0) ? 0 : number_of_clinical_by_location_age_group_by_5_[loc][ac] / number_of_blood_slide_positive;
 
       blood_slide_prevalence_by_location_age_group_[loc][ac] = blood_slide_number_by_location_age_group_[loc][ac] / static_cast<double>(popsize_by_location_age_class_[loc][ac]);
@@ -526,7 +524,6 @@ void ModelDataCollector::monthly_reset() {
 
 void ModelDataCollector::zero_population_statistics() {
   // Vectors to be zeroed
-  zero_fill(popsize_by_location_);
   zero_fill(popsize_residence_by_location_);
   zero_fill(blood_slide_prevalence_by_location_);
   zero_fill(fraction_of_positive_that_are_clinical_by_location_);

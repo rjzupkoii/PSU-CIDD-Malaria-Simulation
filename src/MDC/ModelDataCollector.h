@@ -31,9 +31,6 @@ PROPERTY_REF(DoubleVector, total_immune_by_location)
 
 PROPERTY_REF(DoubleVector2, total_immune_by_location_age_class)
 
-// Population size currently in the location
-PROPERTY_REF(IntVector, popsize_by_location)
-
 // Population size accounting for residence
 PROPERTY_REF(IntVector, popsize_residence_by_location)
 
