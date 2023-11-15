@@ -549,7 +549,7 @@ void Person::update_biting_level() {
 
 void Person::update_current_state() {
   //clear drugs <=0.1
-  drugs_in_blood_->clear_cut_off_drugs_by_event(nullptr);
+  drugs_in_blood_->clear_cut_off_drugs();
   //clear cured parasite
   all_clonal_parasite_populations_->clear_cured_parasites();
 

@@ -1,21 +1,15 @@
 /* 
- * File:   DrugsInBlood.cpp
- * Author: Merlin
- * 
- * Created on July 31, 2013, 1:47 PM
+ * DrugsInBlood.cpp
+ *
+ * Implement the class that controls the drugs in the blood.
  */
-
 #include "DrugsInBlood.h"
-#include "Therapies/Drug.h"
-#include "Events/Event.h"
-#include "Therapies/DrugType.h"
-#include "Person.h"
-#include "Helpers/ObjectHelpers.h"
-#include "Core/TypeDef.h"
 
-#ifndef DRUG_CUT_OFF_VALUE
-#define DRUG_CUT_OFF_VALUE 0.1
-#endif
+#include "Core/TypeDef.h"
+#include "Helpers/ObjectHelpers.h"
+#include "Person.h"
+#include "Therapies/Drug.h"
+#include "Therapies/DrugType.h"
 
 OBJECTPOOL_IMPL(DrugsInBlood)
 
@@ -62,21 +56,6 @@ bool DrugsInBlood::is_drug_in_blood(const int drugTypeID) const {
   return drugs_->find(drugTypeID)!=drugs_->end();
 }
 
-void DrugsInBlood::remove_drug(Drug *drug) const {
-  remove_drug(drug->drug_type()->id());
-}
-
-void DrugsInBlood::remove_drug(const int &drug_type_id) const {
-  auto it = drugs_->find(drug_type_id);
-
-  if (it==drugs_->end()) {
-    return;
-  }
-
-  delete it->second;
-  drugs_->erase(it);
-}
-
 Drug *DrugsInBlood::get_drug(const int &type_id) const {
   if (!is_drug_in_blood(type_id))
     return nullptr;
@@ -103,25 +82,18 @@ void DrugsInBlood::update() const {
   }
 }
 
-void DrugsInBlood::clear_cut_off_drugs_by_event(Event *event) const {
-  if (!drugs_->empty()) {
-    for (auto pos = drugs_->begin(); pos!=drugs_->end();) {
-      //if (pos->second->lastUpdateValue <= 0.1) {
-      //Cut off at 10%
-      if (pos->second->last_update_value() <= DRUG_CUT_OFF_VALUE) {
-        //if drug is astermisinin then deActive Gametocyte
+void DrugsInBlood::clear_cut_off_drugs() const {
+  // Return if the drugs are already empty
+  if (drugs_->empty()) { return; }
 
-        //TODO::review
-        // if (pos->second->drug_type()->is_artemisinin()) {
-        //   person_->all_clonal_parasite_populations()->deactive_astermisinin_on_gametocyte();
-        // }
-
-        //                person->cancelClearDrugEvent(pos->first, eventID);
-        delete pos->second;
-        drugs_->erase(pos++);
-      } else {
-        ++pos;
-      }
+  // Scan each of the drugs in the blood
+  for (auto pos = drugs_->begin(); pos != drugs_->end();) {
+    // Cut off at the defined cutoff value
+    if (pos->second->last_update_value() <= DRUG_CUTOFF_VALUE) {
+      delete pos->second;
+      drugs_->erase(pos++);
+    } else {
+      ++pos;
     }
   }
 }

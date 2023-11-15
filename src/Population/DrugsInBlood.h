@@ -1,24 +1,18 @@
-/* 
- * File:   DrugsInBlood.h
- * Author: Merlin
+/*
+ * DrugsInBlood.h
  *
- * Created on July 31, 2013, 1:47 PM
+ * Define the class that tracks the drugs that are currently in the blood.
  */
-
 #ifndef DRUGSINBLOOD_H
-#define    DRUGSINBLOOD_H
+#define DRUGSINBLOOD_H
 
+#include "Core/ObjectPool.h"
 #include "Core/PropertyMacro.h"
 #include "Core/TypeDef.h"
-#include "Core/ObjectPool.h"
-
-class Person;
 
 class Drug;
-
-class Event;
-
 class DrugType;
+class Person;
 
 class DrugsInBlood {
  OBJECTPOOL(DrugsInBlood)
@@ -32,9 +26,11 @@ class DrugsInBlood {
  POINTER_PROPERTY(DrugPtrMap, drugs)
 
  public:
+  // Cutoff drugs that are less than or equal to 10%
+  const double DRUG_CUTOFF_VALUE = 0.1;
+
   explicit DrugsInBlood(Person *person = nullptr);
 
-  //    DrugsInBlood(const DrugsInBlood& orig);
   virtual ~DrugsInBlood();
 
   void init();
@@ -43,22 +39,20 @@ class DrugsInBlood {
 
   bool is_drug_in_blood(DrugType *drug_type) const;
 
-  bool is_drug_in_blood(int drug_type_id) const;
+  [[nodiscard]] bool is_drug_in_blood(int drug_type_id) const;
 
-  void remove_drug(Drug *drug) const;
+  [[nodiscard]] Drug *get_drug(const int &type_id) const;
 
-  void remove_drug(const int &drug_type_id) const;
-
-  Drug *get_drug(const int &type_id) const;
-
-  std::size_t size() const;
+  [[nodiscard]] std::size_t size() const;
 
   void clear() const;
 
   void update() const;
 
-  void clear_cut_off_drugs_by_event(Event *event) const;
+  // Clear the drugs that were cut off.
+  // This function was originally named clear_cut_off_drugs_by_event and took the calling Event object as a parameter.
+  void clear_cut_off_drugs() const;
 
 };
 
-#endif    /* DRUGSINBLOOD_H */
+#endif
