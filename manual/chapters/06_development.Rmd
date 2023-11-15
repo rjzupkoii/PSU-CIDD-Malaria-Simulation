@@ -50,7 +50,7 @@ sudo apt install libpq-dev
 sudo apt upgrade
 git clone https://github.com/jtv/libpqxx.git
 cd libpqxx
-git checkout 7.0.0
+git checkout 7.8.1
 ./configure --disable-documentation
 make
 sudo make install
