@@ -1,12 +1,10 @@
 /* 
- * File:   ParasiteUpdateFunction.h
- * Author: Merlin
+ * ParasiteUpdateFunction.h
  *
- * Created on July 11, 2013, 2:51 PM
+ * Define the parasite update function interface.
  */
-
 #ifndef PARASITEDENSITYUPDATEFUNCTION_H
-#define    PARASITEDENSITYUPDATEFUNCTION_H
+#define PARASITEDENSITYUPDATEFUNCTION_H
 
 #include "Core/PropertyMacro.h"
 
@@ -16,16 +14,12 @@ class ParasiteDensityUpdateFunction {
  DISALLOW_COPY_AND_ASSIGN(ParasiteDensityUpdateFunction)
 
  public:
-  ParasiteDensityUpdateFunction();
+  ParasiteDensityUpdateFunction() = default;
 
-  //    ParasiteUpdateFunction(const ParasiteUpdateFunction& orig);
-  virtual ~ParasiteDensityUpdateFunction();
+  virtual ~ParasiteDensityUpdateFunction() = default;
 
   virtual double get_current_parasite_density(ClonalParasitePopulation *parasite, int duration) = 0;
 
- private:
-
 };
 
-#endif    /* PARASITEDENSITYUPDATEFUNCTION_H */
-
+#endif

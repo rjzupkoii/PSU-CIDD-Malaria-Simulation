@@ -1,15 +1,13 @@
 /* 
- * File:   ClinicalUpdateFunction.h
- * Author: Merlin
+ * ClinicalUpdateFunction.h
  *
- * Created on July 29, 2013, 5:43 PM
+ * Define the update function for clinical infections.
  */
-
 #ifndef CLINICALUPDATEFUNCTION_H
-#define    CLINICALUPDATEFUNCTION_H
+#define CLINICALUPDATEFUNCTION_H
 
-#include "ParasiteDensityUpdateFunction.h"
 #include "Core/PropertyMacro.h"
+#include "ParasiteDensityUpdateFunction.h"
 
 class Model;
 
@@ -20,12 +18,11 @@ class ClinicalUpdateFunction : public ParasiteDensityUpdateFunction {
 
  public:
   explicit ClinicalUpdateFunction(Model *model = nullptr);
-  //    ClinicalUpdateFunction(const ClinicalUpdateFunction& orig);
 
-  virtual ~ClinicalUpdateFunction();
+  ~ClinicalUpdateFunction() override = default;
 
   double get_current_parasite_density(ClonalParasitePopulation *parasite, int duration) override;
 
 };
 
-#endif    /* CLINICALUPDATEFUNCTION_H */
+#endif

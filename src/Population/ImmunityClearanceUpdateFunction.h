@@ -1,15 +1,13 @@
 /* 
- * File:   ImmunityClearanceUpdateFunction.h
- * Author: Merlin
+ * ImmunityClearanceUpdateFunction.h
  *
- * Created on July 29, 2013, 5:49 PM
+ * Define the parasite clearance due to the immune response.
  */
-
 #ifndef IMMUNITYCLEARANCEUPDATEFUNCTION_H
-#define    IMMUNITYCLEARANCEUPDATEFUNCTION_H
+#define IMMUNITYCLEARANCEUPDATEFUNCTION_H
 
-#include "ParasiteDensityUpdateFunction.h"
 #include "Core/PropertyMacro.h"
+#include "ParasiteDensityUpdateFunction.h"
 
 class Model;
 
@@ -21,11 +19,10 @@ class ImmunityClearanceUpdateFunction : public ParasiteDensityUpdateFunction {
  public:
   explicit ImmunityClearanceUpdateFunction(Model *model = nullptr);
 
-  //    ImmunityClearanceUpdateFunction(const ImmunityClearanceUpdateFunction& orig);
-  virtual ~ImmunityClearanceUpdateFunction();
+  ~ImmunityClearanceUpdateFunction() override = default;
 
   double get_current_parasite_density(ClonalParasitePopulation *parasite, int duration) override;
 
 };
 
-#endif    /* IMMUNITYCLEARANCEUPDATEFUNCTION_H */
+#endif
