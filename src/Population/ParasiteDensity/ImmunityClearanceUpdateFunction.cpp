@@ -5,10 +5,10 @@
  */
 #include "ImmunityClearanceUpdateFunction.h"
 
-#include "ClonalParasitePopulation.h"
-#include "ImmuneSystem.h"
 #include "Model.h"
-#include "Person.h"
+#include "Population/ClonalParasitePopulation.h"
+#include "Population/ImmuneSystem.h"
+#include "Population/Person.h"
 
 ImmunityClearanceUpdateFunction::ImmunityClearanceUpdateFunction(Model *model) : model_(model) { }
 

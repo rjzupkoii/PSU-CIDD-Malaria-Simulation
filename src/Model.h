@@ -9,8 +9,8 @@
 #include <vector>
 #include "Core/PropertyMacro.h"
 #include "Core/Scheduler.h"
-#include "Population/ClinicalUpdateFunction.h"
-#include "Population/ImmunityClearanceUpdateFunction.h"
+#include "Population/ParasiteDensity/ClinicalUpdateFunction.h"
+#include "Population/ParasiteDensity/ImmunityClearanceUpdateFunction.h"
 #include "Treatment/ITreatmentCoverageModel.h"
 
 class Scheduler;

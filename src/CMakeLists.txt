@@ -35,6 +35,7 @@ file(GLOB SOURCE *.cpp
         Parasites/*.cpp 
         Population/*.cpp
         Population/ImmuneComponent/*.cpp
+        Population/ParasiteDensity/*.cpp
         Population/Properties/*.cpp
         Reporters/*.cpp
         Reporters/Specialist/*.cpp

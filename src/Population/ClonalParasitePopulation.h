@@ -10,7 +10,7 @@
 #include "Core/ObjectPool.h"
 #include "Core/PropertyMacro.h"
 #include "Helpers/UniqueId.hxx"
-#include "ParasiteDensityUpdateFunction.h"
+#include "Population/ParasiteDensity/ParasiteDensityUpdateFunction.h"
 #include "Properties/IndexHandler.hxx"
 #include "Therapies/DrugType.h"
 
