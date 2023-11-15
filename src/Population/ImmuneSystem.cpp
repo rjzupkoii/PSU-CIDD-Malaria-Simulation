@@ -6,7 +6,7 @@
  */
 
 #include "ImmuneSystem.h"
-#include "ImmuneComponent.h"
+#include "Population/ImmuneComponent/ImmuneComponent.h"
 #include "Person.h"
 #include "Model.h"
 #include "Core/Config/Config.h"

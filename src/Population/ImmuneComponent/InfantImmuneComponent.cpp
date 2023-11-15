@@ -7,9 +7,9 @@
 
 #include <cmath>
 
-#include "ImmuneSystem.h"
 #include "Model.h"
-#include "Person.h"
+#include "Population/ImmuneSystem.h"
+#include "Population/Person.h"
 
 InfantImmuneComponent::InfantImmuneComponent(ImmuneSystem *immune_system) : ImmuneComponent(immune_system) { }
 

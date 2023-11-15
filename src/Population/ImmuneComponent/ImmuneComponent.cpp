@@ -9,9 +9,9 @@
 
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
-#include "ImmuneSystem.h"
-#include "Person.h"
-#include "Population.h"
+#include "Population/ImmuneSystem.h"
+#include "Population/Person.h"
+#include "Population/Population.h"
 #include "Model.h"
 
 ImmuneComponent::ImmuneComponent(ImmuneSystem *immune_system) : immune_system_(immune_system), latest_value_(0.0) {}

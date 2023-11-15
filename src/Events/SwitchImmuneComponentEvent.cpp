@@ -9,7 +9,7 @@
 #include "Population/Person.h"
 #include "Core/Scheduler.h"
 #include "Population/ImmuneSystem.h"
-#include "Population/NonInfantImmuneComponent.h"
+#include "Population/ImmuneComponent/NonInfantImmuneComponent.h"
 #include <cassert>
 
 OBJECTPOOL_IMPL(SwitchImmuneComponentEvent)
