@@ -1,32 +1,27 @@
 /* 
- * File:   NormalImmuneComponent.h
- * Author: nguyentran
+ * NonInfantImmuneComponent.h
  *
- * Created on May 28, 2013, 11:06 AM
+ * Define the immune component for individuals that are not infants.
  */
-
 #ifndef NONINFANTIMMUNECOMPONENT
-#define    NONINFANTIMMUNECOMPONENT
+#define NONINFANTIMMUNECOMPONENT
 
-#include "ImmuneComponent.h"
 #include "Core/ObjectPool.h"
+#include "ImmuneComponent.h"
 
 class NonInfantImmuneComponent : public ImmuneComponent {
  DISALLOW_COPY_AND_ASSIGN(NonInfantImmuneComponent)
-//    OBJECTPOOL(NonInfantImmuneComponent)
+
  public:
-  NonInfantImmuneComponent(ImmuneSystem *immune_system = nullptr);
+  explicit NonInfantImmuneComponent(ImmuneSystem *immune_system = nullptr);
 
-  // NonInfantImmuneComponent(const NonInfantImmuneComponent& orig);
-  virtual ~NonInfantImmuneComponent();
+  ~NonInfantImmuneComponent() override = default;
 
-  virtual double get_decay_rate(const int &age = 0) const;
+  [[nodiscard]] double get_decay_rate(const int &age) const override;
 
-  virtual double get_acquire_rate(const int &age = 0) const;
-
- private:
+  [[nodiscard]] double get_acquire_rate(const int &age) const override;
 
 };
 
-#endif    /* NONINFANTIMMUNECOMPONENT */
+#endif
 

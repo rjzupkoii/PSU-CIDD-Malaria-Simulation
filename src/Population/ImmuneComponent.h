@@ -1,22 +1,18 @@
 /* 
- * File:   ImmuneComponent.h
- * Author: nguyentran
+ * ImmuneComponent.h
  *
- * Created on May 27, 2013, 12:44 PM
+ * Define the immune component class, this class is responsible for
  */
-
 #ifndef IMMUNECOMPONENT_H
-#define    IMMUNECOMPONENT_H
+#define IMMUNECOMPONENT_H
 
 #include "Core/PropertyMacro.h"
 
-//#include "ObjectPool.h"
 class ImmuneSystem;
-
 class Model;
 
 class ImmuneComponent {
-  //    //OBJECTPOOL(ImmuneComponent)
+
  DISALLOW_COPY_AND_ASSIGN(ImmuneComponent)
 
  POINTER_PROPERTY(ImmuneSystem, immune_system)
@@ -26,7 +22,6 @@ class ImmuneComponent {
  public:
   explicit ImmuneComponent(ImmuneSystem *immune_system = nullptr);
 
-  //    ImmuneComponent(const ImmuneComponent& orig);
   virtual ~ImmuneComponent();
 
   void update();
@@ -35,10 +30,10 @@ class ImmuneComponent {
 
   virtual double get_current_value();
 
-  virtual double get_decay_rate(const int &age = 0) const = 0;
+  [[nodiscard]] virtual double get_decay_rate(const int &age) const = 0;
 
-  virtual double get_acquire_rate(const int &age = 0) const = 0;
+  [[nodiscard]] virtual double get_acquire_rate(const int &age) const = 0;
 
 };
 
-#endif    /* IMMUNECOMPONENT_H */
+#endif
