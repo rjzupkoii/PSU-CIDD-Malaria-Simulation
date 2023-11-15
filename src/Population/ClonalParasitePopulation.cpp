@@ -1,18 +1,18 @@
 /* 
- * ColonalParasitePopulation.cpp
+ * ClonalParasitePopulation.cpp
  * 
- * Implement the ColonalParasitePopulation class.
+ * Implement the ClonalParasitePopulation class.
  */
-
 #include "ClonalParasitePopulation.h"
-#include "SingleHostClonalParasitePopulations.h"
-#include "Therapies/Therapy.hxx"
-#include "Model.h"
-#include "Core/Scheduler.h"
+
+#include <cmath>
+
 #include "Core/Config/Config.h"
 #include "Helpers/NumberHelpers.h"
+#include "Model.h"
 #include "Person.h"
-#include <cmath>
+#include "SingleHostClonalParasitePopulations.h"
+#include "Therapies/Therapy.hxx"
 
 OBJECTPOOL_IMPL(ClonalParasitePopulation)
 const double ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY = -1000;
@@ -36,16 +36,10 @@ double ClonalParasitePopulation::get_current_parasite_density(const int &current
   }
 
   if (update_function_==nullptr) {
-    //        std::cout << "hello" << std::endl;
     return last_update_log10_parasite_density_;
   }
 
   return update_function_->get_current_parasite_density(this, duration);
-}
-
-void ClonalParasitePopulation::mutate_to(Genotype *genotype) {
-  //TODO:: do other statistic things
-  set_genotype(genotype);
 }
 
 double ClonalParasitePopulation::get_log10_relative_density() const {
@@ -94,14 +88,6 @@ void ClonalParasitePopulation::set_genotype(Genotype *value) {
   }
 }
 
-bool ClonalParasitePopulation::resist_to(Therapy *therapy) const {
-  return genotype_->resist_to(therapy);
-}
-
-bool ClonalParasitePopulation::resist_to(DrugType *dt) const {
-  return genotype_->resist_to(dt);
-}
-
 bool ClonalParasitePopulation::resist_to(const int &drug_id) const {
   return genotype_->resist_to(Model::CONFIG->drug_db()->at(drug_id));
 }
@@ -124,6 +110,5 @@ void ClonalParasitePopulation::perform_drug_action(const double &percent_parasit
     newSize = Model::CONFIG->parasite_density_level().log_parasite_density_cured;
   }
 
-//    std::cout << Model::SCHEDULER->current_time() << "\t" <<parasite_population()->person() << "\t"  << percent_parasite_remove << "\t"<<last_update_log10_parasite_density_ << "\t" <<newSize << std::endl;
   set_last_update_log10_parasite_density(newSize);
 }

@@ -1,25 +1,22 @@
 /* 
- * ColonalParasitePopulation.h
+ * ClonalParasitePopulation.h
  *
  * Define the ClonalParasitePopulation class which allows a single parasite 
  * colony to be tracked in an individual.
  */
-
 #ifndef CLONALPARASITEPOPULATION_H
-#define    CLONALPARASITEPOPULATION_H
+#define CLONALPARASITEPOPULATION_H
 
+#include "Core/ObjectPool.h"
 #include "Core/PropertyMacro.h"
+#include "Helpers/UniqueId.hxx"
 #include "ParasiteDensityUpdateFunction.h"
 #include "Properties/IndexHandler.hxx"
 #include "Therapies/DrugType.h"
-#include "Core/ObjectPool.h"
-#include "Helpers/UniqueId.hxx"
-
-class Therapy;
 
 class Genotype;
-
 class SingleHostClonalParasitePopulations;
+class Therapy;
 
 class ClonalParasitePopulation : public IndexHandler {
  OBJECTPOOL(ClonalParasitePopulation);
@@ -45,27 +42,21 @@ class ClonalParasitePopulation : public IndexHandler {
   static const double LOG_ZERO_PARASITE_DENSITY;
 
  public:
-  ClonalParasitePopulation(Genotype *genotype = nullptr);
+  explicit ClonalParasitePopulation(Genotype *genotype = nullptr);
 
-  virtual ~ClonalParasitePopulation();
+  ~ClonalParasitePopulation() override;
 
   double get_current_parasite_density(const int &current_time);
 
-  double get_log10_relative_density() const;
+  [[nodiscard]] double get_log10_relative_density() const;
 
-  void mutate_to(Genotype *genotype);
-
-  bool resist_to(Therapy *therapy) const;
-
-  bool resist_to(DrugType *dt) const;
-
-  bool resist_to(const int &drug_id) const;
+  [[nodiscard]] bool resist_to(const int &drug_id) const;
 
   void update();
 
   void perform_drug_action(const double &percent_parasite_remove);
 
-  ul_uid get_uid() { return _uid; }
+  [[nodiscard]] ul_uid get_uid() const { return _uid; }
 
 };
 

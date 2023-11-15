@@ -624,6 +624,7 @@ void Population::initialize_person_indices() {
   person_index_list_->push_back(p_index_location_moving_level);
 }
 
+// TODO Re-evaluate this code with version 5.0 to determine if it is still needed.
 void Population::perform_interrupted_feeding_recombination() {
   // Cache some values
   auto parasite_types = Model::CONFIG->number_of_parasite_types();
