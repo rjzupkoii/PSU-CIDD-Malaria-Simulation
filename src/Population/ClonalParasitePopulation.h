@@ -4,8 +4,8 @@
  * Define the ClonalParasitePopulation class which allows a single parasite 
  * colony to be tracked in an individual.
  */
-#ifndef CLONALPARASITEPOPULATION_H
-#define CLONALPARASITEPOPULATION_H
+#ifndef CLONAL_PARASITE_POPULATION_H
+#define CLONAL_PARASITE_POPULATION_H
 
 #include "Core/ObjectPool.h"
 #include "Core/PropertyMacro.h"
@@ -39,7 +39,7 @@ class ClonalParasitePopulation : public IndexHandler {
   ul_uid _uid;
 
  public:
-  static const double LOG_ZERO_PARASITE_DENSITY;
+  static constexpr double LOG_ZERO_PARASITE_DENSITY = -1000;
 
  public:
   explicit ClonalParasitePopulation(Genotype *genotype = nullptr);

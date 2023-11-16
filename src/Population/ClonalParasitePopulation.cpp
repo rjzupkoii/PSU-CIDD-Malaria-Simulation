@@ -15,7 +15,6 @@
 #include "Therapies/Therapy.hxx"
 
 OBJECTPOOL_IMPL(ClonalParasitePopulation)
-const double ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY = -1000;
 
 ClonalParasitePopulation::ClonalParasitePopulation(Genotype *genotype) : 
   last_update_log10_parasite_density_(LOG_ZERO_PARASITE_DENSITY), 
