@@ -4,9 +4,8 @@
  * This class contains the points to all the clonal parasites that are inflecting a single individual and defines the
  * functions that are used to calculate the force of infection.
  */
-
-#ifndef SINGLEHOSTCLONALPARASITEPOPULATIONS_H
-#define    SINGLEHOSTCLONALPARASITEPOPULATIONS_H
+#ifndef SINGLE_HOST_CLONAL_PARASITE_POPULATIONS_H
+#define SINGLE_HOST_CLONAL_PARASITE_POPULATIONS_H
 
 #include <vector>
 
@@ -15,14 +14,10 @@
 #include "Core/TypeDef.h"
 
 class ClonalParasitePopulation;
-
-class Person;
-
-class DrugType;
-
 class DrugsInBlood;
-
+class DrugType;
 class ParasiteDensityUpdateFunction;
+class Person;
 
 class SingleHostClonalParasitePopulations {
  OBJECTPOOL(SingleHostClonalParasitePopulations)
@@ -44,9 +39,8 @@ class SingleHostClonalParasitePopulations {
   void remove(const std::size_t &index);
 
  public:
-  SingleHostClonalParasitePopulations(Person *person = nullptr);
+  explicit SingleHostClonalParasitePopulations(Person *person = nullptr);
 
-  //    ParasitePopulation(const ParasitePopulation& orig);
   virtual ~SingleHostClonalParasitePopulations();
 
   void init();
@@ -61,9 +55,7 @@ class SingleHostClonalParasitePopulations {
 
   virtual void change_all_infection_force(const double &sign);
 
-  virtual double get_log10_total_relative_density();
-
-  virtual int latest_update_time() const;
+  [[nodiscard]] virtual int latest_update_time() const;
 
   virtual bool contain(ClonalParasitePopulation *blood_parasite);
 
@@ -78,7 +70,7 @@ class SingleHostClonalParasitePopulations {
 
   void update_by_drugs(DrugsInBlood *drugs_in_blood) const;
 
-  bool has_detectable_parasite() const;
+  [[nodiscard]] bool has_detectable_parasite() const;
 
   void get_parasites_profiles(std::vector<double> &parasite_density, double &log10_total_relative_density) const;
 
@@ -86,7 +78,7 @@ class SingleHostClonalParasitePopulations {
 
   void update_relative_effective_parasite_density_without_free_recombination();
 
-  bool is_gametocytaemic() const;
+  [[nodiscard]] bool is_gametocytaemic() const;
 
 };
 

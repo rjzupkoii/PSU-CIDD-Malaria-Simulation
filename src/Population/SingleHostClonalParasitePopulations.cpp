@@ -1,23 +1,23 @@
 /* 
- * File:   ParasitePopulation.cpp
- * Author: Merlin
- * 
- * Created on July 11, 2013, 1:53 PM
+ * SingleHostClonalParasitePopulations.cpp
+ *
+ * Implement the single host container for clonal parasite populations.
  */
-
 #include "ClonalParasitePopulation.h"
-#include "Parasites/Genotype.h"
-#include "SingleHostClonalParasitePopulations.h"
-#include "Person.h"
-#include "Model.h"
-#include "Core/Config/Config.h"
-#include "DrugsInBlood.h"
-#include "Therapies/Drug.h"
-#include "Core/Random.h"
-#include "MDC/ModelDataCollector.h"
-#include "Helpers/NumberHelpers.h"
+
 #include <cmath>
+
+#include "Core/Config/Config.h"
+#include "Core/Random.h"
+#include "DrugsInBlood.h"
+#include "Helpers/NumberHelpers.h"
 #include "Helpers/ObjectHelpers.h"
+#include "MDC/ModelDataCollector.h"
+#include "Model.h"
+#include "Parasites/Genotype.h"
+#include "Person.h"
+#include "SingleHostClonalParasitePopulations.h"
+#include "Therapies/Drug.h"
 
 OBJECTPOOL_IMPL(SingleHostClonalParasitePopulations)
 
@@ -29,7 +29,7 @@ SingleHostClonalParasitePopulations::SingleHostClonalParasitePopulations(Person*
 void SingleHostClonalParasitePopulations::init() {
   parasites_ = new std::vector<ClonalParasitePopulation*>();
   if (Model::CONFIG != nullptr) {
-    parasite_types = Model::CONFIG->number_of_parasite_types();
+    parasite_types = static_cast<int>(Model::CONFIG->number_of_parasite_types());
     relative_effective_parasite_density_ = new DoubleVector(parasite_types, 0.0);
   }
 }
@@ -81,7 +81,6 @@ void SingleHostClonalParasitePopulations::remove(const std::size_t &index) {
   bp->set_parasite_population(nullptr);
 
   delete bp;
-  bp = nullptr;
 }
 
 void SingleHostClonalParasitePopulations::remove_all_infection_force() {
@@ -142,8 +141,6 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
   // Get the parasite profiles, if the density is zero then return
   std::vector<double> relative_parasite_density(parasite_population_count, 0.0);
   get_parasites_profiles(relative_parasite_density, log10_total_relative_density_);
-
-  // TODO See if this is actually possible or not
   if (NumberHelpers::is_equal(log10_total_relative_density_, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) { return; }
 
   // Make sure nothing was deleted in the process
@@ -178,9 +175,8 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
       const auto id_f = (*parasites_)[i]->genotype()->genotype_id();
       const auto id_m = (*parasites_)[j]->genotype()->genotype_id();
       for (auto p = 0; p < parasite_types; p++) {
-        // Check to see if a call to get_offspring_density is needed,
-        // if the indicies are the same then we know the value is zero (no change),
-        // or one (update with weight)
+        // Check to see if a call to get_offspring_density is needed, if the indices are the same then we know the value
+        // is zero (no change), or one (update with weight)
         if (id_f == id_m) {
           if (id_f == p) { 
             (*relative_effective_parasite_density_)[p] += weight;
@@ -239,39 +235,12 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
 
 }
 
-double SingleHostClonalParasitePopulations::get_log10_total_relative_density() {
-  std::size_t i = 0;
-
-  while ((i < parasites_->size()) &&
-         (NumberHelpers::is_equal(parasites_->at(i)->get_log10_relative_density(),
-                                  ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY))) {
-    i++;
-  }
-
-  if (i == parasites_->size()) {
-    return ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY;
-  }
-
-  auto log10_total_relative_density = parasites_->at(i)->get_log10_relative_density();
-
-  for (std::size_t j = i + 1; j < parasites_->size(); j++) {
-    const auto log10_relative_density = parasites_->at(j)->get_log10_relative_density();
-
-    if (NumberHelpers::is_enot_qual(log10_relative_density, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) {
-      log10_total_relative_density += log10(pow(10, log10_relative_density - log10_total_relative_density) + 1);
-    }
-  }
-
-  return log10_total_relative_density;
-
-}
-
 int SingleHostClonalParasitePopulations::latest_update_time() const {
   return person_->latest_update_time();
 }
 
 int SingleHostClonalParasitePopulations::size() {
-  return parasites_->size();
+  return static_cast<int>(parasites_->size());
 }
 
 bool SingleHostClonalParasitePopulations::contain(ClonalParasitePopulation* blood_parasite) {
@@ -296,76 +265,64 @@ void SingleHostClonalParasitePopulations::change_all_parasite_update_function(Pa
 }
 
 void SingleHostClonalParasitePopulations::update() const {
-
   for (auto* bp : *parasites_) {
     bp->update();
   }
-  //    std::vector<BloodParasite*>(*parasites_).swap(*parasites_);
 }
 
 void SingleHostClonalParasitePopulations::clear_cured_parasites() {
-
   // Only recalculate on update
   bool updated = false;
 
-  for (int i = parasites_->size() - 1; i >= 0; i--) {
+  // Clear all the cured parasites from the individual
+  for (int i = static_cast<int>(parasites_->size()) - 1; i >= 0; i--) {
     if ((*parasites_)[i]->last_update_log10_parasite_density() <= Model::CONFIG->parasite_density_level().log_parasite_density_cured + 0.00001) {
-      
       // Clear the infection force prior to removal
-     if (!updated) {
-       remove_all_infection_force();
-       updated = true;
+      if (!updated) {
+        remove_all_infection_force();
+        updated = true;
      }
-
       remove(i);
     }
   }
 
- // Update the infection force
- if (updated) {
-   add_all_infection_force();
- }
+  // Update the infection force
+  if (updated) {
+    add_all_infection_force();
+  }
 }
 
 void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in_blood) const {
   for (auto &blood_parasite : *parasites_) {
+    // Create a pointer to the current genotype
     auto* new_genotype = blood_parasite->genotype();
 
-    // Percentage is originally zero
-    double percent_parasite_remove = 0;
+    // Percentage to remove is originally zero
+    double percent_parasite_remove = 0.0;
 
-    for (auto it = drugs_in_blood->drugs()->begin(); it != drugs_in_blood->drugs()->end(); ++it) {
-      const auto drug = it->second;
+    for (auto &index : *drugs_in_blood->drugs()) {
+      const auto drug = index.second;
+
+      // Roll the dice to see if a mutation occurred
       const auto p = Model::RANDOM->random_flat(0.0, 1.0);
-
       if (p < drug->get_mutation_probability()) {
+        // A mutation may occur, first we need to determine what it might be
+        auto mutation_locus = static_cast<int>(Model::RANDOM->random_uniform_int(0, new_genotype->gene_expression().size()));
+        auto mutation_allele = blood_parasite->genotype()->select_mutation_allele(mutation_locus);
+        auto* mutation_genotype = new_genotype->combine_mutation_to(mutation_locus, mutation_allele);
 
-        // select all locus
-        //TODO: rework here to only allow x to mutate after intervention day
-        int mutation_locus = Model::RANDOM->random_uniform_int(0, new_genotype->gene_expression().size());
-
-        auto new_allele_value = blood_parasite->genotype()->select_mutation_allele(mutation_locus);
-        //                std::cout << mutation_locus << "-" << bloodParasite->genotype()->gene_expression()[mutation_locus] << "-" << new_allele_value << std::endl;
-        auto* mutation_genotype = new_genotype->combine_mutation_to(mutation_locus, new_allele_value);
-
-        //                if (drug->drug_type()->id() == 3) {
-        //                    std::cout << drug->getMutationProbability() << std::endl;
-        //                }
-        if (mutation_genotype->get_EC50_power_n(drug->drug_type()) >
-            new_genotype->get_EC50_power_n(drug->drug_type())) {
-          //higher EC50^n means lower efficacy then allow mutation occur
-          // if (mutation_locus == 3 && new_allele_value == 1) {
-          //   std::cout << "Hello: " << Model::SCHEDULER->current_time() << " -- " << mutation_genotype->get_EC50_power_n(drug->drug_type()) << " - " << new_genotype->
-          //     get_EC50_power_n(drug->drug_type()) << std::endl;
-          // }
+        // Next, we need to determine if the mutation is adventitious to the parasite. We do this by checking the EC50
+        // and if the EC50 is higher than the current genotype, the drug is less efficacious and the mutation is favorable
+        // to the parasite. As a modeling simplification we ignore scenarios where the EC50 is less than since the drug
+        // is likely to clear the parasite.
+        if (mutation_genotype->get_EC50_power_n(drug->drug_type()) > new_genotype->get_EC50_power_n(drug->drug_type())) {
           new_genotype = mutation_genotype;
         }
-
       }
+
+      // If the new genotype is not the same as the old one, then a mutation occurred
       if (new_genotype != blood_parasite->genotype()) {
-        //mutation occurs
         Model::DATA_COLLECTOR->record_1_mutation(person_->location());
-        //                std::cout << bloodParasite->genotype()->genotype_id() << "==>" << new_genotype->genotype_id() << std::endl;
         blood_parasite->set_genotype(new_genotype);
       }
 
@@ -373,11 +330,12 @@ void SingleHostClonalParasitePopulations::update_by_drugs(DrugsInBlood* drugs_in
       const auto p_temp = drug->get_parasite_killing_rate(blood_parasite->genotype()->genotype_id());
       percent_parasite_remove = (percent_parasite_remove + p_temp) - (percent_parasite_remove * p_temp);
     }
+
+    // If the percent to remove is greater than zero, then perform the drug action
     if (percent_parasite_remove > 0) {
       blood_parasite->perform_drug_action(percent_parasite_remove);
     }
   }
-
 }
 
 bool SingleHostClonalParasitePopulations::has_detectable_parasite() const {
