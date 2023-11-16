@@ -54,6 +54,6 @@ void EndClinicalByNoTreatmentEvent::execute() {
 
     }
     //        std::cout << clinical_caused_parasite_->last_update_log10_parasite_density()<< std::endl;
-    //        std::cout << person->immune_system()->get_lastest_immune_value()<< std::endl;
+    //        std::cout << person->immune_system()->get_latest_immune_value()<< std::endl;
   }
 }

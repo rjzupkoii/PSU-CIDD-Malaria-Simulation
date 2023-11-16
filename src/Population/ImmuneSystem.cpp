@@ -1,24 +1,21 @@
 /* 
- * File:   ImmuneSystem.cpp
- * Author: nguyentran
- * 
- * Created on May 27, 2013, 11:56 AM
+ * ImmuneSystem.cpp
+ *
+ * Implement the immune system for the individuals.
  */
-
 #include "ImmuneSystem.h"
-#include "Population/ImmuneComponent/ImmuneComponent.h"
-#include "Person.h"
-#include "Model.h"
-#include "Core/Config/Config.h"
+
 #include <cmath>
+
+#include "Core/Config/Config.h"
 #include "Helpers/ObjectHelpers.h"
+#include "Model.h"
+#include "Person.h"
+#include "Population/ImmuneComponent/ImmuneComponent.h"
 
 OBJECTPOOL_IMPL(ImmuneSystem)
 
-ImmuneSystem::ImmuneSystem(Person *p) : person_(p), increase_(false), immune_component_(nullptr) {
-  //    immune_components_ = new ImmuneComponentPtrVector();
-
-}
+ImmuneSystem::ImmuneSystem(Person *p) : person_(p), increase_(false), immune_component_(nullptr) { }
 
 ImmuneSystem::~ImmuneSystem() {
 
@@ -44,11 +41,7 @@ void ImmuneSystem::set_immune_component(ImmuneComponent *value) {
   }
 }
 
-void ImmuneSystem::draw_random_immune() {
-  immune_component_->draw_random_immune();
-}
-
-double ImmuneSystem::get_lastest_immune_value() const {
+double ImmuneSystem::get_latest_immune_value() const {
   return immune_component_->latest_value();
 }
 
@@ -63,7 +56,7 @@ double ImmuneSystem::get_current_value() const {
 double ImmuneSystem::get_parasite_size_after_t_days(const int &duration, const double &originalSize,
                                                     const double &fitness) const {
 
-  const auto last_immune_level = get_lastest_immune_value();
+  const auto last_immune_level = get_latest_immune_value();
   const auto temp = Model::CONFIG->immune_system_information().c_max*(1 - last_immune_level) + Model::CONFIG
       ->immune_system_information()
       .c_min*
