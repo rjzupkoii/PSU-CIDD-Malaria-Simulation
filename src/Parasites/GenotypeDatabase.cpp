@@ -61,7 +61,7 @@ std::vector<double> GenotypeDatabase::generate_offspring_parasite_density(const 
   }
 
   for (auto &density : recombination_parasite_density) {
-    if (NumberHelpers::is_not_equal(density, 0.0)) {
+    if (NumberHelpers::is_not_zero(density)) {
       density /= results.size();
     }
   }

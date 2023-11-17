@@ -124,7 +124,7 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
 
   // Update the current values
   for (std::size_t i = 0; i < relative_parasite_density.size(); i++) {
-    if (NumberHelpers::is_equal(relative_parasite_density[i], 0.0)) { continue; }
+    if (NumberHelpers::is_zero(relative_parasite_density[i])) { continue; }
     auto index = (*parasites_)[i]->genotype()->genotype_id();
     (*relative_effective_parasite_density_)[index] += relative_parasite_density[i];
   }
@@ -156,11 +156,11 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
 
   for (std::size_t i = 0; i < parasite_population_count; i++) {
     auto density_i = relative_parasite_density[i];
-    if (NumberHelpers::is_equal(density_i, 0.0)) { continue; }
+    if (NumberHelpers::is_zero(density_i)) { continue; }
 
     for (std::size_t j = i; j < parasite_population_count; j++) {
       auto density_j = relative_parasite_density[j];
-      if (NumberHelpers::is_equal(density_j, 0.0)) { continue; }
+      if (NumberHelpers::is_zero(density_j)) { continue; }
 
       // Are they the same?
       if (i == j) {
@@ -228,7 +228,7 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
 
   // Update the densities
   for (std::size_t j = 0; j < size; j++) {
-    if (NumberHelpers::is_not_equal(relative_parasite_density[j], 0.0)) {
+    if (NumberHelpers::is_not_zero(relative_parasite_density[j])) {
       relative_parasite_density[j] = pow(10, relative_parasite_density[j] - log10_total_relative_density);
     }
   }

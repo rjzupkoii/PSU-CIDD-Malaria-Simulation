@@ -82,7 +82,7 @@ namespace Spatial {
 
                 for (auto destination = 0; destination < number_of_locations; destination++) {
                     // Continue if there is nothing to do
-                    if (NumberHelpers::is_equal(relative_distance_vector[destination], 0.0)) { continue; }
+                    if (NumberHelpers::is_zero(relative_distance_vector[destination])) { continue; }
 
                     // Calculate the proportional probability
                     double probability = std::pow(population, tau_) * kernel[from_location][destination];

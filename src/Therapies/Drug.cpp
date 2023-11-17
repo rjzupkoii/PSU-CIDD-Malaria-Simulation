@@ -50,7 +50,7 @@ double Drug::get_current_drug_concentration(int currentTime) {
     //        return starting_value_ + Model::RANDOM->random_uniform_double(-0.1, 0.1);
     return starting_value_;
   } else {
-    const auto temp = NumberHelpers::is_equal(drug_type_->drug_half_life(), 0.0)
+    const auto temp = NumberHelpers::is_zero(drug_type_->drug_half_life())
                       ? -100
                       : -(days - dosing_days_)*
             log(2)/

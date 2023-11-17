@@ -39,7 +39,7 @@ namespace Spatial {
 
             std::vector<double> v_relative_number_of_circulation_by_location(number_of_locations, 0);
             for (int target_location = 0; target_location < number_of_locations; target_location++) {
-                if (NumberHelpers::is_equal(relative_distance_vector[target_location], 0.0)) {
+                if (NumberHelpers::is_zero(relative_distance_vector[target_location])) {
                     v_relative_number_of_circulation_by_location[target_location] = 0;
                 } else {
                   // Gravity model: N_{ij}=\frac{pop^\alpha_ipop^\beta_j}{d(i,j)^\gamma}\kappa

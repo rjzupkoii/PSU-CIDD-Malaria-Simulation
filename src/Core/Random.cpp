@@ -87,7 +87,7 @@ int Random::random_normal_truncated(const int &mean, const int &sd) {
 
 double Random::random_beta(const double &alpha, const double &beta) {
   //if beta =0, alpha = means
-  if (NumberHelpers::is_equal(beta, 0.0))
+  if (NumberHelpers::is_zero(beta))
     return alpha;
   return gsl_ran_beta(G_RNG, alpha, beta);
 }
@@ -99,14 +99,14 @@ double Random::random_beta(const double &alpha, const double &beta) {
 
 double Random::random_gamma(const double &shape, const double &scale) {
   //if beta =0, alpha = means
-  if (NumberHelpers::is_equal(scale, 0.0))
+  if (NumberHelpers::is_zero(scale))
     return shape;
   return gsl_ran_gamma(G_RNG, shape, scale);
 }
 
 double Random::cdf_gamma_distribution(const double &x, const double &alpha, const double &beta) {
   //if beta =0, alpha = means
-  if (NumberHelpers::is_equal(beta, 0.0))
+  if (NumberHelpers::is_zero(beta))
     return 1.0;
   return gsl_cdf_gamma_P(x, alpha, beta);
 }
