@@ -4,6 +4,11 @@ set(BUILD_WARNINGS false CACHE BOOL "Enable for build warnings")
 # Enable if building on the Windows Subsystem for Linux (WSL), via the command line use -DBUILD_WSL:BOOL=true
 set(BUILD_WSL false CACHE BOOL "Enable for builds on WSL")
 
+# If we are Linux, then use the BUILD_WSL pathway
+if (LINUX)
+  set(BUILD_WSL true)
+endif()
+
 # This function checks for the existence of a given module and sets the flag accordingly
 function(CheckHasModule Module)
   find_package(${Module} QUIET)
