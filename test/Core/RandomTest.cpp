@@ -2,7 +2,7 @@
 // Created by Nguyen Tran on 1/25/2018.
 //
 
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 #include "Core/Random.h"
 #include <iostream>
 #include <catch2/catch.hpp>

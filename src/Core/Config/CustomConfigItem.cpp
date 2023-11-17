@@ -14,7 +14,7 @@
 #include "Config.h"
 #include "Spatial/SpatialModelBuilder.hxx"
 #include "Helpers/ObjectHelpers.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 #include "Therapies/Therapy.hxx"
 #include "Therapies/TherapyBuilder.h"
 #include "Strategies/IStrategy.h"

@@ -10,7 +10,7 @@
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "DrugsInBlood.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 #include "Helpers/ObjectHelpers.h"
 #include "MDC/ModelDataCollector.h"
 #include "Model.h"
@@ -218,7 +218,7 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
     const auto log10_relative_density = (*parasites_)[j]->get_log10_relative_density();
 
     // Update or clear accordingly
-    if (NumberHelpers::is_enot_qual(log10_relative_density, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) {
+    if (NumberHelpers::is_not_equal(log10_relative_density, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) {
       relative_parasite_density[j] = (log10_relative_density);
       log10_total_relative_density += log10(pow(10, log10_relative_density - log10_total_relative_density) + 1);
     } else {
@@ -228,7 +228,7 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
 
   // Update the densities
   for (std::size_t j = 0; j < size; j++) {
-    if (NumberHelpers::is_enot_qual(relative_parasite_density[j], 0.0)) {
+    if (NumberHelpers::is_not_equal(relative_parasite_density[j], 0.0)) {
       relative_parasite_density[j] = pow(10, relative_parasite_density[j] - log10_total_relative_density);
     }
   }

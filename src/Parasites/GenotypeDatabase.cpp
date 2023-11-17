@@ -8,7 +8,7 @@
 
 #include "Genotype.h"
 #include "Core/Config/Config.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 
 GenotypeDatabase::~GenotypeDatabase() {
   for (auto &i : *this) {
@@ -61,7 +61,7 @@ std::vector<double> GenotypeDatabase::generate_offspring_parasite_density(const 
   }
 
   for (auto &density : recombination_parasite_density) {
-    if (NumberHelpers::is_enot_qual(density, 0.0)) {
+    if (NumberHelpers::is_not_equal(density, 0.0)) {
       density /= results.size();
     }
   }
