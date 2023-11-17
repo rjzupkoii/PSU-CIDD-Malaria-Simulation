@@ -12,7 +12,7 @@
 #include "Model.h"
 #include "Core/Scheduler.h"
 #include "Core/Config/Config.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 #include <cmath>
 
 OBJECTPOOL_IMPL(Drug)

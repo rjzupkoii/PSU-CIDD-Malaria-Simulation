@@ -8,7 +8,7 @@
 #include <cmath>
 
 #include "Core/Config/Config.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 #include "Model.h"
 #include "Person.h"
 #include "SingleHostClonalParasitePopulations.h"

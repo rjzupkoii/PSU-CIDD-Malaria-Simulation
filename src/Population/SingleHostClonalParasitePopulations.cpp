@@ -10,7 +10,7 @@
 #include "Core/Config/Config.h"
 #include "Core/Random.h"
 #include "DrugsInBlood.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 #include "Helpers/ObjectHelpers.h"
 #include "MDC/ModelDataCollector.h"
 #include "Model.h"

@@ -9,7 +9,7 @@
 #include <cmath>
 
 #include "Core/PropertyMacro.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 #include "SpatialModel.hxx"
 #include "yaml-cpp/yaml.h"
 

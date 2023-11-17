@@ -8,7 +8,7 @@
 
 #include "Genotype.h"
 #include "Core/Config/Config.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 
 GenotypeDatabase::~GenotypeDatabase() {
   for (auto &i : *this) {

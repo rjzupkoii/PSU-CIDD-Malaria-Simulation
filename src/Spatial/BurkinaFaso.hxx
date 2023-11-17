@@ -11,7 +11,7 @@
 #define BURKINAFASO_HXX
 
 #include "Core/Config/Config.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 #include "Model.h"
 #include "SpatialModel.hxx"
 

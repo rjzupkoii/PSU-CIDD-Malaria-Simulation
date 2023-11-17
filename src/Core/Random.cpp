@@ -12,7 +12,7 @@
 #include <random>
 
 #include "easylogging++.h"
-#include "Helpers/NumberHelpers.h"
+#include "Helpers/NumberHelpers.hxx"
 
 Random::Random(gsl_rng* g_rng) : seed_(0ul), G_RNG(g_rng) {}
 
