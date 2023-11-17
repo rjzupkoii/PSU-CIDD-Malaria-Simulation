@@ -196,7 +196,7 @@ void drug_db::set_value(const YAML::Node &node) {
     auto* dt = new DrugType();
     dt->set_id(drug_id);
 
-    const auto i_s = NumberHelpers::number_to_string<int>(drug_id);
+    const auto i_s = std::to_string(drug_id);
     const auto &dt_node = node[name_][i_s];
 
     dt->set_name(dt_node["name"].as<std::string>());
@@ -388,7 +388,7 @@ therapy_db::~therapy_db() {
 }
 
 Therapy* read_therapy(const YAML::Node &n, const int &therapy_id) {
-  const auto t_id = NumberHelpers::number_to_string<int>(therapy_id);
+  const auto t_id = std::to_string(therapy_id);
   auto* t = TherapyBuilder::build(n[t_id], therapy_id);
   return t;
 }
@@ -409,7 +409,7 @@ strategy_db::~strategy_db() {
 }
 
 IStrategy* read_strategy(const YAML::Node &n, const int &strategy_id, Config* config) {
-  const auto s_id = NumberHelpers::number_to_string<int>(strategy_id);
+  const auto s_id = std::to_string(strategy_id);
   auto* result = StrategyBuilder::build(n[s_id], strategy_id, config);
   VLOG(9) << fmt::format("Strategy: {0}", result->to_string());
   return result;
