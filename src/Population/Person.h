@@ -13,7 +13,7 @@
 #include "Core/ObjectPool.h"
 #include "Core/Dispatcher.h"
 #include "Events/Event.h"
-#include "Properties/PersonIndexByLocationBittingLevelHandler.hxx"
+#include "Properties/PersonIndexByLocationBitingLevelHandler.hxx"
 #include "Properties/PersonIndexByLocationMovingLevelHandler.hxx"
 #include "ClonalParasitePopulation.h"
 #include "Helpers/UniqueId.hxx"
@@ -50,7 +50,7 @@ class DrugsInBlood;
 class Genotype;
 
 class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAgeClassHandler,
-               public PersonIndexByLocationBittingLevelHandler, public PersonIndexByLocationMovingLevelHandler,
+               public PersonIndexByLocationBitingLevelHandler, public PersonIndexByLocationMovingLevelHandler,
                public Dispatcher {
  public:
 
@@ -99,9 +99,9 @@ class Person : public PersonIndexAllHandler, public PersonIndexByLocationStateAg
 
  VIRTUAL_PROPERTY_REF(int, latest_update_time)
 
- PROPERTY_HEADER(int, bitting_level)
+ PROPERTY_HEADER(int, biting_level)
 
- PROPERTY_REF(double, base_bitting_level_value)
+ PROPERTY_REF(double, base_biting_level_value)
 
  PROPERTY_HEADER(int, moving_level)
 

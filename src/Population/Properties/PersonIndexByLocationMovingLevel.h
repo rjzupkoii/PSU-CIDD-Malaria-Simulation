@@ -39,7 +39,7 @@ class PersonIndexByLocationMovingLevel : public PersonIndex {
 
   void add(Person *p, const int &location, const int &moving_level);
 
-  void change_property(Person *p, const int &location, const int &bitting_level);
+  void change_property(Person *p, const int &location, const int &biting_level);
 
 };
 

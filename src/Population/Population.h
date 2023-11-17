@@ -17,7 +17,7 @@
 class Model;
 class PersonIndexAll;
 class PersonIndexByLocationStateAgeClass;
-class PersonIndexByLocationBittingLevel;
+class PersonIndexByLocationBitingLevel;
 
 /**
  * Population will manage the life cycle of Person object it will release/delete all person object when it is deleted

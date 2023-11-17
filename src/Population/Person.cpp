@@ -44,7 +44,7 @@ OBJECTPOOL_IMPL(Person)
 
 Person::Person() :
   location_(-1), residence_location_(-1), host_state_(SUSCEPTIBLE), age_(-1), age_class_(-1), birthday_(-1),
-  latest_update_time_(-1), bitting_level_(-1), base_bitting_level_value_(0), moving_level_(-1),
+  latest_update_time_(-1), biting_level_(-1), base_biting_level_value_(0), moving_level_(-1),
   liver_parasite_type_(nullptr),
   number_of_times_bitten_(0),
   number_of_trips_taken_(0),
@@ -171,11 +171,11 @@ void Person::set_age_class(const int &value) {
   }
 }
 
-int Person::bitting_level() const {
-  return bitting_level_;
+int Person::biting_level() const {
+  return biting_level_;
 }
 
-void Person::set_bitting_level(const int &value) {
+void Person::set_biting_level(const int &value) {
   auto new_value = value;
   if (new_value < 0) {
     new_value = 0;
@@ -184,11 +184,11 @@ void Person::set_bitting_level(const int &value) {
   if (new_value > (Model::CONFIG->relative_bitting_info().number_of_biting_levels - 1)) {
     new_value = Model::CONFIG->relative_bitting_info().number_of_biting_levels - 1;
   }
-  if (bitting_level_ != new_value) {
+  if (biting_level_ != new_value) {
     all_clonal_parasite_populations_->remove_all_infection_force();
 
-    NotifyChange(BITING_LEVEL, &bitting_level_, &new_value);
-    bitting_level_ = new_value;
+    NotifyChange(BITING_LEVEL, &biting_level_, &new_value);
+    biting_level_ = new_value;
     all_clonal_parasite_populations_->add_all_infection_force();
   }
 }
@@ -237,7 +237,7 @@ void Person::notify_change_in_force_of_infection(const double &sign, const int &
 }
 
 double Person::get_biting_level_value() {
-  return Model::CONFIG->relative_bitting_info().v_biting_level_value[bitting_level_];
+  return Model::CONFIG->relative_bitting_info().v_biting_level_value[biting_level_];
 }
 
 double Person::relative_infectivity(const double &log10_parasite_density) {
@@ -534,7 +534,7 @@ void Person::update_biting_level() {
   if (Model::CONFIG->using_age_dependent_bitting_level()) {
 
     //TODO: test here
-    const auto new_biting_level_value = base_bitting_level_value_ * get_age_dependent_biting_factor();
+    const auto new_biting_level_value = base_biting_level_value_ * get_age_dependent_biting_factor();
     const auto diff_in_level = static_cast<int>(std::floor(new_biting_level_value - get_biting_level_value()) /
                                                 ((Model::CONFIG->relative_bitting_info().max_relative_biting_value -
                                                   1) /
@@ -542,7 +542,7 @@ void Person::update_biting_level() {
                                                    Model::CONFIG->relative_bitting_info().number_of_biting_levels -
                                                    1)));
     if (diff_in_level != 0) {
-      set_bitting_level(bitting_level_ + diff_in_level);
+      set_biting_level(biting_level_ + diff_in_level);
     }
   }
 }

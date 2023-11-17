@@ -67,12 +67,12 @@ void PersonIndexByLocationMovingLevel::remove_without_set_index(Person *p) {
   reference.pop_back();
 }
 
-void PersonIndexByLocationMovingLevel::change_property(Person *p, const int &location, const int &moving_level) {
+void PersonIndexByLocationMovingLevel::change_property(Person *p, const int &location, const int &biting_level) {
   //remove from old position
   remove_without_set_index(p); //to save 1 set and improve performance since the index of p will changed when add
 
   //add to new position
-  add(p, location, moving_level);
+  add(p, location, biting_level);
 }
 
 void PersonIndexByLocationMovingLevel::defragment() {

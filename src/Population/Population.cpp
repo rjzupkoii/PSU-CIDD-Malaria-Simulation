@@ -23,7 +23,7 @@
 #include "Model.h"
 #include "Population/ImmuneComponent/NonInfantImmuneComponent.h"
 #include "Properties/PersonIndexAll.h"
-#include "Properties/PersonIndexByLocationBittingLevel.h"
+#include "Properties/PersonIndexByLocationBitingLevel.h"
 #include "Properties/PersonIndexByLocationMovingLevel.h"
 #include "Properties/PersonIndexByLocationStateAgeClass.h"
 #include "Spatial/SpatialModel.hxx"
@@ -122,7 +122,7 @@ void Population::perform_infection_event() {
 #endif
 
   // Get the person index
-  auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
+  auto pi = get_person_index<PersonIndexByLocationBitingLevel>();
 
   // Iterate over all the locations in the model
   for (auto loc = 0; loc < Model::CONFIG->number_of_locations(); loc++) {
@@ -283,8 +283,8 @@ void Population::generate_individual(int location, int age_class) {
   p->immune_system()->immune_component()->set_latest_value(immune_value);
   p->immune_system()->set_increase(false);
 
-  p->set_bitting_level(Model::CONFIG->bitting_level_generator().draw_random_level(Model::RANDOM));
-  p->set_base_bitting_level_value(Model::CONFIG->relative_bitting_info().v_biting_level_value[p->bitting_level()]);
+  p->set_biting_level(Model::CONFIG->bitting_level_generator().draw_random_level(Model::RANDOM));
+  p->set_base_biting_level_value(Model::CONFIG->relative_bitting_info().v_biting_level_value[p->biting_level()]);
 
   p->set_moving_level(Model::CONFIG->moving_level_generator().draw_random_level(Model::RANDOM));
 
@@ -335,7 +335,7 @@ void Population::introduce_parasite(const int &location, Genotype* parasite_type
   if (model() == nullptr) { return; }
 
   DoubleVector vLevelDensity;
-  auto pi = get_person_index<PersonIndexByLocationBittingLevel>();
+  auto pi = get_person_index<PersonIndexByLocationBitingLevel>();
 
   for (int i = 0; i < Model::CONFIG->relative_bitting_info().number_of_biting_levels; i++) {
     auto temp = Model::CONFIG->relative_bitting_info().v_biting_level_value[i] * static_cast<double>(pi->vPerson()[location][i].size());
@@ -440,9 +440,9 @@ void Population::give_1_birth(const int &location) {
   p->set_latest_update_time(Model::SCHEDULER->current_time());
 
   //set_relative_biting_rate
-  p->set_bitting_level(Model::CONFIG->bitting_level_generator().draw_random_level(Model::RANDOM));
-  p->set_base_bitting_level_value(
-      Model::CONFIG->relative_bitting_info().v_biting_level_value[p->bitting_level()]);
+  p->set_biting_level(Model::CONFIG->bitting_level_generator().draw_random_level(Model::RANDOM));
+  p->set_base_biting_level_value(
+      Model::CONFIG->relative_bitting_info().v_biting_level_value[p->biting_level()]);
 
   p->set_moving_level(Model::CONFIG->moving_level_generator().draw_random_level(Model::RANDOM));
 
@@ -615,7 +615,7 @@ void Population::initialize_person_indices() {
           number_of_location, number_of_host_states, number_of_age_classes);
   person_index_list_->push_back(p_index_by_l_s_a);
 
-  auto p_index_location_biting_level = new PersonIndexByLocationBittingLevel(
+  auto p_index_location_biting_level = new PersonIndexByLocationBitingLevel(
       number_of_location, Model::CONFIG->relative_bitting_info().number_of_biting_levels);
   person_index_list_->push_back(p_index_location_biting_level);
 
