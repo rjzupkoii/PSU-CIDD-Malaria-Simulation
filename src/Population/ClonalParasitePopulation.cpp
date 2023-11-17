@@ -44,7 +44,7 @@ double ClonalParasitePopulation::get_current_parasite_density(const int &current
 double ClonalParasitePopulation::get_log10_relative_density() const {
 
   if (NumberHelpers::is_equal(last_update_log10_parasite_density_, LOG_ZERO_PARASITE_DENSITY) ||
-      NumberHelpers::is_equal(gametocyte_level_, 0.0))
+      NumberHelpers::is_zero(gametocyte_level_))
     return LOG_ZERO_PARASITE_DENSITY;
 
   return last_update_log10_parasite_density_ + log10(gametocyte_level_);
@@ -55,7 +55,7 @@ double ClonalParasitePopulation::last_update_log10_parasite_density() const {
 }
 
 void ClonalParasitePopulation::set_last_update_log10_parasite_density(const double &value) {
-  if (NumberHelpers::is_enot_qual(last_update_log10_parasite_density_, value)) {
+  if (NumberHelpers::is_not_equal(last_update_log10_parasite_density_, value)) {
     parasite_population_->remove_all_infection_force();
     last_update_log10_parasite_density_ = value;
     parasite_population_->add_all_infection_force();
@@ -67,7 +67,7 @@ double ClonalParasitePopulation::gametocyte_level() const {
 }
 
 void ClonalParasitePopulation::set_gametocyte_level(const double &value) {
-  if (NumberHelpers::is_enot_qual(gametocyte_level_, value)) {
+  if (NumberHelpers::is_not_equal(gametocyte_level_, value)) {
     parasite_population_->remove_all_infection_force();
     gametocyte_level_ = value;
     parasite_population_->add_all_infection_force();

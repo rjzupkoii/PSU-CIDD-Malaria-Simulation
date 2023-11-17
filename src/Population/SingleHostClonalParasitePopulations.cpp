@@ -124,7 +124,7 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
 
   // Update the current values
   for (std::size_t i = 0; i < relative_parasite_density.size(); i++) {
-    if (NumberHelpers::is_equal(relative_parasite_density[i], 0.0)) { continue; }
+    if (NumberHelpers::is_zero(relative_parasite_density[i])) { continue; }
     auto index = (*parasites_)[i]->genotype()->genotype_id();
     (*relative_effective_parasite_density_)[index] += relative_parasite_density[i];
   }
@@ -143,29 +143,39 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
   get_parasites_profiles(relative_parasite_density, log10_total_relative_density_);
   if (NumberHelpers::is_equal(log10_total_relative_density_, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) { return; }
 
-  // Make sure nothing was deleted in the process
+  // Assert that nothing was deleted in the process
   assert(relative_parasite_density.size() == parasite_population_count);
 
-  // Zero the current value
-  for (auto p = 0; p < parasite_types; p++) {
-    (*relative_effective_parasite_density_)[p] = 0.0;
+  // Start by zeroing out current parasite densities
+  std::fill((*relative_effective_parasite_density_).begin(), (*relative_effective_parasite_density_).end(), 0);
+
+  // Next, if we just have a single parasite the effective density will always be one for that parasite, so set it and return
+  if (parasite_population_count == 1) {
+    // Assert that a density is actually present where we expect it
+    assert(NumberHelpers::is_not_zero(relative_parasite_density[0]));
+
+    const auto index = (*parasites_)[0]->genotype()->genotype_id();
+    const auto weight = relative_parasite_density[0] * relative_parasite_density[0];
+    (*relative_effective_parasite_density_)[index] += weight;
+    return;
   }
 
   // Cache the genotype DB reference
   const auto& genotype_db = Model::CONFIG->genotype_db();
 
+  // Otherwise this looks like a multi-clonal infection which requires more calculation
   for (std::size_t i = 0; i < parasite_population_count; i++) {
-    auto density_i = relative_parasite_density[i];
-    if (NumberHelpers::is_equal(density_i, 0.0)) { continue; }
+    const auto density_i = relative_parasite_density[i];
+    if (NumberHelpers::is_zero(density_i)) { continue; }
 
     for (std::size_t j = i; j < parasite_population_count; j++) {
-      auto density_j = relative_parasite_density[j];
-      if (NumberHelpers::is_equal(density_j, 0.0)) { continue; }
+      const auto density_j = relative_parasite_density[j];
+      if (NumberHelpers::is_zero(density_j)) { continue; }
 
       // Are they the same?
       if (i == j) {
         const auto weight = density_i * density_i;
-        auto index = (*parasites_)[i]->genotype()->genotype_id();
+        const auto index = (*parasites_)[i]->genotype()->genotype_id();
         (*relative_effective_parasite_density_)[index] += weight;
         continue;
       } 
@@ -174,16 +184,14 @@ void SingleHostClonalParasitePopulations::update_relative_effective_parasite_den
       const auto weight = 2 * density_i * density_j;
       const auto id_f = (*parasites_)[i]->genotype()->genotype_id();
       const auto id_m = (*parasites_)[j]->genotype()->genotype_id();
-      for (auto p = 0; p < parasite_types; p++) {
-        // Check to see if a call to get_offspring_density is needed, if the indices are the same then we know the value
-        // is zero (no change), or one (update with weight)
-        if (id_f == id_m) {
-          if (id_f == p) { 
-            (*relative_effective_parasite_density_)[p] += weight;
-          }
-        } else {        
-          // Check the density matrix and use that to ensure that the right weight is applied to the update
-          auto offspring_density = (id_f < id_m) ? genotype_db->mating_matrix->get(id_m, id_f, p) : genotype_db->mating_matrix->get(id_f, id_m, p);
+
+      // If the indices are the same then we can just assign the weight
+      if (id_f == id_m) {
+        (*relative_effective_parasite_density_)[id_f] += weight;
+      } else {
+        // Otherwise we need to get the correct offspring density from the mating matrix
+        for (auto p = 0; p < parasite_types; p++) {
+          const auto offspring_density = (id_f < id_m) ? genotype_db->mating_matrix->get(id_m, id_f, p) : genotype_db->mating_matrix->get(id_f, id_m, p);
           (*relative_effective_parasite_density_)[p] += weight * offspring_density;
         }
       }
@@ -218,7 +226,7 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
     const auto log10_relative_density = (*parasites_)[j]->get_log10_relative_density();
 
     // Update or clear accordingly
-    if (NumberHelpers::is_enot_qual(log10_relative_density, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) {
+    if (NumberHelpers::is_not_equal(log10_relative_density, ClonalParasitePopulation::LOG_ZERO_PARASITE_DENSITY)) {
       relative_parasite_density[j] = (log10_relative_density);
       log10_total_relative_density += log10(pow(10, log10_relative_density - log10_total_relative_density) + 1);
     } else {
@@ -228,7 +236,7 @@ void SingleHostClonalParasitePopulations::get_parasites_profiles(std::vector<dou
 
   // Update the densities
   for (std::size_t j = 0; j < size; j++) {
-    if (NumberHelpers::is_enot_qual(relative_parasite_density[j], 0.0)) {
+    if (NumberHelpers::is_not_zero(relative_parasite_density[j])) {
       relative_parasite_density[j] = pow(10, relative_parasite_density[j] - log10_total_relative_density);
     }
   }

@@ -13,14 +13,28 @@
 
 class NumberHelpers {
  public:
+  // Check to see if the two floating point values are equal.
   template<typename T>
   static bool is_equal(T a, T b, const T epsilon = std::numeric_limits<T>::epsilon()) {
     return std::fabs(a - b) < epsilon;
   }
 
+  // Check to see if the two floating point values are not equal.
   template<typename T>
-  static bool is_enot_qual(T a, T b, const T epsilon = std::numeric_limits<T>::epsilon()) {
-    return !is_equal<T>(a, b, epsilon);
+  static bool is_not_equal(T a, T b, const T epsilon = std::numeric_limits<T>::epsilon()) {
+    return std::fabs(a - b) >= epsilon;
+  }
+
+  // Check to see if the floating point value is zero.
+  template<typename T>
+  static bool is_zero(T a, const T epsilon = std::numeric_limits<T>::epsilon()) {
+    return std::fabs(a) < epsilon;
+  }
+
+  // Check to see if the floating point value is not zero.
+  template<typename T>
+  static bool is_not_zero(T a, const T epsilon = std::numeric_limits<T>::epsilon()) {
+    return std::fabs(a) >= epsilon;
   }
 
   /**

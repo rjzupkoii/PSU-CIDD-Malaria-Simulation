@@ -102,7 +102,7 @@ void immune_system_information::set_value(const YAML::Node &node) {
   const auto mean_initial_condition = read_node<double>(is_node, "mean_initial_condition");
   const auto sd_initial_condition = read_node<double>(is_node, "sd_initial_condition");
 
-  if (NumberHelpers::is_equal(sd_initial_condition, 0.0)) {
+  if (NumberHelpers::is_zero(sd_initial_condition)) {
     value_.alpha_immune = mean_initial_condition;
     value_.beta_immune = 0.0;
   } else {
@@ -464,7 +464,7 @@ void prob_individual_present_at_mda_distribution::set_value(const YAML::Node &no
 
     beta_distribution_params params{};
 
-    if (NumberHelpers::is_equal(sd, 0.0)) {
+    if (NumberHelpers::is_zero(sd)) {
       params.alpha = mean;
       params.beta = 0.0;
     } else {

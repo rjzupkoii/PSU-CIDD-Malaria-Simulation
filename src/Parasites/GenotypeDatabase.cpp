@@ -56,13 +56,12 @@ std::vector<double> GenotypeDatabase::generate_offspring_parasite_density(const 
   std::vector<double> recombination_parasite_density(this->size(), 0.0);
 
   for (auto &ge_i : results) {
-    //        std::cout << ge_i << std::endl;
     recombination_parasite_density[get_id(ge_i)] += 1;
   }
 
   for (auto &density : recombination_parasite_density) {
-    if (NumberHelpers::is_enot_qual(density, 0.0)) {
-      density /= results.size();
+    if (NumberHelpers::is_not_zero(density)) {
+      density /= static_cast<double>(results.size());
     }
   }
 

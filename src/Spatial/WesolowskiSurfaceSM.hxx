@@ -48,7 +48,7 @@ namespace Spatial {
 
           std::vector<double> results(number_of_locations, 0);
           for (int destination = 0; destination < number_of_locations; destination++) {
-            if (NumberHelpers::is_equal(relative_distance_vector[destination], 0.0)) {
+            if (NumberHelpers::is_zero(relative_distance_vector[destination])) {
               results[destination] = 0;
             } else {
               // Gravity model: N_{ij}=\frac{pop^\alpha_ipop^\beta_j}{d(i,j)^\gamma}\kappa
