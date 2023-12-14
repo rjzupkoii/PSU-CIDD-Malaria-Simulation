@@ -28,7 +28,7 @@ class GenotypeDatabase : public GenotypePtrMap {
   VIRTUAL_PROPERTY_REF(IntVector, weight)
 
   private:
-    Flat3D<double>* mating_matrix;
+    Flat3D<double>* mating_matrix = nullptr;
 
     // This is generally bad practice, but since the method gets called a lot 
     // during the model we need to get as much performance as we can out of it.
