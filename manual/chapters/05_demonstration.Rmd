@@ -1,7 +1,3 @@
-\newpage
-
-# (PART\*) Demonstration {-}
-
 # Demonstration
 
 ## Introduction
