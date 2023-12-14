@@ -644,6 +644,23 @@ events:
 **locus** (int) : The genotype database locus index of the desired mutation. \
 **mutant_allele** (int) : The genotype database allele index of the mutation allele that will be applied.
 
+### rotate_treatment_strategy_event
+When initially called, will change the current treatment strategy that is currently deployed in the simulation to the one defined in the `strategy_db` with the given index; however, upon the defined number of `years` it will change to the second one. This is followed by a regular rotation back and forth based upon the defined strategies and number of `years`. The event uses a fixed value of 365 days for one year, and rotations must be at least one year apart. Simple error checking is performed upon model initialization to ensure that values are within bounds.
+
+```YAML
+  - name: rotate_treatment_strategy_event
+    info:
+      - day: 2023/12/14
+        years: 2
+        first_strategy_id: 1
+        second_strategy_id: 2
+```
+
+**day** (date string, YYYY/mm/dd) : The date when the first rotation will occur.
+**years** (int) : The number of years between rotations, where a year is 365 days.
+**first_strategy_id** (int) : The `strategy_db` id of the first treatment strategy to change to.
+**first_strategy_id** (int) : The `strategy_db` id of the second treatment strategy to change to.
+
 ### turn_off_mutation
 Turn off all mutations in the model, recommended during the model burn-in.
 

@@ -58,6 +58,8 @@ public:
   static std::vector<Event*> build_importation_periodically_random_event(const YAML::Node& node, Config* config);
 
   static std::vector<Event*> build_update_beta_raster_event(const YAML::Node& node, Config* config);
+
+  static std::vector<Event*> build_rotate_treatment_strategy_event(const YAML::Node& node, Config* config);
 };
 
 #endif

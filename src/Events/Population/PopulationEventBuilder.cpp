@@ -30,6 +30,7 @@
 #include "ImportationPeriodicallyRandomEvent.h"
 #include "IntroduceMutantEvent.hxx"
 #include "IntroduceMutantRasterEvent.hxx"
+#include "RotateStrategyEvent.h"
 #include "UpdateBetaRasterEvent.hxx"
 
 // Disable data flow analysis (DFA) in CLion
@@ -119,6 +120,49 @@ PopulationEventBuilder::build_change_treatment_strategy_event(const YAML::Node& 
   return events;
 }
 
+std::vector<Event*> PopulationEventBuilder::build_rotate_treatment_strategy_event(const YAML::Node &node, Config *config) {
+  try {
+    std::vector<Event*> events;
+    for (const auto & entry : node) {
+      // Load the values
+      auto start_date = entry["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{start_date} - date::sys_days {config->starting_date()}).count();
+      auto years = entry["years"].as<int>();
+      auto first_strategy_id = entry["first_strategy_id"].as<int>();
+      auto second_strategy_id = entry["second_strategy_id"].as<int>();
+
+      // Make sure the years are reasonable
+      if (years < 1) {
+        LOG(ERROR) << "Strategy rotation must be at least one year (whole numbers) in " << RotateStrategyEvent::EventName;
+        throw std::invalid_argument("Strategy rotation years less than one");
+      }
+
+      // Check to make sure the strategy ids are valid
+      if (first_strategy_id < 0 || second_strategy_id <0) {
+        LOG(ERROR) << "Strategy id cannot be less than zero for " << RotateStrategyEvent::EventName;
+        throw std::invalid_argument("Strategy id cannot be less than zero");
+      }
+      if (first_strategy_id >= Model::CONFIG->strategy_db().size() || second_strategy_id >= Model::CONFIG->strategy_db().size()) {
+        LOG(ERROR) << "Strategy id should be less than the total number of strategies (zero-indexing) for " << RotateStrategyEvent::EventName;
+        throw std::invalid_argument("Strategy id greater than strategy_db size");
+      }
+
+      // Log and add the event to the queue
+      auto* event = new RotateStrategyEvent(time, years, first_strategy_id, second_strategy_id);
+      VLOG(1) << "Adding " << event->name()
+              << " start: " << start_date
+              << ", rotation schedule: " << years
+              << ", initial strategy: " << first_strategy_id
+              << ", next strategy: " << second_strategy_id;
+      events.push_back(event);
+    }
+    return events;
+  } catch (YAML::BadConversion &error) {
+    LOG(ERROR) << "Unrecoverable error parsing YAML value in " << RotateStrategyEvent::EventName << " node: " << error.msg;
+    exit(EXIT_FAILURE);
+  }
+}
+
 std::vector<Event*> PopulationEventBuilder::build_single_round_mda_event(const YAML::Node& node, Config* config) {
   std::vector<Event*> events;
   for (const auto & entry : node) {
@@ -171,7 +215,7 @@ std::vector<Event*> PopulationEventBuilder::build_turn_on_mutation_event(const Y
     return events;
   } catch (YAML::BadConversion &error) {
     LOG(ERROR) << "Unrecoverable error parsing YAML value in turn_on_mutation node: " << error.msg;
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -261,7 +305,7 @@ std::vector<Event*> PopulationEventBuilder::build_annual_beta_update_event(const
     return events;
   } catch (YAML::BadConversion &error) {
     LOG(ERROR) << "Unrecoverable error parsing YAML value in " << AnnualBetaUpdateEvent::EventName << " node: " << error.msg;
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -285,7 +329,7 @@ std::vector<Event*> PopulationEventBuilder::build_annual_coverage_update_event(c
     return events;
   } catch (YAML::BadConversion &error) {
     LOG(ERROR) << "Unrecoverable error parsing YAML value in " << AnnualCoverageUpdateEvent::EventName << " node: " << error.msg;
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -342,7 +386,7 @@ std::vector<Event*> PopulationEventBuilder::build_importation_periodically_rando
     return events;
   } catch (YAML::BadConversion &error) {
     LOG(ERROR) << "Unrecoverable error parsing YAML value in " << ImportationPeriodicallyRandomEvent::EventName << " node: " << error.msg;
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -373,7 +417,7 @@ std::vector<Event*> PopulationEventBuilder::build_update_beta_raster_event(const
     return events;
   } catch (YAML::BadConversion &error) {
     LOG(ERROR) << "Unrecoverable error parsing YAML value in " << UpdateBetaRasterEvent::EventName << " node: " << error.msg;
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -437,6 +481,9 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   }
   if (name == UpdateBetaRasterEvent::EventName) {
     events = build_update_beta_raster_event(node["info"], config);
+  }
+  if (name == RotateStrategyEvent::EventName) {
+    events = build_rotate_treatment_strategy_event(node["info"], config);
   }
 
   return events;
