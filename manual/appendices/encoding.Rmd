@@ -1,9 +1,5 @@
 \newpage
 
-# (APPENDIX) Appendix {-}
-
-# (PART\*) Appendicies {-}
-
 # Genotype Information
 
 Genotypes are encoded into the application via the input file which contains a YAML entry for `genotype_info`. This structure is organized as `loci` with the associated `alleles` that may be mutated during model execution. The following table outlines loci and alleles that are included in the sample configuration file.

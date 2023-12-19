@@ -1,0 +1,71 @@
+\newpage
+
+# (APPENDIX) Appendix {-}
+
+# (PART\*) Appendicies {-}
+
+# Data Sources
+
+In addition to national data sources (e.g., National Malaria Control Programs, Census Reports, etc.) the following data sources may be useful in parameterization of the simulation for a country or as a broader resource for malaria modeling.
+
+## Simulation Data
+
+**The DHS Program: Demographic and Health Surveys** - https://dhsprogram.com/
+
+Sponsored by USAID, the DHS Program conducts periodic demographic and health surveys (DHS survey^[&nbsp;While this turn of phrase is redundant — much like a NIC card (network interface card card) — this is a common way of referring to the surveys in the malaria modeling community.]) in countries throughout the world, with malaria endemic countries well represented. Typically surveys are conducted at a greater frequency than national census and health questions relevant to malaria are included.
+
+&nbsp;
+
+**Malaria Atlas Project** - https://malariaatlas.org/
+
+Sponsored by Telethon Kids Institute and Curtin University, the Malaria Atlas Project (MAP) is considered one of the reference sources for malaria prevalence projections with the malaria modeling community. As such, MAP is a good starting point for preparing a model calibration; however, the data should be cross referenced with any locally acquired data since MAP projections can be off due to publishing delays or how the spatial interpolation model used by MAP works.
+
+&nbsp;
+
+**Spatial Data Repository: The DHS Program** - https://spatialdata.dhsprogram.com/home/
+
+Sponsored by USAID and managed by the DHS Program, the Spatial Data Repository is another means of approaching the data gathered during a DHS survey. This can also be a useful site for finding shapefiles that define districts within a country.
+
+&nbsp;
+
+**The World Bank: Data Catalog** - https://datacatalog.worldbank.org/home
+
+While lacking malaria data, the World Bank's Data Catalog can be a very useful resource for shapefiles (e.g., national and sub-national boundaries) as well as some statistical data. Data is typically published under an open data license (e.g., Creative Commons Attribution 4.0), although it should be double checked to ensure that all of the relevant attribution data is present.
+
+&nbsp;
+
+**World Population Prospects** - https://population.un.org/wpp/
+
+A key part of preparing the simulation for calibration is ensuring that the simulated population is a reasonable proxy for the real population, this includes ensuring that the mortality rate are set correct. In the event that data is not available from a canonical source within the country itself, the United Nation's World Population Prospects is a reasonable source to start with.
+
+
+## Research Data
+
+**ACT Watch: Evidence for Malaria Medicine Policy** - https://www.actwatch.org/
+
+Managed by Population Services International (PSI), this website hosts data from from the ACTwatch and FPwatch projects. The ACTwatch project typically has some useful data, but is much more geographically constrained compared to the DHS Program. However, the site also has the antimalarial database, which is a comprehensive listing of all antimalarials, typically with photographs of the packaging as well.
+
+&nbsp;
+
+**African Journals Online (AJOL)** - https://www.ajol.info/index.php/ajol
+
+African Journals Online (AJOL) is a non-profit that receives funding from the Swedish International Development Cooperation Agency (Sida) and the Wellcome Trust, and acts as an aggregator of all African research journals. This includes journals that are not index by other sources such as Google Scholar. While the quality of individual journals can be a bit uneven, AJOL does provide resources assessing the journal quality. Typically as long as good scientific judgement is applied when reviewing a manuscript, this can be a very good resource for gathering additional data on the malaria situation in a given country.
+
+&nbsp;
+
+**Famine Early Warning Systems Network (FEWS NET)** - https://fews.net/
+
+Proper nutrition can play an important role in malaria in terms of ensuring that drugs are properly absorbed by the body, but also in supporting the immune systems ability to clear or resist an infection. While not a commonly used reference for malaria modeling, this can be a useful resource for helping to understand the context, and also includes a fair amount of geospatial data can be potentially used to inform the simulation.
+
+&nbsp;
+
+**FAO Map Catalog** - https://data.apps.fao.org/map/catalog/srv/eng/catalog.search
+
+The Map Catalog of the Food and Agriculture Organization (FAO) of the United Nations is situationally useful for acquiring geospatial data that can be used as part of analysis or in preparing cartographic products for reports. However, care should be taken since it can be unclear what the underling license of a given geospatial product is, which can interfere with publishing.
+
+&nbsp;
+
+**The Humanitarian Data Exchange (HBX)** - https://data.humdata.org/
+
+The Humanitarian Data Exchange (HBX) is managed by the United Nations Office for the Coordination of Humanitarian Affairs (OCHA) and is another useful site for geospatial data, with the majority covered by an open data license that allow for use in published materials.
+

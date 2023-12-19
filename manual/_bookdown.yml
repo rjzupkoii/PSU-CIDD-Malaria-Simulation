@@ -26,6 +26,7 @@ rmd_files: [
   "chapters/11_configuration.Rmd",
   
   # Appendices
+  "appendices/data_sources.Rmd",
   "appendices/encoding.Rmd",
   "appendices/psu.Rmd",
   
