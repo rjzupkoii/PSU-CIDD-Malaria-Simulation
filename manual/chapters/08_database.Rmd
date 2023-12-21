@@ -150,3 +150,19 @@ UPDATE pg_database SET datallowconn = false WHERE datname = 'masim';
 CREATE DATABASE development WITH TEMPLATE masim OWNER sim;
 UPDATE pg_database SET datallowconn = false WHERE datname = 'masim';
 ```
+
+## Backing Up Databases
+
+In the event that a database backup is required then it is recommended to use the pgAdmin control panel to start the process via `Tools > Backup` when a database is selected. A dialog will appear that will allow a file name can then be supplied (ex., `backup.bak`) and by default the file will be written to `/var/lib/pgadmin/storage/USERNAME/backup.bak` where `USERNAME` is the pgAdmin login of the user that started the process. Typically this is a protected directory so it is recommended to login to the server and move the backup to a different directory. Once moved, `rsync` can be used to move the file:
+
+```bash
+rsync -a USERNAME@SERVER:backup.bak .
+```
+
+Where `USERNAME` is your login for the server, and `SERVER` is either the name or IP address of the server. Since `rsync` runs over `ssh` it defaults to port 22, but the port can be changed via:
+
+```bash
+rsync -rvz -e 'ssh -p PORT' -a USERNAME@SERVER:backup.bak .
+```
+
+
