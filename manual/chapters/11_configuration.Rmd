@@ -471,8 +471,8 @@ rapt_config:
 ### genotype_info<a name="genotype_info"></a>
 To Be Written.
 
-## events
-This setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all the data for the `info` field following will be provided to the loader function.
+## Events
+The `events` setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all the data for the `info` field following will be provided to the loader function.
 
 ### annual_beta_update_event
 The annual beta update event increases or decreases the beta for each cell in the model using the formula $beta' = beta + (beta \cdot rate)$ and clamps the lower bounds for the beta a zero. 
@@ -501,6 +501,20 @@ events:
 
 **day** (date string, YYYY/mm/dd) : The date when the update will first occur. \
 **rate** (float) : The rate of reduction in the coverage for the cells.
+
+### change_circulation_percent_event
+This event changes the `circulation_percent` value of the `circulation_info` setting block. The percentage of population that moves to a new location on a daily basis is changed, with the change remaining in effect for the remainder of the simulation.
+
+```YAML
+events:
+  - change_circulation_percent_event
+    info:
+      - day: 2023/12/22
+        circulation_percent: 0.0042
+```
+
+**day** (date string, YYYY/mm/dd) : The date when the update will first occur. \
+**circulation_percent** (float) : The new daily percentage of the population that will move to a new cell.
 
 ### change_treatment_coverage
 Change the current treatment coverage to be either `SteadyTCM`, `InflatedTCM`, or `LinearTCM`. Passing an invalid treatment coverage name will result in a run time error, and the YAML depends on the treatment coverage model named. Since the simulation defaults to the `SteadyTCM` it is recommended that if there are geographic scale differences in treatment coverage that the `pr_treatment_under5` and `pr_treatment_over5` rasters be used via the `raster_db` setting.\footnote{This event is largely provided for legacy functionality or very small simuations since the ablity to supply rasters via the event is not supported.}

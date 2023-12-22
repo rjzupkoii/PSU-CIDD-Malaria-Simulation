@@ -27,6 +27,7 @@
 
 #include "AnnualBetaUpdateEvent.hxx"
 #include "AnnualCoverageUpdateEvent.hxx"
+#include "ChangeCirculationPercentEvent.hxx"
 #include "ImportationPeriodicallyRandomEvent.h"
 #include "IntroduceMutantEvent.hxx"
 #include "IntroduceMutantRasterEvent.hxx"
@@ -333,6 +334,37 @@ std::vector<Event*> PopulationEventBuilder::build_annual_coverage_update_event(c
   }
 }
 
+std::vector<Event *> PopulationEventBuilder::build_change_circulation_percent_event(const YAML::Node &node, Config *config) {
+  try {
+    std::vector<Event*> events;
+    for (const auto & entry : node) {
+      // Load the values
+      auto start_date = entry["day"].as<date::year_month_day>();
+      auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
+      auto rate = entry["rate"].as<float>();
+
+      // Make sure the rate makes sense
+      if (rate < 0.0) {
+        LOG(ERROR) << "The daily population circulation percentage much be greater than zero for " << ChangeCirculationPercentEvent::EventName;
+        throw std::invalid_argument("Population circulation percentage must be greater than zero");
+      }
+      if (rate > 1.0) {
+        LOG(ERROR) << "The daily population circulation percentage must be less than one (i.e., 100%) for " << ChangeCirculationPercentEvent::EventName;
+        throw std::invalid_argument("Population circulation percentage must be less than one");
+      }
+
+      // Log and add the event to the queue
+      auto *event = new ChangeCirculationPercentEvent(rate, time);
+      VLOG(1) << "Adding " << event->name() << " start: " << start_date << ", rate: " << rate;
+      events.push_back(event);
+    }
+    return events;
+  } catch (YAML::BadConversion &error) {
+    LOG(ERROR) << "Unrecoverable error parsing YAML value in " << ChangeCirculationPercentEvent::EventName << " node: " << error.msg;
+    exit(EXIT_FAILURE);
+  }
+}
+
 // Generate a new importation periodically random event that uses a weighted 
 // random selection to add a new malaria infection with a specific genotype
 // to the model.
@@ -469,6 +501,9 @@ std::vector<Event*> PopulationEventBuilder::build(const YAML::Node& node, Config
   }
   if (name == AnnualCoverageUpdateEvent::EventName) {
     events = build_annual_coverage_update_event(node["info"], config);
+  }
+  if (name == ChangeCirculationPercentEvent::EventName) {
+    events = build_change_circulation_percent_event(node["info"], config);
   }
   if (name == ImportationPeriodicallyRandomEvent::EventName) {
     events = build_importation_periodically_random_event(node["info"], config);
