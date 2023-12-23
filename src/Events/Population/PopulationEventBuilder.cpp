@@ -341,7 +341,7 @@ std::vector<Event *> PopulationEventBuilder::build_change_circulation_percent_ev
       // Load the values
       auto start_date = entry["day"].as<date::year_month_day>();
       auto time = (date::sys_days{start_date} - date::sys_days{config->starting_date()}).count();
-      auto rate = entry["rate"].as<float>();
+      auto rate = entry["circulation_percent"].as<float>();
 
       // Make sure the rate makes sense
       if (rate < 0.0) {
