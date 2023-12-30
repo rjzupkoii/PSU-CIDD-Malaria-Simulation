@@ -153,7 +153,16 @@ UPDATE pg_database SET datallowconn = false WHERE datname = 'masim';
 
 ## Backing Up Databases
 
-In the event that a database backup is required then it is recommended to use the pgAdmin control panel to start the process via `Tools > Backup` when a database is selected. A dialog will appear that will allow a file name can then be supplied (ex., `backup.bak`) and by default the file will be written to `/var/lib/pgadmin/storage/USERNAME/backup.bak` where `USERNAME` is the pgAdmin login of the user that started the process. Typically this is a protected directory so it is recommended to login to the server and move the backup to a different directory. Once moved, `rsync` can be used to move the file:
+In the event that a database backup is required then it is recommended to use the pgAdmin control panel to start the process via `Tools > Backup` when a database is selected. A dialog will appear that will allow a file name can then be supplied (ex., `backup.bak`) and by default the file will be written to `/var/lib/pgadmin/storage/USERNAME/backup.bak` where `USERNAME` is the pgAdmin login of the user that started the process. This is a protected directory so it is recommended to login to the server and move the backup to a different directory. This can be done as follows^[ Note that this requires using `sudo` to switch to the `root` administrative user, the amount of time spent in this mode should be limited to the minimal amount necessary to get the job done]:
+
+```bash
+cd ~
+sudo su
+mv /var/lib/pgadmin/storage/USERNAME/backup.bak .
+exit
+```
+
+Once moved, `rsync` can be used to move the file:
 
 ```bash
 rsync -a USERNAME@SERVER:backup.bak .
@@ -165,4 +174,4 @@ Where `USERNAME` is your login for the server, and `SERVER` is either the name o
 rsync -rvz -e 'ssh -p PORT' -a USERNAME@SERVER:backup.bak .
 ```
 
-
+For larger back-up files, the `--progress` and `--stats` arguments can be used to monitor progress. Note that in addition to the network speed, how fast it takes to sync the file will also depend upon the medium you are writing to, so high speed storage is recommended for large files in addition to a fast network speed.

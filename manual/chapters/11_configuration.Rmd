@@ -507,7 +507,7 @@ This event changes the `circulation_percent` value of the `circulation_info` set
 
 ```YAML
 events:
-  - change_circulation_percent_event
+  - name: change_circulation_percent_event
     info:
       - day: 2023/12/22
         circulation_percent: 0.0042
