@@ -5,6 +5,7 @@ on:
     branches:
       - 4.x.main
     paths:
+      - "manual/home.md"
       - "manual/chapters/**.Rmd"
   repository_dispatch:
     types: [docs]
@@ -25,7 +26,7 @@ jobs:
       - name: Sync docs to wiki
         uses: newrelic/wiki-sync-action@main
         with:
-          source: manual/chapters
+          source: "manual/home.md, manual/chapters"
           destination: wiki
           token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
