@@ -6,15 +6,23 @@ dictate the features currently under development.
 
 ## Change Log
 
+### Version 4.1.7.1
+
+The version 4.1.7.1 release is the last version of the simulation while the project was based at Penn State, and 
+includes new features needed for research, with significant improvements to the documentation.
+
+1. Added `change_circulation_percent_event`  
+2. Added `rotate_treatment_strategy_event`
+
 ### Version 4.1.7
 
-The version 4.1.7 release is focused on adding new features needed for research:
+Version 4.1.7 was an internal version focused on adding new features needed for research:
 
 1. Added the `DistrictMftStrategy` treatment strategy to the simulation.
 
 ### Version 4.1.5
 
-The version 4.1.5 release is focused on adding new features needed for research:
+Version 4.1.5 was an internal version focused on adding new features needed for research:
 
 1. Added the `WesolowskiSurface` movement model to the simulation.
 2. Added the `AgeBandReporter` specialist reporter to the simulation.
@@ -23,13 +31,13 @@ The version 4.1.5 release is focused on adding new features needed for research:
 
 ### Version 4.1.4
 
-The version 4.1.4 release is focused on adding new features needed for research:
+Version 4.1.4 was an internal version focused on adding new features needed for research:
 
 1. Added `update_beta_raster_event`
 
 ### Version 4.1.3
 
-The version 4.1.3 release is focused on adding new features needed for research:
+Version 4.1.3 release was an internal version focused on adding new features needed for research:
 
 1. Add the relevant classes and events needed for the RAPT protocol.
 2. Additional input validation added for input data files.
@@ -44,7 +52,7 @@ The version 4.1.2.1 release is focused on bug fixes and adding new features need
 
 ### Version 4.1.1.1
 
-The version 4.1.1.1 release is specifically intended for work with manuscript revisions.
+Version 4.1.1.1 was an internal version specifically intended for work with manuscript revisions.
 
 1. Updated the Marshall movement model to precompute the kernel.
 
@@ -53,7 +61,7 @@ The version 4.1.1.1 release is specifically intended for work with manuscript re
 The version 4.1.1 release is focused on adding new features needed for research:
 
 1. Added new seasonality method based upon rainfall data.
-2. Added new event (`introduce_mutant_event`) which allows mutations to be introduced in the popuation explicitly.
+2. Added new event (`introduce_mutant_event`) which allows mutations to be introduced in the population explicitly.
 3. Added the genotype carriers reporter to the simulation.
 4. Added the seasonal immunity reporter to the simulation.
 5. Updated `DbReporter` to use ASCII character one (`SOH` or `☺`) to encode `\n\r` instead of removing them. Stored configurations can now have formatting restored.
