@@ -45,7 +45,7 @@ jobs:
         with:
           source: wiki
           destination: wiki
-          token: ${{ secrets.NEWRELIC_BOT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           gitAuthorName: ${{ env.GIT_AUTHOR_NAME }}
           gitAuthorEmail: ${{ env.GIT_AUTHOR_EMAIL }}
           branch: 4.x.main          
