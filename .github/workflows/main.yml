@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: Sync docs to wiki
+      - name: Sync Repository to Wiki
         uses: newrelic/wiki-sync-action@main
         with:
           source: wiki
@@ -40,7 +40,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.event.repository.default_branch }}
-      - name: Sync Wiki to Docs
+      - name: Sync Wiki to Repository
         uses: newrelic/wiki-sync-action@main
         with:
           source: wiki
