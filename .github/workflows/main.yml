@@ -1,0 +1,12 @@
+name: Wiki Content Sync
+
+on:
+  push:
+    branches:
+      - 4.x.main
+    paths:
+      - "manual/chapters/03_calibration.Rmd"
+  repository_dispatch:
+    types: [docs]
+  workflow_dispatch:
+  gollum:
