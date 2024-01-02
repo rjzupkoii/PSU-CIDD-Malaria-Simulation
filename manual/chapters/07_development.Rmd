@@ -4,32 +4,31 @@
 
 # Development
 
-This chapter outlines the basic steps that are needed to build the simulation across various development environments. The guide is written from the standpoint of a "clean" workstation with no other dependencies in place.
+This chapter outlines the basic steps that are needed to build the simulation across various development environments. The guide is written from the standpoint of a "clean" workstation with no other dependencies in place for users intended to work with the simulation's codebase.
 
 ## Tool Chain Dependencies
 
-### Windows 10 / Windows Subsystem for Linux (WSL 1)
+### Windows Subsystem for Linux / Linux
 
-Step 1. Install a Linux sub-system of your choice (Ubuntu recommended, or Red Hat)
+Starting with either the Windows Subsystem for Linux of your choice (Ubuntu recommended, or Red Hat) on a a Linux system:
 
-Step 2. Update the Linux sub-system
+Step 1. Ensure that `apt` is up to date.
 
 ```bash
 sudo apt update
 sudo apt upgrade
 ```
 
-Step 3. Install the build dependencies
+Step 2. Install the build dependencies
 ```bash
 sudo apt install build-essential
 sudo apt install cmake
 sudo apt install libgsl-dev
 sudo apt install libyaml-cpp-dev
 sudo apt install libfmt-dev
-sudo apt upgrade
 ```
 
-Step 4. Add PostgreSQL to the Apt Repository listing
+Step 3. Add PostgreSQL to the Apt Repository listing
 
 Note that while this step is necessary when working from a new installation of Ubuntu, it may not be necessary, and you should check to see if the package can be found by first performing `apt search postgresql-10`
 
@@ -40,14 +39,13 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-
 sudo apt-get update
 ```
 
-Step 5. Install the PostgreSQL and libpqxx dependencies
+Step 4. Install the PostgreSQL and libpqxx dependencies
 
 Note that this should be done from a directory that you are comfortable with git repositories being stored in.
 
 ```bash
 sudo apt install postgresql-10
 sudo apt install libpq-dev
-sudo apt upgrade
 git clone https://github.com/jtv/libpqxx.git
 cd libpqxx
 git checkout 7.8.1
@@ -60,7 +58,7 @@ This may need to be done every time you connect to the VPN, so scripting the upd
 
 ### Upgrading to WSL 2
 
-WSL 2 offers some [performance improvements](https://docs.microsoft.com/en-us/windows/wsl/compare-versions) which may be relevant during development so upgrading may be of interest. To do so the following needs to be performed, note that these steps will also enable WSL 2 if WSL 1 has not already been installed.
+WSL 2 offers some [performance improvements](https://docs.microsoft.com/en-us/windows/wsl/compare-versions) which may be relevant during development so upgrading may be of interest. To do so the following needs to be performed, note that these steps will also enable WSL 2 if WSL 1 has not already been installed. However, one drawback of WSL 2 is that disk access may be slow compared to WSL 1, so this upgrade should only be done if necessary.
 
 Open `PowerShell` with administrator permissions and enter the following:
 
