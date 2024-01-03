@@ -141,6 +141,10 @@ At this point you should be able to connect to the pgAdmin control panel at `htt
 
 After logging into the pgAdmin control panel, start by creating the user `sim` and ensuring they have permissions to login to the database. This is the user that will be the simulation to write results to the database during model execution. Next, run the script `database.sql` which can be found under the `/database` directory of this repository.
 
+![pgAdmin showing the dialog to create a new database, note that here we are creating the `template_masim` template database](figures/pg_admin_create.png)
+
+![pgAdmin showing the results of the `database.sql` script being run. Note that tables have been created under the `sim` schema.](figures/pg_admin_script.png)
+
 ## Cloning databases
 
 For the purposes of development or archiving it may be necessary to clone databases. The following SQL commands can be used from `psql` on the server to do so:
@@ -175,3 +179,13 @@ rsync -rvz -e 'ssh -p PORT' -a USERNAME@SERVER:backup.bak .
 ```
 
 For larger back-up files, the `--progress` and `--stats` arguments can be used to monitor progress. Note that in addition to the network speed, how fast it takes to sync the file will also depend upon the medium you are writing to, so high speed storage is recommended for large files in addition to a fast network speed.
+
+## Restoring Databases
+
+Assuming that the database was dumped per the previous section, the database can then be restored as follows:
+
+```bash
+pg_restore -C -d DATABASE backup.bak
+```
+
+Where `DATABASE` is the name of the database to be *created* on the server.

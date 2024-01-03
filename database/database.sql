@@ -168,6 +168,7 @@ CREATE TABLE sim.replicate
     starttime timestamp with time zone NOT NULL,
     endtime timestamp with time zone,
     movement character(1) COLLATE pg_catalog."default",
+    aggregationlevel character(1) COLLATE pg_catalog."default",
     CONSTRAINT replicate_pkey PRIMARY KEY (id),
     CONSTRAINT replicate_configurationid_fk FOREIGN KEY (configurationid)
         REFERENCES sim.configuration (id) MATCH SIMPLE
@@ -233,7 +234,7 @@ CREATE TABLE sim.monthlydata
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH ( 
+WITH (
     OIDS = FALSE,
     parallel_workers = 4 )
 TABLESPACE pg_default;
@@ -243,7 +244,7 @@ ALTER TABLE sim.monthlydata OWNER to sim;
 CREATE TABLE sim.monthlysitedata
 (
     monthlydataid integer NOT NULL,
-    locationid integer NOT NULL,
+    location integer NOT NULL,
     population integer NOT NULL,
     clinicalepisodes integer NOT NULL,
     treatments integer NOT NULL,
@@ -254,15 +255,16 @@ CREATE TABLE sim.monthlysitedata
     pfprall double precision NOT NULL,
     infectedindividuals integer,
     nontreatment integer NOT NULL,
-    under5treatment integer NOT NULL,
-    over5treatment integer NOT NULL,
-    CONSTRAINT monthlysitedata_pkey PRIMARY KEY (monthlydataid, locationid),
+    genotypecarriers integer,
+    under5treatment integer,
+    over5treatment integer,
+    CONSTRAINT monthlysitedata_pkey PRIMARY KEY (monthlydataid, location),
     CONSTRAINT "monthlydataid_fk" FOREIGN KEY (monthlydataid)
         REFERENCES sim.monthlydata (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH ( 
+WITH (
     OIDS = FALSE,
     parallel_workers = 4 )
 TABLESPACE pg_default;
@@ -283,7 +285,7 @@ CREATE TABLE sim.movement
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH ( 
+WITH (
     OIDS = FALSE,
     parallel_workers = 4 )
 TABLESPACE pg_default;
@@ -346,10 +348,9 @@ WITH (
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS sim.therapyrecord OWNER to sim;
-GRANT SELECT ON TABLE public.v_therapyrecords TO sim;
 
 --
--- Create Releationships
+-- Create Relationships
 --
 CREATE INDEX fki_fk_configuration_studyid
     ON sim.configuration USING btree
@@ -384,4 +385,21 @@ CREATE INDEX fki_notes_studyid
 CREATE INDEX fki_replicate_configurationid
     ON sim.replicate USING btree
     (configurationid)
-    TABLESPACE pg_default;    
+    TABLESPACE pg_default;
+
+--
+-- Create Views
+--
+CREATE OR REPLACE VIEW public.v_therapyrecords
+AS
+SELECT md.replicateid,
+       md.dayselapsed,
+       tr.locationid,
+       tr.therapyid,
+       tr.success,
+       tr.failure,
+       tr.completed
+FROM sim.therapyrecord tr
+         JOIN sim.monthlydata md ON md.id = tr.monthlydataid;
+
+GRANT SELECT ON TABLE public.v_therapyrecords TO sim;
