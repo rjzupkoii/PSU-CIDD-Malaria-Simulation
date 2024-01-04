@@ -59,7 +59,7 @@ postgres-# \q
 
 5. Create administrative user
 
-Be sure to supply the password and select yes when asked if the user should be a super user.
+Here it is recommended that you create an administrative user (e.g., `dbadmin`) that will be used to connect to the database and to perform administrative task. When prompted be sure to supply the password and select yes when asked if the user should be a super user.
 
 ```bash
 sudo -u postgres createuser --interactive --pwprompt
@@ -92,25 +92,50 @@ update pg_database set datistemplate=true where datname='template1';
 
 ## Installation of pgAdmin
 
-The preferred way of installing pgAdmin on a clean Ubuntu installation is though the use of `apt`:
+The preferred way of installing pgAdmin on a clean Ubuntu installation is though the use of `apt`^[ https://www.pgadmin.org/download/pgadmin-4-apt/]:
 
 1. Configure the system for the pgAdmin APT repository.
 
 ```bash
 sudo apt install curl
-sudo curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
-sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release \
-  -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
+curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | \
+  sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
+sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] \
+  https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) \
+  pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
 ```
 
-2. Install pgAdmin
+2. Install pgAdmin:
 
 ```bash
-sudo apt install pgadmin4-web 
+sudo apt install pgadmin4-web
+```
+
+3. Run the pgAdmin configuration script:
+
+```bash
 sudo /usr/pgadmin4/bin/setup-web.sh
 ```
 
-### Configuration of Apache for pgAdmin
+Once installed and configured you should be able to access pgAdmin at http://127.0.0.1/pgadmin4/ or http://localhost/pgadmin4/ the first time you connect, the local database server will not be listed. This can be added by right clicking on 'Servers', selecting 'Register' > 'Server' which will give you the 'Register - Server' prompt. Enter the name you wish to assign (e.g., 'localhost') before clicking the 'Connection' tab, which will prompt you for connection information. Then enter the following:
+
+| Field | Entry |
+| --- | --- |
+| Host name/address | localhost |
+| Port | 5432 |
+| Maintenance Database | postgres |
+| Username | < Admin Username > |
+| Kerberos authentication | Off |
+| Password | < Admin Password > |
+| Save password? | Off recommended |
+| Role | < Leave Blank > |
+| Service | < Leave Blank > |
+
+Where the username and password correspond go the username and password created for the administrative user (e.g., `dbadmin`) when installing PostgreSQL.
+
+![pgAdmin showing the dialog to add a new server, note that here we are adding the localhost](figures/pg_admin_add_server.png)
+
+### Optional Configuration of Apache for pgAdmin
 
 Since newer version of pgAdmin are designed for web environments, configuration following installation may be limited editing the `pgadmin4.conf` configuration to reside at the server root:
 
@@ -139,11 +164,11 @@ At this point you should be able to connect to the pgAdmin control panel at `htt
 
 ## Creation of Simulation Database
 
-After logging into the pgAdmin control panel, start by creating the user `sim` and ensuring they have permissions to login to the database. This is the user that will be the simulation to write results to the database during model execution. Next, run the script `database.sql` which can be found under the `/database` directory of this repository.
-
 ![pgAdmin showing the dialog to create a new database, note that here we are creating the `template_masim` template database](figures/pg_admin_create.png)
 
 ![pgAdmin showing the results of the `database.sql` script being run. Note that tables have been created under the `sim` schema.](figures/pg_admin_script.png)
+
+After logging into the pgAdmin control panel, start by creating the user `sim` and ensuring they have permissions to login to the database. This is the user that will be the simulation to write results to the database during model execution. Next, run the script `database.sql` which can be found under the `/database` directory of this repository.
 
 ## Cloning databases
 
