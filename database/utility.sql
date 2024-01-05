@@ -5,6 +5,15 @@ SELECT pg_size_pretty(pg_database_size('masim'));
 SELECT relname, reltuples::BIGINT as approximate_row_count 
 FROM pg_class WHERE relname in ('monthlydata', 'monthlygenomedata', 'monthlysitedata')
 
+-- Clear everything
+delete from sim.monthlysitedata;
+delete from sim.monthlygenomedata;
+delete from sim.monthlydata;
+delete from sim.movement;
+delete from sim.replicate;
+delete from sim.location;
+delete from sim.configuration;
+
 -- Free unusued disk space
 VACUUM FULL;
 
