@@ -99,14 +99,17 @@ Once the bounds have been found it is necessary to reduce the epsilon values to 
 
 ### Calibration Assessment
 
-<!-- TODO - figure out how to include a proper in text citation in the caption -->
-```{r plosgphfig1a-png, fig.cap = "Example of a calibration assessment comparing the projected prevelence versus the reference prevalence. (Reproduced from Zupko et al. (2022); CC BY 4.0)", out.width = "450px", echo = FALSE}
+<!-- Define the caption for the following figure since we need to include the citation -->
+(ref:fig-calibration-assessment) Example of a calibration assessment comparing the projected prevalence versus the reference prevalence. [Reproduced from @zupko_long_term_2022, CC BY 4.0]
+```{r plosgphfig1a-png, fig.cap="(ref:fig-calibration-assessment)", out.width = "450px", echo = FALSE}
 knitr::include_graphics("diagrams/plos_gph_fig1a.png")
 ```
 
 The primary metric for evaluating the $\beta$ calibration is a comparison of the projected prevalence against the population weighted prevalence for the targeted administrative region level. Typically this is done using data from the Malaria Atlas Project [@weiss_mapping_2019], although the preference should be to use the most reliable and timely data that can be sourced. As shown in Figure \@ref(fig:plosgphfig1a-png) on the left [@zupko_long_term_2022], in administrative regions with a high malaria burden, calibrations that are within ±5% of the reference prevalence are very achievable. However, as the malaria burden declines, the target calibration bounds typically increases to the range of ±10%. This expansion should also be accompanied by a critical evaluation the model calibration to ensure that it is acceptable for the research question being evaluated. Likewise, due to the prefect information that is available in the simulation, in most regions the number of clinical cases is going to exceed the number of reported clinical cases reported (Figure \@ref(fig:plosgphfig1a-png), Right). Awareness of what this differential should be is an important part of ensuring the model is properly calibrated, and typically this differential is presented as the total number of clinical cases versus the total number of treated cases (i.e., those clinical cases that are reported to a health system).
 
-```{r beta-calibration-png, fig.cap = "Comparision of the EIR vesus the prevelence under different  population sizes.", out.width = "450px", echo = FALSE}
+<!-- Define the caption for the following figure since we need to include citations -->
+(ref:fig-beta-calibration) Comparison of the EIR versus the prevalence under different population sizes, note the inclusion of calibration points prepared by Malaria Modeling Consortium members [@hay_urbanization_2005; @cameron_defining_2015]
+```{r beta-calibration-png, fig.cap = "(ref:fig-beta-calibration)", out.width = "450px", echo = FALSE}
 knitr::include_graphics("diagrams/beta_calibration.png")
 ```
 

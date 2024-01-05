@@ -96,10 +96,20 @@ The preferred way of installing pgAdmin on a clean Ubuntu installation is though
 
 1. Configure the system for the pgAdmin APT repository.
 
+Start by installing `curl` if necessary: 
 ```bash
 sudo apt install curl
+```
+
+Next, install the public key for the repository:
+
+``` bash
 curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | \
   sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
+```
+  
+Finally, create the repository configuration file:
+```bash
 sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] \
   https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) \
   pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
@@ -162,13 +172,15 @@ At this point you should be able to connect to the pgAdmin control panel at `htt
 
 # Using the Database
 
+## Creation of the Simulation User
+
 ## Creation of Simulation Database
 
 ![pgAdmin showing the dialog to create a new database, note that here we are creating the `template_masim` template database](figures/pg_admin_create.png)
 
 ![pgAdmin showing the results of the `database.sql` script being run. Note that tables have been created under the `sim` schema.](figures/pg_admin_script.png)
 
-After logging into the pgAdmin control panel, start by creating the user `sim` and ensuring they have permissions to login to the database. This is the user that will be the simulation to write results to the database during model execution. Next, run the script `database.sql` which can be found under the `/database` directory of this repository.
+After logging into the pgAdmin control panel, start by creating the user `sim` with the password `sim` and ensuring they have permissions to login to the database. This is the user that will be the simulation to write results to the database during model execution. Next, run the script `database.sql` which can be found under the `/database` directory of this repository.
 
 ## Cloning databases
 
