@@ -4,7 +4,7 @@
 
 # Development
 
-This chapter outlines the basic steps that are needed to build the simulation across various development environments. The guide is written from the standpoint of a "clean" workstation with no other dependencies in place for users intended to work with the simulation's codebase.
+This chapter outlines the basic steps that are needed to build the simulation across various development environments. The guide is written from the standpoint of a "clean" workstation with no other dependencies in place for users intended to work with the simulation's codebase. Typically the best place to start is by running the `config.sh` script in the root of the repository, which prepares the development environment on Linux and Windows Subsystem for Linux (WSL) systems, followed by creation of a database administrator if needed. However, if the script doesn't work, the full workflow for installing the tool chain dependencies is included here.
 
 ## Tool Chain Dependencies
 
@@ -54,7 +54,13 @@ make
 sudo make install
 ```
 
-This may need to be done every time you connect to the VPN, so scripting the update may be in order.
+Step 5. Create PostgreSQL administrative user
+
+If you are going to be using the PostgreSQL database locally for development purposes, then it is recommended that you also create an administrative user and install pgAdmin (see [Installation of pgAdmin](#Installation of pgAdmin)).
+
+```bash
+sudo -u postgres createuser --interactive --pwprompt
+```
 
 ### Upgrading to WSL 2
 
