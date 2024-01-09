@@ -12,18 +12,21 @@ rmd_files: [
   "chapters/01_introduction.Rmd",
   "chapters/02_description.Rmd",
 
+  # Data Preperation
+  "chapters/03_gis.Rmd",
+
   # Simulation
-  "chapters/03_calibration.Rmd",
-  "chapters/04_execution.Rmd",
-  "chapters/05_demonstration.Rmd",
-  "chapters/06_DxGGenerator.Rmd",
+  "chapters/04_calibration.Rmd",
+  "chapters/05_execution.Rmd",
+  "chapters/06_demonstration.Rmd",
+  "chapters/07_DxGGenerator.Rmd",
 
   # Development
-  "chapters/07_development.Rmd",
-  "chapters/08_database.Rmd",
-  "chapters/09_technicalities.Rmd",
-  "chapters/10_reporters.Rmd",
-  "chapters/11_configuration.Rmd",
+  "chapters/08_development.Rmd",
+  "chapters/09_database.Rmd",
+  "chapters/10_technicalities.Rmd",
+  "chapters/11_reporters.Rmd",
+  "chapters/12_configuration.Rmd",
   
   # Appendices
   "appendices/data_sources.Rmd",
