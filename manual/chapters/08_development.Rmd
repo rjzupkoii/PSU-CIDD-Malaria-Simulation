@@ -62,6 +62,15 @@ If you are going to be using the PostgreSQL database locally for development pur
 sudo -u postgres createuser --interactive --pwprompt
 ```
 
+Step 6. Install Git Large File Storage
+
+While not necessary for building the simulation, when working with country data or archiving projects it is recommended that Git Large File Storage (LFS) is installed as follows:
+
+```bash
+sudo apt install git-lfs
+git lfs install
+```
+
 ### Upgrading to WSL 2
 
 WSL 2 offers some [performance improvements](https://docs.microsoft.com/en-us/windows/wsl/compare-versions) which may be relevant during development so upgrading may be of interest. To do so the following needs to be performed, note that these steps will also enable WSL 2 if WSL 1 has not already been installed. However, one drawback of WSL 2 is that disk access may be slow compared to WSL 1, so this upgrade should only be done if necessary.
