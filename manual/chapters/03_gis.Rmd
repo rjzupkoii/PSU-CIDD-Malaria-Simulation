@@ -3,3 +3,30 @@
 # (PART\*) Geospatial Data {-}
 
 # Preparing Geospatial Data
+
+A key part of the simulation is the spatial component that allows for increased realism due to the spatial heterogeneity that is introduced. However, ensuring that the spatial data is prepared correctly for the simulation can be a challenge since it needs to be done for each country that is simulated. This chapter will walk the reader through the process of preparing the spatial data for a country, using Kenya as an example for the process.
+
+## Data Collection
+
+The first step in preparing the geospatial data is to gather all of the relevant sources, this typically includes:
+
+1. Political boundaries - national and sub-national
+2. Population
+3. Malaria prevalence
+4. Travel or friction surface
+
+Possible sources of this data is included in the appendix.
+
+## Data Preperation
+
+One all of the relevant geospatial data has been collected, the first step is determining the *datum* (the frame of reference for measuring locations on the Earth) and *projection* (the method used to portray the spherical coordinates on a flat surface). A useful starting point for this is [epsg.io](https://epsg.io/), which maintains a database of over 6,000 coordinate systems. 
+
+A typical starting point is to enter the name of the country, which will return a list of all of the relevant records (see Figure \@ref(fig:gisepsgiosearch-png)). Typically, for the purposes of the simulation, using the appropriate Universal Transverse Mercator (UTM) zone projection on the World Geodetic System 1984 (WGS84) datum will provide a reasonable level of accuracy for the simulation. Although large countries may overlap multiple zones, which case the bounding of the projection should be checked to ensure that it covers the majority the country (see Figure \@ref(fig:gisepsgiobounding-png)). Once an appropriate datum and projection has been identified, make a note of it along with the Well-Known ID (WKID) as part of the project documentation since this will be used in the preparation of all of the geospatial data for the simuation.
+
+```{r gisepsgiosearch-png, fig.cap="The results of a search for \"kenya\" on epsg.io", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_epsg_io_search.png")
+```
+
+```{r gisepsgiobounding-png, fig.cap="The details page for Arc 1960 / UTM zone 37N on epsg.io. Note the Well-Known ID (WKID) that appears at the top of the page (EPSG:21097) as well as the bounding box that appears over the map of Kenya.", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_epsg_io_bounding.png")
+```

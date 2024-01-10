@@ -31,7 +31,7 @@ $\\[7.5in]$
 ```
 Compilation date `r Sys.Date()` for version `r version`
 
-Copyright `r format(Sys.Date(), "%Y")` by Robert Zupko
+Copyright 2023 - `r format(Sys.Date(), "%Y")`, Robert Zupko
 
 This document was produced in part through funding from the National Institutes of Health (NIAID R01AI153355), and the Bill and Melinda Gates Foundation (OPP159934, INV-005517).
 
