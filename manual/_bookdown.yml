@@ -12,7 +12,7 @@ rmd_files: [
   "chapters/01_introduction.Rmd",
   "chapters/02_description.Rmd",
 
-  # Data Preperation
+  # Data Preparation
   "chapters/03_gis.Rmd",
 
   # Simulation
