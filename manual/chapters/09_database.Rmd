@@ -3,7 +3,7 @@
 Due to the complexity of data storage requirements for simulations involving multiple cells, a database is provided through the `dbreporter` reporter class. The schema is outlined below and was developed against PostgreSQL due to the high storage requirements. Note that the `notes` table presume the usage of the [MaSimLIMS](https://github.com/rjzupkoii/MaSimLIMS) and can be removed if not needed with no impact upon the simulation.     
 
 ```{r, fig.cap = "Database schema", out.width = "450px", echo = FALSE}
-knitr::include_graphics("diagrams/schema.png")
+knitr::include_graphics("figures/schema.png")
 ```
 
 ## Installation
@@ -143,7 +143,9 @@ Once installed and configured you should be able to access pgAdmin at http://127
 
 Where the username and password correspond go the username and password created for the administrative user (e.g., `dbadmin`) when installing PostgreSQL.
 
-![pgAdmin showing the dialog to add a new server, note that here we are adding the localhost](figures/pg_admin_add_server.png)
+```{r pgadminaddserver-png, fig.cap = "pgAdmin showing the dialog to add a new server, note that here we are adding the localhost", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/pg_admin_add_server.png")
+```
 
 ### Optional Configuration of Apache for pgAdmin
 
@@ -176,9 +178,15 @@ At this point you should be able to connect to the pgAdmin control panel at `htt
 
 ## Creation of Simulation Database
 
-![pgAdmin showing the dialog to create a new database, note that here we are creating the `template_masim` template database](figures/pg_admin_create.png)
+(ref:fig-pgadmin-create)pgAdmin showing the dialog to create a new database, note that here we are creating the `template_masim` template database
+```{r pgadmincreate-png, fig.cap = "(ref:fig-pgadmin-create)", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/pg_admin_create.png")
+```
 
-![pgAdmin showing the results of the `database.sql` script being run. Note that tables have been created under the `sim` schema.](figures/pg_admin_script.png)
+(ref:fig-pgadmin-script)pgAdmin showing the results of the `database.sql` script being run. Note that tables have been created under the `sim` schema.
+```{r pgadminscript-png, fig.cap = "(ref:fig-pgadmin-script)", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/pg_admin_script.png")
+```
 
 After logging into the pgAdmin control panel, start by creating the user `sim` with the password `sim` and ensuring they have permissions to login to the database. This is the user that will be the simulation to write results to the database during model execution. Next, run the script `database.sql` which can be found under the `/database` directory of this repository.
 

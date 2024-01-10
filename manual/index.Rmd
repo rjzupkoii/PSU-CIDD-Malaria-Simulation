@@ -1,6 +1,6 @@
 ---
 site: "bookdown::bookdown_site"
-bibliography: bibliography.bib
+bibliography: "tex/bibliography.bib"
 output:
   bookdown::pdf_document2:
     includes:
@@ -8,6 +8,9 @@ output:
     toc: false
 header-includes:
   - \pagenumbering{gobble}
+  - \usepackage{pdflscape}
+  - \newcommand{\blandscape}{\begin{landscape}}
+  - \newcommand{\elandscape}{\end{landscape}}
 ---
 
 <!-- Read the version number in so we can include it in the title -->

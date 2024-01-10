@@ -8,11 +8,11 @@ When the simulation is executed, the operation can be broken into two distinct p
 2. *Execution* during which the simulation is executed by executing all scheduled operations and events for each time step that the simulation is configured to run (see Figure \@ref(fig:timestep-png)).
 
 ```{r initialization-png, fig.cap = "Typical model initialization sequence", echo = FALSE}
-knitr::include_graphics("diagrams/initialization.png")
+knitr::include_graphics("figures/initialization.png")
 ```
 
 ```{r timestep-png, fig.cap = "Typical model time step sequence", echo = FALSE}
-knitr::include_graphics("diagrams/timestep.png")
+knitr::include_graphics("figures/timestep.png")
 ```
 
 ### Initalization
