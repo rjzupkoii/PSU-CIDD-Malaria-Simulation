@@ -2,11 +2,9 @@
 
 # (PART\*) Geospatial Data {-}
 
-# Preparing Geospatial Data
+# Introduction
 
 A key part of the simulation is the spatial component that allows for increased realism due to the spatial heterogeneity that is introduced. However, ensuring that the spatial data is prepared correctly for the simulation can be a challenge since it needs to be done for each country that is simulated. This chapter will walk the reader through the process of preparing the spatial data for a country, using Kenya as an example for the process.
-
-## Data Collection
 
 The first step in preparing the geospatial data is to gather all of the relevant sources, this typically includes:
 
@@ -17,9 +15,11 @@ The first step in preparing the geospatial data is to gather all of the relevant
 
 Possible sources of this data is included in the appendix.
 
-## Data Preperation
+# Data Preperation
 
-One all of the relevant geospatial data has been collected, the first step is determining the *datum* (the frame of reference for measuring locations on the Earth) and *projection* (the method used to portray the spherical coordinates on a flat surface). A useful starting point for this is [epsg.io](https://epsg.io/), which maintains a database of over 6,000 coordinate systems. 
+## Determining the Projection
+
+Once all of the relevant geospatial data has been collected, the first step is determining the *datum* (the frame of reference for measuring locations on the Earth) and *projection* (the method used to portray the spherical coordinates on a flat surface). A useful starting point for this is [epsg.io](https://epsg.io/), which maintains a database of over 6,000 coordinate systems. 
 
 A typical starting point is to enter the name of the country, which will return a list of all of the relevant records (see Figure \@ref(fig:gisepsgiosearch-png)). Typically, for the purposes of the simulation, using the appropriate Universal Transverse Mercator (UTM) zone projection on the World Geodetic System 1984 (WGS84) datum will provide a reasonable level of accuracy for the simulation. Although large countries may overlap multiple zones, which case the bounding of the projection should be checked to ensure that it covers the majority the country (see Figure \@ref(fig:gisepsgiobounding-png)). Once an appropriate datum and projection has been identified, make a note of it along with the Well-Known ID (WKID) as part of the project documentation since this will be used in the preparation of all of the geospatial data for the simulation.
 
@@ -31,7 +31,7 @@ knitr::include_graphics("figures/gis_epsg_io_search.png")
 knitr::include_graphics("figures/gis_epsg_io_bounding.png")
 ```
 
-Once all of the relevant data has been gathered, start by creating a new project in ArcGIS Pro via `New Project > Map` for this example call the project `Kenya`, set the location to a folder such as `C:\GIS\`, and make sure `Create a new folder for this project` is checked. This will create a new project with the default map of the United States (see Figure \@ref(fig:gisdefaultmap-png)). Start by removing the `World Topographic Map` and `World Hillshade` base maps by right clicking on them under `Drawing Order` and selecting `Remove`. You should now have an empty map with no contents listed.
+Once the projection has been determined and data gathered, start by creating a new project in ArcGIS Pro via `New Project > Map` for this example call the project `Kenya`, set the location to a folder such as `C:\GIS\`, and make sure `Create a new folder for this project` is checked. This will create a new project with the default map of the United States (see Figure \@ref(fig:gisdefaultmap-png)). Start by removing the `World Topographic Map` and `World Hillshade` base maps by right clicking on them under `Drawing Order` and selecting `Remove`. You should now have an empty map with no contents listed.
 
 ```{r gisdefaultmap-png, fig.cap="ArcGIS Pro with the default map of the United States", out.width = "450px", echo = FALSE}
 knitr::include_graphics("figures/gis_default_map.png")
@@ -41,5 +41,79 @@ We will now set the coordinate system for the map. Start by right clicking on `M
 
 ```{r giscoordinatesystem-png, fig.cap="Setting the new coordinate system in ArcGIS Pro", out.width = "450px", echo = FALSE}
 knitr::include_graphics("figures/gis_coordinate_system.png")
+```
+
+## Preparing the District Raster
+
+Next, we need to load the administrative boundaries for the country and prepare 1) raster data that can be used by the simulation, and 2) a comma separated value (CSV) file that can be used to map the district identification value (i.e., `district id`) assigned when creating the raster data, to the name of the district. 
+
+Start by finding the project directory created by ArcGIS, in this case it is `C:\GIS\Kenya` and create a new folder called `data` and one called `simulation`. The `data` folder will be used for storing any data files that are downloaded. Next, locate the administrative boundaries for the country.^[ For Kenya, these were found on the Humanitarian Data Exchange (HBX) by searching for "kenya" at https://data.humdata.org/dataset/cod-ab-ken. Note that an advantage of using data from HBX is that the data is open access under the Creative Commons Attribution for Intergovernmental Organisations, this is relevant when reproducing shapefile data in maps used in publications.] Typically shapefiles are distributed as a compressed file, decompress the file into the `data` directory and have ArcGIS refresh the folder listing by right clicking on home folder and selecting `Refresh` or pressing the `[F5]` key. You should see something similar to Figure \@ref(fig:gisadminshapefiles-png).
+
+```{r gisadminshapefiles-png, fig.cap="Refreshed listing of all of the shapefiles in the data directory in ArcGIS Pro", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_admin_shapefiles.png")
+```
+
+Next, right click on `Map` under the `Drawing Order` panel and select `New Group Layer`, an entry called "New Group Layer" will appear. Double check on the `New Group Layer` and enter "Administrative Boundaries" as the `Name` in the `Layer Properties: New Group Layer` dialog that appears. Click `OK` and under the `Drawing Order` panel you should have an entry called `Map` with an entry called `Administrative Boundaries` below it. 
+
+Now, locate the administrative levels zero (or national boundary), one, and two in the `data` folder of the `Catalog` panel and drag them under the `Administrative Boundaries`. Right click on `Administrative Boundaries` and select `Zoom To Layer` you should now have a map similar to Figure \@ref(fig:gisadminlayers-png).
+
+```{r gisadminlayers-png, fig.cap="The apperance of the map after all shapefiles have been added. Note that the top most layer -- the national boundry -- is covering all of the other layers", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_admin_layers.png")
+```
+
+At this point we could start creating the raster files, but first we should adjust the appearance of the shapefiles to make them easier to work with. Start by renaming them by either double clicking on the layer and changing the name in the `Layer Properties` dialog that appears, or single clicking on the layer name and editing it directly in the `Drawing Order` panel.^[ One suggested format is the country name followed by "Admin NUMBER", or "Kenya - Admin Zero" in the case of our example.] 
+
+Next, we will adjust the symbology that is being used to render the layers so that we can see them all. Start by right clicking on the administrative level zero layer selecting `Symbology`, the `Symbology` panel should appear on the right. Click on the symbol and in the gallery that appears, select `Black Outline (2pts)`. The map should now refresh with the national border in bold and the administrative level one appearing (see Figure \@ref(fig:gisadminlevelzero-png)). Repeat this process for for level one, selecting `Black Outline (1pt)`. Finally, for the level two layer, start by selecting `Black Outline (1pt)` but then click `Properties`, this update the dialog to show the full list of appearance settings. Click the color box next to `Outline color`, select `Gray 50%`, and click `Apply`. The map should now appear similar to Figure \@ref(fig:gisadjustedlayers-png).
+
+```{r gisadminlevelzero-png, fig.cap="The appearnace of the map after the symbology of the administrative level zero has been changed", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_admin_level_zero.png")
+```
+
+```{r gisadjustedlayers-png, fig.cap="The final apperance of the map after all of the administrative layers have had their symbology updated", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_adjusted_layers.png")
+```
+
+Now, we will cover the administrative layer one shapefile to a raster file, and this process is the same regardless of the administrative level of a shapefile. To reduce the visual clutter of the map you may also wish to hide the administrative level two shapefile by clicking the box next to the layer name under the `Drawing Order`. 
+
+First, we need to examine the data associated with the administrative level one shapefile. This can be done by right clicking on the layer and selecting `Attribute Table`, a spreadsheet should appear below the map (see Figure \@ref(fig:gisattributetable-png)).
+
+```{r gisattributetable-png, fig.cap="The attribute table for the adminsitriave level one shapefile for Kenya. Note that the FID column is zero indexed with the provience Baringo being associated with the value zero", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_attribute_table.png")
+```
+
+In examining the attribute table we want to first check to see if there is a numerically indexed field that we can use as the district id assignment, and what the indexing of the field is. In the case of the data from Kenya, the `FID` field could serve this role, but since it is a reserved field by ArcGIS Pro, it cannot be exported, so we are going to add our own ID field. Start by clicking the `Add` button next to the `Field:` label, this will case the dialog to shift to the fields list for the layer. At the bottom of the list of fields, type "ID" under the `Field Name` and make sure `Short` is selected as the `Data Type`, click save and the updated list should look similar to Figure \@ref(fig:gisaddidfield-png).
+
+```{r gisaddidfield-png, fig.cap="The updated fields list after the ID field has been added", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_add_id_field.png")
+```
+
+Close the `Fields` view and scroll to the right of the attribute table, the new `ID` field should be present with all rows set to zero. Since the `FID` provides a unique value for each row, we can use that as the basis for the district id. 
+
+Start by right clicking on `ID` and select `Calculate Field`, a new dialog should appear. In the text box under `ID = ` enter "`!FID! + 1`" which will set the id to be equal to the `FID` value, plus one (if the `FID` is one indexed, then you only need to enter "`!FID!`"). Click `OK` and the `ID` column will be updated to have a unique value in for each row. 
+
+With the `ID` column now created, we can proceed to creating the raster. Close the attribute table and then under the `View` menu, select the `Geoprocessing` option, this will load the `Geoprocessing` panel on the right side of the screen. Type "polygon to raster" and select `Polygon to Raster (Conversion Tools)` when it appears in the list, the dialog will update with the setting prompts for the tool. Next, enter the following settings:
+
+1. Under `Input Features` select the administrative level one shapefile
+2. Under `Value field` select `ID`
+3. Click the folder icon next to `Output Raster Datasest`, select the databases created by ArcGIS Pro for the project (ex., `Kenya.gdb`), enter the name for the new raster (ex., `ken_admin_one`), and click `Save`
+4. Click the `Environments` tab next to `Parameters` and under `Output Coordinate System` select `Current Map [Map]` this will cause the selected projection to be filled in (`Arc_1960_UTM_Zone_37N` as previously entered for Kenya)
+5. Click the `Parameters` tab to return to the previous view, you will note that the `Cellsize` has changed
+6. For `Cellsize` enter 5000, this corresponds to 5000 meters or 5 kilometers across the x or y axis of a cell
+7. Make sure `Build raster attribute table` is checked and click `Run`
+
+Once the calculation is complete you should see a map similar to Figure \@ref(fig:gisadminoneraster-png). Note that the scale should go from one to the number of administrative regions (47 provinces in the case of Kenya) and the symbology selected by ArcGIS Pro may be different. At this point you may wish to create another Group Layer for simulation rasters via the process previously outlined for creating the `Administrative Boundaries` grouping, move the new raster into this grouping. The rendering order of the shapefiles and rasters can be adjusted by changing their order under the `Drawing Order`.
+
+```{r gisadminoneraster-png, fig.cap="The updated fields list after the ID field has been added", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_admin_one_raster.png")
+```
+
+## Exporting the District Mapping File
+
+Now is a good time to export the mapping CSV file by right clicking on the layer under `Drawing Order`, and selecting `Data > Export Table`. This causes a new dialog to appear, click the folder icon next to the `Output Table` and the select the location to save the CSV file (e.g., the `simulation` folder created for the project) and enter the file name *inclusive of the .csv extension* and click `Save`, click `OK` to export the CSV file and close the dialog.
+
+Locate the CSV file on disk and open in spreadsheet software such as Microsoft Excel. If you are using Excel do not allow it to convert any of the data since we will be deleting most of it and changing the order. Upon loading the CSV the contents should appear similar to Figure \@ref(fig:gisexcelcsv-png). Delete all columns except for the administrative region name in English and the ID column. Once complete you should have two columns left. Next, change the order of the columns so that the ID column is first, and the English name column is second. Save the CSV file. At this point the district mapping CSV file is ready and the first row will be used as the field headings.^[ Most of the tools that use the district mapping are agnostic as to the column names, although some may expect them to be called `DISTRICT` and `NAME`.]
+
+```{r gisexcelcsv-png, fig.cap="The data exported by ArcGIS Pro to CSV via the Export Table function", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_excel_csv.png")
 ```
 
