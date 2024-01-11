@@ -21,7 +21,7 @@ Possible sources of this data is included in the appendix.
 
 One all of the relevant geospatial data has been collected, the first step is determining the *datum* (the frame of reference for measuring locations on the Earth) and *projection* (the method used to portray the spherical coordinates on a flat surface). A useful starting point for this is [epsg.io](https://epsg.io/), which maintains a database of over 6,000 coordinate systems. 
 
-A typical starting point is to enter the name of the country, which will return a list of all of the relevant records (see Figure \@ref(fig:gisepsgiosearch-png)). Typically, for the purposes of the simulation, using the appropriate Universal Transverse Mercator (UTM) zone projection on the World Geodetic System 1984 (WGS84) datum will provide a reasonable level of accuracy for the simulation. Although large countries may overlap multiple zones, which case the bounding of the projection should be checked to ensure that it covers the majority the country (see Figure \@ref(fig:gisepsgiobounding-png)). Once an appropriate datum and projection has been identified, make a note of it along with the Well-Known ID (WKID) as part of the project documentation since this will be used in the preparation of all of the geospatial data for the simuation.
+A typical starting point is to enter the name of the country, which will return a list of all of the relevant records (see Figure \@ref(fig:gisepsgiosearch-png)). Typically, for the purposes of the simulation, using the appropriate Universal Transverse Mercator (UTM) zone projection on the World Geodetic System 1984 (WGS84) datum will provide a reasonable level of accuracy for the simulation. Although large countries may overlap multiple zones, which case the bounding of the projection should be checked to ensure that it covers the majority the country (see Figure \@ref(fig:gisepsgiobounding-png)). Once an appropriate datum and projection has been identified, make a note of it along with the Well-Known ID (WKID) as part of the project documentation since this will be used in the preparation of all of the geospatial data for the simulation.
 
 ```{r gisepsgiosearch-png, fig.cap="The results of a search for \"kenya\" on epsg.io", out.width = "450px", echo = FALSE}
 knitr::include_graphics("figures/gis_epsg_io_search.png")
@@ -30,3 +30,16 @@ knitr::include_graphics("figures/gis_epsg_io_search.png")
 ```{r gisepsgiobounding-png, fig.cap="The details page for Arc 1960 / UTM zone 37N on epsg.io. Note the Well-Known ID (WKID) that appears at the top of the page (EPSG:21097) as well as the bounding box that appears over the map of Kenya.", out.width = "450px", echo = FALSE}
 knitr::include_graphics("figures/gis_epsg_io_bounding.png")
 ```
+
+Once all of the relevant data has been gathered, start by creating a new project in ArcGIS Pro via `New Project > Map` for this example call the project `Kenya`, set the location to a folder such as `C:\GIS\`, and make sure `Create a new folder for this project` is checked. This will create a new project with the default map of the United States (see Figure \@ref(fig:gisdefaultmap-png)). Start by removing the `World Topographic Map` and `World Hillshade` base maps by right clicking on them under `Drawing Order` and selecting `Remove`. You should now have an empty map with no contents listed.
+
+```{r gisdefaultmap-png, fig.cap="ArcGIS Pro with the default map of the United States", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_default_map.png")
+```
+
+We will now set the coordinate system for the map. Start by right clicking on `Map` under `Drawing Order` and selecting `Properties`, this will load a new window titled `Map Properties: Map`. Click on `Coordinate Systems` on the left hand side of the window, this will display the current coordinate system for the map. By default `WGS 1984 Web Mercator (auxiliary sphere)` is used, but we want to set the map to the coordinate system system selected for the country we are working with. Locate the `Search` box under the `Current Z` box and enter the WKID value identified on epsg.io - using Kenya as our example this would be `21097`. A valid WKID should only return a single entry, in this case `Arc 1960 UTM Zone 37N` (see \@ref(fig:giscoordinatesystem-png)). Make sure the new coordinate system is listed under the `Current XY` and click `OK`.^[ Since the simulation models everything as a flat plane, it is unlikely that `Current Z` will ever be set to anything.] The default coordinate system has now been set for the map.
+
+```{r giscoordinatesystem-png, fig.cap="Setting the new coordinate system in ArcGIS Pro", out.width = "450px", echo = FALSE}
+knitr::include_graphics("figures/gis_coordinate_system.png")
+```
+
