@@ -117,3 +117,12 @@ Locate the CSV file on disk and open in spreadsheet software such as Microsoft E
 knitr::include_graphics("figures/gis_excel_csv.png")
 ```
 
+
+
+\newpage
+\blandscape
+```{r gisworkflow-png, fig.cap="The typical workflow used when preparing the geospaital data for a country", out.width = "575px", echo = FALSE}
+knitr::include_graphics("figures/gis_workflow.png")
+```
+\elandscape
+\newpage

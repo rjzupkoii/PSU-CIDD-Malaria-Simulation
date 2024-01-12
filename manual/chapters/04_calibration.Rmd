@@ -121,5 +121,4 @@ One important thing to keep in mind when evaluating the beta calibration is that
 knitr::include_graphics("figures/workflow.png")
 ```
 \elandscape
-
 \newpage
