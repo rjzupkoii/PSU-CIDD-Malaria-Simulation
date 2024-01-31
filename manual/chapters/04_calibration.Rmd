@@ -34,7 +34,7 @@ $$p' = \frac{1000}{\left( 1 + \frac{cbr}{1000}\right) ^n}$$
 
 Where $cbr$ is the crude birth rate, $n$ is the number of years prior to calibration year, and $p'$ is the initial population. The cell multiplier can then be calculated as:
 
-$$multiplier = \frac{1000 - p'}{1000}$$
+$$multiplier = 1 - \left( \frac{1000 - p'}{1000} \right)$$
 
 The resulting $multiplier$ can then be applied using the Raster Calculator functionality in geographic information system (GIS) software (e.g., [ArcGIS Pro](https://www.esri.com/en-us/arcgis/products/arcgis-pro/overview), [GRASS GIS](https://grass.osgeo.org/), or [QGIS](https://qgis.org/en/site/)) where it is recommended that the floating point result be rounded up to the nearest integer value (i.e., [Round Up](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/round-up.htm) function in ArcGIS Pro) to ensure that cells with a population always maintain a population. Once applied, the results can be validated by applying the equation:
 
@@ -49,7 +49,7 @@ It is recommended that a new database be created for each country being studied.
 
 `./MaSim -l -i [CONFIGURATION]`
 
-## Beta ($\beta$) Calibration
+## Beta Calibration
 
 ### Setting Bounds
 
@@ -107,16 +107,16 @@ knitr::include_graphics("figures/plos_gph_fig1a.png")
 
 The primary metric for evaluating the $\beta$ calibration is a comparison of the projected prevalence against the population weighted prevalence for the targeted administrative region level. Typically this is done using data from the Malaria Atlas Project [@weiss_mapping_2019], although the preference should be to use the most reliable and timely data that can be sourced. As shown in Figure \@ref(fig:plosgphfig1a-png) on the left [@zupko_long_term_2022], in administrative regions with a high malaria burden, calibrations that are within ±5% of the reference prevalence are very achievable. However, as the malaria burden declines, the target calibration bounds typically increases to the range of ±10%. This expansion should also be accompanied by a critical evaluation the model calibration to ensure that it is acceptable for the research question being evaluated. Likewise, due to the prefect information that is available in the simulation, in most regions the number of clinical cases is going to exceed the number of reported clinical cases reported (Figure \@ref(fig:plosgphfig1a-png), Right). Awareness of what this differential should be is an important part of ensuring the model is properly calibrated, and typically this differential is presented as the total number of clinical cases versus the total number of treated cases (i.e., those clinical cases that are reported to a health system).
 
-<!-- Define the caption for the following figure since we need to include citations -->
-(ref:fig-beta-calibration) Comparison of the EIR versus the prevalence under different population sizes, note the inclusion of calibration points prepared by Malaria Modeling Consortium members [@hay_urbanization_2005; @cameron_defining_2015]
-```{r beta-calibration-png, fig.cap = "(ref:fig-beta-calibration)", out.width = "450px", echo = FALSE}
-knitr::include_graphics("figures/beta_calibration.png")
-```
-
 One important thing to keep in mind when evaluating the beta calibration is that as the population size decreases, the variance between individual runs increases. This is illustrated by Figure \@ref(fig:beta-calibration-png) in which the EIR is plotted against the *Pf*PR~2-10~ under different population sizes. Given that the $\beta$ can act as a proxy for the EIR, increasing the $\beta$ can be expected to produce increase the EIR, and thus such a figure can be produced by sweeping the $\beta$ space from zero to *n*. While the expected behavior is that an increase in $\beta$, and thus an increase in the EIR, should produce an increase in the *Pf*PR~2-10~, this is only observed under the larger population sizes. Under small population sizes, while the general trend is for increasing EIR and *Pf*PR~2-10~, the this may not be observed between small changes in the EIR and/or $\beta$. This a known limitation of the model.
 
 \newpage
 \blandscape
+<!-- Define the caption for the following figure since we need to include citations -->
+(ref:fig-beta-calibration) Comparison of the EIR versus the prevalence under different population sizes, note the inclusion of calibration points prepared by Malaria Modeling Consortium members [@hay_urbanization_2005; @cameron_defining_2015]
+```{r beta-calibration-png, fig.cap = "(ref:fig-beta-calibration)", out.width = "650px", echo = FALSE}
+knitr::include_graphics("figures/beta_calibration.png")
+```
+\newpage
 ```{r workflow-png, fig.cap="The typical workflow used when preparing the simulation for a new country.", out.width = "650px", echo = FALSE}
 knitr::include_graphics("figures/workflow.png")
 ```
