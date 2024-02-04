@@ -362,7 +362,7 @@ At this point the raster can be generated using the `Polygon to Raster` tool usi
 5. On the `Enviroments` tab the `Current Map` is selected for the `Output Coordinate System`.
 6. The admin one raster is selected as the `Snap Raster`
 
-Once complete the final raster should looks similar to Figure \@ref(fig:treatmentraster-png).
+Once complete the final raster should looks similar to Figure \@ref(fig:treatmentraster-png). In the event that a second treatment raster is needed for the over-5 group, it is recommended that a second value field be created (ex., "Over5Treatments") and the original value field be renamed (ex., "Under5Treatments" to reflect the differences). 
 
 ```{r treatmentraster-png, fig.cap="The final treatment seeking raster with the admin one border overlaid. Note that the symbology has been updated to unqiue values, with only the five entered under-5 treatment seeking rates present.", out.width="450px", echo = FALSE}
 knitr::include_graphics("figures/gis/treatment_raster.png")
@@ -380,7 +380,17 @@ In addition to *Pf*PR~2-10~ rasters, the Malaria Atlas Project (MAP) also produc
 
 Each of these travel time rasters serves a different purpose, and presently the generalized movement model in the simulation that supports a travel surface (i.e., `WesolowskiSurface`) works best with the travel time to cities raster.
 
-Since the travel time raster is produced by MAP, using their option to "Clip to Country" is going to produce the same raster extent as the *Pf*PR~2-10~ raster. In the case of Kenya this means that the Ilemi Triangle will not be included due to being disputed territory. However, the workflow to prepare the raster is the same as the *Pf*PR~2-10~ raster:
+Since the travel time raster is produced by MAP, using their option to "Clip to Country" is going to produce the same raster extent as the *Pf*PR~2-10~ raster. In the case of Kenya this means that the Ilemi Triangle will not be included due to being disputed territory. 
+
+<br>
+
+```{r traveltimeraster-png, fig.cap="The final treatment seeking raster with the admin one border overlaid. Note that the symbology has been updated to unqiue values, with only the five entered under-5 treatment seeking rates present.", out.width="450px", echo = FALSE}
+knitr::include_graphics("figures/gis/travel_time_raster.png")
+```
+
+\newpage
+
+The workflow to prepare the raster is the same as the *Pf*PR~2-10~ raster:
 
 1. Start by downloading the global travel time data, unzip it to a convenient location for the project.
 2. Add the global travel time raster to the map, be sure to build pyramids and calculate statistics.
@@ -391,13 +401,113 @@ After cleaning up the work space you should have travel time raster that appears
 
 While this is a streamlined process, the underlying resolution of the travel time raster is similar to the population raster from WorldPop. As such, this will result in considerable data loss in the process of going from 30 arc seconds to 5,000 meters. If data accuracy is necessary then the workflow can be adjusted to following one similar to creating the population raster -- although the mean or median should be taken as part of the aggregation as opposed to sum -- however, this should be contextualized against the 25 km^2^ that each cell in the raster will represent. While a more elaborate workflow based upon aggregation as opposed to resampling may be more accurate in a technical sense, the difference will not have a significant impact upon the model fidelity due to the distance involved in crossing a single cell.^[ The average walking speed of adults is about 5 km/h, while a motorized vehicle on roads (or good terrain) will be quicker, the key point here is that in practical terms the cells are actually quite large!]
 
-```{r traveltimeraster-png, fig.cap="The final treatment seeking raster with the admin one border overlaid. Note that the symbology has been updated to unqiue values, with only the five entered under-5 treatment seeking rates present.", out.width="450px", echo = FALSE}
-knitr::include_graphics("figures/gis/travel_time_raster.png")
-```
-
 ## Exporting the ASC Files
 
-Placeholder for pending work...
+By this point, all of the rasters necessary for model calibration should have been completed; however, the rasters are currently in a format that is not supported by the simulation (i.e., GeoTIFF). The next step is going to export the rasters to a ASCII text coded raster (i.e., an ASC file, Esri ASCII rater, or Esri grid) that can be loaded into the simulation.^[ Documentation on the formation can be found in the [ArcGIS Manual](https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/esri-ascii-raster-format.htm) or in [Wikipedia](https://en.wikipedia.org/wiki/Esri_grid). As to why the simulation uses the Esri grid format as opposed to a binary raster, the reasons are two fold. First, the Esri grid files are human readable which allows for manual edits to be performed if necessary without the need for additional software, so simple simulations can be manually created in a purely text-based environment which is useful for scientific computing where being connected via SSH to a remote system is still likely. Second, during development of the simulation's geospatial codebase, a review of use cases was conducted and it was deemed unlikely that simulated area would be so big as to render the Esri grid files unmanageable.] At a minimum the following rasters be exported from ArcGIS for the simulation:
+
+1. The *initial population raster*, which will be used to create the initial population when the simulation starts.
+2. The *administrative districts raster*, which will be used to aggregate cell level data to a district.
+3. The *under-5 treatment seeking raster*, which will be used to determine the likelihood that an individual under-5 will seek/receive treatment.
+
+The other mandatory raster for the simulation -- the beta's surface -- is created by the workflow outlined in the chapter on Model Calibration. However, the following rasters may need to be exported from ArcGIS depending on the circumstances:
+
+4. The *over-5 treatment seeking raster*, which will be used to set a different likelihood of seeking/receiving treatment for individuals over-5.
+5. The *travel surface raster*, which will be used with the movement model to control how individuals move around the simulated landscape.
+6. The *climate zone raster*, which is used to determine which climate zone a cell is within, the production of which is tied to the production of climatic data for the simulation.
+
+In this case, all of the rasters that have been created thus far will be exported. It is recommended by first ensuring that there is a folder in the relevant country repository (e.g., `/GIS/` that will contain the files that are created.^[ While best practices for reproducible science would call for *all* files to be stored in a repository, in practice the workflow has typically been for geospatial files to get added to the repository if they are necessary to run the simulation or produce data used in analysis. Effectively, if the geospatial is produced by a different organization it's included as a reference, whereas files produced by members of the lab are included as part of the data analysis.] Next, the `Raster to ASCII` tool is run in ArcGIS for each raster file, with the results written to the folder that was created, using the the `*.ASC` output format. Once complete the output will look similar to Figure \@ref(fig:ascfilesvscode-png)
+
+```{r ascfilesvscode-png, fig.cap="The contents of the GIS directory in VS Code following exporting in ArcGIS. Note the presence of projection files (*.prj) and ArcGIS data files (*.xml).", out.width="450px", echo = FALSE}
+knitr::include_graphics("figures/gis/asc_files_vscode.png")
+```
+
+Exportation via the `Raster to ASCII` tool results in the creation of projection files (\*.prj) as well as ArcGIS data files (\*.xml) in the directory. It is recommended that the projection files be retained for reference, while the ArcGIS data files be deleted since they will not be used. Once all ASC files have been exported, run the `validateraster` tool from `PSU-CIDD-MaSim-Support` to check that all of the rasters have been correctly aligned. In this case, we find that there there is some misalignment in the files created for Kenya:
+
+\newpage
+
+```
+Using ken_districts.asc as reference
+178 != 179 ncols
+224 != 228 nrows
+-67203.471654228 != -72203.471654228 xllcorner
+-518695.09422505 != -528695.09422505 yllcorner
+Error with alignment between ./ken_districts.asc and ./ken_initial_population.asc
+178 != 179 ncols
+224 != 228 nrows
+-67203.471654228 != -72203.471654228 xllcorner
+-518695.09422505 != -528695.09422505 yllcorner
+Error with alignment between ./ken_districts.asc and ./ken_population.asc
+5 files crosschecked, 6 total files
+```
+
+This tells us that the something has gone wrong with the creation of the population and initial population rasters. Specifically, the two population rasters have more rows and columns than the other rasters. The next step is to isolate the likely cause of this problem, which can typically done by adjusting the symbology to show Nodata values, as shown in Figure \@ref(fig:errorchecking-png).
+
+Based upon the results reported by `validateraster` and visual examination of the rasters in ArcGIS, the suggestion is that at some point some extra data was produced for the population rasters. This is quite common and can be addressed by using `Extract by Mask` to create an updated raster based upon the smaller raster. In this case we will be using the population rasters as the `Input Raster` and the admin one raster as the `Input raster or feature mask data`. Pay close attention to ensure that the `Analysis Extent` is the same as the smaller raster (this can be updated by clicking the down arrow next to the `Extent of a Layer` icon and selecting the appropriate raster). If this is done correctly you should have a raster similar to Figure \@ref(fig:extractbymask-png). Be sure to double check the number of rows and columns using the `Properties` dialog for the raster since color bleeding can result in it looking like the process has failed. The ultimate check some be the the number of rows and columns matching the smaller raster.
+
+```{r errorchecking-png, fig.cap="By overlaying the smaller districts raster on the larger initial popuation raster, with Nodata being displayed, the source of the extra rows at the top, bottom, and left side can be seen. Note that the underlying initial population raster also suggests the presence of data outside the bounds suggested by the district raster.", out.width="450px", echo = FALSE}
+knitr::include_graphics("figures/gis/error_checking.png")
+```
+
+```{r extractbymask-png, fig.cap="Upated rows and columns following the use of the Extract by Maks tool. Note that some color bleeding is present due to how ArcGIS is rendering the layered rasters.", out.width="450px", echo = FALSE}
+knitr::include_graphics("figures/gis/extract_by_mask.png")
+```
+
+At this point running `validateraster` suggests that while the alignment issues have been addressed, the data is still misaligned:
+
+```
+Using ken_districts.asc as reference
+Mismatched nodata at 0, 32
+One: 42.0, Two -9999.0
+Mismatched nodata at 0, 33
+One: 42.0, Two -9999.0
+Mismatched nodata at 11, 43
+One: 42.0, Two -9999.0
+Mismatched nodata at 12, 43
+One: 42.0, Two -9999.0
+Mismatched nodata at 12, 44
+One: 42.0, Two -9999.0
+Mismatched nodata at 13, 43
+One: 42.0, Two -9999.0
+Mismatched nodata at 13, 44
+One: 42.0, Two -9999.0
+Mismatched nodata at 14, 44
+One: 42.0, Two -9999.0
+Mismatched nodata at 21, 47
+One: 42.0, Two -9999.0
+Plus 311 additional errors
+```
+
+In this case the `validaterasters` tool is reporting that one raster -- `ken_districts.asc` -- has a value present that that another raster is reporting as Nodata (i.e., -9999). If these rasters are used to run the simulation it will result in an error during model initialization since there will be a mismatch between the number of cells with data and between the various layers. 
+
+Here we need to know what the root cause is before we can adjust the data. As before start by using a contrasting color for the Nodata values, followed by using the `Swipe` tool under `Raster Layer` in the ribbon bar to examine the two layers. In doing so we find parts of the map that look like Figure \@ref(fig:waterasnodata-png), given that these areas contain major bodies of water (Lake Victoria to the west, Lake Turkana to the north) it appears that the WorldPop data is reporting bodies of water as Nodata as opposed to a population of zero. This hypnosis can be confirmed by adjusting the Nodata setting for the source raster as in Figure \@ref(fig:worldpopnodata-png).
+
+```{r waterasnodata-png, fig.cap="Using the Swipe tool we find that the newly extracted inital popuation raster is missing data where the admin one raster is reporting data.", out.width="450px", echo = FALSE}
+knitr::include_graphics("figures/gis/water_as_nodata.png")
+```
+
+```{r worldpopnodata-png, fig.cap="Rediplaying the WorldPop data with the Nodata symbology adjusted, note the presence of missing data.", out.width="450px", echo = FALSE}
+knitr::include_graphics("figures/gis/worldpop_nodata.png")
+```
+
+This suggests that the Nodata values that appear within the bounds of Kenya should be adjusted to zero for the population. There are two approaches that can be used, the first is to edit the pixels to the correct value, while the other is to reclassify the Nodata value and extract an updated raster. Typically the second approach is quicker, and will be used here.
+
+In the Geoprocessing menu search for and load  `Reclassify (Spatial Analysis Tools)`, select the appropriate raster and under the `Value` column enter "NODATA" and under `New` column enter "0", as in Figure \@ref(fig:reclassifytool-png). This will produce a new raster which should then be used as the `Input Raster` for the `Extract by Mask` tool, as previously described. Once complete, the new raster should have zeros present instead of Nodata within the extent of the admin one districts.^[ The challenging part of this workflow is typically keeping track of the rasters. If you have multiple rasters with issues it's recommended to address them one at a time, and clean-up the temporary and invalid rasters before moving on to the next.]
+
+```{r reclassifytool-png, fig.cap="Reclassifing a population raster such that Nodata will be zero.", out.width="450px", echo = FALSE}
+knitr::include_graphics("figures/gis/reclassify_tool.png")
+```
+
+Once all issues have been addressed, `validateraster` will report no errors in a manner similar to the following:
+
+```
+Using ken_districts.asc as reference
+5 files crosschecked, 6 total files
+No errors detected
+```
+
+At this point, model calibration can begin if malaria does not follow a seasonal pattern. Otherwise, a seasonal adjustment will need to be prepared based upon climatic data, as described in the next section.
+
+\newpage
 
 # Climatic Data Production
 
