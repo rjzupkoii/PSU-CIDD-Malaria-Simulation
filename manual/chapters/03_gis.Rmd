@@ -511,5 +511,24 @@ At this point, model calibration can begin if malaria does not follow a seasonal
 
 # Climatic Data Production
 
-Placeholder for pending work...
+Typically, malaria incidence increases and declines with the local rainfall variability due to the underlying habitat requirements for *Anopheles* mosquitoes [@pascual_shifting_2008; @bomblies_modeling_2012]. In the context of the simulation -- and model calibration -- this is typically managed by adjusting the daily beta (i.e., transmission intensity) based upon a seasonality model. Two approaches have been used to develop this seasonality mode: a equation-based model for each of the three climatic zones in Burkina Faso [@zupko_long_term_2022], and a rainfall-based model with the daily beta adjusted based upon historical rainfall data for Rwanda [@zupko_modeling_2023]. Selection of the approach to use will typically depend upon the country being modeled; however, the preference is for the rainfall-based model since it has a closer coupling to real data.
 
+When it is possible to use a single climatic model for the entire country, the script `era5_rainfall_doy.js` in the `PSU-CIDD-MaSim-Support` repository can be used to get the daily average rainfall, based upon ten years of climatic data from the Copernicus Climate Change Service (C3S).^[ see https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels?tab=overview] The script will highlight the country being processed (see Figure \@ref(fig:earthenginerainfall-png)) and also allow a CSV file to be exported to Google Drive which contains the daily rainfall data (see Figure \@ref(fig:earthengineexport-png)). After which it will be necessary to smooth the data, off-set it to account for the *Anopheles* lifecycle, and scale it such that it is bounded between one and an appropriate floor (ex., 0.4 and 1.0 in the case of Rwanda, [@zupko_modeling_2023]).^[ Precise details for this process are stored in the Rwanda repositories: `PSU-CIDD-Rwanda` and `malariaibm-spatial-Rwanda-561H`.] When this approach is used, an additional raster for the simulation is not needed.
+
+The alternative approach is an equation-based model that can be developed on the basis of the malaria incidence or seasonal rainfall patterns. In addition to allowing for the alternative data source, this approach also allows a country to be segmented into multiple climate zones (see [@zupko_long_term_2022]). The workflow for producing the climate zones varies, although in the case of Burkina Faso it was based upon the underlying precipitation data from WorldClim [@fick_worldclim_2017], which was then converted into an aligned raster using the processes previously described in this chapter. 
+
+```{r earthenginerainfall-png, fig.cap="Example output of the daily median rainfall script being run in Google Earth Engine.", out.width="450px", echo = FALSE}
+knitr::include_graphics("figures/gis/earthengine_rainfall.png")
+```
+
+```{r earthengineexport-png, fig.cap="The CSV data export task dialog in Google Earth Engine, note that a task history is retained (as indicated by the failed task) and the Drive Folder must be present in Google Drive for the user running the script.", out.width="450px", echo = FALSE}
+knitr::include_graphics("figures/gis/earthengine_export.png")
+```
+
+<!-- Define the caption for the following figure since we need to include a reference -->
+(ref:fig-bfa-seasonality) Example of raster segmentation based upon climate zones using precipitation data from @fick_worldclim_2017, from the supplemental to @zupko_long_term_2022.
+```{r bfaseasonality-png, fig.cap="(ref:fig-bfa-seasonality)", out.width="450px", out.height="250px", echo = FALSE}
+knitr::include_graphics("figures/gis/bfa_seasonality.png")
+```
+
+\pagebreak
