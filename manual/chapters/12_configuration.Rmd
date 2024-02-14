@@ -469,7 +469,52 @@ rapt_config:
 ## Genotype Information
 
 ### genotype_info<a name="genotype_info"></a>
-To Be Written.
+This node defines the genotype database that is used by the simulation for the mutation pathways, looking up the drug sensitivity and resistance, and the cost that the parasite incurs due to the mutation. The node itself is made up of multiple loci which in turn have multiple allele attached to them. The loci are zero indexed and values should not be repeated; however, while the alleles are zero indexed, the index count restarts with each locus.
+
+```YAML
+genotype_info:
+  loci:
+    - locus_name: "pfcrt"
+      position: 0
+      alleles:
+        - value: 0
+          allele_name: "K76"
+          short_name: "K"
+          can_mutate_to: [1]
+          mutation_level: 0
+          daily_cost_of_resistance: 0.0
+        - value: 1
+          allele_name: "76T"
+          short_name: "T"
+          can_mutate_to: [0]
+          mutation_level: 1
+          daily_cost_of_resistance: 0.0005
+    - locus_name: "K13 Propeller"
+      position: 1
+      alleles:
+        - value: 0
+          allele_name: "C580"
+          short_name: "C"
+          can_mutate_to: [1]
+          mutation_level: 0
+          daily_cost_of_resistance: 0.0
+        - value: 1
+          allele_name: "580Y"
+          short_name: "Y"
+          can_mutate_to: [0]
+          mutation_level: 1
+          daily_cost_of_resistance: 0.0005          
+```
+
+**locus_name** (string) : the name of the locus, which in turn will have `alleles` attached to it. \
+**position** (integer) : the index of the locus, zero-indexed. \
+**alleles** (YAML) : the YAML node that the allele associated with this locus will be attached to. \
+**value** (int) : the index of the allele within this locus, zero indexed. \
+**allele_name** (string) : the name of the allele. \
+**short_name** (character) : the character code that is assigned to the allele. \
+**can_mutate_to** (integer array) : an array of the indexes of the alleles that this position can mutate to. \
+**mutation_level** (integer) : the mutation level of the allele, the higher the number, the more mutations are necessary to reach the allele (i.e., a mutation level of three indicates that the allele must mutate from *A* to *B* to *C* before reaching *D*). \
+**daily_cost_of_resistance** (float) : the fitness cost to the parasite to maintain the mutation. \
 
 ## Events
 The `events` setting is used to list the various events that will be loaded and run during the model. The `name` field dictates which event will be parsed and all the data for the `info` field following will be provided to the loader function.
